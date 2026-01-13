@@ -2,3 +2,7 @@
   command = "echo prebuilt"
   publish = "public"
 
+[[redirects]]
+  from = "/"
+  to = "/tsonic/"
+  status = 301

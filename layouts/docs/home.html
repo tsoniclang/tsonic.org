@@ -1,13 +1,11 @@
 {{ define "main" }}
 <article class="doc">
+  <script>
+    location.replace("/tsonic/");
+  </script>
   <h1 class="site-title">{{ .Site.Title }}</h1>
-  <p class="lead">Documentation for the Tsonic compiler and its ecosystem.</p>
-
-  <h2 class="section-title">Projects</h2>
-  <ul class="mounts">
-    {{ range .Site.Mounts }}
-      <li><a href="{{ .UrlPrefix }}">{{ .Name }}</a></li>
-    {{ end }}
-  </ul>
+  <p class="lead">
+    Redirecting to <a href="/tsonic/">Tsonic docs</a>…
+  </p>
 </article>
 {{ end }}
