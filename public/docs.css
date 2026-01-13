@@ -88,6 +88,27 @@ a:hover {
   width: min(420px, 40vw);
 }
 
+.gh-link {
+  margin-left: auto;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.02);
+  color: var(--muted);
+}
+
+.gh-link:hover {
+  text-decoration: none;
+  color: var(--text);
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.gh-link:focus {
+  outline: none;
+  box-shadow: var(--focus);
+  border-color: rgba(37, 99, 235, 0.35);
+}
+
 .search input {
   width: 100%;
   padding: 8px 10px;
@@ -399,4 +420,3 @@ td {
     padding: 18px 16px;
   }
 }
-
