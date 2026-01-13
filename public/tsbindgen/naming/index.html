@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Naming | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+    <span>Naming</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Naming</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/naming.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="naming-conventions">Naming Conventions</h1>
+<p>tsbindgen supports two naming conventions for members.</p>
+<h2 id="clr-mode-default">CLR Mode (Default)</h2>
+<p>Members retain their C#/CLR PascalCase names.</p>
+<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out
+# or explicitly:
+npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out --naming clr
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-typescript">list.GetEnumerator();
+Console.WriteLine(&quot;hello&quot;);
+String.IsNullOrEmpty(s);
+Array.Sort(array);
+</code></pre>
+<h2 id="javascript-mode">JavaScript Mode</h2>
+<p>Members are converted to camelCase.</p>
+<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out --naming js
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-typescript">list.getEnumerator();
+Console.writeLine(&quot;hello&quot;);
+String.isNullOrEmpty(s);
+Array.sort(array);
+</code></pre>
+<h2 id="conversion-rules">Conversion Rules</h2>
+<h3 id="basic-conversion">Basic Conversion</h3>
+<p>First letter becomes lowercase:</p>
+<table>
+<thead>
+<tr>
+<th>CLR</th>
+<th>JavaScript</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetEnumerator</code></td>
+<td><code>getEnumerator</code></td>
+</tr>
+<tr>
+<td><code>WriteLine</code></td>
+<td><code>writeLine</code></td>
+</tr>
+<tr>
+<td><code>ToString</code></td>
+<td><code>toString</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="acronyms">Acronyms</h3>
+<p>Acronyms are lowercased as a unit:</p>
+<table>
+<thead>
+<tr>
+<th>CLR</th>
+<th>JavaScript</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>XMLReader</code></td>
+<td><code>xmlReader</code></td>
+</tr>
+<tr>
+<td><code>HTTPClient</code></td>
+<td><code>httpClient</code></td>
+</tr>
+<tr>
+<td><code>IOStream</code></td>
+<td><code>ioStream</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="single-letters">Single Letters</h3>
+<p>Single-letter prefixes are lowercased:</p>
+<table>
+<thead>
+<tr>
+<th>CLR</th>
+<th>JavaScript</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IDisposable</code></td>
+<td><code>iDisposable</code></td>
+</tr>
+<tr>
+<td><code>TKey</code></td>
+<td><code>tKey</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="type-names">Type Names</h2>
+<p>Type names are <strong>never</strong> transformed - always PascalCase:</p>
+<pre><code class="language-typescript">// Both modes:
+List_1&lt;T&gt;
+Dictionary_2&lt;TKey, TValue&gt;
+IEnumerable_1&lt;T&gt;
+</code></pre>
+<h2 id="extension-methods">Extension Methods</h2>
+<p>Extension method names follow the same naming mode:</p>
+<ul>
+<li><code>--naming clr</code>: <code>Where</code>, <code>Select</code>, <code>ToList</code>, ...</li>
+<li><code>--naming js</code>: <code>where</code>, <code>select</code>, <code>toList</code>, ...</li>
+</ul>
+<h2 id="reserved-words">Reserved Words</h2>
+<p>TypeScript reserved words get a trailing underscore:</p>
+<table>
+<thead>
+<tr>
+<th>Original</th>
+<th>TypeScript</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default</code></td>
+<td><code>default_</code></td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>class_</code></td>
+</tr>
+<tr>
+<td><code>function</code></td>
+<td><code>function_</code></td>
+</tr>
+<tr>
+<td><code>import</code></td>
+<td><code>import_</code></td>
+</tr>
+<tr>
+<td><code>export</code></td>
+<td><code>export_</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="name-conflicts">Name Conflicts</h2>
+<p>When multiple members would have the same name, numeric suffixes are added:</p>
+<pre><code class="language-typescript">// Two methods both become &quot;add&quot; after camelCase
+add(item: T): void;
+add2(index: int, item: T): void;
+</code></pre>
+<h2 id="explicit-interface-members">Explicit Interface Members</h2>
+<p>Explicit interface implementations get interface-suffixed names:</p>
+<pre><code class="language-csharp">// C#
+void ICollection.Clear() { }
+void Clear() { }
+</code></pre>
+<pre><code class="language-typescript">// TypeScript
+clear(): void;           // Own method
+clear_ICollection(): void; // Explicit implementation
+</code></pre>
+<h2 id="choosing-a-mode">Choosing a Mode</h2>
+<p><strong>Use CLR mode when:</strong></p>
+<ul>
+<li>Interop with existing C# code</li>
+<li>Documentation references use C# names</li>
+<li>Team is familiar with C# conventions</li>
+</ul>
+<p><strong>Use JavaScript mode when:</strong></p>
+<ul>
+<li>TypeScript-first development</li>
+<li>Following JavaScript naming conventions</li>
+<li>IDE autocomplete matches expectations</li>
+</ul>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

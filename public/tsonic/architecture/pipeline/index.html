@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pipeline | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Pipeline</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Pipeline</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/pipeline.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="compilation-pipeline">Compilation Pipeline</h1>
+<p>Detailed breakdown of each compilation stage.</p>
+<h2 id="stage-overview">Stage Overview</h2>
+<pre><code>Source Files (.ts)
+       |
+       v
+  [1. Program Creation]
+       |
+       v
+  [2. Module Resolution]
+       |
+       v
+  [3. Validation]
+       |
+       v
+  [4. IR Building]
+       |
+       v
+  [5. Dependency Analysis]
+       |
+       v
+  [6. C# Emission]
+       |
+       v
+  [7. Backend Compilation]
+       |
+       v
+  Native Binary
+</code></pre>
+<h2 id="stage-1-program-creation">Stage 1: Program Creation</h2>
+<p><strong>Package</strong>: <code>@tsonic/frontend</code>
+<strong>Entry</strong>: <code>createProgram()</code></p>
+<p>Creates a TypeScript program using the TS Compiler API:</p>
+<pre><code class="language-typescript">const program = createProgram(filePaths, {
+  projectRoot,
+  sourceRoot,
+  rootNamespace,
+  typeRoots,
+});
+</code></pre>
+<p>Responsibilities:</p>
+<ul>
+<li>Initialize TypeScript compiler</li>
+<li>Configure compiler options</li>
+<li>Load source files</li>
+<li>Resolve type roots</li>
+</ul>
+<h2 id="stage-2-module-resolution">Stage 2: Module Resolution</h2>
+<p><strong>Package</strong>: <code>@tsonic/frontend</code>
+<strong>Entry</strong>: <code>resolveImport()</code></p>
+<p>Resolves import specifiers to actual files:</p>
+<pre><code class="language-typescript">// Local import
+&quot;./utils/math.js&quot; -&gt; &quot;/project/src/utils/math.ts&quot;
+
+// .NET import
+&quot;@tsonic/dotnet/System.IO.js&quot; -&gt; CLR type resolution
+</code></pre>
+<p>Rules:</p>
+<ul>
+<li>Local imports MUST have a <code>.js</code> or <code>.ts</code> extension (<code>.js</code> recommended)</li>
+<li>.NET imports map to CLR namespaces</li>
+<li>Relative paths resolved from importing file</li>
+<li>Barrel re-exports followed</li>
+</ul>
+<h2 id="stage-3-validation">Stage 3: Validation</h2>
+<p><strong>Package</strong>: <code>@tsonic/frontend</code>
+<strong>Entry</strong>: <code>validateProgram()</code></p>
+<p>Validates TypeScript code against Tsonic constraints:</p>
+<h3 id="import-validation">Import Validation</h3>
+<ul>
+<li><code>.js</code> or <code>.ts</code> extension required for local imports</li>
+<li>No dynamic imports</li>
+<li>No <code>import type</code> syntax</li>
+</ul>
+<h3 id="feature-validation">Feature Validation</h3>
+<ul>
+<li>No <code>with</code> statements</li>
+<li>No <code>import.meta</code></li>
+<li>No <code>eval()</code></li>
+<li>No <code>Promise.then/catch/finally</code></li>
+</ul>
+<h3 id="export-validation">Export Validation</h3>
+<ul>
+<li>Entry point must export <code>main()</code></li>
+<li>All exports must be valid declarations</li>
+</ul>
+<h3 id="generic-validation">Generic Validation</h3>
+<ul>
+<li>Type parameters must be constrained or inferred</li>
+<li>No unsupported generic patterns</li>
+</ul>
+<h2 id="stage-4-ir-building">Stage 4: IR Building</h2>
+<p><strong>Package</strong>: <code>@tsonic/frontend</code>
+<strong>Entry</strong>: <code>buildIrModule()</code></p>
+<p>Transforms TypeScript AST to Intermediate Representation:</p>
+<pre><code class="language-typescript">const irModule = buildIrModule(sourceFile, checker, options);
+</code></pre>
+<h3 id="statement-conversion">Statement Conversion</h3>
+<table>
+<thead>
+<tr>
+<th>TypeScript</th>
+<th>IR Node</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>function foo()</code></td>
+<td><code>IrFunctionDeclaration</code></td>
+</tr>
+<tr>
+<td><code>class Foo</code></td>
+<td><code>IrClassDeclaration</code></td>
+</tr>
+<tr>
+<td><code>interface Foo</code></td>
+<td><code>IrInterfaceDeclaration</code></td>
+</tr>
+<tr>
+<td><code>const x = 1</code></td>
+<td><code>IrVariableDeclaration</code></td>
+</tr>
+<tr>
+<td><code>if (cond)</code></td>
+<td><code>IrIfStatement</code></td>
+</tr>
+<tr>
+<td><code>for (...)</code></td>
+<td><code>IrForStatement</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="expression-conversion">Expression Conversion</h3>
+<table>
+<thead>
+<tr>
+<th>TypeScript</th>
+<th>IR Node</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>42</code></td>
+<td><code>IrLiteralExpression</code></td>
+</tr>
+<tr>
+<td><code>foo</code></td>
+<td><code>IrIdentifierExpression</code></td>
+</tr>
+<tr>
+<td><code>a + b</code></td>
+<td><code>IrBinaryExpression</code></td>
+</tr>
+<tr>
+<td><code>foo()</code></td>
+<td><code>IrCallExpression</code></td>
+</tr>
+<tr>
+<td><code>new Foo()</code></td>
+<td><code>IrNewExpression</code></td>
+</tr>
+<tr>
+<td><code>obj.prop</code></td>
+<td><code>IrMemberExpression</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="type-conversion">Type Conversion</h3>
+<table>
+<thead>
+<tr>
+<th>TypeScript</th>
+<th>IR Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>number</code></td>
+<td><code>IrPrimitiveType(&quot;number&quot;)</code></td>
+</tr>
+<tr>
+<td><code>string[]</code></td>
+<td><code>IrArrayType</code></td>
+</tr>
+<tr>
+<td><code>Foo&lt;T&gt;</code></td>
+<td><code>IrReferenceType</code></td>
+</tr>
+<tr>
+<td><code>A \| B</code></td>
+<td><code>IrUnionType</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="stage-5-dependency-analysis">Stage 5: Dependency Analysis</h2>
+<p><strong>Package</strong>: <code>@tsonic/frontend</code>
+<strong>Entry</strong>: <code>buildModuleDependencyGraph()</code></p>
+<p>Analyzes module dependencies for compilation order:</p>
+<pre><code class="language-typescript">const { modules, entryModule } = buildModuleDependencyGraph(
+  entryPoint,
+  compilerOptions
+);
+</code></pre>
+<p>Responsibilities:</p>
+<ul>
+<li>Traverse import graph</li>
+<li>Detect circular dependencies</li>
+<li>Build compilation order</li>
+<li>Collect all IR modules</li>
+</ul>
+<h2 id="stage-6-c-emission">Stage 6: C# Emission</h2>
+<p><strong>Package</strong>: <code>@tsonic/emitter</code>
+<strong>Entry</strong>: <code>emitCSharpFiles()</code></p>
+<p>Generates C# code from IR:</p>
+<pre><code class="language-typescript">const { files } = emitCSharpFiles(modules, {
+  rootNamespace,
+  entryPointPath,
+});
+</code></pre>
+<h3 id="module-structure">Module Structure</h3>
+<pre><code>IrModule (src/utils/Math.ts)
+    |
+    v
+C# File:
+  namespace MyApp.Utils {
+    public static class Math {
+      // declarations
+    }
+  }
+</code></pre>
+<h3 id="type-emission">Type Emission</h3>
+<table>
+<thead>
+<tr>
+<th>IR Type</th>
+<th>C# Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>primitiveType(&quot;number&quot;)</code></td>
+<td><code>double</code></td>
+</tr>
+<tr>
+<td><code>primitiveType(&quot;string&quot;)</code></td>
+<td><code>string</code></td>
+</tr>
+<tr>
+<td><code>arrayType(T)</code></td>
+<td><code>T[]</code> (native array)</td>
+</tr>
+<tr>
+<td><code>referenceType(&quot;List&quot;, [T])</code></td>
+<td><code>System.Collections.Generic.List&lt;T&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="expression-emission">Expression Emission</h3>
+<pre><code class="language-typescript">// IR: IrBinaryExpression { left, op: &quot;+&quot;, right }
+// C#: (left) + (right)
+
+// IR: IrCallExpression { callee, args }
+// C#: callee(args)
+</code></pre>
+<h2 id="stage-7-backend-compilation">Stage 7: Backend Compilation</h2>
+<p><strong>Package</strong>: <code>@tsonic/backend</code>
+<strong>Entry</strong>: <code>buildCommand()</code> (via CLI)</p>
+<p>Compiles C# to native binary:</p>
+<h3 id="step-7a-generate-project-files">Step 7a: Generate Project Files</h3>
+<pre><code>generated/
+├── src/*.cs          # Emitted C#
+├── Program.cs        # Entry wrapper
+└── tsonic.csproj     # Project config
+</code></pre>
+<h3 id="step-7b-dotnet-publish">Step 7b: dotnet publish</h3>
+<pre><code class="language-bash">dotnet publish tsonic.csproj \
+  -c Release \
+  -r linux-x64 \
+  --nologo
+</code></pre>
+<p>NativeAOT settings in .csproj:</p>
+<ul>
+<li><code>PublishAot=true</code></li>
+<li><code>PublishSingleFile=true</code></li>
+<li><code>PublishTrimmed=true</code></li>
+</ul>
+<h3 id="step-7c-copy-output">Step 7c: Copy Output</h3>
+<pre><code>generated/bin/Release/net10.0/linux-x64/publish/app
+    |
+    v
+out/app
+</code></pre>
+<h2 id="error-handling">Error Handling</h2>
+<p>Each stage can produce diagnostics:</p>
+<pre><code class="language-typescript">if (!result.ok) {
+  for (const diagnostic of result.error.diagnostics) {
+    console.log(`${diagnostic.code}: ${diagnostic.message}`);
+  }
+}
+</code></pre>
+<p>Errors stop the pipeline; warnings continue.</p>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

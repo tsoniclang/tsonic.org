@@ -1,0 +1,1963 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Concepts | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Concepts</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Concepts</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/architecture/concepts.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="key-concepts">Key Concepts</h1>
+<p>This document explains the core concepts and patterns used in tsbindgen.</p>
+<h2 id="facade-pattern">Facade Pattern</h2>
+<h3 id="what-is-a-facade">What is a Facade?</h3>
+<p>Each namespace generates two TypeScript files:</p>
+<ul>
+<li><code>&lt;Namespace&gt;/internal/index.d.ts</code> - Full declarations with all details</li>
+<li><code>&lt;Namespace&gt;.d.ts</code> - Facade that re-exports with friendly aliases (flat ESM)</li>
+</ul>
+<h3 id="why-facades">Why Facades?</h3>
+<ol>
+<li><strong>Clean imports</strong>: Users import from <code>@tsonic/dotnet/System.js</code> not <code>@tsonic/dotnet/System/internal/index.js</code></li>
+<li><strong>Friendly aliases</strong>: <code>List&lt;T&gt;</code> instead of <code>List_1&lt;T&gt;</code></li>
+<li><strong>Encapsulation</strong>: Internal structure can change without breaking imports</li>
+</ol>
+<h3 id="directory-structure">Directory Structure</h3>
+<pre><code>output/
+  System.Collections.Generic/
+    internal/
+      index.d.ts            # Full declarations
+      metadata.json         # CLR semantics
+    bindings.json           # CLR↔TS name mappings
+  System.Collections.Generic.d.ts  # Facade (public API)
+  System.Collections.Generic.js   # Runtime stub (throws)
+</code></pre>
+<h3 id="internal-file-full-declarations">Internal File (Full Declarations)</h3>
+<p>The internal file contains complete type definitions:</p>
+<pre><code class="language-typescript">// System.Collections.Generic/internal/index.d.ts
+
+// Imports from other namespaces
+import type { int } from &quot;@tsonic/core/types.js&quot;;
+import * as System_Internal from &quot;../../System/internal/index.js&quot;;
+import type { IEnumerable_1 } from &quot;../../System.Collections.Generic/internal/index.js&quot;;
+
+// Instance interface (properties and methods)
+export interface List_1$instance&lt;T&gt; {
+    readonly count: int;
+    readonly capacity: int;
+    add(item: T): void;
+    clear(): void;
+    contains(item: T): boolean;
+    indexOf(item: T): int;
+    insert(index: int, item: T): void;
+    remove(item: T): boolean;
+    removeAt(index: int): void;
+}
+
+// Constructor/static declaration
+export declare const List_1: {
+    new &lt;T&gt;(): List_1&lt;T&gt;;
+    new &lt;T&gt;(capacity: int): List_1&lt;T&gt;;
+    new &lt;T&gt;(collection: IEnumerable_1&lt;T&gt;): List_1&lt;T&gt;;
+};
+
+// Views interface (explicit interface implementations)
+export interface __List_1$views&lt;T&gt; {
+    As_ICollection(): System_Internal.ICollection;
+    As_IEnumerable(): System_Internal.IEnumerable;
+    As_IList(): System_Internal.IList;
+}
+
+// Combined type alias
+export type List_1&lt;T&gt; = List_1$instance&lt;T&gt; &amp; __List_1$views&lt;T&gt;;
+</code></pre>
+<h3 id="facade-file-public-api">Facade File (Public API)</h3>
+<p>The facade provides curated exports with friendly aliases. <strong>No <code>export *</code></strong> is used to prevent leaking internal <code>$instance</code> and <code>$views</code> types to consumers.</p>
+<pre><code class="language-typescript">// System.Collections.Generic.d.ts
+
+// Import internal for type alias references
+import * as Internal from './System.Collections.Generic/internal/index.js';
+
+// Cross-namespace type imports for constraints
+import type { IComparable_1 } from './System/internal/index.js';
+
+// Public API exports (curated - no export *)
+// Value re-exports for classes (TypeScript re-exports both value AND type binding)
+export { List_1 as List } from './System.Collections.Generic/internal/index.js';
+export { Dictionary_2 as Dictionary } from './System.Collections.Generic/internal/index.js';
+export { HashSet_1 as HashSet } from './System.Collections.Generic/internal/index.js';
+export { Queue_1 as Queue } from './System.Collections.Generic/internal/index.js';
+export { Stack_1 as Stack } from './System.Collections.Generic/internal/index.js';
+
+// Type aliases for interfaces (with Internal.-prefixed constraints)
+export type IEnumerable&lt;T&gt; = Internal.IEnumerable_1&lt;T&gt;;
+export type IList&lt;T&gt; = Internal.IList_1&lt;T&gt;;
+export type ICollection&lt;T&gt; = Internal.ICollection_1&lt;T&gt;;
+</code></pre>
+<h3 id="value-vs-type-only-exports">Value vs Type-Only Exports</h3>
+<p>The facade uses different export strategies based on type kind:</p>
+<table>
+<thead>
+<tr>
+<th>Type Kind</th>
+<th>Export Strategy</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Class</td>
+<td>Value re-export</td>
+<td>Need <code>new List&lt;T&gt;()</code></td>
+</tr>
+<tr>
+<td>Struct</td>
+<td>Value re-export</td>
+<td>Need <code>new Point()</code></td>
+</tr>
+<tr>
+<td>Enum</td>
+<td>Value re-export</td>
+<td>Need <code>ConsoleColor.Red</code></td>
+</tr>
+<tr>
+<td>StaticNamespace</td>
+<td>Value re-export</td>
+<td>Need <code>Console.WriteLine()</code></td>
+</tr>
+<tr>
+<td>Interface</td>
+<td>Type alias</td>
+<td>No runtime value</td>
+</tr>
+<tr>
+<td>Delegate</td>
+<td>Type alias</td>
+<td>Function signature only</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-typescript">// Value re-export (for classes, structs, enums)
+export { List_1 } from './System.Collections.Generic/internal/index.js';
+
+// Type alias (for interfaces, delegates)
+export type IEnumerable&lt;T&gt; = Internal.IEnumerable_1&lt;T&gt;;
+</code></pre>
+<h3 id="import-paths">Import Paths</h3>
+<p>Facades simplify import paths for consumers:</p>
+<pre><code class="language-typescript">// ❌ Internal path (tsbindgen implementation detail)
+import { List_1 } from '@tsonic/dotnet/System.Collections.Generic/internal/index.js';
+
+// ✅ Facade (stable public surface)
+import { List } from '@tsonic/dotnet/System.Collections.Generic.js';
+</code></pre>
+<h2 id="dual-scope-naming">Dual-Scope Naming</h2>
+<h3 id="the-problem">The Problem</h3>
+<p>A class member and an interface member might have the same name after transformation:</p>
+<pre><code class="language-csharp">class MyClass : ICollection {
+    public void Clear() { }              // Class member
+    void ICollection.Clear() { }         // Explicit interface impl
+}
+</code></pre>
+<p>Both become <code>clear</code> in JavaScript naming mode. Without separate scopes, these would collide.</p>
+<h3 id="scope-types">Scope Types</h3>
+<p>The renaming system uses four scope types:</p>
+<table>
+<thead>
+<tr>
+<th>Scope Type</th>
+<th>Format</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Namespace</td>
+<td><code>ns:System.Collections:internal</code></td>
+<td>Type names in namespace</td>
+</tr>
+<tr>
+<td>Type (instance)</td>
+<td><code>type:System.Collections.Generic.List</code>1#instance`</td>
+<td>Instance members</td>
+</tr>
+<tr>
+<td>Type (static)</td>
+<td><code>type:System.Collections.Generic.List</code>1#static`</td>
+<td>Static members</td>
+</tr>
+<tr>
+<td>View</td>
+<td><code>view:{TypeStableId}:{InterfaceStableId}#instance</code></td>
+<td>Explicit interface members</td>
+</tr>
+</tbody>
+</table>
+<h3 id="real-example-list">Real Example: List<T></h3>
+<p><code>List&lt;T&gt;</code> implements multiple interfaces with overlapping member names:</p>
+<pre><code class="language-csharp">// C# - List&lt;T&gt; has both own and explicit interface members
+public class List&lt;T&gt; : IList&lt;T&gt;, ICollection, IEnumerable {
+    // Own member (visible on class)
+    public void Clear() { }
+
+    // Explicit ICollection.CopyTo (not visible on class)
+    void ICollection.CopyTo(Array array, int index) { }
+
+    // Explicit IEnumerable.GetEnumerator (different return type)
+    IEnumerator IEnumerable.GetEnumerator() { }
+}
+</code></pre>
+<p><strong>Scope assignments:</strong></p>
+<pre><code>Scope: type:System.Collections.Generic.List`1#instance
+  - clear           (own method)
+  - add             (own method)
+  - getEnumerator   (returns IEnumerator&lt;T&gt;)
+
+Scope: view:..List`1:System.Collections.ICollection#instance
+  - copyTo          (explicit ICollection.CopyTo)
+
+Scope: view:..List`1:System.Collections.IEnumerable#instance
+  - getEnumerator   (explicit - different return type)
+</code></pre>
+<h3 id="typescript-output">TypeScript Output</h3>
+<pre><code class="language-typescript">// Class surface - own members
+export interface List_1$instance&lt;T&gt; {
+    clear(): void;
+    add(item: T): void;
+    getEnumerator(): IEnumerator_1&lt;T&gt;;  // Generic version
+}
+
+// View surface - explicit interface members
+export interface __List_1$views&lt;T&gt; {
+    As_ICollection(): ICollection;      // Access copyTo via view
+    As_IEnumerable(): IEnumerable;      // Access non-generic GetEnumerator
+}
+</code></pre>
+<h3 id="why-staticinstance-separation">Why Static/Instance Separation?</h3>
+<p>Static and instance members can have the same name in C#:</p>
+<pre><code class="language-csharp">class MyClass {
+    public static void Create() { }     // Static
+    public void Create() { }            // Instance (different signature)
+}
+</code></pre>
+<p>Separate scopes prevent false collisions:</p>
+<pre><code>Scope: type:MyClass#static
+  - create (static method)
+
+Scope: type:MyClass#instance
+  - create (instance method)
+</code></pre>
+<h3 id="scope-key-format">Scope Key Format</h3>
+<p>Scope keys are strings that uniquely identify each scope:</p>
+<pre><code>Namespace:  ns:{namespace}:{internal|public}
+Type:       type:{ClrFullName}#{instance|static}
+View:       view:{TypeStableId}:{InterfaceStableId}#{instance|static}
+</code></pre>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><code>ns:System.Collections.Generic:internal</code></li>
+<li><code>type:System.Collections.Generic.List</code>1#instance`</li>
+<li><code>view:System.Private.CoreLib:System.Collections.Generic.List</code>1:System.Collections.ICollection#instance`</li>
+</ul>
+<h2 id="views-and-explicit-interface-implementation">Views and Explicit Interface Implementation</h2>
+<h3 id="what-is-a-view">What is a View?</h3>
+<p>A view provides access to interface members that don't appear on the class surface. Views are generated by the <code>ViewPlanner</code> shape pass.</p>
+<h3 id="why-views-are-needed">Why Views Are Needed</h3>
+<p>C# has two ways to implement interface members:</p>
+<p><strong>1. Implicit implementation</strong> - visible on class:</p>
+<pre><code class="language-csharp">class MyList : ICollection {
+    public void Clear() { }  // Visible as myList.Clear()
+}
+</code></pre>
+<p><strong>2. Explicit implementation</strong> - only visible via interface:</p>
+<pre><code class="language-csharp">class MyList : ICollection {
+    void ICollection.CopyTo(Array array, int index) { }  // Hidden
+}
+
+// C# usage:
+var list = new MyList();
+list.CopyTo(...);              // Error! Not visible
+((ICollection)list).CopyTo(...);  // OK - cast to interface
+</code></pre>
+<h3 id="real-example-array">Real Example: Array</h3>
+<p><code>System.Array</code> implements multiple interfaces with conflicting members:</p>
+<pre><code class="language-csharp">public abstract class Array : IList, ICollection, IEnumerable, ICloneable {
+    // Explicit implementations (different Count types)
+    int ICollection.Count =&gt; Length;
+    int IList.Count =&gt; Length;
+
+    // Explicit (return type conflicts)
+    IEnumerator IEnumerable.GetEnumerator() { ... }
+
+    // Own property
+    public int Length { get; }
+}
+</code></pre>
+<h3 id="typescript-solution">TypeScript Solution</h3>
+<p>ViewPlanner creates <code>__$views</code> interface with <code>As_</code> accessor properties:</p>
+<pre><code class="language-typescript">// Array's own members
+export interface Array_$instance {
+    readonly length: int;
+    getEnumerator(): IEnumerator;
+}
+
+// Static members
+export declare const Array_: {
+    new (length: int): Array_;
+    readonly empty: Array_;
+    createInstance(elementType: Type, length: int): Array_;
+};
+
+// View accessors for explicit implementations
+export interface __Array_$views {
+    As_IList(): IList;
+    As_ICollection(): ICollection;
+    As_IEnumerable(): IEnumerable;
+    As_ICloneable(): ICloneable;
+}
+
+// Combined type
+export type Array_ = Array_$instance &amp; __Array_$views;
+</code></pre>
+<h3 id="usage-in-typescript">Usage in TypeScript</h3>
+<pre><code class="language-typescript">const arr: Array_ = Array_.createInstance(typeof(int), 10);
+
+// Own member - direct access
+console.log(arr.length);
+
+// Explicit interface member - access via view
+const collection = arr.As_ICollection();
+console.log(collection.count);
+
+// Different GetEnumerator via view
+const enumerator = arr.As_IEnumerable().getEnumerator();
+</code></pre>
+<h3 id="when-views-are-created">When Views Are Created</h3>
+<p>ViewPlanner creates a view when:</p>
+<ol>
+<li><strong>Explicit interface implementation</strong> - member uses <code>void IFoo.Method()</code> syntax</li>
+<li><strong>Signature conflict</strong> - interface member differs from class member (different return type, parameters)</li>
+<li><strong>Non-structural match</strong> - after naming transform, signatures don't match</li>
+</ol>
+<h3 id="view-structure">View Structure</h3>
+<p>Each <code>ExplicitView</code> contains:</p>
+<pre><code class="language-csharp">public sealed record ExplicitView(
+    TypeReference InterfaceReference,       // The interface being viewed
+    string ViewPropertyName,                // &quot;As_ICollection&quot;
+    ImmutableArray&lt;MemberStableId&gt; ViewMembers  // Members in this view
+);
+</code></pre>
+<h3 id="naming-convention">Naming Convention</h3>
+<p>View property names follow the pattern <code>As_{InterfaceName}</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>View Property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ICollection</code></td>
+<td><code>As_ICollection</code></td>
+</tr>
+<tr>
+<td><code>IList&lt;T&gt;</code></td>
+<td><code>As_IList_1</code></td>
+</tr>
+<tr>
+<td><code>IEnumerable&lt;T&gt;</code></td>
+<td><code>As_IEnumerable_1</code></td>
+</tr>
+<tr>
+<td><code>IDisposable</code></td>
+<td><code>As_IDisposable</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="emitscope">EmitScope</h2>
+<h3 id="what-is-emitscope">What is EmitScope?</h3>
+<p>EmitScope is an enum that determines where a member appears in TypeScript output. Every member is assigned an EmitScope during Shape passes.</p>
+<pre><code class="language-csharp">public enum EmitScope
+{
+    Unspecified,    // Not yet decided (invalid after Shape)
+    ClassSurface,   // On $instance interface
+    StaticSurface,  // On static const declaration
+    ViewOnly,       // Only in __$views interface
+    Omitted         // Not emitted (tracked in metadata)
+}
+</code></pre>
+<h3 id="emitscope-to-output-mapping">EmitScope to Output Mapping</h3>
+<table>
+<thead>
+<tr>
+<th>EmitScope</th>
+<th>Output Location</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ClassSurface</td>
+<td><code>$instance</code> interface</td>
+<td><code>list.add(item)</code></td>
+</tr>
+<tr>
+<td>StaticSurface</td>
+<td><code>const</code> declaration</td>
+<td><code>List_1.empty</code></td>
+</tr>
+<tr>
+<td>ViewOnly</td>
+<td><code>__$views</code> interface</td>
+<td><code>list.As_ICollection()</code></td>
+</tr>
+<tr>
+<td>Omitted</td>
+<td>Only in metadata.json</td>
+<td>Indexers, generic statics</td>
+</tr>
+</tbody>
+</table>
+<h3 id="real-example-list-1">Real Example: List<T></h3>
+<pre><code class="language-csharp">public class List&lt;T&gt; : IList&lt;T&gt;, ICollection {
+    // Instance members
+    public void Add(T item) { }           // ClassSurface
+    public void Clear() { }               // ClassSurface
+    public int Count { get; }             // ClassSurface
+
+    // Static members
+    public static List&lt;T&gt; Empty { get; }  // StaticSurface (error: generic static)
+
+    // Explicit interface implementations
+    void ICollection.CopyTo(Array a, int i) { }  // ViewOnly
+
+    // Indexer
+    public T this[int index] { get; set; }  // Omitted (conflicts)
+}
+</code></pre>
+<p><strong>TypeScript output:</strong></p>
+<pre><code class="language-typescript">// ClassSurface -&gt; $instance interface
+export interface List_1$instance&lt;T&gt; {
+    add(item: T): void;     // EmitScope.ClassSurface
+    clear(): void;          // EmitScope.ClassSurface
+    readonly count: int;    // EmitScope.ClassSurface
+}
+
+// StaticSurface -&gt; const declaration
+export declare const List_1: {
+    new &lt;T&gt;(): List_1&lt;T&gt;;
+    // Note: static Empty&lt;T&gt; is Omitted (generic static not supported in TS)
+};
+
+// ViewOnly -&gt; __$views interface
+export interface __List_1$views&lt;T&gt; {
+    As_ICollection(): ICollection;  // Access CopyTo via view
+}
+</code></pre>
+<h3 id="how-emitscope-is-assigned">How EmitScope is Assigned</h3>
+<p>Different Shape passes assign EmitScope:</p>
+<table>
+<thead>
+<tr>
+<th>Pass</th>
+<th>Assigns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Initial load</td>
+<td>Instance -&gt; ClassSurface, Static -&gt; StaticSurface</td>
+</tr>
+<tr>
+<td>StructuralConformance</td>
+<td>Explicit impls -&gt; ViewOnly</td>
+</tr>
+<tr>
+<td>ExplicitImplSynthesizer</td>
+<td>Synthesized members -&gt; ViewOnly</td>
+</tr>
+<tr>
+<td>IndexerPlanner</td>
+<td>Conflicting indexers -&gt; Omitted</td>
+</tr>
+<tr>
+<td>ClassSurfaceDeduplicator</td>
+<td>Duplicate losers -&gt; Omitted</td>
+</tr>
+<tr>
+<td>OverloadUnifier</td>
+<td>Duplicate overloads -&gt; Omitted</td>
+</tr>
+<tr>
+<td>EnumeratorConformancePass</td>
+<td>Reset() promoted -&gt; ClassSurface</td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-members-are-omitted">Why Members Are Omitted</h3>
+<p>Members are marked <code>Omitted</code> when they can't be safely emitted:</p>
+<table>
+<thead>
+<tr>
+<th>Reason</th>
+<th>Example</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Generic static</td>
+<td><code>static T Default&lt;T&gt;</code></td>
+<td>TypeScript doesn't support class-level generics for statics</td>
+</tr>
+<tr>
+<td>Indexer conflict</td>
+<td><code>this[int]</code> and <code>this[string]</code></td>
+<td>Creates duplicate <code>[key: T]</code> signatures</td>
+</tr>
+<tr>
+<td>Duplicate signature</td>
+<td>Method overloads with same erased signature</td>
+<td>Would cause TS duplicate identifier error</td>
+</tr>
+<tr>
+<td>Pointer parameter</td>
+<td><code>void Process(int* ptr)</code></td>
+<td>Requires unsafe context</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Omitted members are tracked in metadata.json:</strong></p>
+<pre><code class="language-json">{
+  &quot;types&quot;: {
+    &quot;List_1&quot;: {
+      &quot;intentionalOmissions&quot;: {
+        &quot;indexers&quot;: [
+          {&quot;signature&quot;: &quot;Item[int]&quot;, &quot;reason&quot;: &quot;indexer_conflict&quot;}
+        ],
+        &quot;genericStatics&quot;: [
+          {&quot;member&quot;: &quot;Empty&quot;, &quot;reason&quot;: &quot;generic_static_not_supported&quot;}
+        ]
+      }
+    }
+  }
+}
+</code></pre>
+<h3 id="emitscope-validation">EmitScope Validation</h3>
+<p>Phase Gate validates EmitScope invariants:</p>
+<ul>
+<li>TBG710: Every member must have EmitScope set (not Unspecified)</li>
+<li>TBG711: ViewOnly members must be in exactly one ExplicitView</li>
+<li>TBG702: No member can be both ClassSurface and ViewOnly</li>
+</ul>
+<h2 id="stableid">StableId</h2>
+<h3 id="what-is-stableid">What is StableId?</h3>
+<p>A unique identifier for a type or member that survives all transformations. StableId is the CLR identity - it never changes regardless of naming mode or shape transformations.</p>
+<h3 id="why-stableid-is-needed">Why StableId Is Needed</h3>
+<p>During pipeline execution, symbols get renamed and transformed:</p>
+<pre><code>CLR name:           System.Collections.Generic.List`1.Add
+After CLR naming:   List_1.Add
+After JS naming:    List_1.add
+Emitted as:         List_1$instance.add
+
+StableId stays constant: &quot;System.Private.CoreLib:System.Collections.Generic.List`1::Add(T):void&quot;
+</code></pre>
+<p>StableId is used as dictionary keys for:</p>
+<ul>
+<li>Rename decisions (mapping CLR -&gt; TypeScript names)</li>
+<li>Bindings (mapping TypeScript -&gt; CLR for runtime)</li>
+<li>Member tracking across Shape passes</li>
+</ul>
+<h3 id="typestableid">TypeStableId</h3>
+<p>For types, StableId combines assembly and CLR full name:</p>
+<pre><code class="language-csharp">public sealed record TypeStableId : StableId
+{
+    public required string AssemblyName { get; init; }     // &quot;System.Private.CoreLib&quot;
+    public required string ClrFullName { get; init; }      // &quot;System.Collections.Generic.List`1&quot;
+
+    // Format: &quot;AssemblyName:ClrFullName&quot;
+    public override string ToString() =&gt; $&quot;{AssemblyName}:{ClrFullName}&quot;;
+}
+</code></pre>
+<p><strong>Real examples:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>TypeStableId</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>List&lt;T&gt;</code></td>
+<td><code>System.Private.CoreLib:System.Collections.Generic.List</code>1`</td>
+</tr>
+<tr>
+<td><code>Dictionary&lt;K,V&gt;</code></td>
+<td><code>System.Private.CoreLib:System.Collections.Generic.Dictionary</code>2`</td>
+</tr>
+<tr>
+<td><code>Console</code></td>
+<td><code>System.Console:System.Console</code></td>
+</tr>
+<tr>
+<td><code>Enumerable</code></td>
+<td><code>System.Linq:System.Linq.Enumerable</code></td>
+</tr>
+<tr>
+<td><code>String</code></td>
+<td><code>System.Private.CoreLib:System.String</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="memberstableid">MemberStableId</h3>
+<p>For members, StableId includes declaring type, name, and signature:</p>
+<pre><code class="language-csharp">public sealed record MemberStableId : StableId
+{
+    public required string DeclaringClrFullName { get; init; }  // &quot;System.Collections.Generic.List`1&quot;
+    public required string MemberName { get; init; }             // &quot;Add&quot;
+    public required string CanonicalSignature { get; init; }     // &quot;(T):void&quot;
+    public int? MetadataToken { get; init; }                     // 100663296 (optional)
+
+    // Format: &quot;AssemblyName:DeclaringType::MemberSignature&quot;
+}
+</code></pre>
+<p><strong>Real examples:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>MemberStableId</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>List&lt;T&gt;.Add(T)</code></td>
+<td><code>...List</code>1::Add(T):void`</td>
+</tr>
+<tr>
+<td><code>List&lt;T&gt;.Count</code></td>
+<td><code>...List</code>1::Count|int`</td>
+</tr>
+<tr>
+<td><code>List&lt;T&gt;.Clear()</code></td>
+<td><code>...List</code>1::Clear():void`</td>
+</tr>
+<tr>
+<td><code>String.IsNullOrEmpty(string)</code></td>
+<td><code>...String::IsNullOrEmpty(string):bool</code></td>
+</tr>
+<tr>
+<td><code>Console.WriteLine(string)</code></td>
+<td><code>...Console::WriteLine(string):void</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="canonical-signature-format">Canonical Signature Format</h3>
+<p>The signature format disambiguates overloads:</p>
+<table>
+<thead>
+<tr>
+<th>Member Kind</th>
+<th>Signature Format</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Method</td>
+<td><code>(params):return</code></td>
+<td><code>(int,string):void</code></td>
+</tr>
+<tr>
+<td>Property</td>
+<td><code>\|type</code></td>
+<td><code>\|int</code></td>
+</tr>
+<tr>
+<td>Indexer</td>
+<td><code>(params)\|type</code></td>
+<td><code>(int)\|T</code></td>
+</tr>
+<tr>
+<td>Field</td>
+<td><code>\|type</code></td>
+<td><code>\|int</code></td>
+</tr>
+<tr>
+<td>Event</td>
+<td><code>\|type</code></td>
+<td><code>\|EventHandler</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="metadatatoken">MetadataToken</h3>
+<p>The optional <code>MetadataToken</code> is the CLR reflection token. It's used for exact runtime correlation but excluded from equality comparison (semantic identity only).</p>
+<pre><code class="language-csharp">// Two MemberStableIds are equal if CLR identity matches
+// even if MetadataTokens differ (e.g., from different assembly versions)
+id1 == id2  // true if name+signature match, ignores token
+</code></pre>
+<h3 id="stableid-in-bindings">StableId in Bindings</h3>
+<p>The bindings.json file maps TypeScript names back to StableId:</p>
+<pre><code class="language-json">{
+  &quot;types&quot;: [{
+    &quot;stableId&quot;: &quot;System.Private.CoreLib:System.Collections.Generic.List`1&quot;,
+    &quot;clrName&quot;: &quot;System.Collections.Generic.List`1&quot;,
+    &quot;tsEmitName&quot;: &quot;List_1&quot;,
+    &quot;methods&quot;: [{
+      &quot;stableId&quot;: &quot;...List`1::Add(T):void&quot;,
+      &quot;clrName&quot;: &quot;Add&quot;,
+      &quot;tsEmitName&quot;: &quot;add&quot;,
+      &quot;metadataToken&quot;: 100663296
+    }]
+  }]
+}
+</code></pre>
+<h2 id="type-emission-pattern">Type Emission Pattern</h2>
+<h3 id="the-three-part-pattern">The Three-Part Pattern</h3>
+<p>Classes and structs emit as three parts in the internal index:</p>
+<pre><code class="language-typescript">// internal/index.d.ts
+
+// 1. Instance interface - instance properties and methods
+export interface List_1$instance&lt;T&gt; {
+    readonly count: int;
+    add(item: T): void;
+    remove(item: T): boolean;
+    clear(): void;
+}
+
+// 2. Static/constructor const - constructors and static members
+export const List_1: {
+    new &lt;T&gt;(): List_1&lt;T&gt;;
+    new &lt;T&gt;(capacity: int): List_1&lt;T&gt;;
+    new &lt;T&gt;(collection: IEnumerable_1&lt;T&gt;): List_1&lt;T&gt;;
+};
+
+// 3. Combined type alias - unifies instance + views
+export type List_1&lt;T&gt; = List_1$instance&lt;T&gt; &amp; __List_1$views&lt;T&gt;;
+</code></pre>
+<h3 id="implementation-in-classprinter">Implementation in ClassPrinter</h3>
+<p>The ClassPrinter has separate methods for each part:</p>
+<pre><code class="language-csharp">// From ClassPrinter.cs
+public static class ClassPrinter
+{
+    // Emits: interface T$instance { ... }
+    public static string PrintInstance(TypeSymbol type, ...) { ... }
+
+    // Emits: const T: { new(...): T; statics... };
+    public static string PrintValueExport(TypeSymbol type, ...) { ... }
+}
+
+// From InternalIndexEmitter.cs - type alias
+private static string EmitIntersectionTypeAlias(TypeSymbol type, ...)
+{
+    // Emits: export type T&lt;...&gt; = T$instance&lt;...&gt; &amp; __T$views&lt;...&gt;;
+    var rhsExpression = $&quot;{finalName}$instance{typeArgs} &amp; __{finalName}$views{typeArgs}&quot;;
+    sb.Append($&quot;export type {finalName}{typeParams} = {rhsExpression};&quot;);
+}
+</code></pre>
+<h3 id="why-this-pattern">Why This Pattern?</h3>
+<p><strong>1. Static-side inheritance fix (TS2417)</strong></p>
+<p>TypeScript checks <code>typeof Derived extends typeof Base</code> for class inheritance. But .NET static methods aren't polymorphic—derived types can have different overloads. Using <code>interface</code> + <code>const</code> avoids this:</p>
+<pre><code class="language-typescript">// ❌ class syntax - TS2417 when static signatures differ
+export class List_1&lt;T&gt; extends Object { ... }
+
+// ✅ interface + const - no static-side inheritance checking
+export interface List_1$instance&lt;T&gt; extends Object$instance { ... }
+export const List_1: { new&lt;T&gt;(): List_1&lt;T&gt;; };  // Returns full type, not $instance
+</code></pre>
+<p><strong>2. Separation of concerns</strong></p>
+<ul>
+<li>Instance interface: Type-only declaration (properties, methods)</li>
+<li>Const: Runtime value (constructors, static members)</li>
+<li>Type alias: Public API that combines everything</li>
+</ul>
+<p><strong>3. View composition</strong></p>
+<p>The type alias combines instance members with view accessors:</p>
+<pre><code class="language-typescript">// What users see:
+export type List_1&lt;T&gt; = List_1$instance&lt;T&gt; &amp; __List_1$views&lt;T&gt;;
+
+// Expands to all members:
+// - count, add(), remove(), clear() from $instance
+// - As_ICollection(), As_IEnumerable() from $views
+</code></pre>
+<h3 id="real-example-stringbuilder">Real Example: StringBuilder</h3>
+<pre><code class="language-typescript">// 1. Instance interface
+export interface StringBuilder$instance {
+    readonly length: int;
+    readonly capacity: int;
+    append(value: string): StringBuilder;
+    append(value: char): StringBuilder;
+    appendLine(): StringBuilder;
+    appendLine(value: string): StringBuilder;
+    clear(): StringBuilder;
+    toString(): string;
+}
+
+// 2. Static/constructor const
+export const StringBuilder: {
+    new (): StringBuilder;
+    new (capacity: int): StringBuilder;
+    new (value: string): StringBuilder;
+    new (value: string, capacity: int): StringBuilder;
+};
+
+// 3. Type alias (no views for StringBuilder)
+export type StringBuilder = StringBuilder$instance &amp; __StringBuilder$views;
+</code></pre>
+<h3 id="type-specific-variations">Type-Specific Variations</h3>
+<table>
+<thead>
+<tr>
+<th>TypeKind</th>
+<th>Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Class/Struct</td>
+<td><code>interface $instance</code> + <code>const</code> + <code>type alias</code></td>
+</tr>
+<tr>
+<td>Interface</td>
+<td><code>interface $instance</code> only (no const, no alias)</td>
+</tr>
+<tr>
+<td>Enum</td>
+<td><code>const enum</code> (single declaration)</td>
+</tr>
+<tr>
+<td>Delegate</td>
+<td>Callable + <code>interface $instance</code> + <code>type alias</code></td>
+</tr>
+<tr>
+<td>Static class</td>
+<td><code>abstract class</code> (special case)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="universal-instance-naming">Universal $instance Naming</h3>
+<p>All classes/structs use the <code>$instance</code> suffix—even those without views:</p>
+<pre><code class="language-csharp">// From SymbolRenamer.cs
+public static string GetInstanceTypeName(TypeSymbol type)
+{
+    var stem = GetFinalTypeName(type);
+
+    // Enums: both type and value - no split
+    if (type.Kind == TypeKind.Enum) return stem;
+
+    // Delegates: function types - no split
+    if (type.Kind == TypeKind.Delegate) return stem;
+
+    // All other types get $instance suffix
+    return stem + &quot;$instance&quot;;
+}
+</code></pre>
+<p>This enables Phase Gate validation (TBG8A1) to verify consistent naming across the entire codebase.</p>
+<h2 id="delegate-callable-pattern">Delegate Callable Pattern</h2>
+<h3 id="the-problem-1">The Problem</h3>
+<p>C# delegates are callable types with both function signature and object properties:</p>
+<pre><code class="language-csharp">Action&lt;int&gt; callback = (x) =&gt; Console.WriteLine(x);
+callback(42);                    // Invoke delegate (callable)
+Console.WriteLine(callback.Target);   // Access Target property (object)
+Console.WriteLine(callback.Method);   // Access Method property (object)
+</code></pre>
+<p>TypeScript needs to support both calling the delegate AND accessing its properties.</p>
+<h3 id="typescript-solution-1">TypeScript Solution</h3>
+<p>Delegates emit as two parts:</p>
+<p><strong>1. Simple type alias (in internal/index.d.ts):</strong></p>
+<pre><code class="language-typescript">// From ClassPrinter.PrintDelegate()
+type Action_1&lt;T&gt; = (obj: T) =&gt; void;
+type Func_2&lt;T, TResult&gt; = (arg: T) =&gt; TResult;
+type Predicate_1&lt;T&gt; = (obj: T) =&gt; boolean;
+</code></pre>
+<p><strong>2. Intersection type alias (for composition):</strong></p>
+<pre><code class="language-typescript">// From EmitIntersectionTypeAlias() - when views exist
+export type Func_2&lt;T, TResult&gt; =
+    ((arg: T) =&gt; TResult) &amp;          // Callable signature (from Invoke)
+    Func_2$instance&lt;T, TResult&gt; &amp;    // Instance members (Target, Method)
+    __Func_2$views&lt;T, TResult&gt;;      // View accessors
+</code></pre>
+<h3 id="implementation">Implementation</h3>
+<p>The callable signature comes from the delegate's <code>Invoke</code> method:</p>
+<pre><code class="language-csharp">// From InternalIndexEmitter.BuildDelegateCallSignature()
+private static string BuildDelegateCallSignature(TypeSymbol type, ...)
+{
+    // Find the Invoke method - this defines the delegate's signature
+    var invokeMethod = type.Members.Methods
+        .FirstOrDefault(m =&gt; m.ClrName == &quot;Invoke&quot;);
+
+    if (invokeMethod == null)
+        return &quot;&quot;; // Fallback: no call signature
+
+    // Build parameter list: (arg1: T, arg2: U, ...)
+    var parameters = string.Join(&quot;, &quot;, invokeMethod.Parameters.Select(p =&gt;
+        $&quot;{p.Name}: {TypeRefPrinter.Print(p.Type, ...)}&quot;));
+
+    // Build return type
+    var returnType = TypeRefPrinter.Print(invokeMethod.ReturnType, ...);
+
+    // Return call signature: ((params) =&gt; returnType)
+    return $&quot;(({parameters}) =&gt; {returnType})&quot;;
+}
+</code></pre>
+<h3 id="real-examples">Real Examples</h3>
+<p><strong>Action (void return):</strong></p>
+<pre><code class="language-typescript">// System.Action&lt;T&gt;
+type Action_1&lt;T&gt; = (obj: T) =&gt; void;
+
+// Usage - arrow function assignable
+const log: Action_1&lt;string&gt; = (s) =&gt; console.log(s);
+log(&quot;hello&quot;);
+</code></pre>
+<p><strong>Func (with return):</strong></p>
+<pre><code class="language-typescript">// System.Func&lt;T, TResult&gt;
+type Func_2&lt;T, TResult&gt; = (arg: T) =&gt; TResult;
+
+// Usage - arrow function assignable
+const double: Func_2&lt;int, int&gt; = (x) =&gt; x * 2;
+const result = double(21);  // 42
+</code></pre>
+<p><strong>Predicate (boolean return):</strong></p>
+<pre><code class="language-typescript">// System.Predicate&lt;T&gt;
+type Predicate_1&lt;T&gt; = (obj: T) =&gt; boolean;
+
+// Usage - in LINQ methods
+list.where((x) =&gt; x &gt; 0);  // Arrow function works
+</code></pre>
+<p><strong>EventHandler:</strong></p>
+<pre><code class="language-typescript">// System.EventHandler&lt;TEventArgs&gt;
+type EventHandler_1&lt;TEventArgs&gt; = (sender: Object, e: TEventArgs) =&gt; void;
+
+// Usage
+const handler: EventHandler_1&lt;ClickEventArgs&gt; = (sender, e) =&gt; {
+    console.log(`Clicked at ${e.x}, ${e.y}`);
+};
+</code></pre>
+<h3 id="why-the-intersection-pattern">Why the Intersection Pattern?</h3>
+<p>The intersection allows both calling AND property access:</p>
+<pre><code class="language-typescript">// Full delegate type with properties
+export type Func_2&lt;T, TResult&gt; =
+    ((arg: T) =&gt; TResult) &amp;          // Can call: func(42)
+    Func_2$instance&lt;T, TResult&gt; &amp;    // Can access: func.target, func.method
+    __Func_2$views&lt;T, TResult&gt;;      // Can view: func.As_ICloneable()
+
+const func: Func_2&lt;int, string&gt; = (x) =&gt; x.toString();
+
+// Both work:
+func(42);                            // Callable
+console.log(func.method?.name);      // Property access
+</code></pre>
+<h3 id="delegate-vs-regular-types">Delegate vs Regular Types</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Delegate</th>
+<th>Class/Struct</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primary alias</td>
+<td><code>type T = (params) =&gt; R</code></td>
+<td><code>type T = T$instance &amp; __T$views</code></td>
+</tr>
+<tr>
+<td>Callable</td>
+<td>Yes (from <code>Invoke</code>)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>$instance suffix</td>
+<td>Not used</td>
+<td>Used</td>
+</tr>
+<tr>
+<td>Instance interface</td>
+<td><code>T$instance</code> for properties</td>
+<td><code>T$instance</code> for all members</td>
+</tr>
+</tbody>
+</table>
+<h2 id="property-covariance">Property Covariance</h2>
+<h3 id="the-problem-2">The Problem</h3>
+<p>C# allows covariant property overrides—a derived class can return a more specific type:</p>
+<pre><code class="language-csharp">class RequestCachePolicy {
+    public virtual RequestCacheLevel Level { get; }  // Base type
+}
+
+class HttpRequestCachePolicy : RequestCachePolicy {
+    public override HttpRequestCacheLevel Level { get; }  // More specific type
+}
+</code></pre>
+<p>TypeScript doesn't support property overloading. This causes TS2416:</p>
+<pre><code class="language-typescript">// ❌ TypeScript error TS2416
+interface HttpRequestCachePolicy$instance extends RequestCachePolicy$instance {
+    readonly level: HttpRequestCacheLevel;  // Incompatible with base's RequestCacheLevel
+}
+</code></pre>
+<h3 id="the-solution-propertyoverrideunifier">The Solution: PropertyOverrideUnifier</h3>
+<p>The <code>PropertyOverrideUnifier</code> shape pass analyzes inheritance chains and unifies conflicting property types:</p>
+<pre><code class="language-typescript">// ✅ Both classes use union type
+interface RequestCachePolicy$instance {
+    readonly level: RequestCacheLevel | HttpRequestCacheLevel;
+}
+
+interface HttpRequestCachePolicy$instance extends RequestCachePolicy$instance {
+    readonly level: RequestCacheLevel | HttpRequestCacheLevel;  // Same union
+}
+</code></pre>
+<h3 id="implementation-1">Implementation</h3>
+<pre><code class="language-csharp">// From PropertyOverrideUnifier.cs
+public static class PropertyOverrideUnifier
+{
+    public static PropertyOverridePlan Build(SymbolGraph graph, BuildContext ctx)
+    {
+        var plan = new PropertyOverridePlan();
+
+        // Process all types that have a base class
+        var typesWithBase = graph.TypeIndex.Values
+            .Where(t =&gt; t.BaseType != null);
+
+        foreach (var type in typesWithBase)
+        {
+            UnifyPropertiesInHierarchy(type, graph, ctx, plan);
+        }
+
+        return plan;
+    }
+}
+
+// From PropertyOverridePlan.cs
+public sealed class PropertyOverridePlan
+{
+    // Maps (type stable ID, property stable ID) → unified TypeScript type string
+    public Dictionary&lt;(string TypeStableId, string PropertyStableId), string&gt;
+        PropertyTypeOverrides { get; init; } = new();
+}
+</code></pre>
+<h3 id="real-example-cache-policy">Real Example: Cache Policy</h3>
+<pre><code class="language-csharp">// C# BCL hierarchy
+public class RequestCachePolicy {
+    public virtual RequestCacheLevel Level { get; }
+}
+
+public class HttpRequestCachePolicy : RequestCachePolicy {
+    public override HttpRequestCacheLevel Level { get; }  // Covariant
+}
+</code></pre>
+<p><strong>Generated TypeScript:</strong></p>
+<pre><code class="language-typescript">// System.Net.Cache/internal/index.d.ts
+
+// Base class - unified type
+export interface RequestCachePolicy$instance {
+    readonly level: RequestCacheLevel | HttpRequestCacheLevel;
+}
+
+// Derived class - same unified type
+export interface HttpRequestCachePolicy$instance extends RequestCachePolicy$instance {
+    readonly level: RequestCacheLevel | HttpRequestCacheLevel;
+}
+</code></pre>
+<h3 id="diagnostic-codes">Diagnostic Codes</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TBG300</td>
+<td>Property covariance detected (INFO)</td>
+</tr>
+<tr>
+<td>TBG310</td>
+<td>Covariance summary in Phase Gate (INFO)</td>
+</tr>
+<tr>
+<td>TBG903</td>
+<td>PropertyOverridePlan validity error (ERROR)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="impact-in-bcl">Impact in BCL</h3>
+<p>The BCL has ~12 property covariance cases:</p>
+<table>
+<thead>
+<tr>
+<th>Base Type</th>
+<th>Derived Type</th>
+<th>Property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RequestCachePolicy</code></td>
+<td><code>HttpRequestCachePolicy</code></td>
+<td><code>Level</code></td>
+</tr>
+<tr>
+<td><code>WebRequest</code></td>
+<td><code>HttpWebRequest</code></td>
+<td><code>CachePolicy</code></td>
+</tr>
+<tr>
+<td><code>WebResponse</code></td>
+<td><code>HttpWebResponse</code></td>
+<td><code>Headers</code></td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody>
+</table>
+<p>All are handled automatically by PropertyOverrideUnifier—no manual intervention needed.</p>
+<h3 id="why-union-types">Why Union Types?</h3>
+<p>The union approach is safe:</p>
+<ol>
+<li><strong>Reading</strong>: Code expecting <code>Base.property</code> still works (union contains base type)</li>
+<li><strong>Type narrowing</strong>: TypeScript can narrow to specific type when needed</li>
+<li><strong>Runtime</strong>: Actual property value is always the most derived type</li>
+</ol>
+<pre><code class="language-typescript">const policy: RequestCachePolicy = getPolicy();
+
+// Property type is RequestCacheLevel | HttpRequestCacheLevel
+const level = policy.level;
+
+// Can narrow with type guards
+if (policy instanceof HttpRequestCachePolicy) {
+    // TypeScript knows: level is HttpRequestCacheLevel
+}
+</code></pre>
+<h2 id="extension-methods">Extension Methods</h2>
+<h3 id="the-problem-3">The Problem</h3>
+<p>C# extension methods appear as instance methods on the target type:</p>
+<pre><code class="language-csharp">// Definition in static class
+public static class Enumerable {
+    public static IEnumerable&lt;T&gt; Where&lt;T&gt;(this IEnumerable&lt;T&gt; source, Func&lt;T, bool&gt; predicate) { }
+    public static IEnumerable&lt;TResult&gt; Select&lt;T, TResult&gt;(this IEnumerable&lt;T&gt; source, Func&lt;T, TResult&gt; selector) { }
+}
+
+// Usage - looks like instance method
+var filtered = list.Where(x =&gt; x &gt; 0).Select(x =&gt; x * 2);
+</code></pre>
+<p>TypeScript doesn't have extension methods. We need a pattern that:</p>
+<ol>
+<li>Makes extension methods callable as instance methods</li>
+<li>Groups methods by target type</li>
+<li>Handles generic type parameters</li>
+</ol>
+<h3 id="typescript-solution-bucket-types--extensionmethods-wrapper">TypeScript Solution: Bucket Types + ExtensionMethods Wrapper</h3>
+<p>Extension methods are emitted into <code>__internal/extensions/index.d.ts</code> in two layers:</p>
+<ol>
+<li><strong>Bucket interfaces</strong> keyed by target type (per declaring namespace)</li>
+<li>A <strong>wrapper type</strong> (<code>ExtensionMethods_&lt;Namespace&gt;</code>) that intersects a receiver shape with the applicable buckets (C# “using” semantics).</li>
+</ol>
+<pre><code class="language-typescript">// __internal/extensions/index.d.ts (excerpt)
+
+// Bucket for IEnumerable&lt;T&gt; extension methods in System.Linq
+export interface __Ext_System_Linq_IEnumerable_1&lt;T&gt; {
+  where(
+    predicate: System.Func_2&lt;T, boolean&gt;
+  ): ExtensionMethods_System_Linq&lt;System_Collections_Generic.IEnumerable_1&lt;T&gt;&gt;;
+  select&lt;TResult&gt;(
+    selector: System.Func_2&lt;T, TResult&gt;
+  ): ExtensionMethods_System_Linq&lt;System_Collections_Generic.IEnumerable_1&lt;TResult&gt;&gt;;
+  // ...
+}
+
+// Generic helper type for extension methods in namespace: System.Linq
+export type ExtensionMethods_System_Linq&lt;TShape&gt; =
+  TShape &amp; (
+    (TShape extends System_Collections_Generic.IEnumerable_1&lt;infer T0&gt; ? __Ext_System_Linq_IEnumerable_1&lt;T0&gt; : {}) &amp;
+    // ... other targets (IQueryable&lt;T&gt;, arrays, etc.)
+    {}
+  );
+</code></pre>
+<p>The namespace facade re-exports the wrapper as <code>ExtensionMethods</code>:</p>
+<pre><code class="language-typescript">// System.Linq.d.ts
+export type { ExtensionMethods_System_Linq as ExtensionMethods } from &quot;./__internal/extensions/index.js&quot;;
+</code></pre>
+<p>Usage looks like a type-level <code>using System.Linq;</code>:</p>
+<pre><code class="language-typescript">import type { ExtensionMethods as Linq } from &quot;./System.Linq.js&quot;;
+import type { IEnumerable } from &quot;./System.Collections.Generic.js&quot;;
+
+type LinqSeq&lt;T&gt; = Linq&lt;IEnumerable&lt;T&gt;&gt;;
+declare const xs: LinqSeq&lt;number&gt;;
+xs.where((x) =&gt; x &gt; 0).select((x) =&gt; x * 2);
+</code></pre>
+<h3 id="implementation-2">Implementation</h3>
+<p><strong>Step 1: ExtensionMethodAnalyzer</strong> groups methods by target type:</p>
+<pre><code class="language-csharp">// From ExtensionMethodAnalyzer.cs
+public static ExtensionMethodsPlan Analyze(BuildContext ctx, SymbolGraph graph)
+{
+    // Collect all extension methods from static classes
+    var allExtensionMethods = graph.Namespaces
+        .SelectMany(ns =&gt; ns.Types)
+        .Where(t =&gt; t.IsStatic)
+        .SelectMany(t =&gt; t.Members.Methods)
+        .Where(m =&gt; m.IsExtensionMethod);
+
+    // Group by target type (first parameter's type)
+    var buckets = allExtensionMethods
+        .GroupBy(m =&gt; GetTargetTypeKey(m.ExtensionTarget));
+
+    return new ExtensionMethodsPlan { Buckets = buckets.ToImmutableArray() };
+}
+</code></pre>
+<p><strong>Step 2: ExtensionBucketPlan</strong> describes each bucket:</p>
+<pre><code class="language-csharp">// From ExtensionBucketPlan.cs
+public sealed record ExtensionBucketPlan
+{
+    public required ExtensionTargetKey Key { get; init; }       // Target type identity
+    public required TypeSymbol TargetType { get; init; }        // IEnumerable_1
+    public required ImmutableArray&lt;MethodSymbol&gt; Methods { get; init; }  // All methods
+
+    // TypeScript interface name: &quot;__Ext_IEnumerable_1&quot;
+    public string BucketInterfaceName =&gt; $&quot;__Ext_{TargetType.TsEmitName}&quot;;
+}
+</code></pre>
+<p><strong>Step 3: ExtensionsEmitter</strong> generates the file:</p>
+<pre><code class="language-csharp">// From ExtensionsEmitter.cs
+public static void Emit(BuildContext ctx, ExtensionMethodsPlan plan, SymbolGraph graph, string outputDirectory)
+{
+    // Create __internal/extensions/index.d.ts
+    var extensionsDir = Path.Combine(outputDirectory, &quot;__internal&quot;, &quot;extensions&quot;);
+    Directory.CreateDirectory(extensionsDir);
+
+    // Generate bucket interfaces
+    foreach (var bucket in plan.Buckets)
+    {
+        // export interface __Ext_IEnumerable_1&lt;T&gt; { ... }
+    }
+}
+</code></pre>
+<h3 id="real-example-linq">Real Example: LINQ</h3>
+<p><strong>C# definition (System.Linq.Enumerable):</strong></p>
+<pre><code class="language-csharp">public static class Enumerable {
+    public static IEnumerable&lt;T&gt; Where&lt;T&gt;(this IEnumerable&lt;T&gt; source, Func&lt;T, bool&gt; predicate);
+    public static IEnumerable&lt;TResult&gt; Select&lt;T, TResult&gt;(this IEnumerable&lt;T&gt; source, Func&lt;T, TResult&gt; selector);
+    public static T First&lt;T&gt;(this IEnumerable&lt;T&gt; source);
+    public static List&lt;T&gt; ToList&lt;T&gt;(this IEnumerable&lt;T&gt; source);
+    public static int Count&lt;T&gt;(this IEnumerable&lt;T&gt; source);
+    // ... 100+ methods
+}
+</code></pre>
+<p><strong>Generated bucket interface:</strong></p>
+<pre><code class="language-typescript">// __internal/extensions/index.d.ts
+
+export interface __Ext_IEnumerable_1&lt;T&gt; {
+    where(predicate: Func_2&lt;T, boolean&gt;): IEnumerable_1&lt;T&gt;;
+    select&lt;TResult&gt;(selector: Func_2&lt;T, TResult&gt;): IEnumerable_1&lt;TResult&gt;;
+    first(): T;
+    first(predicate: Func_2&lt;T, boolean&gt;): T;
+    toList(): List_1&lt;T&gt;;
+    toArray(): T[];
+    count(): int;
+    count(predicate: Func_2&lt;T, boolean&gt;): int;
+    any(): boolean;
+    any(predicate: Func_2&lt;T, boolean&gt;): boolean;
+    all(predicate: Func_2&lt;T, boolean&gt;): boolean;
+    // ... all LINQ methods
+}
+</code></pre>
+<h3 id="how-bucket-interfaces-are-used">How Bucket Interfaces Are Used</h3>
+<p>The bucket interfaces are merged into target types via declaration merging:</p>
+<pre><code class="language-typescript">// Usage in code
+const list: List_1&lt;int&gt; = new List_1&lt;int&gt;();
+list.add(1);
+list.add(2);
+list.add(3);
+
+// Extension methods available as instance methods
+const filtered = list.where(x =&gt; x &gt; 1);       // From __Ext_IEnumerable_1
+const doubled = list.select(x =&gt; x * 2);       // From __Ext_IEnumerable_1
+const count = list.count();                     // From __Ext_IEnumerable_1
+</code></pre>
+<h3 id="target-type-grouping">Target Type Grouping</h3>
+<p>Extension methods are grouped by their target type's generic definition:</p>
+<table>
+<thead>
+<tr>
+<th>Extension Method</th>
+<th>Target Type</th>
+<th>Bucket Interface</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Where&lt;T&gt;(IEnumerable&lt;T&gt;)</code></td>
+<td><code>IEnumerable&lt;T&gt;</code></td>
+<td><code>__Ext_IEnumerable_1&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td><code>ToList&lt;T&gt;(IEnumerable&lt;T&gt;)</code></td>
+<td><code>IEnumerable&lt;T&gt;</code></td>
+<td><code>__Ext_IEnumerable_1&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td><code>AsQueryable&lt;T&gt;(IEnumerable&lt;T&gt;)</code></td>
+<td><code>IEnumerable&lt;T&gt;</code></td>
+<td><code>__Ext_IEnumerable_1&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td><code>Append(string, string)</code></td>
+<td><code>string</code></td>
+<td><code>__Ext_String</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="diagnostic-codes-1">Diagnostic Codes</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TBG904</td>
+<td>Extension methods plan invalid</td>
+</tr>
+<tr>
+<td>TBG905</td>
+<td>Extension method has erased 'any' type</td>
+</tr>
+<tr>
+<td>TBG906</td>
+<td>Extension bucket name invalid</td>
+</tr>
+<tr>
+<td>TBG907</td>
+<td>Extension import unresolved</td>
+</tr>
+</tbody>
+</table>
+<h2 id="honest-emission">Honest Emission</h2>
+<h3 id="the-problem-4">The Problem</h3>
+<p>Not all C# interfaces can be safely used in TypeScript <code>extends</code>:</p>
+<pre><code class="language-typescript">// This might cause TS2430 if there are conflicting members
+interface MyClass$instance extends IFoo$instance, IBar$instance { }
+// Error TS2430: Interface 'MyClass$instance' incorrectly extends 'IFoo$instance'
+// Error TS2320: Cannot simultaneously extend types 'IFoo$instance' and 'IBar$instance'
+</code></pre>
+<p>TypeScript has strict structural requirements:</p>
+<ul>
+<li><strong>TS2430</strong>: Interface member signature doesn't match base</li>
+<li><strong>TS2320</strong>: Multiple bases have conflicting member signatures</li>
+</ul>
+<h3 id="the-solution-safetoextendanalyzer">The Solution: SafeToExtendAnalyzer</h3>
+<p>The <code>SafeToExtendAnalyzer</code> determines which interfaces are safe to extend:</p>
+<pre><code class="language-csharp">// From SafeToExtendAnalyzer.cs
+public static class SafeToExtendAnalyzer
+{
+    public record SafeToExtendResult(
+        IReadOnlyList&lt;TypeReference&gt; AssignableInterfaces,      // Safe for extends
+        IReadOnlyList&lt;(TypeReference Interface, string Reason)&gt; NonAssignableInterfaces  // Must use views
+    );
+
+    public static Dictionary&lt;string, SafeToExtendResult&gt; Analyze(
+        BuildContext ctx, SymbolGraph graph, TypeNameResolver resolver)
+    {
+        foreach (var type in graph.AllTypes)
+        {
+            // Build the type's member signature map
+            var typeSurface = BuildMemberSignatureMap(type, ...);
+
+            foreach (var iface in type.Interfaces)
+            {
+                // Check if interface members are compatible with type surface
+                if (IsCompatible(typeSurface, ifaceSurface))
+                    assignable.Add(iface);
+                else
+                    nonAssignable.Add((iface, reason));
+            }
+        }
+    }
+}
+</code></pre>
+<h3 id="real-example-ienumerator">Real Example: IEnumerator</h3>
+<p>A type implementing multiple interfaces with different <code>Current</code> property types:</p>
+<pre><code class="language-csharp">// C#: CharEnumerator implements multiple interfaces
+public class CharEnumerator : IEnumerator&lt;char&gt;, IEnumerator {
+    public char Current { get; }             // From IEnumerator&lt;char&gt;
+    object IEnumerator.Current { get; }      // Explicit impl (different type)
+}
+</code></pre>
+<p><strong>Analysis result:</strong></p>
+<pre><code class="language-typescript">// SafeToExtendAnalyzer output:
+// - IEnumerator&lt;char&gt; -&gt; SAFE (Current: char matches class surface)
+// - IEnumerator -&gt; UNSAFE (Current: object conflicts with char)
+
+// Generated TypeScript:
+export interface CharEnumerator$instance
+    extends IEnumerator_1$instance&lt;CLROf&lt;char&gt;&gt; {  // Safe interface in extends
+    readonly current: char;
+}
+
+export interface __CharEnumerator$views {
+    As_IEnumerator(): IEnumerator;  // Unsafe interface as view
+}
+</code></pre>
+<h3 id="implementation-pattern">Implementation Pattern</h3>
+<p>Two passes coordinate honest emission:</p>
+<p><strong>1. HonestEmissionPlanner</strong> - tracks unsatisfiable interfaces:</p>
+<pre><code class="language-csharp">// From HonestEmissionPlanner.cs
+public static HonestEmissionPlan PlanHonestEmission(BuildContext ctx, ...)
+{
+    // Find interfaces where class can't structurally satisfy requirements
+    var unsatisfiableByType = conformanceIssues
+        .GroupBy(i =&gt; i.TypeStableId)
+        .ToDictionary(g =&gt; g.Key, g =&gt; g.Select(i =&gt; i.InterfaceStableId).ToHashSet());
+
+    return new HonestEmissionPlan { UnsatisfiableInterfaces = unsatisfiableByType };
+}
+</code></pre>
+<p><strong>2. SafeToExtendAnalyzer</strong> - determines extends vs views:</p>
+<pre><code class="language-csharp">// Safe = no conflicting member signatures
+// Unsafe = member signature conflicts with type surface
+</code></pre>
+<h3 id="why-honest">Why &quot;Honest&quot;?</h3>
+<p>The emission is &quot;honest&quot; because it only claims what TypeScript can verify:</p>
+<ul>
+<li><strong>Honest</strong>: <code>extends IFoo</code> only if all <code>IFoo</code> members are compatible</li>
+<li><strong>Dishonest</strong>: Claiming <code>extends IFoo</code> when signatures conflict (causes TS errors)</li>
+</ul>
+<h2 id="scc-buckets-strongly-connected-components">SCC Buckets (Strongly Connected Components)</h2>
+<h3 id="the-problem-5">The Problem</h3>
+<p>Circular namespace dependencies cause TypeScript import errors:</p>
+<pre><code class="language-typescript">// System.Collections.Generic/internal/index.d.ts
+import type { Func_2 } from &quot;../../System/internal/index.js&quot;;  // Func used in List
+
+// System/internal/index.d.ts
+import type { IEnumerable_1 } from &quot;../../System.Collections.Generic/internal/index.js&quot;;  // IEnumerable used in Func
+
+// ❌ Circular import! TypeScript may fail to resolve types
+</code></pre>
+<p>The .NET BCL has many such circular dependencies:</p>
+<ul>
+<li><code>System.Collections.Generic</code> ↔ <code>System.Linq</code></li>
+<li><code>System</code> ↔ <code>System.Collections.Generic</code></li>
+<li><code>System.IO</code> ↔ <code>System.Text</code></li>
+</ul>
+<h3 id="the-solution-sccplanner">The Solution: SCCPlanner</h3>
+<p>The <code>SCCPlanner</code> uses Tarjan's algorithm to find <strong>Strongly Connected Components</strong> (SCCs)—groups of namespaces that mutually depend on each other:</p>
+<pre><code class="language-csharp">// From SCCPlan.cs
+public sealed record SCCPlan
+{
+    // All SCCs in dependency graph
+    public required IReadOnlyList&lt;SCCBucket&gt; Buckets { get; init; }
+
+    // Maps namespace → bucket index
+    public required IReadOnlyDictionary&lt;string, int&gt; NamespaceToBucket { get; init; }
+}
+
+public sealed record SCCBucket
+{
+    public required string BucketId { get; init; }       // &quot;scc_0&quot; or namespace name
+    public required IReadOnlyList&lt;string&gt; Namespaces { get; init; }
+    public bool IsMultiNamespace =&gt; Namespaces.Count &gt; 1;  // Has cycles?
+}
+</code></pre>
+<h3 id="real-example-bcl-sccs">Real Example: BCL SCCs</h3>
+<pre><code>SCC Analysis for .NET BCL:
+
+Bucket 0 (multi-namespace SCC):
+  - System
+  - System.Collections.Generic
+  - System.Linq
+  - System.Threading.Tasks
+  → Types within can freely reference each other
+
+Bucket 1 (singleton SCC - no cycles):
+  - System.Net.Http
+  → Can import from Bucket 0, but not vice versa
+
+Bucket 2 (singleton SCC):
+  - System.Text.Json
+</code></pre>
+<h3 id="how-sccs-help">How SCCs Help</h3>
+<p>tsbindgen computes SCCs (Tarjan) over the namespace dependency graph and records them in the emission plan.</p>
+<p>PhaseGate uses the SCC plan to:</p>
+<ul>
+<li>Detect and warn on <strong>inter-SCC</strong> cycles (<code>TBG201</code>)</li>
+<li>Suppress warnings for <strong>intra-SCC</strong> cycles (expected in the BCL)</li>
+</ul>
+<h3 id="diagnostic-code">Diagnostic Code</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TBG201</td>
+<td>Circular inheritance/dependency detected (handled by SCC bucketing)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="primitive-lifting-in-generic-type-arguments">Primitive Lifting in Generic Type Arguments</h2>
+<h3 id="the-principle">The Principle</h3>
+<p>tsbindgen emits CLR type names directly in generic type argument positions. This ensures:</p>
+<ol>
+<li>CLR type identity is preserved at the type level</li>
+<li>Generic constraints are satisfied without runtime type inference</li>
+<li>The Tsonic compiler can enforce numeric correctness at compile time</li>
+</ol>
+<h3 id="type-emission-layers">Type Emission Layers</h3>
+<p>The type system has three distinct layers:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Responsibility</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>tsbindgen</strong></td>
+<td>Emits CLR-true surface names</td>
+<td><code>Span_1&lt;Char&gt;</code>, <code>IEquatable_1&lt;Int32&gt;</code></td>
+</tr>
+<tr>
+<td><strong>@tsonic/core</strong></td>
+<td>Primitive aliases + unsafe markers</td>
+<td><code>type int = number</code>, <code>type char = string &amp; { __brand: &quot;char&quot; }</code>, <code>type ptr&lt;T&gt; = ...</code></td>
+</tr>
+<tr>
+<td><strong>Tsonic compiler</strong></td>
+<td>Enforces numeric correctness</td>
+<td><code>42 as int</code> validates bounds</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-it-works">How It Works</h3>
+<p>When a primitive type appears as a generic type argument, tsbindgen emits the CLR type name instead of the TypeScript primitive alias:</p>
+<pre><code class="language-typescript">// Value positions use TS aliases for ergonomics
+function add(a: int, b: int): int;
+
+// Generic type arguments use CLR names
+type IntList = List_1&lt;Int32&gt;;  // Not List_1&lt;int&gt;
+tryFormat(destination: Span_1&lt;Char&gt;): boolean;  // Not Span_1&lt;char&gt;
+</code></pre>
+<h3 id="implementation-primitivelift">Implementation: PrimitiveLift</h3>
+<p>The lifting rules are defined in <code>PrimitiveLift.cs</code>:</p>
+<pre><code class="language-csharp">// From PrimitiveLift.cs
+internal static class PrimitiveLift
+{
+    // Rules: (TsName, ClrFullName, ClrSimpleName, TsCarrier)
+    internal static readonly (string, string, string, string)[] Rules = {
+        (&quot;sbyte&quot;,   &quot;System.SByte&quot;,   &quot;SByte&quot;,   &quot;number&quot;),
+        (&quot;short&quot;,   &quot;System.Int16&quot;,   &quot;Int16&quot;,   &quot;number&quot;),
+        (&quot;int&quot;,     &quot;System.Int32&quot;,   &quot;Int32&quot;,   &quot;number&quot;),
+        (&quot;long&quot;,    &quot;System.Int64&quot;,   &quot;Int64&quot;,   &quot;number&quot;),
+        (&quot;float&quot;,   &quot;System.Single&quot;,  &quot;Single&quot;,  &quot;number&quot;),
+        (&quot;double&quot;,  &quot;System.Double&quot;,  &quot;Double&quot;,  &quot;number&quot;),
+        (&quot;decimal&quot;, &quot;System.Decimal&quot;, &quot;Decimal&quot;, &quot;number&quot;),
+        (&quot;char&quot;,    &quot;System.Char&quot;,    &quot;Char&quot;,    &quot;string&quot;),
+        (&quot;boolean&quot;, &quot;System.Boolean&quot;, &quot;Boolean&quot;, &quot;boolean&quot;),
+        (&quot;string&quot;,  &quot;System.String&quot;,  &quot;String&quot;,  &quot;string&quot;),
+        // ... all primitives
+    };
+
+    // Returns CLR simple name for a TS primitive, or null if not a primitive
+    public static string? GetClrSimpleName(string tsPrimitive) { ... }
+}
+</code></pre>
+<h3 id="real-example-iequatable">Real Example: IEquatable<int></h3>
+<pre><code class="language-typescript">// @tsonic/core defines the aliases
+type int = number;
+type Int32 = number;
+
+// tsbindgen emits CLR name in generic position
+interface Int32$instance extends IEquatable_1$instance&lt;Int32&gt; { ... }
+
+// Interface method uses the type parameter directly
+interface IEquatable_1$instance&lt;T&gt; {
+    equals(other: T): boolean;  // T is Int32 when used with Int32
+}
+</code></pre>
+<h3 id="cross-namespace-qualification">Cross-Namespace Qualification</h3>
+<p>When CLR type names are used outside the System namespace, they are qualified with <code>System_Internal.</code>:</p>
+<pre><code class="language-typescript">// In System.Collections.Generic/internal/index.d.ts
+import * as System_Internal from &quot;../../System/internal/index.js&quot;;
+
+// CLR names qualified to resolve correctly
+interface List_1$instance&lt;T&gt; {
+    tryFormat(destination: Span_1&lt;System_Internal.Char&gt;): boolean;
+}
+</code></pre>
+<h3 id="why-direct-clr-names">Why Direct CLR Names?</h3>
+<p>The direct approach has several advantages over alternatives:</p>
+<ol>
+<li><strong>No conditional type overhead</strong>: No <code>CLROf&lt;T&gt;</code> wrapper to resolve at type-check time</li>
+<li><strong>Clear semantics</strong>: What you see is what the CLR type system expects</li>
+<li><strong>Clean separation</strong>: tsbindgen emits structure, @tsonic/core provides primitive aliases/markers</li>
+<li><strong>Simpler output</strong>: Generated declarations are more readable</li>
+</ol>
+<h2 id="nested-type-flattening">Nested Type Flattening</h2>
+<h3 id="the-problem-6">The Problem</h3>
+<p>C# nested types use <code>+</code> separator in CLR naming:</p>
+<pre><code class="language-csharp">public class List&lt;T&gt; {
+    public struct Enumerator : IEnumerator&lt;T&gt; { }  // CLR name: List`1+Enumerator
+}
+
+public class Dictionary&lt;TKey, TValue&gt; {
+    public struct KeyCollection { }      // Dictionary`2+KeyCollection
+    public struct ValueCollection { }    // Dictionary`2+ValueCollection
+    public struct Enumerator { }         // Dictionary`2+Enumerator
+}
+</code></pre>
+<p>TypeScript doesn't support nested type declarations like C#:</p>
+<pre><code class="language-typescript">// ❌ Not valid TypeScript
+class List_1&lt;T&gt; {
+    class Enumerator { }  // Can't nest classes in TS
+}
+</code></pre>
+<h3 id="the-solution--separator">The Solution: $ Separator</h3>
+<p>Nested types are flattened to namespace level with <code>$</code> separator:</p>
+<pre><code class="language-typescript">// System.Collections.Generic/internal/index.d.ts
+
+// Parent type
+export interface List_1$instance&lt;T&gt; {
+    getEnumerator(): List_1$Enumerator&lt;T&gt;;
+}
+
+// Nested type flattened with $ separator
+export interface List_1$Enumerator$instance&lt;T&gt; extends IEnumerator_1$instance&lt;T&gt; {
+    readonly current: T;
+    moveNext(): boolean;
+    reset(): void;
+    dispose(): void;
+}
+
+export const List_1$Enumerator: {
+    // Nested struct's constructor
+};
+
+export type List_1$Enumerator&lt;T&gt; = List_1$Enumerator$instance&lt;T&gt; &amp; __List_1$Enumerator$views&lt;T&gt;;
+</code></pre>
+<h3 id="naming-convention-1">Naming Convention</h3>
+<table>
+<thead>
+<tr>
+<th>CLR Name</th>
+<th>TypeScript Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>List</code>1+Enumerator<code>|</code>List_1$Enumerator`</td>
+<td></td>
+</tr>
+<tr>
+<td><code>Dictionary</code>2+KeyCollection<code>|</code>Dictionary_2$KeyCollection`</td>
+<td></td>
+</tr>
+<tr>
+<td><code>Dictionary</code>2+ValueCollection<code>|</code>Dictionary_2$ValueCollection`</td>
+<td></td>
+</tr>
+<tr>
+<td><code>Delegate+InvocationListEnumerator</code></td>
+<td><code>Delegate$InvocationListEnumerator</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="real-example-dictionary-collections">Real Example: Dictionary Collections</h3>
+<pre><code class="language-csharp">// C# nested types
+public class Dictionary&lt;TKey, TValue&gt; {
+    public struct KeyCollection : ICollection&lt;TKey&gt; { }
+    public struct ValueCollection : ICollection&lt;TValue&gt; { }
+}
+</code></pre>
+<p><strong>Generated TypeScript:</strong></p>
+<pre><code class="language-typescript">// Dictionary itself
+export interface Dictionary_2$instance&lt;TKey, TValue&gt; {
+    readonly keys: Dictionary_2$KeyCollection&lt;TKey, TValue&gt;;
+    readonly values: Dictionary_2$ValueCollection&lt;TKey, TValue&gt;;
+}
+
+// Flattened nested types
+export interface Dictionary_2$KeyCollection$instance&lt;TKey, TValue&gt;
+    extends ICollection_1$instance&lt;TKey&gt; {
+    readonly count: int;
+    contains(item: TKey): boolean;
+    copyTo(array: TKey[], arrayIndex: int): void;
+}
+
+export interface Dictionary_2$ValueCollection$instance&lt;TKey, TValue&gt;
+    extends ICollection_1$instance&lt;TValue&gt; {
+    readonly count: int;
+    contains(item: TValue): boolean;
+    copyTo(array: TValue[], arrayIndex: int): void;
+}
+</code></pre>
+<h3 id="why--separator">Why $ Separator?</h3>
+<p>The <code>$</code> character was chosen because:</p>
+<ol>
+<li><strong>Valid TypeScript identifier</strong> - unlike <code>+</code> or <code>.</code></li>
+<li><strong>Visually distinct</strong> - clearly indicates nesting relationship</li>
+<li><strong>Not ambiguous</strong> - <code>_</code> is used for generic arity (<code>List_1</code>)</li>
+<li><strong>Consistent</strong> - also used in <code>$instance</code> and <code>$views</code> suffixes</li>
+</ol>
+<h3 id="import-simplification">Import Simplification</h3>
+<p>All types at namespace level simplifies imports:</p>
+<pre><code class="language-typescript">// User code - simple flat imports
+import {
+    List_1,
+    List_1$Enumerator,
+    Dictionary_2,
+    Dictionary_2$KeyCollection,
+    Dictionary_2$ValueCollection
+} from &quot;@dotnet/System.Collections.Generic&quot;;
+</code></pre>
+<h3 id="stableid-for-nested-types">StableId for Nested Types</h3>
+<p>Nested types have StableIds that preserve the full path:</p>
+<pre><code>TypeStableId: System.Private.CoreLib:System.Collections.Generic.List`1+Enumerator
+  → TsEmitName: List_1$Enumerator
+</code></pre>
+<p>The bindings.json maps TypeScript names back to CLR nested type paths.</p>
+<h2 id="multi-arity-families">Multi-arity Families</h2>
+<h3 id="the-problem-7">The Problem</h3>
+<p>.NET has type families with varying generic arity:</p>
+<ul>
+<li><code>Action</code> (0 params) through <code>Action&lt;T1,...,T16&gt;</code> (16 params)</li>
+<li><code>Func&lt;TResult&gt;</code> (1 param) through <code>Func&lt;T1,...,T17&gt;</code> (17 params)</li>
+<li><code>Tuple&lt;T1&gt;</code> through <code>Tuple&lt;T1,...,T8&gt;</code></li>
+<li><code>ValueTuple</code> through <code>ValueTuple&lt;T1,...,T8&gt;</code></li>
+</ul>
+<p>These are separate CLR types but conceptually one &quot;family&quot;. Users expect to write <code>Action&lt;string, int&gt;</code> not <code>Action_2&lt;string, int&gt;</code>.</p>
+<h3 id="the-solution-sentinel-ladder-pattern">The Solution: Sentinel-Ladder Pattern</h3>
+<p>Multi-arity families use a unique sentinel symbol to detect which arity variant to dispatch to:</p>
+<pre><code class="language-typescript">// Sentinel symbol - uniquely identifies &quot;unspecified&quot; type parameter
+declare const __unspecified: unique symbol;
+export type __ = typeof __unspecified;
+
+// Multi-arity facade with default sentinel values
+export type Action&lt;T1 = __, T2 = __, T3 = __&gt; =
+  [T1] extends [__] ? Internal.Action :           // Action()
+  [T2] extends [__] ? Internal.Action_1&lt;T1&gt; :     // Action&lt;T1&gt;
+  [T3] extends [__] ? Internal.Action_2&lt;T1, T2&gt; : // Action&lt;T1, T2&gt;
+  Internal.Action_3&lt;T1, T2, T3&gt;;                  // Action&lt;T1, T2, T3&gt;
+</code></pre>
+<h3 id="how-it-works-1">How It Works</h3>
+<ol>
+<li><strong>Default sentinel</strong>: Each type parameter defaults to <code>__</code> (the sentinel)</li>
+<li><strong>Conditional dispatch</strong>: <code>[T] extends [__]</code> checks if parameter was specified</li>
+<li><strong>Ladder evaluation</strong>: TypeScript evaluates top-to-bottom, first match wins</li>
+<li><strong>Internal dispatch</strong>: Routes to correct internal type with arity suffix</li>
+</ol>
+<h3 id="real-example-func">Real Example: Func</h3>
+<pre><code class="language-typescript">// System.d.ts (facade)
+export type Func&lt;T1 = __, T2 = __, TResult = __&gt; =
+  [T1] extends [__] ? never :                           // Func needs at least TResult
+  [T2] extends [__] ? Internal.Func_1&lt;T1&gt; :             // Func&lt;TResult&gt;
+  [TResult] extends [__] ? Internal.Func_2&lt;T1, T2&gt; :    // Func&lt;T, TResult&gt;
+  Internal.Func_3&lt;T1, T2, TResult&gt;;                     // Func&lt;T1, T2, TResult&gt;
+
+// Usage:
+type MyCallback = Func&lt;string&gt;;           // → Func_1&lt;string&gt;
+type MyMapper = Func&lt;int, string&gt;;        // → Func_2&lt;int, string&gt;
+type MyReducer = Func&lt;int, int, int&gt;;     // → Func_3&lt;int, int, int&gt;
+</code></pre>
+<h3 id="nested-constraint-guards">Nested Constraint Guards</h3>
+<p>When internal types have generic constraints, the facade must verify constraints before dispatch:</p>
+<pre><code class="language-typescript">// SearchValues&lt;T&gt; requires T extends IEquatable&lt;T&gt;
+export type SearchValues&lt;T1 = __&gt; =
+  [T1] extends [__] ? Internal.SearchValues :
+  [T1] extends [IEquatable_1&lt;T1&gt;] ? Internal.SearchValues_1&lt;T1&gt; : never;
+</code></pre>
+<p>For multi-parameter constraints, guards are nested:</p>
+<pre><code class="language-typescript">// JSType_Function&lt;T1, T2, T3, T4&gt; requires all T extends JSType
+export type JSType_Function&lt;T1 = __, T2 = __, T3 = __, T4 = __&gt; =
+  [T1] extends [__] ? Internal.JSType_Function :
+  [T2] extends [__] ? [T1] extends [Internal.JSType] ? Internal.JSType_Function_1&lt;T1&gt; : never :
+  [T3] extends [__] ? [T1] extends [Internal.JSType] ? [T2] extends [Internal.JSType] ? Internal.JSType_Function_2&lt;T1, T2&gt; : never : never :
+  [T4] extends [__] ? [T1] extends [Internal.JSType] ? [T2] extends [Internal.JSType] ? [T3] extends [Internal.JSType] ? Internal.JSType_Function_3&lt;T1, T2, T3&gt; : never : never : never :
+  [T1] extends [Internal.JSType] ? [T2] extends [Internal.JSType] ? [T3] extends [Internal.JSType] ? [T4] extends [Internal.JSType] ? Internal.JSType_Function_4&lt;T1, T2, T3, T4&gt; : never : never : never : never;
+</code></pre>
+<h3 id="implementation-files">Implementation Files</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Emit/MultiArityFamilyDetect.cs</code></td>
+<td>Detects multi-arity families from CLR types</td>
+</tr>
+<tr>
+<td><code>Emit/MultiArityAliasEmit.cs</code></td>
+<td>Generates sentinel-ladder type aliases</td>
+</tr>
+<tr>
+<td><code>Emit/FamilyIndexEmitter.cs</code></td>
+<td>Emits <code>families.json</code> canonical family index</td>
+</tr>
+</tbody>
+</table>
+<h3 id="facadefamilyindex">FacadeFamilyIndex</h3>
+<p>The <code>families.json</code> file provides a canonical index of multi-arity families for cross-package imports:</p>
+<pre><code class="language-json">{
+  &quot;System.Action&quot;: {
+    &quot;stem&quot;: &quot;Action&quot;,
+    &quot;namespace&quot;: &quot;System&quot;,
+    &quot;minArity&quot;: 0,
+    &quot;maxArity&quot;: 16,
+    &quot;isDelegate&quot;: true
+  },
+  &quot;System.Func&quot;: {
+    &quot;stem&quot;: &quot;Func&quot;,
+    &quot;namespace&quot;: &quot;System&quot;,
+    &quot;minArity&quot;: 1,
+    &quot;maxArity&quot;: 17,
+    &quot;isDelegate&quot;: true
+  }
+}
+</code></pre>
+<p>This enables <code>ImportPlanner</code> to resolve cross-package multi-arity imports without runtime type inspection.</p>
+<h3 id="constraint-invariants">Constraint Invariants</h3>
+<p>Three invariants are enforced by <code>test-facade-constraint-invariants.sh</code>:</p>
+<ol>
+<li><strong>No <code>Internal.Internal.*</code></strong>: Double-qualification is never valid</li>
+<li><strong>No <code>Internal.unknown/any/never</code></strong>: TypeScript built-ins shouldn't be qualified</li>
+<li><strong>No <code>bigint</code> carrier</strong>: Long/ULong use <code>number</code> aliases, not raw bigint</li>
+</ol>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

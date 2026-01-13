@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>nodejs | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link active" href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Node.js Standard Library</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/nodejs/#overview">Overview</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/nodejs/#installation">Installation</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/nodejs/#usage">Usage</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/nodejs/#implemented-modules">Implemented Modules</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/nodejs/#architecture">Architecture</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+    <span>nodejs</span>
+  </nav>
+
+  <h1>nodejs</h1>
+  <div class="content"><h1 id="tsonic-standard-library">Tsonic Standard Library</h1>
+<p>A Node.js-like standard library for .NET, enabling TypeScript compiled to C# via Tsonic to use familiar APIs for file system, path manipulation, events, and more.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<h3 id="nodejs-standard-library">Node.js Standard Library</h3>
+<ul>
+<li><a href="/nodejs/#overview">Overview</a></li>
+<li><a href="/nodejs/#installation">Installation</a></li>
+<li><a href="/nodejs/#usage">Usage</a></li>
+<li><a href="/nodejs/#implemented-modules">Implemented Modules</a></li>
+<li><a href="/nodejs/#architecture">Architecture</a></li>
+</ul>
+<h2 id="overview">Overview</h2>
+<p>Tsonic compiles TypeScript to C# so code can run on .NET. While the <a href="https://github.com/tsoniclang/tsonic-runtime">Tsonic Runtime</a> provides JavaScript standard library functionality (console, Math, JSON, etc.), <strong>nodejs</strong> implements Node.js-inspired APIs like <code>fs</code>, <code>path</code>, and <code>events</code>.</p>
+<p><strong>Note:</strong> This library is inspired by Node.js APIs but is <strong>not an exact replica</strong>. It provides similar, familiar APIs that work naturally with .NET while maintaining the Node.js developer experience. APIs may deviate where .NET offers better approaches or where exact Node.js compatibility is impractical.</p>
+<p>This repository provides:</p>
+<ul>
+<li><strong>C# Implementation</strong> (<code>nodejs</code>) - A .NET library with Node.js-inspired APIs optimized for .NET</li>
+<li><strong>TypeScript Declarations</strong> (<code>.d.ts</code> files) - Type definitions for IDE support</li>
+<li><strong>Metadata Files</strong> (<code>.metadata.json</code>) - C# semantic information for the Tsonic compiler</li>
+<li><strong>Bindings</strong> (<code>.bindings.json</code>) - Maps JavaScript module names to CLR types</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<h3 id="for-typescript-projects-using-tsonic">For TypeScript Projects (using Tsonic)</h3>
+<pre><code class="language-bash">npm install --save-dev @tsonic/node-types
+</code></pre>
+<h3 id="for-net-projects">For .NET Projects</h3>
+<pre><code class="language-bash">dotnet add package nodejs
+</code></pre>
+<h2 id="usage">Usage</h2>
+<h3 id="in-typescript-compiled-via-tsonic">In TypeScript (compiled via Tsonic)</h3>
+<pre><code class="language-typescript">import * as path from &quot;path&quot;;
+import * as fs from &quot;fs&quot;;
+import { EventEmitter } from &quot;events&quot;;
+
+// Path operations
+const fullPath = path.join(__dirname, &quot;config&quot;, &quot;settings.json&quot;);
+const ext = path.extname(fullPath);  // &quot;.json&quot;
+const dir = path.dirname(fullPath);
+
+// File system operations
+const content = fs.readFileSync(&quot;./package.json&quot;, &quot;utf-8&quot;);
+fs.writeFileSync(&quot;./output.txt&quot;, &quot;Hello from Tsonic!&quot;);
+
+// Event handling
+class MyEmitter extends EventEmitter {}
+const emitter = new MyEmitter();
+emitter.on(&quot;event&quot;, (data) =&gt; console.log(data));
+emitter.emit(&quot;event&quot;, &quot;Hello World!&quot;);
+</code></pre>
+<h3 id="tsonic-configuration">Tsonic Configuration</h3>
+<p>Add to your <code>tsconfig.json</code> or Tsonic configuration:</p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://tsonic.org/schema/v1.json&quot;,
+  &quot;rootNamespace&quot;: &quot;MyApp&quot;,
+  &quot;entryPoint&quot;: &quot;src/index.ts&quot;,
+  &quot;dotnet&quot;: {
+    &quot;typeRoots&quot;: [
+      &quot;node_modules/@tsonic/dotnet-types/10.0.0/types&quot;,
+      &quot;../tsonic-runtime/src/Tsonic.Runtime/types&quot;,
+      &quot;node_modules/@tsonic/node-types/types&quot;
+    ],
+    &quot;packages&quot;: [
+      { &quot;name&quot;: &quot;Tsonic.Runtime&quot;, &quot;version&quot;: &quot;1.0.0&quot; },
+      { &quot;name&quot;: &quot;nodejs&quot;, &quot;version&quot;: &quot;1.0.0&quot; }
+    ]
+  }
+}
+</code></pre>
+<p>The Tsonic compiler will:</p>
+<ol>
+<li>Load type definitions from <code>@tsonic/node-types</code></li>
+<li>Use bindings to map <code>import &quot;fs&quot;</code> → <code>nodejs.fs</code></li>
+<li>Generate C# code that calls the .NET implementation</li>
+<li>Add NuGet package references automatically</li>
+</ol>
+<h2 id="implemented-modules">Implemented Modules</h2>
+<p>For detailed API coverage compared to official Node.js types, see <a href="docs/api-coverage.md">API Coverage</a>.</p>
+<h3 id="path---path-manipulation"><code>path</code> - Path manipulation</h3>
+<p>Provides utilities for working with file and directory paths.</p>
+<pre><code class="language-typescript">import * as path from &quot;path&quot;;
+
+path.join(&quot;/foo&quot;, &quot;bar&quot;, &quot;baz&quot;);       // &quot;/foo/bar/baz&quot;
+path.basename(&quot;/foo/bar/file.txt&quot;);    // &quot;file.txt&quot;
+path.extname(&quot;index.html&quot;);            // &quot;.html&quot;
+path.resolve(&quot;wwwroot&quot;, &quot;static&quot;);     // Absolute path
+path.isAbsolute(&quot;/foo&quot;);               // true
+</code></pre>
+<p><strong>Available functions:</strong></p>
+<ul>
+<li><code>basename(path, suffix?)</code> - Get the last portion of a path</li>
+<li><code>dirname(path)</code> - Get the directory name</li>
+<li><code>extname(path)</code> - Get the file extension</li>
+<li><code>join(...paths)</code> - Join path segments</li>
+<li><code>normalize(path)</code> - Normalize a path</li>
+<li><code>resolve(...paths)</code> - Resolve to an absolute path</li>
+<li><code>isAbsolute(path)</code> - Test if path is absolute</li>
+<li><code>relative(from, to)</code> - Get relative path</li>
+<li><code>parse(path)</code> - Parse a path into an object</li>
+<li><code>format(pathObject)</code> - Format a path from an object</li>
+<li><code>matchesGlob(path, pattern)</code> - Test glob pattern matching</li>
+<li><code>toNamespacedPath(path)</code> - Windows namespace prefix (Windows only)</li>
+</ul>
+<p><strong>Properties:</strong></p>
+<ul>
+<li><code>sep</code> - Platform-specific path separator (<code>/</code> or <code>\</code>)</li>
+<li><code>delimiter</code> - Platform-specific path delimiter (<code>:</code> or <code>;</code>)</li>
+<li><code>posix</code> - POSIX path utilities</li>
+<li><code>win32</code> - Windows path utilities</li>
+</ul>
+<h3 id="fs---file-system-operations"><code>fs</code> - File system operations</h3>
+<p>Synchronous file system operations for reading, writing, and manipulating files and directories.</p>
+<pre><code class="language-typescript">import * as fs from &quot;fs&quot;;
+
+// Read/write files
+const data = fs.readFileSync(&quot;./config.json&quot;, &quot;utf-8&quot;);
+fs.writeFileSync(&quot;./output.txt&quot;, &quot;Hello!&quot;);
+fs.appendFileSync(&quot;./log.txt&quot;, &quot;New entry\n&quot;);
+
+// Directory operations
+fs.mkdirSync(&quot;./temp&quot;, { recursive: true });
+const files = fs.readdirSync(&quot;./src&quot;);
+fs.rmdirSync(&quot;./temp&quot;, { recursive: true });
+
+// File info
+const stats = fs.statSync(&quot;./package.json&quot;);
+console.log(stats.size, stats.mtime);
+
+// Other operations
+fs.existsSync(&quot;./file.txt&quot;);
+fs.copyFileSync(&quot;./src.txt&quot;, &quot;./dest.txt&quot;);
+fs.renameSync(&quot;./old.txt&quot;, &quot;./new.txt&quot;);
+fs.unlinkSync(&quot;./file.txt&quot;);
+</code></pre>
+<p><strong>Available functions:</strong></p>
+<ul>
+<li><code>readFileSync(path, encoding?)</code> - Read file contents</li>
+<li><code>writeFileSync(path, data, encoding?)</code> - Write to file</li>
+<li><code>appendFileSync(path, data, encoding?)</code> - Append to file</li>
+<li><code>existsSync(path)</code> - Check if path exists</li>
+<li><code>mkdirSync(path, options?)</code> - Create directory</li>
+<li><code>readdirSync(path)</code> - Read directory contents</li>
+<li><code>statSync(path)</code> - Get file/directory stats</li>
+<li><code>unlinkSync(path)</code> - Delete file</li>
+<li><code>rmdirSync(path, options?)</code> - Remove directory</li>
+<li><code>copyFileSync(src, dest)</code> - Copy file</li>
+<li><code>renameSync(oldPath, newPath)</code> - Rename/move file</li>
+</ul>
+<h3 id="events---event-emitter"><code>events</code> - Event emitter</h3>
+<p>Node.js EventEmitter for implementing event-driven architectures.</p>
+<pre><code class="language-typescript">import { EventEmitter } from &quot;events&quot;;
+
+class DataStream extends EventEmitter {
+  processData() {
+    this.emit(&quot;data&quot;, { chunk: 1 });
+    this.emit(&quot;end&quot;);
+  }
+}
+
+const stream = new DataStream();
+stream.on(&quot;data&quot;, (chunk) =&gt; console.log(&quot;Data:&quot;, chunk));
+stream.once(&quot;end&quot;, () =&gt; console.log(&quot;Complete&quot;));
+stream.processData();
+</code></pre>
+<p><strong>Available methods:</strong></p>
+<ul>
+<li><code>on(eventName, listener)</code> - Register event listener</li>
+<li><code>once(eventName, listener)</code> - Register one-time listener</li>
+<li><code>emit(eventName, ...args)</code> - Trigger event</li>
+<li><code>off(eventName, listener)</code> / <code>removeListener()</code> - Remove listener</li>
+<li><code>removeAllListeners(eventName?)</code> - Remove all listeners</li>
+<li><code>listeners(eventName)</code> - Get listener array</li>
+<li><code>listenerCount(eventName)</code> - Count listeners</li>
+<li><code>eventNames()</code> - Get registered event names</li>
+<li><code>setMaxListeners(n)</code> / <code>getMaxListeners()</code> - Listener limits</li>
+<li><code>prependListener()</code> / <code>prependOnceListener()</code> - Add to beginning</li>
+</ul>
+<h2 id="architecture">Architecture</h2>
+<h3 id="how-it-works">How It Works</h3>
+<pre><code>TypeScript Source Code
+         ↓
+    Tsonic Compiler
+         ↓
+  (reads .d.ts, .metadata.json, .bindings.json)
+         ↓
+    Generated C# Code
+         ↓
+  .NET Runtime (NativeAOT)
+         ↓
+   nodejs (this library)
+         ↓
+   .NET BCL (File, Path, etc.)
+</code></pre>
+<h3 id="file-structure">File Structure</h3>
+<pre><code>nodejs-clr/
+├── src/nodejs/        # C# implementation
+│   ├── path.cs                # Path module
+│   ├── fs.cs                  # File system module
+│   └── EventEmitter.cs        # Event emitter
+├── types/                     # TypeScript declarations
+│   ├── path.d.ts              # Path type definitions
+│   ├── fs.d.ts                # FS type definitions
+│   ├── events-simple.d.ts     # Events type definitions
+│   ├── *.metadata.json        # CLR metadata
+│   ├── nodejs.bindings.json  # Module bindings
+│   └── index.d.ts             # Main entry point
+├── tests/nodejs.Tests/  # Unit tests
+└── nodejs.sln         # Solution file
+</code></pre>
+<h3 id="metadata-and-bindings">Metadata and Bindings</h3>
+<p><strong>Bindings</strong> (<code>nodejs.bindings.json</code>) map JavaScript imports to C# types:</p>
+<pre><code class="language-json">{
+  &quot;bindings&quot;: {
+    &quot;path&quot;: {
+      &quot;kind&quot;: &quot;module&quot;,
+      &quot;assembly&quot;: &quot;nodejs&quot;,
+      &quot;type&quot;: &quot;nodejs.path&quot;
+    }
+  }
+}
+</code></pre>
+<p><strong>Metadata</strong> (<code>.metadata.json</code>) provides C# semantic information:</p>
+<pre><code class="language-json">{
+  &quot;assemblyName&quot;: &quot;nodejs&quot;,
+  &quot;types&quot;: {
+    &quot;nodejs.path&quot;: {
+      &quot;kind&quot;: &quot;class&quot;,
+      &quot;isStatic&quot;: true,
+      &quot;members&quot;: {
+        &quot;join(params string[])&quot;: {
+          &quot;kind&quot;: &quot;method&quot;,
+          &quot;isStatic&quot;: true
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h2 id="development">Development</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>.NET 10 SDK (or later)</li>
+<li>Node.js 18+ (for npm package)</li>
+</ul>
+<h3 id="building">Building</h3>
+<pre><code class="language-bash"># Build C# library
+dotnet build
+
+# Run tests
+dotnet test
+
+# Pack NuGet package
+dotnet pack src/nodejs/nodejs.csproj -c Release
+
+# Pack npm package
+npm pack
+</code></pre>
+<h3 id="testing">Testing</h3>
+<pre><code class="language-bash">cd tests/nodejs.Tests
+dotnet test
+</code></pre>
+<h2 id="differences-from-nodejs">Differences from Node.js</h2>
+<p><strong>Important:</strong> This is <strong>not a Node.js compatibility layer</strong>. It's a <strong>.NET-native standard library</strong> inspired by Node.js APIs. Expect differences where .NET offers better approaches or where exact compatibility is impractical.</p>
+<h3 id="design-philosophy">Design Philosophy</h3>
+<ul>
+<li><strong>Familiar, not identical</strong> - APIs follow Node.js conventions but adapt to .NET idioms</li>
+<li><strong>Pragmatic</strong> - We deviate from Node.js when .NET offers better solutions</li>
+<li><strong>Performance</strong> - Leverages .NET BCL for optimal performance</li>
+<li><strong>NativeAOT first</strong> - Designed for ahead-of-time compilation</li>
+</ul>
+<h3 id="not-yet-implemented">Not Yet Implemented</h3>
+<ul>
+<li><strong>Asynchronous operations</strong> - Only synchronous methods are implemented currently</li>
+<li><strong>Streams</strong> - <code>ReadStream</code>, <code>WriteStream</code>, etc.</li>
+<li><strong>Promises</strong> - <code>fs/promises</code> module</li>
+<li><strong>Advanced features</strong> - File watchers, advanced stat info, symbolic links</li>
+<li><strong>Buffer</strong> - Binary data handling (partially - use <code>Uint8Array</code> instead)</li>
+<li><strong>Process module</strong> - Not yet implemented</li>
+</ul>
+<h3 id="platform-differences">Platform Differences</h3>
+<ul>
+<li><strong>File permissions</strong> - Limited support on Windows (mode/chmod operations may not work as expected)</li>
+<li><strong>Path separators</strong> - Automatically handled by .NET APIs</li>
+<li><strong>Case sensitivity</strong> - Follows platform conventions (case-insensitive on Windows)</li>
+</ul>
+<h2 id="contributing">Contributing</h2>
+<p>Contributions are welcome! This project follows the patterns established in <a href="https://github.com/tsoniclang/tsonic-runtime">tsonic-runtime</a>.</p>
+<h3 id="adding-a-new-module">Adding a New Module</h3>
+<ol>
+<li>Create C# implementation in <code>src/nodejs/</code></li>
+<li>Add TypeScript declarations in <code>types/</code></li>
+<li>Create metadata file (<code>types/&lt;module&gt;.metadata.json</code>)</li>
+<li>Add binding in <code>types/nodejs.bindings.json</code></li>
+<li>Add reference in <code>types/index.d.ts</code></li>
+<li>Write tests in <code>tests/nodejs.Tests/</code></li>
+</ol>
+<h2 id="license">License</h2>
+<p>MIT License - see <a href="LICENSE">LICENSE</a> file for details.</p>
+<h2 id="related-projects">Related Projects</h2>
+<ul>
+<li><a href="https://github.com/tsoniclang/tsonic">Tsonic</a> - TypeScript to C# compiler</li>
+<li><a href="https://github.com/tsoniclang/tsonic-runtime">Tsonic Runtime</a> - JavaScript standard library for .NET</li>
+</ul>
+<h2 id="support">Support</h2>
+<ul>
+<li>Documentation: <a href="https://tsonic.org">https://tsonic.org</a></li>
+<li>Issues: <a href="https://github.com/tsoniclang/nodejs-clr/issues">https://github.com/tsoniclang/nodejs-clr/issues</a></li>
+<li>Discussions: <a href="https://github.com/tsoniclang/tsonic/discussions">https://github.com/tsoniclang/tsonic/discussions</a></li>
+</ul>
+</div>
+
+  
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

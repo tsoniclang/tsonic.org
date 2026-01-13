@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Architecture | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+    <span>Architecture</span>
+  </nav>
+
+  <h1>Architecture</h1>
+  <div class="content"><h1 id="tsonic-architecture">Tsonic Architecture</h1>
+<p>Technical documentation for contributors and advanced users.</p>
+<h2 id="design-goals">Design Goals</h2>
+<p>Tsonic is designed around these principles:</p>
+<ol>
+<li><strong>Exact Semantics</strong>: JavaScript behavior preserved exactly via runtime libraries</li>
+<li><strong>Native Performance</strong>: NativeAOT compilation for fast startup and execution</li>
+<li><strong>Zero Magic</strong>: Clear errors instead of guessing; explicit over implicit</li>
+<li><strong>Functional Codebase</strong>: Immutable data, pure functions, explicit dependencies</li>
+</ol>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<p>Tsonic is a multi-phase compiler that transforms TypeScript to native executables:</p>
+<pre><code>                    ┌─────────────────────────────────────────┐
+                    │           TypeScript Source             │
+                    └──────────────────┬──────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              FRONTEND PACKAGE                                │
+│  ┌────────────┐    ┌────────────┐    ┌────────────┐    ┌────────────┐       │
+│  │   Parse    │ -&gt; │  Resolve   │ -&gt; │  Validate  │ -&gt; │  Build IR  │       │
+│  │ TypeScript │    │  Imports   │    │   Rules    │    │            │       │
+│  └────────────┘    └────────────┘    └────────────┘    └────────────┘       │
+└─────────────────────────────────────────┬───────────────────────────────────┘
+                                          │
+                                          ▼
+                    ┌─────────────────────────────────────────┐
+                    │        IR (Intermediate Representation) │
+                    │   Language-agnostic AST with semantics  │
+                    └──────────────────┬──────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              EMITTER PACKAGE                                 │
+│  ┌────────────┐    ┌────────────┐    ┌────────────┐    ┌────────────┐       │
+│  │   Types    │    │ Statements │    │Expressions │    │  Modules   │       │
+│  │  Emitter   │    │  Emitter   │    │  Emitter   │    │  Emitter   │       │
+│  └────────────┘    └────────────┘    └────────────┘    └────────────┘       │
+└─────────────────────────────────────────┬───────────────────────────────────┘
+                                          │
+                                          ▼
+                    ┌─────────────────────────────────────────┐
+                    │              C# Source Code             │
+                    └──────────────────┬──────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              BACKEND PACKAGE                                 │
+│  ┌────────────┐    ┌────────────┐    ┌────────────┐    ┌────────────┐       │
+│  │  Generate  │ -&gt; │  Generate  │ -&gt; │   dotnet   │ -&gt; │   Copy     │       │
+│  │   .csproj  │    │ Program.cs │    │  publish   │    │  Binary    │       │
+│  └────────────┘    └────────────┘    └────────────┘    └────────────┘       │
+└─────────────────────────────────────────┬───────────────────────────────────┘
+                                          │
+                                          ▼
+                    ┌─────────────────────────────────────────┐
+                    │            Native Binary                │
+                    │     (via .NET NativeAOT compiler)       │
+                    └─────────────────────────────────────────┘
+</code></pre>
+<h2 id="package-structure">Package Structure</h2>
+<pre><code>packages/
+├── frontend/     # TypeScript parsing, validation, IR building
+├── emitter/      # C# code generation from IR
+├── backend/      # .NET build orchestration
+└── cli/          # Command-line interface
+</code></pre>
+<h3 id="dependency-graph">Dependency Graph</h3>
+<pre><code>cli
+ ├── frontend
+ ├── emitter
+ └── backend
+
+frontend (standalone)
+
+emitter
+ └── frontend (for IR types)
+
+backend (standalone)
+</code></pre>
+<h2 id="core-data-structures">Core Data Structures</h2>
+<h3 id="ir-intermediate-representation">IR (Intermediate Representation)</h3>
+<p>The IR is the central data structure bridging TypeScript and C#:</p>
+<ul>
+<li><strong>IrModule</strong>: Represents a compiled TypeScript file</li>
+<li><strong>IrStatement</strong>: Function, class, variable declarations, control flow</li>
+<li><strong>IrExpression</strong>: Literals, operators, calls, member access</li>
+<li><strong>IrType</strong>: Primitives, references, arrays, functions, unions</li>
+</ul>
+<p>See <a href="/tsonic/architecture/ir/">IR Documentation</a> for complete type definitions.</p>
+<h3 id="result-types">Result Types</h3>
+<p>All operations return <code>Result&lt;T, E&gt;</code> instead of throwing exceptions:</p>
+<pre><code class="language-typescript">type Result&lt;T, E&gt; = { ok: true; value: T } | { ok: false; error: E };
+</code></pre>
+<h3 id="diagnostics">Diagnostics</h3>
+<p>Errors are collected as <code>Diagnostic</code> objects with:</p>
+<ul>
+<li>Error code (TSN1xxx - TSN9xxx)</li>
+<li>Severity (error, warning)</li>
+<li>Message and hint</li>
+<li>Source location</li>
+</ul>
+<p>See <a href="/tsonic/architecture/diagnostics/">Diagnostics</a> for error handling details.</p>
+<h2 id="key-design-decisions">Key Design Decisions</h2>
+<h3 id="why-ir">Why IR?</h3>
+<p>The IR provides:</p>
+<ol>
+<li><strong>Separation of concerns</strong>: Frontend knows nothing about C#</li>
+<li><strong>Optimization opportunities</strong>: Can transform IR before emission</li>
+<li><strong>Testability</strong>: Test IR building and emission independently</li>
+<li><strong>Extensibility</strong>: Could target other languages in future</li>
+</ol>
+<h3 id="why-functional-programming">Why Functional Programming?</h3>
+<p>The compiler uses strict FP principles:</p>
+<ul>
+<li><strong>Immutable data</strong>: No unexpected mutations during compilation</li>
+<li><strong>Pure functions</strong>: Same inputs always produce same outputs</li>
+<li><strong>Explicit dependencies</strong>: No hidden global state</li>
+<li><strong>Testability</strong>: Pure functions are trivial to test</li>
+</ul>
+<h3 id="why-nativeaot">Why NativeAOT?</h3>
+<p>NativeAOT provides:</p>
+<ul>
+<li>Fast startup (no JIT warmup)</li>
+<li>Small binaries (tree shaking)</li>
+<li>No runtime dependency</li>
+<li>Predictable performance</li>
+</ul>
+<h2 id="table-of-contents">Table of Contents</h2>
+<h3 id="core-architecture">Core Architecture</h3>
+<ul>
+<li><a href="/tsonic/architecture/overview/">Overview</a> - Design principles and goals</li>
+<li><a href="/tsonic/architecture/pipeline/">Pipeline</a> - 7-stage compilation pipeline</li>
+<li><a href="/tsonic/architecture/ir/">IR</a> - Intermediate Representation types</li>
+<li><a href="/tsonic/architecture/diagnostics/">Diagnostics</a> - Error handling and reporting</li>
+</ul>
+<h3 id="packages">Packages</h3>
+<ul>
+<li><a href="/tsonic/architecture/packages/">Packages</a> - Monorepo structure</li>
+<li><a href="/tsonic/architecture/frontend/">Frontend</a> - TypeScript parsing and IR building</li>
+<li><a href="/tsonic/architecture/emitter/">Emitter</a> - C# code generation</li>
+<li><a href="/tsonic/architecture/backend/">Backend</a> - .NET build orchestration</li>
+</ul>
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="/tsonic/architecture/type-mappings/">Type Mappings</a> - TypeScript to C# conversion</li>
+<li><a href="/tsonic/architecture/runtime/">Runtime</a> - Tsonic.Runtime library</li>
+</ul>
+<h2 id="development">Development</h2>
+<pre><code class="language-bash"># Build all packages
+./scripts/build/all.sh
+
+# Run tests
+npm test
+
+# Run E2E tests
+./test/scripts/run-all.sh
+
+# Format code
+./scripts/build/format.sh
+
+# Lint code
+./scripts/build/lint.sh
+</code></pre>
+<h2 id="contributing">Contributing</h2>
+<ol>
+<li>Read the <a href="https://github.com/tsoniclang/tsonic/blob/main/CODING-STANDARDS.md">coding standards</a></li>
+<li>Understand the <a href="/tsonic/architecture/pipeline/">pipeline</a> flow</li>
+<li>Follow functional programming principles</li>
+<li>Add tests for new functionality</li>
+<li>Run format and lint before committing</li>
+</ol>
+</div>
+
+  
+    <ul class="page-list">
+      
+        <li><a href="/tsonic/architecture/backend/">Backend</a></li>
+      
+        <li><a href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+      
+        <li><a href="/tsonic/architecture/emitter/">Emitter</a></li>
+      
+        <li><a href="/tsonic/architecture/frontend/">Frontend</a></li>
+      
+        <li><a href="/tsonic/architecture/ir/">Ir</a></li>
+      
+        <li><a href="/tsonic/architecture/overview/">Overview</a></li>
+      
+        <li><a href="/tsonic/architecture/packages/">Packages</a></li>
+      
+        <li><a href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+      
+        <li><a href="/tsonic/architecture/runtime/">Runtime</a></li>
+      
+        <li><a href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+      
+    </ul>
+  
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

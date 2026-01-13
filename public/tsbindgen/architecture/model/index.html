@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Model | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Model</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Model</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/architecture/model.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="model-data-structures">Model (Data Structures)</h1>
+<p>The Model defines all data structures used throughout the pipeline. These are immutable records that flow from Load through Emit.</p>
+<h2 id="symbolgraph">SymbolGraph</h2>
+<p><strong>File:</strong> <code>Model/SymbolGraph.cs</code></p>
+<p>Central registry of all types. The SymbolGraph is the primary data structure passed between phases.</p>
+<pre><code class="language-csharp">public sealed record SymbolGraph
+{
+    public ImmutableArray&lt;NamespaceSymbol&gt; Namespaces { get; }
+    public IReadOnlyDictionary&lt;string, TypeSymbol&gt; TypeIndex { get; }
+
+    public bool TryGetType(string clrFullName, out TypeSymbol? type);
+    public SymbolGraph WithIndices();  // Rebuild lookup indices
+}
+</code></pre>
+<p><strong>Key invariants:</strong></p>
+<ul>
+<li>TypeIndex is keyed by CLR full name (e.g., <code>System.Collections.Generic.List</code>1`)</li>
+<li>Each namespace appears once</li>
+<li>Types are unique by StableId</li>
+</ul>
+<h2 id="namespacesymbol">NamespaceSymbol</h2>
+<p><strong>File:</strong> <code>Model/Symbols/NamespaceSymbol.cs</code></p>
+<pre><code class="language-csharp">public sealed record NamespaceSymbol
+{
+    public string Name { get; }                              // &quot;System.Collections.Generic&quot;
+    public bool IsRoot { get; }                              // true for empty namespace
+    public ImmutableArray&lt;TypeSymbol&gt; Types { get; }
+    public ImmutableArray&lt;string&gt; ContributingAssemblies { get; }  // Which DLLs contributed types
+}
+</code></pre>
+<h2 id="typesymbol">TypeSymbol</h2>
+<p><strong>File:</strong> <code>Model/Symbols/TypeSymbol.cs</code></p>
+<p>Represents a CLR type (class, interface, struct, enum, delegate).</p>
+<pre><code class="language-csharp">public sealed record TypeSymbol
+{
+    // Identity
+    public TypeStableId StableId { get; }
+    public string ClrFullName { get; }                       // &quot;System.Collections.Generic.List`1&quot;
+    public string TsEmitName { get; }                        // &quot;List_1&quot;
+    public string Namespace { get; }
+    public int Arity { get; }                                // Generic parameter count
+
+    // Classification
+    public TypeKind Kind { get; }                            // Class, Interface, Struct, Enum, Delegate
+    public Accessibility Accessibility { get; }
+    public bool IsAbstract { get; }
+    public bool IsSealed { get; }
+    public bool IsStatic { get; }
+
+    // Inheritance
+    public TypeReference? BaseClass { get; }
+    public ImmutableArray&lt;TypeReference&gt; Interfaces { get; }
+
+    // Generics
+    public ImmutableArray&lt;GenericParameterSymbol&gt; GenericParameters { get; }
+
+    // Members
+    public MemberCollection Members { get; }
+
+    // Shape pass outputs
+    public ImmutableArray&lt;ExplicitView&gt; ExplicitViews { get; }  // From ViewPlanner
+}
+</code></pre>
+<h2 id="typekind">TypeKind</h2>
+<p>Classification of CLR types:</p>
+<pre><code class="language-csharp">public enum TypeKind
+{
+    Class,              // Reference type with implementation
+    Interface,          // Contract only
+    Struct,             // Value type
+    Enum,               // Enumeration
+    Delegate,           // Callable type
+    StaticNamespace     // Static class (no instance members)
+}
+</code></pre>
+<p><strong>TypeScript mapping:</strong></p>
+<table>
+<thead>
+<tr>
+<th>TypeKind</th>
+<th>TypeScript Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Class</td>
+<td><code>interface + const</code></td>
+</tr>
+<tr>
+<td>Interface</td>
+<td><code>interface</code></td>
+</tr>
+<tr>
+<td>Struct</td>
+<td><code>interface + const</code></td>
+</tr>
+<tr>
+<td>Enum</td>
+<td><code>const enum</code></td>
+</tr>
+<tr>
+<td>Delegate</td>
+<td><code>type = (...) =&gt; R</code></td>
+</tr>
+<tr>
+<td>StaticNamespace</td>
+<td><code>abstract class</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="membercollection">MemberCollection</h2>
+<p>Container for all member types on a TypeSymbol:</p>
+<pre><code class="language-csharp">public sealed record MemberCollection
+{
+    public ImmutableArray&lt;MethodSymbol&gt; Methods { get; }
+    public ImmutableArray&lt;PropertySymbol&gt; Properties { get; }
+    public ImmutableArray&lt;FieldSymbol&gt; Fields { get; }
+    public ImmutableArray&lt;EventSymbol&gt; Events { get; }
+    public ImmutableArray&lt;ConstructorSymbol&gt; Constructors { get; }
+}
+</code></pre>
+<h2 id="methodsymbol">MethodSymbol</h2>
+<p><strong>File:</strong> <code>Model/Symbols/MemberSymbols/MethodSymbol.cs</code></p>
+<pre><code class="language-csharp">public sealed record MethodSymbol
+{
+    public MemberStableId StableId { get; }
+    public string ClrName { get; }
+    public string TsEmitName { get; }
+
+    public TypeReference ReturnType { get; }
+    public ImmutableArray&lt;ParameterSymbol&gt; Parameters { get; }
+    public ImmutableArray&lt;GenericParameterSymbol&gt; GenericParameters { get; }
+
+    public bool IsStatic { get; }
+    public bool IsVirtual { get; }
+    public bool IsAbstract { get; }
+    public bool IsOverride { get; }
+    public bool IsExtensionMethod { get; }
+
+    public EmitScope EmitScope { get; }
+    public TypeReference? SourceInterface { get; }  // If from interface
+}
+</code></pre>
+<h2 id="emitscope">EmitScope</h2>
+<p>Determines where a member appears in TypeScript output:</p>
+<pre><code class="language-csharp">public enum EmitScope
+{
+    Unspecified,    // Not yet decided (invalid after Shape)
+    ClassSurface,   // On the $instance interface
+    StaticSurface,  // On the static const declaration
+    ViewOnly,       // Only in __$views interface (explicit impl)
+    Omitted         // Not emitted to .d.ts (tracked in metadata)
+}
+</code></pre>
+<h3 id="emitscope-assignment">EmitScope Assignment</h3>
+<p>Shape passes assign EmitScope based on analysis:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>EmitScope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Normal instance method</td>
+<td>ClassSurface</td>
+</tr>
+<tr>
+<td>Static method</td>
+<td>StaticSurface</td>
+</tr>
+<tr>
+<td>Explicit interface impl</td>
+<td>ViewOnly</td>
+</tr>
+<tr>
+<td>Indexer (conflicts)</td>
+<td>Omitted</td>
+</tr>
+<tr>
+<td>Generic static member</td>
+<td>Omitted</td>
+</tr>
+</tbody>
+</table>
+<h3 id="emitscope-in-output">EmitScope in Output</h3>
+<pre><code class="language-typescript">// ClassSurface -&gt; $instance interface
+export interface List_1$instance&lt;T&gt; {
+    add(item: T): void;        // EmitScope.ClassSurface
+    readonly count: int;       // EmitScope.ClassSurface
+}
+
+// StaticSurface -&gt; const declaration
+export declare const List_1: {
+    new &lt;T&gt;(): List_1&lt;T&gt;;     // Constructor
+    empty&lt;T&gt;(): List_1&lt;T&gt;;    // EmitScope.StaticSurface
+};
+
+// ViewOnly -&gt; __$views interface
+export interface __List_1$views&lt;T&gt; {
+    As_ICollection(): ICollection;  // EmitScope.ViewOnly
+}
+</code></pre>
+<h2 id="typereference-hierarchy">TypeReference Hierarchy</h2>
+<p><strong>File:</strong> <code>Model/Types/TypeReference.cs</code></p>
+<p>Abstract base for all type references. Used in signatures, constraints, and inheritance.</p>
+<pre><code class="language-csharp">public abstract record TypeReference;
+</code></pre>
+<h3 id="namedtypereference">NamedTypeReference</h3>
+<p>Reference to a named type (class, interface, struct, enum, delegate):</p>
+<pre><code class="language-csharp">public sealed record NamedTypeReference(
+    string AssemblyName,                         // &quot;System.Private.CoreLib&quot;
+    string FullName,                             // &quot;System.Collections.Generic.List`1&quot;
+    string Name,                                 // &quot;List`1&quot;
+    ImmutableArray&lt;TypeReference&gt; TypeArguments  // Generic arguments
+) : TypeReference;
+</code></pre>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><code>List&lt;string&gt;</code> -&gt; FullName: <code>System.Collections.Generic.List</code>1<code>, TypeArguments: [</code>string`]</li>
+<li><code>Dictionary&lt;int, string&gt;</code> -&gt; FullName: <code>...Dictionary</code>2<code>, TypeArguments: [</code>int<code>, </code>string`]</li>
+</ul>
+<h3 id="genericparameterreference">GenericParameterReference</h3>
+<p>Reference to a generic type parameter (T, TKey, etc.):</p>
+<pre><code class="language-csharp">public sealed record GenericParameterReference(
+    string Name,              // &quot;T&quot;, &quot;TKey&quot;, &quot;TResult&quot;
+    int Position,             // 0-based position
+    bool IsMethodParameter    // true if method-level, false if type-level
+) : TypeReference;
+</code></pre>
+<h3 id="arraytypereference">ArrayTypeReference</h3>
+<p>Reference to an array type:</p>
+<pre><code class="language-csharp">public sealed record ArrayTypeReference(
+    TypeReference ElementType,
+    int Rank                   // 1 for T[], 2 for T[,], etc.
+) : TypeReference;
+</code></pre>
+<h3 id="pointertypereference">PointerTypeReference</h3>
+<p>Reference to a pointer type (unsafe):</p>
+<pre><code class="language-csharp">public sealed record PointerTypeReference(
+    TypeReference ElementType  // The pointed-to type
+) : TypeReference;
+</code></pre>
+<p>Maps to <code>ptr&lt;T&gt;</code> in TypeScript (from <code>@tsonic/core/types.js</code>).</p>
+<h3 id="byreftypereference">ByRefTypeReference</h3>
+<p>Reference to a by-reference type (ref/out/in parameters):</p>
+<pre><code class="language-csharp">public sealed record ByRefTypeReference(
+    TypeReference ElementType,
+    RefKind Kind               // Ref, Out, In
+) : TypeReference;
+</code></pre>
+<p>Tracked in <code>metadata.json</code> via <code>parameterModifiers</code> (ref/out/in). The emitted <code>.d.ts</code> uses the element type directly.</p>
+<h3 id="nullabletypereference">NullableTypeReference</h3>
+<p>Reference to a nullable type:</p>
+<pre><code class="language-csharp">public sealed record NullableTypeReference(
+    TypeReference UnderlyingType
+) : TypeReference;
+</code></pre>
+<p>Maps to <code>T | null</code> in TypeScript.</p>
+<h2 id="stableid">StableId</h2>
+<p>Unique identifier for symbols that survives transformations. Used as dictionary keys and for tracking across phases.</p>
+<h3 id="typestableid">TypeStableId</h3>
+<pre><code class="language-csharp">public sealed record TypeStableId
+{
+    public string AssemblyName { get; }   // &quot;System.Private.CoreLib&quot;
+    public string ClrFullName { get; }    // &quot;System.Collections.Generic.List`1&quot;
+
+    // Format: &quot;AssemblyName:ClrFullName&quot;
+    public override string ToString() =&gt; $&quot;{AssemblyName}:{ClrFullName}&quot;;
+}
+</code></pre>
+<h3 id="memberstableid">MemberStableId</h3>
+<pre><code class="language-csharp">public sealed record MemberStableId
+{
+    public string DeclaringClrType { get; }    // &quot;System.Collections.Generic.List`1&quot;
+    public string CanonicalSignature { get; }  // &quot;Add(T):void&quot;
+    public int MetadataToken { get; }          // CLR metadata token
+
+    // Format: &quot;DeclaringType::Signature (Token)&quot;
+}
+</code></pre>
+<p><strong>Canonical Signature Format:</strong></p>
+<ul>
+<li>Methods: <code>MethodName(ParamType1,ParamType2):ReturnType</code></li>
+<li>Properties: <code>PropertyName|PropertyType</code></li>
+<li>Fields: <code>FieldName|FieldType</code></li>
+</ul>
+<h2 id="explicitview">ExplicitView</h2>
+<p>Output from ViewPlanner - represents an <code>As_IInterface</code> property:</p>
+<pre><code class="language-csharp">public sealed record ExplicitView(
+    TypeReference InterfaceReference,  // The interface being viewed
+    string ViewPropertyName,           // &quot;As_IEnumerable_1&quot;
+    ImmutableArray&lt;MemberStableId&gt; Members  // Members in this view
+);
+</code></pre>
+<h2 id="genericparametersymbol">GenericParameterSymbol</h2>
+<p>Represents a generic type parameter with constraints:</p>
+<pre><code class="language-csharp">public sealed record GenericParameterSymbol
+{
+    public string Name { get; }                              // &quot;T&quot;, &quot;TKey&quot;
+    public int Position { get; }                             // 0-based
+    public GenericParameterConstraints Constraints { get; }
+}
+
+public sealed record GenericParameterConstraints
+{
+    public bool HasReferenceTypeConstraint { get; }    // where T : class
+    public bool HasValueTypeConstraint { get; }        // where T : struct
+    public bool HasDefaultConstructorConstraint { get } // where T : new()
+    public ImmutableArray&lt;TypeReference&gt; TypeConstraints { get; }  // where T : IFoo
+}
+</code></pre>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

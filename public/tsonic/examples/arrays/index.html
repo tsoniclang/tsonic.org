@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arrays | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/examples/">Examples</a>
+      <span class="sep">/</span>
+    
+    <span>Arrays</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Arrays</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/examples/arrays.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="array-examples">Array Examples</h1>
+<p>Working with arrays in Tsonic.</p>
+<h2 id="creating-arrays">Creating Arrays</h2>
+<pre><code class="language-typescript">// Array literal - infers type from elements
+const numbers = [1, 2, 3, 4, 5]; // int[]
+const floats = [1.5, 2.5, 3.5]; // double[]
+
+// Generic syntax (also emits as native array)
+const strings: Array&lt;string&gt; = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]; // string[]
+
+// Empty array requires type annotation
+const empty: number[] = [];
+
+// Explicit element type
+import { int } from &quot;@tsonic/core/types.js&quot;;
+const counts: int[] = [1, 2, 3];
+</code></pre>
+<h2 id="native-array-operations">Native Array Operations</h2>
+<p>Arrays emit as C# native arrays (<code>T[]</code>):</p>
+<pre><code class="language-typescript">const items = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
+
+// Length property
+const len = items.length;
+
+// Index access
+const first = items[0];
+const last = items[items.length - 1];
+</code></pre>
+<h2 id="using-list-for-dynamic-collections">Using List for Dynamic Collections</h2>
+<p>For dynamic collections with add/remove operations, use <code>List&lt;T&gt;</code>:</p>
+<pre><code class="language-typescript">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+// Create list with collection initializer
+const numbers = new List&lt;number&gt;([1, 2, 3]);
+
+// Or create empty and add items
+const names = new List&lt;string&gt;();
+names.add(&quot;Alice&quot;);
+names.add(&quot;Bob&quot;);
+
+// List properties and methods
+Console.writeLine(names.count); // 2
+const hasAlice = names.contains(&quot;Alice&quot;); // true
+
+// Remove items
+names.remove(&quot;Alice&quot;);
+
+// Clear all
+names.clear();
+</code></pre>
+<h3 id="collection-initializer-syntax">Collection Initializer Syntax</h3>
+<p>Use <code>new List&lt;T&gt;([...])</code> to initialize with values:</p>
+<pre><code class="language-typescript">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+
+// Initialize with array literal
+const numbers = new List&lt;number&gt;([1, 2, 3, 4, 5]);
+
+// Initialize with variables
+const items = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
+const list = new List&lt;string&gt;(items);
+
+// Empty list (no initializer needed)
+const empty = new List&lt;string&gt;();
+</code></pre>
+<h2 id="linq-operations">LINQ Operations</h2>
+<p>Use LINQ for functional-style array processing:</p>
+<pre><code class="language-typescript">import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
+
+const numbers = [1, 2, 3, 4, 5];
+
+// Select = map
+const doubled = Enumerable.select(numbers, (n) =&gt; n * 2);
+
+// Where = filter
+const evens = Enumerable.where(numbers, (n) =&gt; n % 2 === 0);
+
+// Aggregate = reduce
+const sum = Enumerable.aggregate(numbers, 0, (acc, n) =&gt; acc + n);
+
+// First, Last
+const first = Enumerable.first(numbers);
+const last = Enumerable.last(numbers);
+
+// Any, All
+const anyEven = Enumerable.any(numbers, (n) =&gt; n % 2 === 0);
+const allPositive = Enumerable.all(numbers, (n) =&gt; n &gt; 0);
+</code></pre>
+<h2 id="iterating-arrays">Iterating Arrays</h2>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+const items = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
+
+// For-of loop (preferred)
+for (const item of items) {
+  Console.writeLine(item);
+}
+
+// Index-based for loop
+for (let i = 0; i &lt; items.length; i++) {
+  Console.writeLine(items[i]);
+}
+</code></pre>
+<h2 id="array-destructuring">Array Destructuring</h2>
+<pre><code class="language-typescript">const numbers = [1, 2, 3, 4, 5];
+
+// Extract first elements
+const [first, second] = numbers;
+// first = 1, second = 2
+
+// Skip elements
+const [, , third] = numbers;
+// third = 3
+
+// Rest pattern
+const [head, ...tail] = numbers;
+// head = 1, tail = [2, 3, 4, 5]
+</code></pre>
+<h2 id="multi-dimensional-arrays">Multi-dimensional Arrays</h2>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+const matrix: number[][] = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
+];
+
+// Access element
+const value = matrix[1][2]; // 6
+
+// Iterate
+for (const row of matrix) {
+  for (const cell of row) {
+    Console.writeLine(cell.toString());
+  }
+}
+</code></pre>
+<h2 id="type-safe-arrays">Type-safe Arrays</h2>
+<pre><code class="language-typescript">import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
+
+interface User {
+  id: number;
+  name: string;
+}
+
+const users: User[] = [
+  { id: 1, name: &quot;Alice&quot; },
+  { id: 2, name: &quot;Bob&quot; },
+];
+
+// Find user by id
+const found = Enumerable.firstOrDefault(users, (u) =&gt; u.id === 1);
+
+// Map to names
+const names = Enumerable.select(users, (u) =&gt; u.name);
+</code></pre>
+<h2 id="spread-operator">Spread Operator</h2>
+<pre><code class="language-typescript">const arr1 = [1, 2, 3];
+const arr2 = [4, 5, 6];
+
+// Concatenate
+const combined = [...arr1, ...arr2];
+// [1, 2, 3, 4, 5, 6]
+
+// Copy
+const copy = [...arr1];
+</code></pre>
+<h2 id="integer-arrays">Integer Arrays</h2>
+<p>Use <code>int</code> from <code>@tsonic/core</code> for integer arrays:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+// Integer array
+const counts: int[] = [1, 2, 3];
+
+// Array indexing with integers
+const items = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
+const index: int = 1;
+const item = items[index]; // &quot;b&quot;
+
+// LINQ operations require int for indexing
+import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
+
+const numbers: int[] = [10, 20, 30];
+const first = Enumerable.elementAt(numbers, 0);
+</code></pre>
+<h3 id="long-arrays">Long Arrays</h3>
+<p>Large integers automatically infer to <code>long[]</code>:</p>
+<pre><code class="language-typescript">// Large numbers cause long[] inference
+const bigNumbers = [1, 2, 2147483648];
+// Emits: long[] bigNumbers = [1L, 2L, 2147483648L];
+
+const timestamps = [1609459200000, 1609545600000];
+// Emits: long[] (JS millisecond timestamps)
+</code></pre>
+<blockquote>
+<p><strong>See also:</strong> <a href="/tsonic/numeric-types/">Numeric Types Guide</a> for complete integer type coverage.</p>
+</blockquote>
+<h2 id="tuples">Tuples</h2>
+<p>Tuples are fixed-length arrays with specific element types:</p>
+<pre><code class="language-typescript">// Tuple - fixed length, specific types per position
+const point: [number, number] = [10, 20];
+const record: [string, number] = [&quot;Alice&quot;, 30];
+
+// Access by index
+const x = point[0]; // number
+const y = point[1]; // number
+
+// Destructuring
+const [name, age] = record;
+
+// Unlike arrays, tuples have fixed length
+// point[2] = 30; // Error - tuple only has 2 elements
+</code></pre>
+<p>Tuples generate <code>ValueTuple&lt;T1, T2, ...&gt;</code> in C#.</p>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

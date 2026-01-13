@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Normalize | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Normalize</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Normalize</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/architecture/normalize.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="normalize-phase">Normalize Phase</h1>
+<p>The Normalize phase reserves all TypeScript identifiers and resolves naming conflicts.</p>
+<h2 id="entry-point">Entry Point</h2>
+<p><strong>File:</strong> <code>Normalize/NameReservation.cs</code></p>
+<pre><code class="language-csharp">public static void ReserveAll(BuildContext ctx, SymbolGraph graph)
+{
+    // 1. Reserve type names in namespace scopes
+    foreach (var ns in graph.Namespaces)
+    {
+        var scope = ScopeFactory.Namespace(ns.Name);
+        foreach (var type in ns.Types)
+        {
+            ctx.Renamer.ReserveTypeName(
+                type.StableId,
+                type.TsEmitName,
+                scope,
+                &quot;TypeReservation&quot;);
+        }
+    }
+
+    // 2. Reserve member names in type scopes
+    foreach (var type in graph.AllTypes)
+    {
+        ReserveMembers(ctx, type);
+    }
+}
+</code></pre>
+<h2 id="scope-system">Scope System</h2>
+<p>Names are reserved in hierarchical scopes:</p>
+<pre><code>Namespace Scope: &quot;ns:System.Collections.Generic#internal&quot;
+    └── Type names (List_1, Dictionary_2, ...)
+
+Type Scope: &quot;type:System.Collections.Generic.List`1#instance&quot;
+    └── Instance member names (add, remove, count, ...)
+
+Type Scope: &quot;type:System.Collections.Generic.List`1#static&quot;
+    └── Static member names (empty, ...)
+
+View Scope: &quot;view:System.Collections.Generic.List`1:IEnumerable`1#instance&quot;
+    └── View member names (getEnumerator, ...)
+</code></pre>
+<h2 id="conflict-resolution">Conflict Resolution</h2>
+<p>When a name is already taken in a scope, numeric suffixes are added:</p>
+<pre><code class="language-csharp">// First reservation
+&quot;add&quot; -&gt; &quot;add&quot;
+
+// Conflict - add suffix
+&quot;add&quot; -&gt; &quot;add2&quot;
+
+// Another conflict
+&quot;add&quot; -&gt; &quot;add3&quot;
+</code></pre>
+<h2 id="naming-style-transform">Naming Style Transform</h2>
+<p>The <code>--naming js</code> option applies camelCase transform:</p>
+<pre><code class="language-csharp">ctx.Renamer.AdoptMemberStyleTransform(name =&gt; ToCamelCase(name));
+
+// GetEnumerator -&gt; getEnumerator
+// WriteLine -&gt; writeLine
+// XMLReader -&gt; xmlReader
+</code></pre>
+<p>Type names are NOT transformed (always PascalCase).</p>
+<h2 id="reserved-word-handling">Reserved Word Handling</h2>
+<p>TypeScript reserved words get trailing underscore:</p>
+<pre><code class="language-csharp">public static class TypeScriptReservedWords
+{
+    public static (string Sanitized, bool WasSanitized) Sanitize(string name)
+    {
+        if (IsReserved(name))
+            return (name + &quot;_&quot;, true);
+        return (name, false);
+    }
+}
+
+// Examples:
+// &quot;default&quot; -&gt; &quot;default_&quot;
+// &quot;class&quot; -&gt; &quot;class_&quot;
+// &quot;function&quot; -&gt; &quot;function_&quot;
+</code></pre>
+<h2 id="rename-decisions">Rename Decisions</h2>
+<p>Every rename is recorded for bindings generation:</p>
+<pre><code class="language-csharp">public sealed record RenameDecision
+{
+    public StableId Id { get; }
+    public string Requested { get; }      // Original name
+    public string Final { get; }          // Final TypeScript name
+    public string Reason { get; }         // Why renamed
+    public string Strategy { get; }       // None, NumericSuffix, ReservedWord
+    public string ScopeKey { get; }
+    public bool? IsStatic { get; }
+}
+</code></pre>
+<h2 id="querying-final-names">Querying Final Names</h2>
+<p>After normalization, all names are queryable:</p>
+<pre><code class="language-csharp">// Type names
+string finalName = ctx.Renamer.GetFinalTypeName(type);
+string instanceName = ctx.Renamer.GetInstanceTypeName(type);  // T$instance
+string staticName = ctx.Renamer.GetStaticInterfaceName(type); // T$static
+
+// Member names
+var scope = ScopeFactory.ClassSurface(type, isStatic: false);
+string memberName = ctx.Renamer.GetFinalMemberName(member.StableId, scope);
+</code></pre>
+<h2 id="explicit-interface-members">Explicit Interface Members</h2>
+<p>Explicit interface implementations get interface-suffixed names:</p>
+<pre><code class="language-csharp">// C#: void ICollection.Clear() { }
+// Requested: &quot;clear&quot; (conflicts with own Clear method)
+// Final: &quot;clear_ICollection&quot;
+</code></pre>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

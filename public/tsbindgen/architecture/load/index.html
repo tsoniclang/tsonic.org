@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Load | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Load</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Load</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/architecture/load.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="load-phase">Load Phase</h1>
+<p>The Load phase uses .NET reflection to extract type information from assemblies.</p>
+<h2 id="entry-point">Entry Point</h2>
+<p><strong>File:</strong> <code>Load/AssemblyLoader.cs</code></p>
+<pre><code class="language-csharp">public static SymbolGraph Load(
+    BuildContext ctx,
+    IEnumerable&lt;string&gt; assemblyPaths,
+    string runtimeDirectory)
+</code></pre>
+<h2 id="metadataloadcontext">MetadataLoadContext</h2>
+<p>Uses <code>System.Reflection.MetadataLoadContext</code> for isolated assembly inspection:</p>
+<pre><code class="language-csharp">var resolver = new PathAssemblyResolver(runtimeAssemblies);
+using var mlc = new MetadataLoadContext(resolver);
+
+foreach (var path in assemblyPaths)
+{
+    var assembly = mlc.LoadFromAssemblyPath(path);
+    // Reflect types...
+}
+</code></pre>
+<p><strong>Why MetadataLoadContext?</strong></p>
+<ul>
+<li>Can inspect assemblies without loading them into the runtime</li>
+<li>Works with assemblies targeting different .NET versions</li>
+<li>No conflict with already-loaded assemblies</li>
+</ul>
+<h2 id="type-reflection">Type Reflection</h2>
+<p>For each public type, extracts:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td><code>Type.Name</code></td>
+</tr>
+<tr>
+<td>Namespace</td>
+<td><code>Type.Namespace</code></td>
+</tr>
+<tr>
+<td>Assembly</td>
+<td><code>Type.Assembly.GetName().Name</code></td>
+</tr>
+<tr>
+<td>Base class</td>
+<td><code>Type.BaseType</code></td>
+</tr>
+<tr>
+<td>Interfaces</td>
+<td><code>Type.GetInterfaces()</code></td>
+</tr>
+<tr>
+<td>Generic parameters</td>
+<td><code>Type.GetGenericArguments()</code></td>
+</tr>
+<tr>
+<td>Attributes</td>
+<td><code>Type.GetCustomAttributesData()</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="member-reflection">Member Reflection</h2>
+<p>For each type, reflects:</p>
+<ul>
+<li><strong>Methods</strong> - <code>Type.GetMethods(BindingFlags.Public | ...)</code></li>
+<li><strong>Properties</strong> - <code>Type.GetProperties(...)</code></li>
+<li><strong>Fields</strong> - <code>Type.GetFields(...)</code></li>
+<li><strong>Events</strong> - <code>Type.GetEvents(...)</code></li>
+<li><strong>Constructors</strong> - <code>Type.GetConstructors(...)</code></li>
+</ul>
+<h2 id="critical-name-based-comparisons">Critical: Name-Based Comparisons</h2>
+<p><strong>MetadataLoadContext types cannot be compared with <code>typeof()</code>:</strong></p>
+<pre><code class="language-csharp">// WRONG - Always false for MetadataLoadContext types
+if (type == typeof(int)) return &quot;number&quot;;
+
+// CORRECT - Use name-based comparison
+if (type.FullName == &quot;System.Int32&quot;) return &quot;int&quot;;
+</code></pre>
+<p>This is because MetadataLoadContext creates isolated Type objects that are different instances from the runtime's typeof() results.</p>
+<h2 id="output-symbolgraph">Output: SymbolGraph</h2>
+<p>The Load phase produces a <code>SymbolGraph</code> containing:</p>
+<ul>
+<li><code>Namespaces</code> - All namespaces found</li>
+<li><code>Types</code> - All public types with members</li>
+<li>No indices yet (built in Model phase)</li>
+</ul>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

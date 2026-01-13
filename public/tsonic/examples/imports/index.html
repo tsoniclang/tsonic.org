@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Imports | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/examples/">Examples</a>
+      <span class="sep">/</span>
+    
+    <span>Imports</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Imports</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/examples/imports.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="import-examples">Import Examples</h1>
+<p>Module imports and exports in Tsonic.</p>
+<h2 id="local-imports">Local Imports</h2>
+<p>Local imports <strong>must</strong> use the <code>.js</code> extension:</p>
+<pre><code class="language-typescript">// models/User.ts
+export interface User {
+  id: number;
+  name: string;
+}
+
+export class UserService {
+  getUser(id: number): User {
+    return { id, name: &quot;Alice&quot; };
+  }
+}
+</code></pre>
+<pre><code class="language-typescript">// App.ts
+import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import { User, UserService } from &quot;./models/User.js&quot;;
+
+export function main(): void {
+  const service = new UserService();
+  const user = service.getUser(1);
+  Console.writeLine(user.name);
+}
+</code></pre>
+<h2 id="relative-paths">Relative Paths</h2>
+<pre><code class="language-typescript">// Same directory
+import { helper } from &quot;./helper.js&quot;;
+
+// Parent directory
+import { config } from &quot;../config.js&quot;;
+
+// Nested path
+import { utils } from &quot;./lib/utils/index.js&quot;;
+</code></pre>
+<h2 id="named-exports">Named Exports</h2>
+<pre><code class="language-typescript">// utils.ts
+export const PI = 3.14159;
+
+export function add(a: number, b: number): number {
+  return a + b;
+}
+
+export function multiply(a: number, b: number): number {
+  return a * b;
+}
+
+export interface Point {
+  x: number;
+  y: number;
+}
+</code></pre>
+<pre><code class="language-typescript">// App.ts
+import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import { PI, add, Point } from &quot;./utils.js&quot;;
+
+const point: Point = { x: 10, y: 20 };
+Console.writeLine(add(1, 2));
+Console.writeLine(PI);
+</code></pre>
+<h2 id="namespace-import">Namespace Import</h2>
+<p>Import all exports under a namespace:</p>
+<pre><code class="language-typescript">// utils.ts
+export const PI = 3.14159;
+export function add(a: number, b: number): number {
+  return a + b;
+}
+</code></pre>
+<pre><code class="language-typescript">// App.ts
+import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import * as utils from &quot;./utils.js&quot;;
+
+Console.writeLine(utils.PI);
+Console.writeLine(utils.add(1, 2));
+</code></pre>
+<h2 id="re-exports-barrel-files">Re-exports (Barrel Files)</h2>
+<p>Create index files to re-export from multiple modules:</p>
+<pre><code class="language-typescript">// models/User.ts
+export interface User {
+  id: number;
+  name: string;
+}
+
+// models/Product.ts
+export interface Product {
+  id: number;
+  price: number;
+}
+
+// models/index.ts
+export { User } from &quot;./User.js&quot;;
+export { Product } from &quot;./Product.js&quot;;
+</code></pre>
+<pre><code class="language-typescript">// App.ts
+import { User, Product } from &quot;./models/index.js&quot;;
+</code></pre>
+<h2 id="type-only-imports">Type-Only Imports</h2>
+<p>Import types without runtime code:</p>
+<pre><code class="language-typescript">// types.ts
+export interface Config {
+  host: string;
+  port: number;
+}
+</code></pre>
+<pre><code class="language-typescript">// App.ts
+import type { Config } from &quot;./types.js&quot;;
+
+function loadConfig(): Config {
+  return { host: &quot;localhost&quot;, port: 8080 };
+}
+</code></pre>
+<h2 id="net-imports">.NET Imports</h2>
+<p>.NET imports use the <code>.js</code> extension (and do <strong>not</strong> use <code>.ts</code>):</p>
+<pre><code class="language-typescript">// System namespace
+import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+// System.IO namespace
+import { File, Directory } from &quot;@tsonic/dotnet/System.IO.js&quot;;
+
+// System.Collections.Generic
+import { List, Dictionary } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+</code></pre>
+<pre><code class="language-typescript">export function main(): void {
+  Console.writeLine(&quot;Hello from .NET!&quot;);
+
+  const exists = File.exists(&quot;config.json&quot;);
+  const files = Directory.getFiles(&quot;.&quot;);
+}
+</code></pre>
+<h2 id="directory-structure-and-namespaces">Directory Structure and Namespaces</h2>
+<p>File paths map to C# namespaces:</p>
+<pre><code>src/
+├── App.ts           → MyApp.App
+├── models/
+│   ├── User.ts      → MyApp.Models.User
+│   └── Product.ts   → MyApp.Models.Product
+└── services/
+    └── api.ts       → MyApp.Services.Api
+</code></pre>
+<p>When importing across directories:</p>
+<pre><code class="language-typescript">// src/services/api.ts
+  import { User } from &quot;../models/User.js&quot;;
+// Resolves to namespace MyApp.Models
+
+export function getUser(): User {
+  return { id: 1, name: &quot;Alice&quot; };
+}
+</code></pre>
+<h2 id="multiple-file-project">Multiple File Project</h2>
+<pre><code class="language-typescript">// src/models/User.ts
+export interface User {
+  id: number;
+  name: string;
+}
+
+// src/services/UserService.ts
+import { User } from &quot;../models/User.js&quot;;
+
+export class UserService {
+  private users: User[] = [];
+
+  add(user: User): void {
+    this.users.push(user);
+  }
+
+  find(id: number): User | null {
+    for (const user of this.users) {
+      if (user.id === id) {
+        return user;
+      }
+    }
+    return null;
+  }
+}
+
+// src/App.ts
+import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import { User } from &quot;./models/User.js&quot;;
+import { UserService } from &quot;./services/UserService.js&quot;;
+
+export function main(): void {
+  const service = new UserService();
+
+  service.add({ id: 1, name: &quot;Alice&quot; });
+  service.add({ id: 2, name: &quot;Bob&quot; });
+
+  const user = service.find(1);
+  if (user) {
+    Console.writeLine(user.name);
+  }
+}
+</code></pre>
+<p>Build with:</p>
+<pre><code class="language-bash">tsonic build src/App.ts --namespace MyApp
+</code></pre>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Library Mode | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+    <span>Library Mode</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Library Mode</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/library-mode.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="library-mode">Library Mode</h1>
+<p>Library mode generates declarations for your assembly without duplicating types from existing packages.</p>
+<h2 id="use-case">Use Case</h2>
+<p>When building a TypeScript package with .NET bindings:</p>
+<ul>
+<li>BCL types come from <code>@tsonic/dotnet</code> (published package)</li>
+<li>Runtime types come from <code>@tsonic/core</code> (Tsonic runtime primitives)</li>
+<li>Your types are generated fresh with references to these packages</li>
+</ul>
+<h2 id="workflow">Workflow</h2>
+<h3 id="step-1-have-bcl-types">Step 1: Have BCL Types</h3>
+<p>Either generate BCL or use the published package:</p>
+<pre><code class="language-bash"># Option A: Generate BCL yourself
+npx tsbindgen generate -d $DOTNET_RUNTIME -o ./bcl-types
+
+# Option B: Use published package
+npm install @tsonic/dotnet
+# Types are in node_modules/@tsonic/dotnet
+</code></pre>
+<h3 id="step-2-generate-your-library">Step 2: Generate Your Library</h3>
+<pre><code class="language-bash">npx tsbindgen generate \
+  -a ./MyLibrary.dll \
+  -d $DOTNET_RUNTIME \
+  -o ./my-lib-types \
+  --lib ./bcl-types
+</code></pre>
+<h2 id="what---lib-does">What --lib Does</h2>
+<ol>
+<li><strong>Skips library types</strong> - Types from assemblies in <code>--lib</code> packages are not regenerated</li>
+<li><strong>Generates imports</strong> - Cross-references become import statements to the library package</li>
+<li><strong>Validates references</strong> - Ensures all referenced types exist in one of the <code>--lib</code> packages</li>
+<li><strong>Merges contracts</strong> - Multiple <code>--lib</code> options combine their type registries</li>
+</ol>
+<h2 id="multiple-library-references">Multiple Library References</h2>
+<p>You can specify <code>--lib</code> multiple times to reference several packages:</p>
+<pre><code class="language-bash">npx tsbindgen generate \
+  -a ./MyLibrary.dll \
+  -d $DOTNET_RUNTIME \
+  -o ./my-lib-types \
+  --lib ./node_modules/@tsonic/dotnet \
+  --lib ./node_modules/@tsonic/core
+</code></pre>
+<p>When a type is referenced, tsbindgen checks each library in order and imports from the first one that provides it. This allows layered package structures:</p>
+<ul>
+<li><code>@tsonic/core</code> - Tsonic runtime types (primitives, Array, etc.)</li>
+<li><code>@tsonic/dotnet</code> - .NET BCL types (references <code>@tsonic/core</code> for primitives)</li>
+<li>Your package - Your types (references both)</li>
+</ul>
+<h2 id="output-structure">Output Structure</h2>
+<p>Without <code>--lib</code>:</p>
+<pre><code>output/
++-- System.d.ts
++-- System.js
++-- System/
++-- System.Collections.Generic.d.ts
++-- System.Collections.Generic.js
++-- System.Collections.Generic/
++-- MyNamespace.d.ts
++-- MyNamespace.js
++-- MyNamespace/
++-- ... (all emitted namespaces)
+</code></pre>
+<p>With <code>--lib ./bcl-types</code>:</p>
+<pre><code>output/
++-- MyNamespace.d.ts
++-- MyNamespace.js
++-- MyNamespace/
+    +-- bindings.json
+    +-- internal/
+        +-- index.d.ts
+        +-- metadata.json
+</code></pre>
+<p>BCL references become imports:</p>
+<pre><code class="language-typescript">// In MyNamespace/internal/index.d.ts
+import type { List_1 } from '@tsonic/dotnet/System.Collections.Generic.js';
+import type { Exception } from '@tsonic/dotnet/System.js';
+
+export interface MyClass$instance {
+    getItems(): List_1&lt;string&gt;;
+    getError(): Exception;
+}
+</code></pre>
+<h2 id="example-custom-library">Example: Custom Library</h2>
+<h3 id="your-c-library">Your C# Library</h3>
+<pre><code class="language-csharp">// MyLibrary/MyClass.cs
+namespace MyCompany.Utils
+{
+    public class DataProcessor
+    {
+        public List&lt;string&gt; Process(string[] items) { ... }
+        public void HandleError(Exception ex) { ... }
+    }
+}
+</code></pre>
+<h3 id="generate">Generate</h3>
+<pre><code class="language-bash">npx tsbindgen generate \
+  -a ./MyLibrary.dll \
+  -d $DOTNET_RUNTIME \
+  -o ./my-lib-types \
+  --lib ./node_modules/@tsonic/dotnet
+</code></pre>
+<h3 id="output">Output</h3>
+<pre><code class="language-typescript">// my-lib-types/MyCompany.Utils/internal/index.d.ts
+import type { List_1 } from '@tsonic/dotnet/System.Collections.Generic.js';
+import type { Exception } from '@tsonic/dotnet/System.js';
+
+export interface DataProcessor$instance {
+    process(items: string[]): List_1&lt;string&gt;;
+    handleError(ex: Exception): void;
+}
+
+export declare const DataProcessor: {
+    new (): DataProcessor;
+};
+
+export type DataProcessor = DataProcessor$instance;
+</code></pre>
+<h2 id="validation-errors">Validation Errors</h2>
+<p>Library mode performs strict validation:</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Description</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LIB001</code></td>
+<td>Type not found in library</td>
+<td>Ensure BCL is complete</td>
+</tr>
+<tr>
+<td><code>LIB002</code></td>
+<td>Member signature mismatch</td>
+<td>Regenerate with same options</td>
+</tr>
+<tr>
+<td><code>LIB003</code></td>
+<td>Generic constraint mismatch</td>
+<td>Check constraint compatibility</td>
+</tr>
+</tbody>
+</table>
+<h2 id="best-practices">Best Practices</h2>
+<ol>
+<li><strong>Use same --naming</strong> - Match the naming mode of your BCL package</li>
+<li><strong>Keep BCL updated</strong> - Regenerate when .NET version changes</li>
+<li><strong>Pin versions</strong> - Use specific @tsonic/dotnet version in package.json</li>
+</ol>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

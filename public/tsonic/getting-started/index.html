@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Getting Started | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+    <span>Getting Started</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Getting Started</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/getting-started.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="getting-started">Getting Started</h1>
+<p>This guide walks you through installing Tsonic and building your first program.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="nodejs-22">Node.js 22+</h3>
+<p>Download from <a href="https://nodejs.org/">nodejs.org</a> or use a version manager:</p>
+<pre><code class="language-bash"># Using nvm
+nvm install 22
+nvm use 22
+
+# Verify
+node --version
+</code></pre>
+<h3 id="net-10-sdk">.NET 10 SDK</h3>
+<p>Download from <a href="https://dotnet.microsoft.com/download/dotnet/10.0">dotnet.microsoft.com</a>:</p>
+<pre><code class="language-bash"># Linux (Ubuntu/Debian)
+sudo apt-get install dotnet-sdk-10.0
+
+# macOS
+brew install dotnet-sdk
+
+# Verify
+dotnet --version
+</code></pre>
+<h3 id="macos-xcode-command-line-tools">macOS: Xcode Command Line Tools</h3>
+<p>Required for NativeAOT builds on macOS:</p>
+<pre><code class="language-bash">xcode-select --install
+
+# Verify
+xcrun --show-sdk-path
+</code></pre>
+<h2 id="installation">Installation</h2>
+<h3 id="global-installation-recommended">Global Installation (Recommended)</h3>
+<pre><code class="language-bash">npm install -g tsonic
+</code></pre>
+<p>Verify:</p>
+<pre><code class="language-bash">tsonic --version
+</code></pre>
+<h3 id="local-installation">Local Installation</h3>
+<p>For project-specific usage:</p>
+<pre><code class="language-bash">npm install --save-dev tsonic
+npx tsonic --version
+</code></pre>
+<h2 id="creating-a-project">Creating a Project</h2>
+<h3 id="using-project-init">Using project init</h3>
+<p>The easiest way to start:</p>
+<pre><code class="language-bash">mkdir my-app
+cd my-app
+tsonic project init
+</code></pre>
+<p>This creates:</p>
+<pre><code>my-app/
+├── src/
+│   └── App.ts           # Entry point
+├── tsonic.json          # Configuration
+├── package.json         # NPM package with scripts
+├── .gitignore           # Ignores generated/ and out/
+└── README.md            # Project readme
+</code></pre>
+<h3 id="project-init-options">Project Init Options</h3>
+<pre><code class="language-bash"># Skip installing type packages
+tsonic project init --skip-types
+
+# Specify type package version
+tsonic project init --types-version &lt;ver&gt;
+</code></pre>
+<h3 id="manual-setup">Manual Setup</h3>
+<p>If you prefer manual setup:</p>
+<ol>
+<li>Create <code>tsonic.json</code>:</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;rootNamespace&quot;: &quot;MyApp&quot;,
+  &quot;entryPoint&quot;: &quot;src/App.ts&quot;,
+  &quot;sourceRoot&quot;: &quot;src&quot;
+}
+</code></pre>
+<ol start="2">
+<li>Create <code>src/App.ts</code>:</li>
+</ol>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+export function main(): void {
+  Console.writeLine(&quot;Hello!&quot;);
+}
+</code></pre>
+<ol start="3">
+<li>Install type packages:</li>
+</ol>
+<pre><code class="language-bash">npm install --save-dev tsonic @tsonic/core @tsonic/globals
+</code></pre>
+<h2 id="building-and-running">Building and Running</h2>
+<h3 id="build-command">Build Command</h3>
+<p>Generate C# and compile to native:</p>
+<pre><code class="language-bash">tsonic build src/App.ts
+</code></pre>
+<p>Output goes to <code>out/app</code> (or <code>out/app.exe</code> on Windows).</p>
+<h3 id="run-command">Run Command</h3>
+<p>Build and execute in one step:</p>
+<pre><code class="language-bash">tsonic run src/App.ts
+</code></pre>
+<h3 id="npm-scripts">NPM Scripts</h3>
+<p>The generated <code>package.json</code> includes convenience scripts:</p>
+<pre><code class="language-bash">npm run build    # tsonic build src/App.ts
+npm run dev      # tsonic run src/App.ts
+</code></pre>
+<h2 id="understanding-the-output">Understanding the Output</h2>
+<p>After building:</p>
+<pre><code>my-app/
+├── generated/           # Generated C# code
+│   ├── src/
+│   │   └── App.cs       # Your code as C#
+│   ├── Program.cs       # Entry point wrapper
+│   └── tsonic.csproj    # .NET project file
+└── out/
+    └── app              # Native executable
+</code></pre>
+<h3 id="generated-c-example">Generated C# (Example)</h3>
+<p>Your TypeScript:</p>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+export function main(): void {
+  Console.writeLine(&quot;Hello!&quot;);
+}
+</code></pre>
+<p>Becomes:</p>
+<pre><code class="language-csharp">namespace MyApp
+{
+    public static class App
+    {
+        public static void Main()
+        {
+            global::System.Console.WriteLine(&quot;Hello!&quot;);
+        }
+    }
+}
+</code></pre>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="/tsonic/cli/">CLI Reference</a> - All commands and options</li>
+<li><a href="/tsonic/configuration/">Configuration</a> - tsonic.json in detail</li>
+<li><a href="/tsonic/language/">Language Guide</a> - TypeScript features supported</li>
+<li><a href="/tsonic/dotnet-interop/">.NET Interop</a> - Using .NET libraries</li>
+</ul>
+<h3 id="specialized-guides">Specialized Guides</h3>
+<ul>
+<li><a href="/tsonic/numeric-types/">Numeric Types</a> - Integer types and narrowing</li>
+<li><a href="/tsonic/generators/">Generators</a> - Sync, async, and bidirectional generators</li>
+<li><a href="/tsonic/callbacks/">Callbacks</a> - Action and Func patterns</li>
+<li><a href="/tsonic/async-patterns/">Async Patterns</a> - Async/await and for-await</li>
+</ul>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

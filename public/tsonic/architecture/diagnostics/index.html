@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Diagnostics | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Diagnostics</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Diagnostics</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/diagnostics.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="diagnostics-system">Diagnostics System</h1>
+<p>How errors and warnings are created, collected, and reported.</p>
+<h2 id="overview">Overview</h2>
+<p>The diagnostics system provides structured error reporting across all compiler phases. Instead of throwing exceptions, each phase returns <code>Result&lt;T, Diagnostic[]&gt;</code>.</p>
+<h2 id="diagnostic-structure">Diagnostic Structure</h2>
+<pre><code class="language-typescript">type Diagnostic = {
+  readonly code: DiagnosticCode; // &quot;TSN1001&quot;
+  readonly severity: DiagnosticSeverity; // &quot;error&quot; | &quot;warning&quot; | &quot;info&quot;
+  readonly message: string; // Description
+  readonly location?: SourceLocation; // File, line, column
+  readonly hint?: string; // Suggested fix
+  readonly relatedLocations?: readonly SourceLocation[];
+};
+
+type SourceLocation = {
+  readonly file: string;
+  readonly line: number;
+  readonly column: number;
+  readonly length: number;
+};
+</code></pre>
+<h2 id="error-code-ranges">Error Code Ranges</h2>
+<table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Category</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TSN1xxx</td>
+<td>Module resolution and imports</td>
+</tr>
+<tr>
+<td>TSN2xxx</td>
+<td>Type system</td>
+</tr>
+<tr>
+<td>TSN3xxx</td>
+<td>C# keywords and identifiers</td>
+</tr>
+<tr>
+<td>TSN4xxx</td>
+<td>.NET interop</td>
+</tr>
+<tr>
+<td>TSN5xxx</td>
+<td>NativeAOT and runtime</td>
+</tr>
+<tr>
+<td>TSN6xxx</td>
+<td>Internal compiler errors</td>
+</tr>
+<tr>
+<td>TSN7xxx</td>
+<td>Language semantics and validation</td>
+</tr>
+<tr>
+<td>TSN9xxx</td>
+<td>Metadata and bindings loading</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tsn7xxx-detailed-codes">TSN7xxx Detailed Codes</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TSN7403</td>
+<td>Anonymous object literal requires type annotation</td>
+</tr>
+<tr>
+<td>TSN7405</td>
+<td>Object literal contains ineligible pattern</td>
+</tr>
+<tr>
+<td>TSN7406</td>
+<td>Mapped type not supported (Partial, Required, etc.)</td>
+</tr>
+<tr>
+<td>TSN7407</td>
+<td>Conditional type not supported (Extract, Exclude)</td>
+</tr>
+<tr>
+<td>TSN7408</td>
+<td>Mixed variadic tuples not supported</td>
+</tr>
+<tr>
+<td>TSN7409</td>
+<td><code>infer</code> keyword not supported</td>
+</tr>
+<tr>
+<td>TSN7410</td>
+<td>Intersection types not supported (A &amp; B)</td>
+</tr>
+<tr>
+<td>TSN7413</td>
+<td>Dictionary key type restriction (string/number only)</td>
+</tr>
+<tr>
+<td>TSN7414</td>
+<td>Type cannot be represented in compiler subset</td>
+</tr>
+<tr>
+<td>TSN7420</td>
+<td>ref/out/In are parameter modifiers, not types</td>
+</tr>
+</tbody>
+</table>
+<h2 id="creating-diagnostics">Creating Diagnostics</h2>
+<p>Use the factory function:</p>
+<pre><code class="language-typescript">import { createDiagnostic } from &quot;./types/diagnostic.js&quot;;
+
+const diagnostic = createDiagnostic(
+  &quot;TSN1001&quot;,
+  &quot;error&quot;,
+  &quot;Local import must have .js or .ts extension&quot;,
+  { file: &quot;src/main.ts&quot;, line: 5, column: 20, length: 15 },
+  'Add an extension (recommended): &quot;./utils.js&quot;'
+);
+</code></pre>
+<h2 id="collecting-diagnostics">Collecting Diagnostics</h2>
+<p>Use the <code>DiagnosticsCollector</code> to aggregate diagnostics:</p>
+<pre><code class="language-typescript">import {
+  createDiagnosticsCollector,
+  addDiagnostic,
+  mergeDiagnostics,
+} from &quot;./types/diagnostic.js&quot;;
+
+// Create collector
+const collector = createDiagnosticsCollector();
+
+// Add diagnostic (returns new collector - immutable)
+const updated = addDiagnostic(collector, diagnostic);
+
+// Check for errors
+if (updated.hasErrors) {
+  return { ok: false, error: updated.diagnostics };
+}
+
+// Merge multiple collectors
+const merged = mergeDiagnostics(collector1, collector2);
+</code></pre>
+<h2 id="error-flow-through-pipeline">Error Flow Through Pipeline</h2>
+<p>Each phase propagates errors up the chain:</p>
+<pre><code class="language-typescript">const compile = (entryPoint: string): Result&lt;BuildOutput, Diagnostic[]&gt; =&gt; {
+  // Phase 1: Create program
+  const programResult = createProgram(entryPoint);
+  if (!programResult.ok) {
+    return programResult; // Propagate errors
+  }
+
+  // Phase 2: Resolve modules
+  const resolverResult = resolveModules(programResult.value);
+  if (!resolverResult.ok) {
+    return resolverResult; // Propagate errors
+  }
+
+  // Phase 3: Validate
+  const validationResult = validateModules(resolverResult.value);
+  if (!validationResult.ok) {
+    return validationResult; // Propagate errors
+  }
+
+  // ... continue pipeline
+};
+</code></pre>
+<h2 id="phase-specific-errors">Phase-Specific Errors</h2>
+<h3 id="frontend-errors-tsn1xxx-tsn2xxx-tsn7xxx">Frontend Errors (TSN1xxx, TSN2xxx, TSN7xxx)</h3>
+<pre><code class="language-typescript">// Import validation
+const validateImport = (specifier: string): Result&lt;void, Diagnostic&gt; =&gt; {
+  if (!specifier.endsWith(&quot;.js&quot;) &amp;&amp; !specifier.endsWith(&quot;.ts&quot;)) {
+    return {
+      ok: false,
+      error: createDiagnostic(
+        &quot;TSN1001&quot;,
+        &quot;error&quot;,
+        &quot;Local import must have .js or .ts extension&quot;,
+        location,
+        `Change &quot;${specifier}&quot; to &quot;${specifier}.js&quot; (recommended)`
+      ),
+    };
+  }
+  return { ok: true, value: undefined };
+};
+</code></pre>
+<h3 id="emitter-errors-tsn5xxx">Emitter Errors (TSN5xxx)</h3>
+<pre><code class="language-typescript">// Emission error
+const emitExpression = (expr: IrExpression): Result&lt;string, Diagnostic&gt; =&gt; {
+  if (expr.kind === &quot;unsupported&quot;) {
+    return {
+      ok: false,
+      error: createDiagnostic(
+        &quot;TSN5001&quot;,
+        &quot;error&quot;,
+        `Cannot emit expression: ${expr.reason}`,
+        expr.location
+      ),
+    };
+  }
+  // ...
+};
+</code></pre>
+<h3 id="backend-errors-tsn6xxx">Backend Errors (TSN6xxx)</h3>
+<pre><code class="language-typescript">// Build error
+const runDotnetPublish = (cwd: string): Result&lt;string, Diagnostic&gt; =&gt; {
+  const result = spawnSync(&quot;dotnet&quot;, [&quot;publish&quot;], { cwd });
+  if (result.status !== 0) {
+    return {
+      ok: false,
+      error: createDiagnostic(
+        &quot;TSN6001&quot;,
+        &quot;error&quot;,
+        `dotnet publish failed: ${result.stderr}`,
+        undefined,
+        &quot;Check that .NET SDK is installed&quot;
+      ),
+    };
+  }
+  return { ok: true, value: result.stdout };
+};
+</code></pre>
+<h2 id="formatting-diagnostics">Formatting Diagnostics</h2>
+<p>The CLI formats diagnostics for console output:</p>
+<pre><code class="language-typescript">const formatDiagnostic = (diagnostic: Diagnostic): string =&gt; {
+  const parts: string[] = [];
+
+  if (diagnostic.location) {
+    parts.push(
+      `${diagnostic.location.file}:${diagnostic.location.line}:${diagnostic.location.column}`
+    );
+  }
+
+  parts.push(`${diagnostic.severity} ${diagnostic.code}:`);
+  parts.push(diagnostic.message);
+
+  if (diagnostic.hint) {
+    parts.push(`Hint: ${diagnostic.hint}`);
+  }
+
+  return parts.join(&quot; &quot;);
+};
+</code></pre>
+<p>Example output:</p>
+<pre><code>src/main.ts:5:20 error TSN1001: Local import must have .js or .ts extension
+  Hint: Change &quot;./utils&quot; to &quot;./utils.js&quot; (recommended)
+</code></pre>
+<h2 id="related-locations">Related Locations</h2>
+<p>Some errors span multiple files. Use <code>relatedLocations</code>:</p>
+<pre><code class="language-typescript">const createCircularDepError = (cycle: string[]): Diagnostic =&gt; ({
+  code: &quot;TSN1002&quot;,
+  severity: &quot;error&quot;,
+  message: `Circular dependency: ${cycle.join(&quot; -&gt; &quot;)}`,
+  location: { file: cycle[0], line: 1, column: 0, length: 0 },
+  relatedLocations: cycle.slice(1).map((file) =&gt; ({
+    file,
+    line: 1,
+    column: 0,
+    length: 0,
+  })),
+});
+</code></pre>
+<h2 id="error-vs-warning">Error vs Warning</h2>
+<p><strong>Errors</strong> stop compilation:</p>
+<ul>
+<li>Missing imports</li>
+<li>Type mismatches</li>
+<li>Unsupported features</li>
+<li>Build failures</li>
+</ul>
+<p><strong>Warnings</strong> allow compilation to continue:</p>
+<ul>
+<li>Unused imports</li>
+<li>Deprecated features</li>
+<li>Non-critical issues</li>
+</ul>
+<pre><code class="language-typescript">// Error - stops compilation
+const error = createDiagnostic(&quot;TSN1001&quot;, &quot;error&quot;, &quot;Missing file extension&quot;);
+
+// Warning - compilation continues
+const warning = createDiagnostic(
+  &quot;TSN7001&quot;,
+  &quot;warning&quot;,
+  &quot;Import 'User' is declared but never used&quot;
+);
+</code></pre>
+<h2 id="best-practices">Best Practices</h2>
+<ol>
+<li><strong>Specific error codes</strong>: Each error type has a unique code</li>
+<li><strong>Clear messages</strong>: Explain what's wrong</li>
+<li><strong>Helpful hints</strong>: Suggest how to fix</li>
+<li><strong>Accurate locations</strong>: Point to exact position</li>
+<li><strong>Related info</strong>: Include all relevant locations</li>
+<li><strong>Fail early</strong>: Return errors as soon as detected</li>
+<li><strong>Collect all</strong>: In IDE mode, collect all errors before returning</li>
+</ol>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

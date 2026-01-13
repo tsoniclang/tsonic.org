@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Testing | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+    <span>Testing</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Testing</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/testing.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="testing">Testing</h1>
+<p>tsbindgen includes validation and regression testing to ensure correct TypeScript output.</p>
+<h2 id="validation">Validation</h2>
+<h3 id="running-validation">Running Validation</h3>
+<pre><code class="language-bash"># Full BCL validation (2-3 minutes)
+node test/validate/validate.js --strict
+
+# Capture output for analysis
+node test/validate/validate.js --strict 2&gt;&amp;1 | tee .tests/validation-$(date +%s).txt
+</code></pre>
+<h3 id="what-validation-does">What Validation Does</h3>
+<ol>
+<li>Cleans <code>.tests/validate/</code></li>
+<li>Creates <code>tsconfig.json</code> in <code>.tests/validate/</code></li>
+<li>Runs <code>tsbindgen generate</code> against the local .NET runtime</li>
+<li>Verifies each namespace has <code>internal/index.d.ts</code> and <code>internal/metadata.json</code></li>
+<li>Installs <code>@tsonic/core</code> into <code>.tests/validate/</code> (requires npm network access)</li>
+<li>Runs <code>npx tsc</code> and writes output to <code>.tests/tsc-validation.txt</code></li>
+</ol>
+<h3 id="success-criteria">Success Criteria</h3>
+<table>
+<thead>
+<tr>
+<th>Criteria</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zero TypeScript errors</td>
+<td>Required when using <code>--strict</code></td>
+</tr>
+<tr>
+<td>Zero syntax errors (TS1xxx)</td>
+<td>Required (always)</td>
+</tr>
+<tr>
+<td>All assemblies generate</td>
+<td>Required</td>
+</tr>
+<tr>
+<td>All metadata files present</td>
+<td>Required</td>
+</tr>
+</tbody>
+</table>
+<h2 id="regression-tests">Regression Tests</h2>
+<p>Individual test scripts verify specific behaviors.</p>
+<h3 id="running-all-tests">Running All Tests</h3>
+<pre><code class="language-bash">./test/scripts/run-all.sh
+</code></pre>
+<h3 id="individual-tests">Individual Tests</h3>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test-lib.sh</code></td>
+<td>Library mode functionality</td>
+</tr>
+<tr>
+<td><code>test-naming-js.sh</code></td>
+<td>JavaScript naming convention</td>
+</tr>
+<tr>
+<td><code>test-strict-mode.sh</code></td>
+<td>Strict mode validation</td>
+</tr>
+<tr>
+<td><code>test-delegate-callable.sh</code></td>
+<td>Delegate callable signatures</td>
+</tr>
+<tr>
+<td><code>test-delegate-typescript.sh</code></td>
+<td>Delegate typing in TS</td>
+</tr>
+<tr>
+<td><code>test-primitive-identity.sh</code></td>
+<td>Primitive type mappings</td>
+</tr>
+<tr>
+<td><code>test-primitive-lifting.sh</code></td>
+<td>Primitive type lifting in generic args</td>
+</tr>
+<tr>
+<td><code>test-primitive-constraints.sh</code></td>
+<td>Primitive constraint invariants</td>
+</tr>
+<tr>
+<td><code>test-camelcase-regression.sh</code></td>
+<td>CamelCase conversion</td>
+</tr>
+<tr>
+<td><code>test-multiarity-import.sh</code></td>
+<td>Multi-arity types import correctly</td>
+</tr>
+<tr>
+<td><code>test-multiarity-no-wrong-export.sh</code></td>
+<td>Facades don't export wrong arity</td>
+</tr>
+<tr>
+<td><code>test-facade-constraint-invariants.sh</code></td>
+<td>Constraint invariants validation</td>
+</tr>
+<tr>
+<td><code>test-facade-clean-exports.sh</code></td>
+<td>Facades don't leak internal types</td>
+</tr>
+<tr>
+<td><code>test-facade-value-exports.sh</code></td>
+<td>Facade value exports correctness</td>
+</tr>
+<tr>
+<td><code>test-params-rest.sh</code></td>
+<td>C# params → TS rest parameters</td>
+</tr>
+<tr>
+<td><code>test-cross-module-alias.sh</code></td>
+<td>Cross-module type aliases</td>
+</tr>
+<tr>
+<td><code>test-surface-manifest.sh</code></td>
+<td>Surface regression guard</td>
+</tr>
+</tbody>
+</table>
+<h3 id="running-a-single-test">Running a Single Test</h3>
+<pre><code class="language-bash">./test/scripts/test-lib.sh
+</code></pre>
+<h2 id="analyzing-errors">Analyzing Errors</h2>
+<h3 id="error-categories">Error Categories</h3>
+<pre><code>TS1xxx - Syntax errors (CRITICAL - must be zero)
+TS2xxx - Semantic errors (FIXED in v0.7.4 - now zero)
+TS6200 - Duplicate type aliases (expected for primitive type aliases)
+</code></pre>
+<h3 id="finding-specific-errors">Finding Specific Errors</h3>
+<pre><code class="language-bash"># Run validation with capture
+node test/validate/validate.js 2&gt;&amp;1 | tee .tests/run.txt
+
+# Count errors by type
+grep &quot;error TS&quot; .tests/run.txt | sed 's/.*error \(TS[0-9]*\).*/\1/' | sort | uniq -c | sort -rn
+
+# Find specific error examples
+grep &quot;TS2417&quot; .tests/run.txt | head -20
+
+# Errors for specific namespace
+grep &quot;System.Collections.Generic&quot; .tests/run.txt
+</code></pre>
+<h2 id="known-semantic-errors">Known Semantic Errors</h2>
+<p><strong>As of v0.7.4</strong>: The BCL compiles with <strong>zero semantic errors</strong>. All previously known issues have been fixed.</p>
+<h3 id="ts2417---property-covariance-fixed">TS2417 - Property Covariance (FIXED)</h3>
+<p>C# allows properties to return more specific types than interfaces require. TypeScript doesn't support property overloads.</p>
+<p><strong>Status</strong>: <strong>FIXED</strong> in v0.7.4 - PropertyOverrideUnifier uses union types for covariant properties.</p>
+<h3 id="ts2430---interface-method-conflicts-fixed">TS2430 - Interface Method Conflicts (FIXED)</h3>
+<p>Method signature mismatch between class and inherited interface (e.g., different method overloads).</p>
+<p><strong>Status</strong>: <strong>FIXED</strong> in v0.7.4 - ClassPrinter emits inherited method overloads.</p>
+<h3 id="ts2344---constraint-violations-fixed">TS2344 - Constraint Violations (FIXED)</h3>
+<p>Multi-arity facade type parameters passed to constrained internal types without verification.</p>
+<p><strong>Status</strong>: <strong>FIXED</strong> in v0.7.4 - MultiArityAliasEmit uses nested constraint guards.</p>
+<h3 id="ts6200---duplicate-type-aliases">TS6200 - Duplicate Type Aliases</h3>
+<p>Expected for primitive type aliases that may be declared in multiple namespaces.</p>
+<p><strong>Status</strong>: Harmless, declaration merging handles it.</p>
+<h2 id="test-output-directories">Test Output Directories</h2>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.tests/</code></td>
+<td>Captured validation output (gitignored)</td>
+</tr>
+<tr>
+<td><code>.tests/validate/</code></td>
+<td>Generated declarations for <code>validate.js</code></td>
+</tr>
+<tr>
+<td><code>test/baselines/</code></td>
+<td>Surface manifest baselines</td>
+</tr>
+</tbody>
+</table>
+<h2 id="surface-manifest-testing">Surface Manifest Testing</h2>
+<p>Tracks the public API surface for regression detection.</p>
+<pre><code class="language-bash"># Capture baseline (writes `test/baselines/bcl-surface-manifest.json`)
+bash test/scripts/capture-baseline.sh
+
+# Verify current output matches baseline
+bash test/scripts/test-surface-manifest.sh
+</code></pre>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

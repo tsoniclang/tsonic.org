@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nodejs Typescript Errors Analysis | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+    <span>Nodejs Typescript Errors Analysis</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Nodejs Typescript Errors Analysis</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/nodejs-typescript-errors-analysis.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="nodejs-typescript-errors-analysis-report">nodejs TypeScript Errors Analysis Report</h1>
+<blockquote>
+<p><strong>RESOLVED</strong>: This document is historical. All errors described here have been fixed in v0.7.4.
+The nodejs package now compiles with <strong>zero TypeScript errors</strong>.</p>
+</blockquote>
+<p><strong>Date:</strong> 2025-12-06
+<strong>Author:</strong> Claude (with Jeswin)
+<strong>Package:</strong> @tsonic/nodejs
+<strong>Total Errors:</strong> <del>13 nodejs-specific + 18 BCL errors</del> → <strong>0 errors (v0.7.4+)</strong></p>
+<hr />
+<h2 id="executive-summary">Executive Summary</h2>
+<p>After implementing library mode in tsbindgen, the nodejs package correctly imports BCL types from <code>@tsonic/dotnet</code> using facade names. However, 13 TypeScript errors remain in the nodejs package itself. These fall into 3 distinct categories:</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Count</th>
+<th>Severity</th>
+<th>Fix Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TS2300: Duplicate IEnumerable</td>
+<td>4</td>
+<td>High</td>
+<td>ImportPlanner.cs or FacadeEmitter.cs</td>
+</tr>
+<tr>
+<td>TS1016: Required param after optional</td>
+<td>8</td>
+<td>Medium</td>
+<td>MethodPrinter.cs</td>
+</tr>
+<tr>
+<td>TS2314: ValueTuple requires 1 arg</td>
+<td>1</td>
+<td>Medium</td>
+<td>FacadeEmitter.cs (AliasEmit.cs)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="error-1-ts2300---duplicate-identifier-ienumerable">Error 1: TS2300 - Duplicate Identifier 'IEnumerable'</h2>
+<h3 id="error-messages">Error Messages</h3>
+<pre><code>nodejs.d.ts(9,71): error TS2300: Duplicate identifier 'IEnumerable'.
+nodejs.d.ts(10,15): error TS2300: Duplicate identifier 'IEnumerable'.
+nodejs/internal/index.d.ts(13,71): error TS2300: Duplicate identifier 'IEnumerable'.
+nodejs/internal/index.d.ts(15,15): error TS2300: Duplicate identifier 'IEnumerable'.
+</code></pre>
+<h3 id="context">Context</h3>
+<p>In .NET, there are TWO types named <code>IEnumerable</code>:</p>
+<ol>
+<li><strong><code>System.Collections.IEnumerable</code></strong> - Non-generic interface (legacy)</li>
+<li><strong><code>System.Collections.Generic.IEnumerable&lt;T&gt;</code></strong> - Generic interface (modern)</li>
+</ol>
+<p>These are in DIFFERENT namespaces but have the same simple name.</p>
+<h3 id="what-happened">What Happened</h3>
+<p>When tsbindgen's facade system transforms type names:</p>
+<ul>
+<li><code>System.Collections.Generic.IEnumerable</code>1<code>→ exports as</code>IEnumerable` (arity stripped)</li>
+<li><code>System.Collections.IEnumerable</code> → exports as <code>IEnumerable</code> (no arity to strip)</li>
+</ul>
+<p>Both become <code>IEnumerable</code> in their respective facade files:</p>
+<pre><code class="language-typescript">// @tsonic/dotnet/System.Collections.Generic.d.ts
+export type IEnumerable&lt;T&gt; = Internal.IEnumerable_1&lt;T&gt;;
+
+// @tsonic/dotnet/System.Collections.d.ts
+export type IEnumerable = Internal.IEnumerable;
+</code></pre>
+<p>When nodejs imports from BOTH namespaces, TypeScript sees a duplicate:</p>
+<pre><code class="language-typescript">// nodejs/internal/index.d.ts (GENERATED - PROBLEMATIC)
+import type { ..., IEnumerable, ... } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+import type { IEnumerable } from &quot;@tsonic/dotnet/System.Collections.js&quot;;  // COLLISION!
+</code></pre>
+<h3 id="root-cause">Root Cause</h3>
+<p>The <code>ImportPlanner.cs</code> deduplication logic only prevents duplicate imports within a SINGLE import statement. It doesn't handle same-name imports from DIFFERENT namespaces.</p>
+<pre><code class="language-csharp">// Current code (ImportPlanner.cs:156-162)
+// LIBRARY FACADE FIX: Skip if this facade name was already imported
+// Multiple arity types (Action_1, Action_2, Action_3) all map to same facade name (Action)
+if (typeImports.Any(ti =&gt; ti.TypeName == tsName))
+{
+    ctx.Log(&quot;ImportPlanner&quot;, $&quot;Skipping duplicate facade import: {tsName}&quot;);
+    continue;
+}
+</code></pre>
+<p>This deduplication is scoped to a single <code>foreach</code> iteration (one target namespace), not across all namespaces.</p>
+<h3 id="test-case">Test Case</h3>
+<pre><code class="language-typescript">// test-duplicate-import.ts
+import type { IEnumerable } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+import type { IEnumerable } from &quot;@tsonic/dotnet/System.Collections.js&quot;;
+// Error: Duplicate identifier 'IEnumerable'
+
+// What TypeScript expects:
+import type { IEnumerable } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+import type { IEnumerable as IEnumerable_NonGeneric } from &quot;@tsonic/dotnet/System.Collections.js&quot;;
+</code></pre>
+<h3 id="potential-fixes">Potential Fixes</h3>
+<p><strong>Option A: Cross-namespace deduplication with aliasing (ImportPlanner.cs)</strong></p>
+<pre><code class="language-csharp">// Track all imported type names across ALL namespaces
+var allImportedTypeNames = new HashSet&lt;string&gt;();
+
+foreach (var targetNamespace in dependencies.OrderBy(d =&gt; d))
+{
+    // ... existing code ...
+
+    foreach (var clrName in referencedTypeClrNames)
+    {
+        // ... compute tsName ...
+
+        // NEW: Check if this name was already imported from ANY namespace
+        if (allImportedTypeNames.Contains(tsName))
+        {
+            // Need alias - append namespace suffix
+            var alias = $&quot;{tsName}_{GetNamespaceShortName(targetNamespace)}&quot;;
+            typeImports.Add(new TypeImport(TypeName: tsName, Alias: alias, ...));
+        }
+        else
+        {
+            allImportedTypeNames.Add(tsName);
+            typeImports.Add(new TypeImport(TypeName: tsName, Alias: null, ...));
+        }
+    }
+}
+</code></pre>
+<p><strong>Option B: Facade naming differentiation (FacadeEmitter.cs)</strong></p>
+<p>Since <code>IEnumerable</code> (non-generic) is rarely used directly in modern code, we could export it with a suffix:</p>
+<pre><code class="language-typescript">// System.Collections.d.ts
+export type IEnumerable_0 = Internal.IEnumerable;  // Non-generic gets _0
+</code></pre>
+<p>This would match how we handle <code>Task</code> vs <code>Task&lt;T&gt;</code> → <code>Task_0</code> vs <code>Task</code>.</p>
+<p><strong>Recommendation:</strong> Option A is more robust. It handles ANY cross-namespace name collision, not just IEnumerable.</p>
+<hr />
+<h2 id="error-2-ts1016---required-parameter-after-optional">Error 2: TS1016 - Required Parameter After Optional</h2>
+<h3 id="error-messages-1">Error Messages</h3>
+<pre><code>nodejs/internal/index.d.ts(2094,53): error TS1016: A required parameter cannot follow an optional parameter.
+nodejs/internal/index.d.ts(2098,37): error TS1016: A required parameter cannot follow an optional parameter.
+nodejs/internal/index.d.ts(2101,37): error TS1016: A required parameter cannot follow an optional parameter.
+nodejs/internal/index.d.ts(2105,36): error TS1016: A required parameter cannot follow an optional parameter.
+nodejs/internal/index.d.ts(2106,35): error TS1016: A required parameter cannot follow an optional parameter.
+nodejs/internal/index.d.ts(2112,36): error TS1016: A required parameter cannot follow an optional parameter.
+nodejs/internal/index.d.ts(2114,37): error TS1016: A required parameter cannot follow an optional parameter.
+nodejs/internal/index.d.ts(2115,36): error TS1016: A required parameter cannot follow an optional parameter.
+</code></pre>
+<h3 id="context-1">Context</h3>
+<p>In C#, the <code>params</code> keyword allows variadic arguments:</p>
+<pre><code class="language-csharp">// nodejs-clr/src/nodejs/console/console.cs (line 24)
+public static void assert(bool value, string? message = null, params object[] optionalParams)
+{
+    // Can be called as:
+    // assert(true)
+    // assert(true, &quot;message&quot;)
+    // assert(true, &quot;message&quot;, arg1, arg2, arg3)
+}
+</code></pre>
+<p>Key behaviors:</p>
+<ul>
+<li><code>message</code> is optional (<code>= null</code>)</li>
+<li><code>params object[] optionalParams</code> is IMPLICITLY optional in C# - you can omit it entirely</li>
+</ul>
+<h3 id="what-happened-1">What Happened</h3>
+<p>tsbindgen emits <code>params</code> arrays as regular (required) arrays:</p>
+<pre><code class="language-typescript">// Generated TypeScript (WRONG)
+static assert(value: boolean, message?: string, optionalParams: unknown[]): void;
+//                            ^^^^^^^^ optional    ^^^^^^^^^^^^^^^^^^ required!
+
+// TypeScript rule: Required params cannot follow optional params
+</code></pre>
+<h3 id="root-cause-1">Root Cause</h3>
+<p>The <code>MethodPrinter.cs</code> (or wherever parameters are emitted) doesn't mark <code>params</code> arrays as optional:</p>
+<pre><code class="language-csharp">// Current emission (simplified)
+foreach (var param in method.Parameters)
+{
+    var isOptional = param.HasDefaultValue;  // Only checks HasDefaultValue
+    // params arrays don't have HasDefaultValue, so they're treated as required
+}
+</code></pre>
+<h3 id="test-case-1">Test Case</h3>
+<pre><code class="language-csharp">// C# source
+public static void log(object? message = null, params object[] optionalParams) { }
+
+// Current TypeScript emission (WRONG)
+static log(message?: unknown, optionalParams: unknown[]): void;
+
+// Correct TypeScript emission
+static log(message?: unknown, optionalParams?: unknown[]): void;
+//                                          ^ must be optional!
+
+// Or with rest syntax (more idiomatic):
+static log(message?: unknown, ...optionalParams: unknown[]): void;
+</code></pre>
+<h3 id="potential-fixes-1">Potential Fixes</h3>
+<p><strong>Option A: Mark params arrays as optional</strong></p>
+<pre><code class="language-csharp">// In MethodPrinter.cs or ParameterEmitter.cs
+var isOptional = param.HasDefaultValue || param.IsParams;
+
+// Emit as: paramName?: unknown[]
+</code></pre>
+<p><strong>Option B: Use TypeScript rest syntax</strong></p>
+<pre><code class="language-csharp">// Detect params arrays and emit with rest syntax
+if (param.IsParams)
+{
+    sb.Append($&quot;...{paramName}: {elementType}[]&quot;);
+}
+else
+{
+    sb.Append($&quot;{paramName}{optionalMarker}: {paramType}&quot;);
+}
+
+// Emit as: ...optionalParams: unknown[]
+</code></pre>
+<p><strong>Recommendation:</strong> Option B is more idiomatic TypeScript. Rest parameters (<code>...args</code>) are the TypeScript equivalent of C# <code>params</code>.</p>
+<h3 id="affected-methods-8-total">Affected Methods (8 total)</h3>
+<p>All in <code>console$instance</code>:</p>
+<ul>
+<li><code>assert(value, message?, optionalParams)</code> - line 2094</li>
+<li><code>debug(message?, optionalParams)</code> - line 2098</li>
+<li><code>error(message?, optionalParams)</code> - line 2101</li>
+<li><code>info(message?, optionalParams)</code> - line 2105</li>
+<li><code>log(message?, optionalParams)</code> - line 2106</li>
+<li><code>timeLog(label?, data)</code> - line 2112</li>
+<li><code>trace(message?, optionalParams)</code> - line 2114</li>
+<li><code>warn(message?, optionalParams)</code> - line 2115</li>
+</ul>
+<hr />
+<h2 id="error-3-ts2314---generic-type-requires-type-arguments">Error 3: TS2314 - Generic Type Requires Type Arguments</h2>
+<h3 id="error-message">Error Message</h3>
+<pre><code>nodejs/internal/index.d.ts(2147,67): error TS2314: Generic type 'ValueTuple_1' requires 1 type argument(s).
+</code></pre>
+<h3 id="context-2">Context</h3>
+<p>In C#, <code>ValueTuple</code> comes in multiple arities:</p>
+<ul>
+<li><code>ValueTuple</code> - 0 elements (empty tuple)</li>
+<li><code>ValueTuple&lt;T1&gt;</code> - 1 element</li>
+<li><code>ValueTuple&lt;T1, T2&gt;</code> - 2 elements</li>
+<li>... up to <code>ValueTuple&lt;T1, ..., T8&gt;</code> - 8 elements</li>
+</ul>
+<p>This is similar to <code>Action</code> and <code>Func</code> which also have multiple arities.</p>
+<h3 id="what-happened-2">What Happened</h3>
+<p>The nodejs code uses <code>ValueTuple&lt;T1, T2&gt;</code> (2-element tuple):</p>
+<pre><code class="language-csharp">// C# source
+public static ValueTuple&lt;KeyObject, KeyObject&gt; generateKeyPairSync(string type_, object? options = null)
+</code></pre>
+<p>Which should emit as:</p>
+<pre><code class="language-typescript">static generateKeyPairSync(type_: string, options?: unknown): ValueTuple_2&lt;KeyObject, KeyObject&gt;;
+</code></pre>
+<p>But it emits as:</p>
+<pre><code class="language-typescript">// Generated (WRONG)
+static generateKeyPairSync(type_: string, options?: unknown): ValueTuple&lt;KeyObject, KeyObject&gt;;
+</code></pre>
+<p>The problem: <code>ValueTuple</code> in the facade maps to <code>ValueTuple_1</code> (1-arg), not a conditional type that handles all arities:</p>
+<pre><code class="language-typescript">// Current facade exports (System.d.ts)
+export { ValueTuple as ValueTuple_0 } from './System/internal/index.js';
+export { ValueTuple_1 as ValueTuple } from './System/internal/index.js';
+// Missing: ValueTuple_2 through ValueTuple_8!
+</code></pre>
+<p>When nodejs imports <code>ValueTuple</code> and uses it with 2 type arguments:</p>
+<pre><code class="language-typescript">import type { ValueTuple } from &quot;@tsonic/dotnet/System.js&quot;;
+// ValueTuple is actually ValueTuple_1 which requires exactly 1 type argument
+
+ValueTuple&lt;KeyObject, KeyObject&gt;  // Error! ValueTuple_1 only takes 1 arg
+</code></pre>
+<h3 id="root-cause-2">Root Cause</h3>
+<p>The facade emitter has special handling for <code>Action</code> and <code>Func</code> (conditional types), but NOT for <code>ValueTuple</code>:</p>
+<pre><code class="language-typescript">// System.d.ts - Action uses conditional type for all arities
+export type Action&lt;
+  T1 = __,
+  T2 = __,
+  ...
+  T16 = __,
+&gt; =
+  [T1] extends [__] ? ((() =&gt; void) | Internal.Action) :
+  [T2] extends [__] ? (((arg1: T1) =&gt; void) | Internal.Action_1&lt;T1&gt;) :
+  [T3] extends [__] ? (((arg1: T1, arg2: T2) =&gt; void) | Internal.Action_2&lt;T1, T2&gt;) :
+  // ... handles all arities with one export name
+
+// ValueTuple SHOULD have similar treatment but doesn't:
+export type ValueTuple&lt;
+  T1 = __,
+  T2 = __,
+  ...
+  T8 = __,
+&gt; =
+  [T1] extends [__] ? Internal.ValueTuple :
+  [T2] extends [__] ? Internal.ValueTuple_1&lt;T1&gt; :
+  [T3] extends [__] ? Internal.ValueTuple_2&lt;T1, T2&gt; :
+  // ... etc
+</code></pre>
+<h3 id="test-case-2">Test Case</h3>
+<pre><code class="language-typescript">// test-valuetuple.ts
+import type { ValueTuple } from &quot;@tsonic/dotnet/System.js&quot;;
+
+// Current behavior (FAILS)
+type KeyPair = ValueTuple&lt;string, number&gt;;  // Error: requires 1 type argument
+
+// Expected behavior
+type KeyPair = ValueTuple&lt;string, number&gt;;  // Should work, maps to ValueTuple_2
+</code></pre>
+<h3 id="potential-fixes-2">Potential Fixes</h3>
+<p><strong>Option A: Add conditional type for ValueTuple (AliasEmit.cs)</strong></p>
+<p>Add <code>ValueTuple</code> to the list of multi-arity types that get conditional type treatment:</p>
+<pre><code class="language-csharp">// In AliasEmit.cs or DelegateAliasEmit.cs
+private static readonly HashSet&lt;string&gt; MultiArityTypes = new()
+{
+    &quot;System.Action&quot;,
+    &quot;System.Func&quot;,
+    &quot;System.ValueTuple&quot;,  // ADD THIS
+    &quot;System.Tuple&quot;,       // Also has multiple arities
+};
+</code></pre>
+<p>Then generate:</p>
+<pre><code class="language-typescript">export type ValueTuple&lt;
+  T1 = __,
+  T2 = __,
+  T3 = __,
+  T4 = __,
+  T5 = __,
+  T6 = __,
+  T7 = __,
+  T8 = __,
+&gt; =
+  [T1] extends [__] ? Internal.ValueTuple :
+  [T2] extends [__] ? Internal.ValueTuple_1&lt;T1&gt; :
+  [T3] extends [__] ? Internal.ValueTuple_2&lt;T1, T2&gt; :
+  [T4] extends [__] ? Internal.ValueTuple_3&lt;T1, T2, T3&gt; :
+  [T5] extends [__] ? Internal.ValueTuple_4&lt;T1, T2, T3, T4&gt; :
+  [T6] extends [__] ? Internal.ValueTuple_5&lt;T1, T2, T3, T4, T5&gt; :
+  [T7] extends [__] ? Internal.ValueTuple_6&lt;T1, T2, T3, T4, T5, T6&gt; :
+  [T8] extends [__] ? Internal.ValueTuple_7&lt;T1, T2, T3, T4, T5, T6, T7&gt; :
+  Internal.ValueTuple_8&lt;T1, T2, T3, T4, T5, T6, T7, T8&gt;;
+</code></pre>
+<p><strong>Option B: Export all arities individually</strong></p>
+<p>Export each arity separately in the facade:</p>
+<pre><code class="language-typescript">export { ValueTuple as ValueTuple_0 } from './System/internal/index.js';
+export { ValueTuple_1 } from './System/internal/index.js';
+export { ValueTuple_2 } from './System/internal/index.js';
+// ... etc
+</code></pre>
+<p>Then user code imports the specific arity:</p>
+<pre><code class="language-typescript">import type { ValueTuple_2 } from &quot;@tsonic/dotnet/System.js&quot;;
+type KeyPair = ValueTuple_2&lt;string, number&gt;;
+</code></pre>
+<p><strong>Recommendation:</strong> Option A is preferred. It provides ergonomic usage (<code>ValueTuple&lt;A, B&gt;</code> instead of <code>ValueTuple_2&lt;A, B&gt;</code>) and matches how Action/Func work.</p>
+<hr />
+<h2 id="appendix-bcl-errors-known-limitation">Appendix: BCL Errors (Known Limitation)</h2>
+<p>The 18 TS2430 errors in <code>@tsonic/dotnet/System.Numerics.js</code> are a known .NET/TypeScript impedance mismatch:</p>
+<pre><code>error TS2430: Interface 'IBinaryFloatingPointIeee754_1$instance&lt;TSelf&gt;' incorrectly extends
+interface 'IUtf8SpanFormattable$instance'.
+  Types of property 'tryFormat' are incompatible.
+</code></pre>
+<p>This occurs because:</p>
+<ol>
+<li>C# interfaces have covariant method overloading</li>
+<li>TypeScript interfaces don't support method overloading with incompatible signatures</li>
+</ol>
+<p>This is tracked as a known limitation and is NOT caused by the library mode changes.</p>
+<hr />
+<h2 id="summary-of-recommended-actions">Summary of Recommended Actions</h2>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+<th>File</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TS2300 Duplicate IEnumerable</td>
+<td>Cross-namespace deduplication with aliasing</td>
+<td>ImportPlanner.cs</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>TS1016 Params not optional</td>
+<td>Use rest syntax for params arrays</td>
+<td>MethodPrinter.cs</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>TS2314 ValueTuple arity</td>
+<td>Add conditional type (like Action/Func)</td>
+<td>AliasEmit.cs</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total Effort:</strong> ~2-3 hours of focused work</p>
+<hr />
+<h2 id="files-referenced">Files Referenced</h2>
+<ul>
+<li><code>tsbindgen/src/tsbindgen/Plan/ImportPlanner.cs</code> - Import deduplication logic</li>
+<li><code>tsbindgen/src/tsbindgen/Emit/*.cs</code> - Type/method emission</li>
+<li><code>nodejs/nodejs/internal/index.d.ts</code> - Generated output with errors</li>
+<li><code>dotnet/System.d.ts</code> - Facade exports</li>
+<li><code>nodejs-clr/src/nodejs/console/console.cs</code> - C# source with params</li>
+</ul>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

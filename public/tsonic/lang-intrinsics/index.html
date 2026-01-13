@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lang Intrinsics | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+    <span>Lang Intrinsics</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Lang Intrinsics</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/lang-intrinsics.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="language-intrinsics">Language Intrinsics</h1>
+<p>Tsonic includes a small set of <strong>language intrinsics</strong> in <code>@tsonic/core/lang.js</code>. These are TypeScript declarations that compile to C# keywords and special forms.</p>
+<pre><code class="language-typescript">import {
+  stackalloc,
+  sizeof,
+  nameof,
+  defaultof,
+  trycast,
+} from &quot;@tsonic/core/lang.js&quot;;
+</code></pre>
+<h2 id="stackalloc">stackalloc</h2>
+<p>Allocate stack memory and get a <code>Span&lt;T&gt;</code>:</p>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import { stackalloc } from &quot;@tsonic/core/lang.js&quot;;
+import { int } from &quot;@tsonic/core/types.js&quot;;
+
+export function main(): void {
+  const buffer = stackalloc&lt;int&gt;(256);
+  buffer[0] = 42;
+
+  Console.writeLine(`First: ${buffer[0]}`);
+  Console.writeLine(`Length: ${buffer.length}`);
+}
+</code></pre>
+<p>This emits C# like:</p>
+<pre><code class="language-csharp">Span&lt;int&gt; buffer = stackalloc int[256];
+buffer[0] = 42;
+</code></pre>
+<h2 id="sizeof">sizeof</h2>
+<p>Get the size (bytes) of an unmanaged type:</p>
+<pre><code class="language-typescript">import { sizeof } from &quot;@tsonic/core/lang.js&quot;;
+import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const bytes: int = sizeof&lt;int&gt;();
+</code></pre>
+<h2 id="defaultof">defaultof</h2>
+<p>Get the default value for a type:</p>
+<pre><code class="language-typescript">import { defaultof } from &quot;@tsonic/core/lang.js&quot;;
+import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const zero: int = defaultof&lt;int&gt;();
+const nothing = defaultof&lt;object&gt;(); // null
+</code></pre>
+<h2 id="nameof">nameof</h2>
+<p>Get a symbol name as a string:</p>
+<pre><code class="language-typescript">import { nameof } from &quot;@tsonic/core/lang.js&quot;;
+
+export function main(): void {
+  const myVariable = 123;
+  const field = nameof(myVariable); // &quot;myVariable&quot;
+  void field;
+}
+</code></pre>
+<h2 id="trycast">trycast</h2>
+<p>Safe cast that returns <code>null</code> on failure (C# <code>as</code>):</p>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import { trycast } from &quot;@tsonic/core/lang.js&quot;;
+
+class Animal {
+  name!: string;
+}
+
+class Dog extends Animal {
+  breed!: string;
+}
+
+export function main(animal: Animal): void {
+  const dog = trycast&lt;Dog&gt;(animal);
+  if (dog !== null) {
+    Console.writeLine(dog.breed);
+  }
+}
+</code></pre>
+<h2 id="thisarg-extension-method-receiver">thisarg (extension method receiver)</h2>
+<p><code>thisarg&lt;T&gt;</code> marks the <strong>receiver parameter</strong> of a C# extension method. It is only valid on the <strong>first parameter</strong> of a <strong>top-level</strong> function declaration.</p>
+<pre><code class="language-typescript">import type { thisarg } from &quot;@tsonic/core/lang.js&quot;;
+import { int } from &quot;@tsonic/core/types.js&quot;;
+
+export function inc(x: thisarg&lt;int&gt;): int {
+  return x + 1;
+}
+</code></pre>
+<p>This emits C# like:</p>
+<pre><code class="language-csharp">public static int Inc(this int x) =&gt; x + 1;
+</code></pre>
+<h2 id="ptr-unsafe-pointers">ptr (unsafe pointers)</h2>
+<p><code>ptr&lt;T&gt;</code> is a type marker for unsafe pointer types (<code>T*</code>). It is defined in <code>@tsonic/core/types.js</code>.</p>
+<pre><code class="language-typescript">import type { ptr } from &quot;@tsonic/core/types.js&quot;;
+import { int } from &quot;@tsonic/core/types.js&quot;;
+
+export function accept(p: ptr&lt;int&gt;): void {}
+export function accept2(p: ptr&lt;ptr&lt;int&gt;&gt;): void {} // int**
+</code></pre>
+<p>Pointers are intended for interop and low-level scenarios; prefer safe APIs (<code>Span&lt;T&gt;</code>, <code>IntPtr</code>, etc.) when possible.</p>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+
