@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Renaming | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Renaming</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Renaming</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/architecture/renaming.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="renaming-system">Renaming System</h1>
+<p>The renaming system manages all TypeScript identifier generation.</p>
+<h2 id="symbolrenamer">SymbolRenamer</h2>
+<p><strong>File:</strong> <code>Renaming/SymbolRenamer.cs</code></p>
+<p>Central naming authority:</p>
+<pre><code class="language-csharp">public sealed class SymbolRenamer
+{
+    // Style transforms
+    public void AdoptTypeStyleTransform(Func&lt;string, string&gt; transform);
+    public void AdoptMemberStyleTransform(Func&lt;string, string&gt; transform);
+
+    // Reservation
+    public void ReserveTypeName(StableId id, string requested, RenameScope scope, ...);
+    public void ReserveMemberName(StableId id, string requested, RenameScope scope, ...);
+
+    // Querying
+    public string GetFinalTypeName(TypeSymbol type);
+    public string GetInstanceTypeName(TypeSymbol type);   // T$instance
+    public string GetStaticInterfaceName(TypeSymbol type); // T$static
+    public string GetFinalMemberName(StableId id, RenameScope scope);
+}
+</code></pre>
+<h2 id="scopes">Scopes</h2>
+<p><strong>File:</strong> <code>Renaming/RenameScope.cs</code></p>
+<p>Names are reserved within scopes:</p>
+<pre><code class="language-csharp">public abstract record RenameScope(string ScopeKey);
+
+public sealed record NamespaceScope(
+    string NamespaceName,
+    NamespaceArea Area     // Internal or Facade
+) : RenameScope($&quot;ns:{NamespaceName}#{Area}&quot;);
+
+public sealed record TypeScope(
+    string TypeClrName,
+    bool IsStatic,
+    bool IsView,
+    string? ViewInterfaceId
+) : RenameScope(...);
+</code></pre>
+<p><strong>Scope examples:</strong></p>
+<ul>
+<li><code>ns:System.Collections.Generic#internal</code> - Namespace scope</li>
+<li><code>type:System.Collections.Generic.List\</code>1#instance` - Instance members</li>
+<li><code>type:System.Collections.Generic.List\</code>1#static` - Static members</li>
+<li><code>view:System.Collections.Generic.List\</code>1:IEnumerable`1#instance` - View members</li>
+</ul>
+<h2 id="scopefactory">ScopeFactory</h2>
+<p><strong>File:</strong> <code>Renaming/ScopeFactory.cs</code></p>
+<p>Creates properly-formatted scopes:</p>
+<pre><code class="language-csharp">public static class ScopeFactory
+{
+    public static NamespaceScope Namespace(string name, NamespaceArea area = Internal);
+    public static TypeScope ClassSurface(TypeSymbol type, bool isStatic);
+    public static TypeScope ViewSurface(TypeSymbol type, StableId interfaceId, bool isStatic);
+}
+</code></pre>
+<h2 id="name-reservation-table">Name Reservation Table</h2>
+<p><strong>File:</strong> <code>Renaming/NameReservationTable.cs</code></p>
+<p>Tracks reserved names per scope:</p>
+<pre><code class="language-csharp">public sealed class NameReservationTable
+{
+    public bool TryReserve(string name, StableId owner);
+    public bool IsReserved(string name);
+    public int AllocateNextSuffix(string baseName);
+}
+</code></pre>
+<h2 id="conflict-resolution">Conflict Resolution</h2>
+<p>When a name is taken, numeric suffixes are added:</p>
+<pre><code>add -&gt; add       (first)
+add -&gt; add2      (conflict)
+add -&gt; add3      (conflict)
+</code></pre>
+<p>For explicit interface implementations, interface name is used:</p>
+<pre><code>clear -&gt; clear             (own method)
+clear -&gt; clear_ICollection (explicit impl)
+</code></pre>
+<h2 id="typescript-reserved-words">TypeScript Reserved Words</h2>
+<p><strong>File:</strong> <code>Renaming/TypeScriptReservedWords.cs</code></p>
+<pre><code class="language-csharp">private static readonly HashSet&lt;string&gt; Reserved = new()
+{
+    // Keywords
+    &quot;break&quot;, &quot;case&quot;, &quot;catch&quot;, &quot;class&quot;, &quot;const&quot;, &quot;continue&quot;,
+    &quot;debugger&quot;, &quot;default&quot;, &quot;delete&quot;, &quot;do&quot;, &quot;else&quot;, &quot;enum&quot;,
+    &quot;export&quot;, &quot;extends&quot;, &quot;false&quot;, &quot;finally&quot;, &quot;for&quot;, &quot;function&quot;,
+    &quot;if&quot;, &quot;import&quot;, &quot;in&quot;, &quot;instanceof&quot;, &quot;new&quot;, &quot;null&quot;, &quot;return&quot;,
+    &quot;super&quot;, &quot;switch&quot;, &quot;this&quot;, &quot;throw&quot;, &quot;true&quot;, &quot;try&quot;, &quot;typeof&quot;,
+    &quot;var&quot;, &quot;void&quot;, &quot;while&quot;, &quot;with&quot;,
+
+    // Strict mode
+    &quot;implements&quot;, &quot;interface&quot;, &quot;let&quot;, &quot;package&quot;, &quot;private&quot;,
+    &quot;protected&quot;, &quot;public&quot;, &quot;static&quot;, &quot;yield&quot;,
+
+    // Future reserved
+    &quot;await&quot;, &quot;async&quot;
+};
+
+public static (string Sanitized, bool WasSanitized) Sanitize(string name)
+{
+    if (Reserved.Contains(name))
+        return (name + &quot;_&quot;, true);
+    return (name, false);
+}
+</code></pre>
+<h2 id="style-transforms">Style Transforms</h2>
+<h3 id="clr-style-default">CLR Style (default)</h3>
+<p>No transformation - PascalCase preserved:</p>
+<pre><code class="language-csharp">Renamer.AdoptMemberStyleTransform(name =&gt; name);
+
+// GetEnumerator -&gt; GetEnumerator
+// WriteLine -&gt; WriteLine
+</code></pre>
+<h3 id="javascript-style---naming-js">JavaScript Style (<code>--naming js</code>)</h3>
+<p>camelCase transformation:</p>
+<pre><code class="language-csharp">Renamer.AdoptMemberStyleTransform(name =&gt; ToCamelCase(name));
+
+// GetEnumerator -&gt; getEnumerator
+// WriteLine -&gt; writeLine
+// XMLReader -&gt; xmlReader
+</code></pre>
+<h2 id="rename-decisions">Rename Decisions</h2>
+<p>Every rename is recorded:</p>
+<pre><code class="language-csharp">public sealed record RenameDecision
+{
+    public StableId Id { get; }
+    public string Requested { get; }      // Original name
+    public string Final { get; }          // Final TypeScript name
+    public string From { get; }           // Base name (without suffixes)
+    public string Reason { get; }         // Why this decision
+    public string DecisionSource { get; } // Which component made decision
+    public string Strategy { get; }       // None, NumericSuffix, OverloadFamily
+    public string ScopeKey { get; }
+    public bool? IsStatic { get; }
+}
+</code></pre>
+<p><strong>Strategies:</strong></p>
+<ul>
+<li><code>None</code> - No rename needed</li>
+<li><code>NumericSuffix</code> - Added numeric suffix (add2, add3)</li>
+<li><code>ReservedWord</code> - Added underscore (default_)</li>
+<li><code>OverloadFamily</code> - Shares name with overload family</li>
+</ul>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cli | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+    <span>Cli</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Cli</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/cli.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="cli-reference">CLI Reference</h1>
+<p>Complete reference for all Tsonic CLI commands and options.</p>
+<h2 id="synopsis">Synopsis</h2>
+<pre><code>tsonic &lt;command&gt; [options]
+</code></pre>
+<h2 id="commands">Commands</h2>
+<h3 id="project-init">project init</h3>
+<p>Initialize a new Tsonic project in the current directory.</p>
+<pre><code class="language-bash">tsonic project init [options]
+</code></pre>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--nodejs</code></td>
+<td>Enable Node.js interop (installs @tsonic/nodejs)</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--pure</code></td>
+<td>Use PascalCase .NET bindings (installs @tsonic/globals-pure)</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--skip-types</code></td>
+<td>Skip installing type declarations</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--types-version &lt;ver&gt;</code></td>
+<td>Version of type declarations</td>
+<td>Latest</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Initialize a new project
+tsonic project init
+
+# Enable Node.js interop (fs, path, etc.)
+tsonic project init --nodejs
+
+# Use PascalCase for BCL methods (WriteLine instead of writeLine)
+tsonic project init --pure
+
+# Skip type package installation
+tsonic project init --skip-types
+
+# Use specific type package version
+tsonic project init --types-version &lt;ver&gt;
+</code></pre>
+<p><strong>Created Files:</strong></p>
+<ul>
+<li><code>tsonic.json</code> - Project configuration</li>
+<li><code>package.json</code> - NPM package with scripts</li>
+<li><code>src/App.ts</code> - Entry point with sample code</li>
+<li><code>.gitignore</code> - Ignores build artifacts</li>
+<li><code>README.md</code> - Project readme</li>
+</ul>
+<h3 id="generate">generate</h3>
+<p>Generate C# code from TypeScript without compiling.</p>
+<pre><code class="language-bash">tsonic generate &lt;entry&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;entry&gt;</code></td>
+<td>Entry point file (e.g., <code>src/App.ts</code>)</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--config &lt;file&gt;</code></td>
+<td><code>-c</code></td>
+<td>Config file path</td>
+<td><code>tsonic.json</code></td>
+</tr>
+<tr>
+<td><code>--src &lt;dir&gt;</code></td>
+<td><code>-s</code></td>
+<td>Source root directory</td>
+<td>From config</td>
+</tr>
+<tr>
+<td><code>--out &lt;name&gt;</code></td>
+<td><code>-o</code></td>
+<td>Output name (assembly/binary)</td>
+<td>From config</td>
+</tr>
+<tr>
+<td><code>--namespace &lt;ns&gt;</code></td>
+<td><code>-n</code></td>
+<td>Root namespace</td>
+<td>From config</td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td><code>-V</code></td>
+<td>Verbose output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td><code>-q</code></td>
+<td>Suppress output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--lib &lt;path&gt;</code></td>
+<td><code>-L</code></td>
+<td>External library path</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Basic generate
+tsonic generate src/App.ts
+
+# Override output name (assembly/binary)
+tsonic generate src/App.ts --out my-app
+
+# With external library
+tsonic generate src/App.ts --lib ./libs/MyLib
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>generated/
+├── src/
+│   └── App.cs           # Your code as C#
+├── Program.cs           # Entry point wrapper
+└── tsonic.csproj        # .NET project file
+</code></pre>
+<h3 id="build">build</h3>
+<p>Build a native executable from TypeScript.</p>
+<pre><code class="language-bash">tsonic build &lt;entry&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;entry&gt;</code></td>
+<td>Entry point file</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--config &lt;file&gt;</code></td>
+<td><code>-c</code></td>
+<td>Config file path</td>
+<td><code>tsonic.json</code></td>
+</tr>
+<tr>
+<td><code>--src &lt;dir&gt;</code></td>
+<td><code>-s</code></td>
+<td>Source root directory</td>
+<td>From config</td>
+</tr>
+<tr>
+<td><code>--out &lt;name&gt;</code></td>
+<td><code>-o</code></td>
+<td>Output name (binary/assembly)</td>
+<td>From config</td>
+</tr>
+<tr>
+<td><code>--namespace &lt;ns&gt;</code></td>
+<td><code>-n</code></td>
+<td>Root namespace</td>
+<td>From config</td>
+</tr>
+<tr>
+<td><code>--rid &lt;rid&gt;</code></td>
+<td><code>-r</code></td>
+<td>Runtime identifier</td>
+<td>Auto-detected</td>
+</tr>
+<tr>
+<td><code>--optimize &lt;level&gt;</code></td>
+<td><code>-O</code></td>
+<td>Optimization: <code>size</code> or <code>speed</code></td>
+<td><code>speed</code></td>
+</tr>
+<tr>
+<td><code>--keep-temp</code></td>
+<td><code>-k</code></td>
+<td>Keep build artifacts</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--no-strip</code></td>
+<td></td>
+<td>Keep debug symbols</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td><code>-V</code></td>
+<td>Verbose output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td><code>-q</code></td>
+<td>Suppress output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--lib &lt;path&gt;</code></td>
+<td><code>-L</code></td>
+<td>External library path</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Runtime Identifiers (RID):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>RID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux x64</td>
+<td><code>linux-x64</code></td>
+</tr>
+<tr>
+<td>Linux ARM64</td>
+<td><code>linux-arm64</code></td>
+</tr>
+<tr>
+<td>macOS x64</td>
+<td><code>osx-x64</code></td>
+</tr>
+<tr>
+<td>macOS ARM64</td>
+<td><code>osx-arm64</code></td>
+</tr>
+<tr>
+<td>Windows x64</td>
+<td><code>win-x64</code></td>
+</tr>
+<tr>
+<td>Windows ARM64</td>
+<td><code>win-arm64</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Basic build
+tsonic build src/App.ts
+
+# Cross-compile for Linux
+tsonic build src/App.ts --rid linux-x64
+
+# Optimize for size
+tsonic build src/App.ts --optimize size
+
+# Keep build artifacts for debugging
+tsonic build src/App.ts --keep-temp --no-strip
+</code></pre>
+<p><strong>Build Steps:</strong></p>
+<ol>
+<li><strong>Step 1/3</strong>: Generate C# code (same as <code>generate</code>)</li>
+<li><strong>Step 2/3</strong>: Run <code>dotnet publish</code> with NativeAOT</li>
+<li><strong>Step 3/3</strong>: Copy output to <code>out/</code></li>
+</ol>
+<h3 id="run">run</h3>
+<p>Build and run the executable in one step.</p>
+<pre><code class="language-bash">tsonic run &lt;entry&gt; [-- args...]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;entry&gt;</code></td>
+<td>Entry point file</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>-- args...</code></td>
+<td>Arguments passed to executable</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Options:</strong></p>
+<p>Same as <code>build</code> command.</p>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Build and run
+tsonic run src/App.ts
+
+# Pass arguments to executable
+tsonic run src/App.ts -- --input data.txt --verbose
+
+# With build options
+tsonic run src/App.ts --verbose -- --debug
+</code></pre>
+<h3 id="add-package">add package</h3>
+<p>Add a local DLL (and bindings) to the project.</p>
+<pre><code class="language-bash">tsonic add package &lt;dll-path&gt; [types-package]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;dll-path&gt;</code></td>
+<td>Path to the .NET DLL file</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>[types-package]</code></td>
+<td>npm package with type decls</td>
+<td>No (auto-generated if omitted)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--verbose</code></td>
+<td><code>-V</code></td>
+<td>Verbose output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td><code>-q</code></td>
+<td>Suppress output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--deps &lt;dir&gt;</code></td>
+<td>-</td>
+<td>Additional directory to probe for referenced assemblies (repeatable)</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Add a custom library
+tsonic add package ./libs/MyLib.dll @myorg/mylib-types
+
+# Auto-generate bindings (tsbindgen) when types are omitted
+tsonic add package ./libs/MyLib.dll
+
+# If the DLL references other DLLs in a custom folder
+tsonic add package ./libs/MyLib.dll --deps ./libs/deps
+</code></pre>
+<p><strong>What it does:</strong></p>
+<ol>
+<li>Resolves the DLL dependency closure and copies non-framework DLLs to <code>lib/</code> (no &quot;copy-all&quot; behavior)</li>
+<li>Updates your config file (<code>--config</code> respected):
+<ul>
+<li>Adds copied DLLs to <code>dotnet.libraries</code></li>
+<li>Adds any required shared frameworks to <code>dotnet.frameworkReferences</code></li>
+</ul>
+</li>
+<li>If <code>types-package</code> is provided: installs it via npm</li>
+<li>If <code>types-package</code> is omitted:
+<ul>
+<li>Runs tsbindgen for <strong>every non-framework DLL in the closure</strong> (A, B, C, …)</li>
+<li>Writes generated bindings under <code>.tsonic/bindings/dll/&lt;name&gt;-types/</code> (gitignored)</li>
+<li>Installs them into <code>node_modules/&lt;name&gt;-types/</code> (without modifying <code>package.json</code>)</li>
+</ul>
+</li>
+</ol>
+<h3 id="add-nuget">add nuget</h3>
+<p>Add a NuGet package reference (and bindings) to the project.</p>
+<pre><code class="language-bash">tsonic add nuget &lt;package-id&gt; &lt;version&gt; [types-package]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;package-id&gt;</code></td>
+<td>NuGet package id</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>&lt;version&gt;</code></td>
+<td>Exact NuGet version</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>[types-package]</code></td>
+<td>npm package with type decls</td>
+<td>No (auto-generated if omitted)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Add and auto-generate bindings
+tsonic add nuget Microsoft.Extensions.Logging 10.0.0
+
+# Add but use published bindings instead
+tsonic add nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
+</code></pre>
+<p><strong>What it does (auto-generated bindings):</strong></p>
+<ul>
+<li>Restores the NuGet package graph for the project (<code>dotnet restore</code>)</li>
+<li>Generates bindings for the full <strong>transitive closure</strong> of packages (A, B, C, …)</li>
+<li>Emits <strong>one bindings package per NuGet package</strong> under <code>.tsonic/bindings/nuget/&lt;id&gt;-types/</code></li>
+<li>Installs them into <code>node_modules/&lt;id&gt;-types/</code> (without modifying <code>package.json</code>)</li>
+</ul>
+<p><strong>Using published bindings packages (no auto-generation):</strong></p>
+<p>If you pass a <code>types-package</code>, Tsonic records it in your config so <code>tsonic restore</code> knows
+bindings are supplied externally and will not attempt to generate them:</p>
+<pre><code class="language-json">{
+  &quot;dotnet&quot;: {
+    &quot;packageReferences&quot;: [
+      {
+        &quot;id&quot;: &quot;Microsoft.EntityFrameworkCore&quot;,
+        &quot;version&quot;: &quot;10.0.1&quot;,
+        &quot;types&quot;: &quot;@tsonic/efcore&quot;
+      }
+    ]
+  }
+}
+</code></pre>
+<h3 id="update-nuget">update nuget</h3>
+<p>Update an existing NuGet package reference (and bindings) in the project.</p>
+<pre><code class="language-bash">tsonic update nuget &lt;package-id&gt; &lt;version&gt; [types-package]
+</code></pre>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Update pinned NuGet version (auto-generated bindings)
+tsonic update nuget Microsoft.Extensions.Logging 10.0.1
+
+# Switch to published bindings (no auto-generation)
+tsonic update nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
+</code></pre>
+<p><strong>What it does:</strong></p>
+<ul>
+<li>Updates the matching entry in <code>dotnet.packageReferences</code> in your config (<code>--config</code> respected)</li>
+<li>Runs <code>tsonic restore</code> to validate restore + keep local bindings consistent</li>
+</ul>
+<h3 id="remove-nuget">remove nuget</h3>
+<p>Remove a NuGet package reference (and refresh bindings) from the project.</p>
+<pre><code class="language-bash">tsonic remove nuget &lt;package-id&gt;
+</code></pre>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash">tsonic remove nuget Microsoft.Extensions.Logging
+</code></pre>
+<p><strong>What it does:</strong></p>
+<ul>
+<li>Removes the matching entry from <code>dotnet.packageReferences</code> in your config (<code>--config</code> respected)</li>
+<li>Runs <code>tsonic restore</code> to validate restore + keep local bindings consistent</li>
+</ul>
+<h3 id="add-framework">add framework</h3>
+<p>Add a FrameworkReference (and bindings) to the project.</p>
+<pre><code class="language-bash">tsonic add framework &lt;framework-reference&gt; [types-package]
+</code></pre>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Add shared framework and use published bindings
+tsonic add framework Microsoft.AspNetCore.App @tsonic/aspnetcore
+
+# Auto-generate bindings from installed shared framework assemblies
+tsonic add framework Microsoft.AspNetCore.App
+</code></pre>
+<p><strong>What it does (auto-generated bindings):</strong></p>
+<ul>
+<li>Generates a local bindings package under <code>.tsonic/bindings/framework/&lt;ref&gt;-types/</code></li>
+<li>Installs it into <code>node_modules/&lt;ref&gt;-types/</code> (without modifying <code>package.json</code>)</li>
+</ul>
+<p><strong>Using published bindings packages (no auto-generation):</strong></p>
+<p>If you pass a <code>types-package</code>, Tsonic records it in your config so <code>tsonic restore</code> knows
+bindings are supplied externally and will not attempt to generate them:</p>
+<pre><code class="language-json">{
+  &quot;dotnet&quot;: {
+    &quot;frameworkReferences&quot;: [
+      { &quot;id&quot;: &quot;Microsoft.AspNetCore.App&quot;, &quot;types&quot;: &quot;@tsonic/aspnetcore&quot; }
+    ]
+  }
+}
+</code></pre>
+<h3 id="restore">restore</h3>
+<p>Restore .NET dependencies and (re)generate local bindings for a cloned repo.</p>
+<pre><code class="language-bash">tsonic restore
+</code></pre>
+<p>By default, local bindings generation allows constructor-constraint loss (C# still enforces
+constraints at build time). Use <code>--strict</code> to make constructor-constraint loss a hard error.</p>
+<p>This command is also run automatically before <code>tsonic build</code> / <code>generate</code> / <code>run</code> / <code>pack</code> when the project has
+any .NET deps declared in <code>tsonic.json</code>.</p>
+<p>Restore only auto-generates bindings for dependency entries that do <strong>not</strong> specify a <code>types</code> package.</p>
+<h3 id="pack">pack</h3>
+<p>Create a NuGet package from a library project.</p>
+<pre><code class="language-bash">tsonic pack [options]
+</code></pre>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li><code>output.type</code> must be <code>&quot;library&quot;</code> in tsonic.json</li>
+<li><code>output.packable</code> must be <code>true</code> in tsonic.json</li>
+</ul>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--config &lt;file&gt;</code></td>
+<td><code>-c</code></td>
+<td>Config file path</td>
+<td><code>tsonic.json</code></td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td><code>-V</code></td>
+<td>Verbose output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td><code>-q</code></td>
+<td>Suppress output</td>
+<td><code>false</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Create NuGet package
+tsonic pack
+
+# With custom config
+tsonic pack --config tsonic.library.json
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>generated/bin/Release/MyLib.1.0.0.nupkg
+</code></pre>
+<p><strong>Publishing to NuGet:</strong></p>
+<pre><code class="language-bash">dotnet nuget push generated/bin/Release/MyLib.1.0.0.nupkg \
+  --api-key YOUR_API_KEY \
+  --source https://api.nuget.org/v3/index.json
+</code></pre>
+<h2 id="global-options">Global Options</h2>
+<p>These options work with all commands:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--help</code></td>
+<td><code>-h</code></td>
+<td>Show help</td>
+</tr>
+<tr>
+<td><code>--version</code></td>
+<td><code>-v</code></td>
+<td>Show version</td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td><code>-V</code></td>
+<td>Verbose output</td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td><code>-q</code></td>
+<td>Suppress output</td>
+</tr>
+<tr>
+<td><code>--config &lt;file&gt;</code></td>
+<td><code>-c</code></td>
+<td>Config file path</td>
+</tr>
+</tbody>
+</table>
+<h2 id="exit-codes">Exit Codes</h2>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Success</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Generic error</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Unknown command</td>
+</tr>
+<tr>
+<td>3</td>
+<td>No tsonic.json found</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Generate failed</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Build failed</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Run failed</td>
+</tr>
+<tr>
+<td>8</td>
+<td>.NET SDK not found</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Pack failed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="environment-variables">Environment Variables</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TSONIC_VERBOSE</code></td>
+<td>Enable verbose output</td>
+</tr>
+<tr>
+<td><code>DOTNET_ROOT</code></td>
+<td>.NET SDK location</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-file-resolution">Configuration File Resolution</h2>
+<p>Tsonic looks for configuration in this order:</p>
+<ol>
+<li>Path specified with <code>--config</code></li>
+<li><code>tsonic.json</code> in current directory</li>
+<li><code>tsonic.json</code> in parent directories (walks up)</li>
+</ol>
+<h2 id="examples">Examples</h2>
+<h3 id="complete-workflow">Complete Workflow</h3>
+<pre><code class="language-bash"># Create project
+mkdir my-cli &amp;&amp; cd my-cli
+tsonic project init
+
+# Edit src/App.ts
+# ...
+
+# Build
+tsonic build src/App.ts
+
+# Run
+./out/app
+
+# Or build and run together
+tsonic run src/App.ts
+</code></pre>
+<h3 id="library-mode">Library Mode</h3>
+<pre><code class="language-bash"># Build as library
+tsonic build src/lib.ts --config tsonic.library.json
+
+# Output in dist/
+ls dist/
+</code></pre>
+<h3 id="cross-compilation">Cross-Compilation</h3>
+<pre><code class="language-bash"># Build for multiple platforms
+tsonic build src/App.ts --rid linux-x64 --out app-linux
+tsonic build src/App.ts --rid osx-arm64 --out app-macos
+tsonic build src/App.ts --rid win-x64 --out app-windows
+</code></pre>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Frontend | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Frontend</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Frontend</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/frontend.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="frontend-package">Frontend Package</h1>
+<p>The frontend transforms TypeScript into IR.</p>
+<h2 id="entry-points">Entry Points</h2>
+<h3 id="buildmoduledependencygraph">buildModuleDependencyGraph</h3>
+<p>Main entry for compiling a project:</p>
+<pre><code class="language-typescript">const result = buildModuleDependencyGraph(entryPoint, {
+  projectRoot: &quot;/path/to/project&quot;,
+  sourceRoot: &quot;src&quot;,
+  rootNamespace: &quot;MyApp&quot;,
+  typeRoots: [&quot;node_modules/@tsonic/globals&quot;],
+});
+
+if (result.ok) {
+  const { modules, entryModule } = result.value;
+}
+</code></pre>
+<h3 id="createprogram">createProgram</h3>
+<p>Lower-level TypeScript program creation:</p>
+<pre><code class="language-typescript">const result = createProgram(filePaths, options);
+if (result.ok) {
+  const program = result.value;
+}
+</code></pre>
+<h2 id="module-resolution">Module Resolution</h2>
+<h3 id="local-imports">Local Imports</h3>
+<p>Local imports must have <code>.ts</code> extension:</p>
+<pre><code class="language-typescript">// Resolved from importing file's directory
+&quot;./utils.ts&quot; -&gt; resolved to absolute path
+&quot;../models/User.ts&quot; -&gt; resolved relative
+</code></pre>
+<p>Resolution in <code>resolver/path-resolution.ts</code>:</p>
+<pre><code class="language-typescript">const resolveLocalImport = (
+  specifier: string,
+  importingFile: string,
+  sourceRoot: string
+): Result&lt;string, Diagnostic&gt; =&gt; {
+  // Must have .js or .ts extension
+  if (!specifier.endsWith(&quot;.js&quot;) &amp;&amp; !specifier.endsWith(&quot;.ts&quot;)) {
+    return error(createDiagnostic(&quot;TSN1001&quot;, ...));
+  }
+  // Resolve to absolute path
+  const resolved = path.resolve(path.dirname(importingFile), specifier);
+  return ok(resolved);
+};
+</code></pre>
+<h3 id="net-imports">.NET Imports</h3>
+<p>.NET imports map to CLR namespaces:</p>
+<pre><code class="language-typescript">&quot;@tsonic/dotnet/System.js&quot; -&gt; clrNamespace: &quot;System&quot;
+&quot;@tsonic/dotnet/System.IO.js&quot; -&gt; clrNamespace: &quot;System.IO&quot;
+</code></pre>
+<p>Resolution via <code>clrResolver</code>:</p>
+<pre><code class="language-typescript">const resolveClrImport = (
+  specifier: string
+): Result&lt;ClrResolution, Diagnostic&gt; =&gt; {
+  // Extract namespace from specifier
+  const namespace = specifier
+    .replace(&quot;@tsonic/dotnet/&quot;, &quot;&quot;)
+    .replace(/\.js$/, &quot;&quot;)
+    .replace(/\//g, &quot;.&quot;);
+  return ok({ clrNamespace: namespace, isLocal: false });
+};
+</code></pre>
+<h2 id="validation">Validation</h2>
+<h3 id="import-validation">Import Validation</h3>
+<p><code>validation/imports.ts</code>:</p>
+<ul>
+<li>Verify <code>.ts</code> extension on local imports</li>
+<li>Verify <code>.js</code> or <code>.ts</code> extension on local imports</li>
+<li>No dynamic imports</li>
+<li>Resolve all import specifiers</li>
+<li>Check module existence</li>
+</ul>
+<h3 id="feature-validation">Feature Validation</h3>
+<p><code>validation/features.ts</code>:</p>
+<pre><code class="language-typescript">const unsupportedFeatures = [
+  &quot;with statement&quot;,
+  &quot;import.meta&quot;,
+  &quot;dynamic import()&quot;,
+  &quot;Promise.then/catch/finally&quot;,
+];
+</code></pre>
+<p><code>validation/unsupported-utility-types.ts</code>:</p>
+<p>Validates that unsupported utility types are not used:</p>
+<ul>
+<li>TSN7406: Mapped types (Partial, Required, Readonly, Pick, Omit)</li>
+<li>TSN7407: Conditional types (Extract, Exclude, NonNullable, ReturnType)</li>
+<li>TSN7410: Intersection types (A &amp; B)</li>
+</ul>
+<h3 id="export-validation">Export Validation</h3>
+<p><code>validation/exports.ts</code>:</p>
+<ul>
+<li>Entry point must export <code>main()</code></li>
+<li>Exported names must resolve</li>
+<li>Re-exports must be valid</li>
+</ul>
+<h3 id="yield-lowering-pass">Yield Lowering Pass</h3>
+<p><code>validation/yield-lowering-pass.ts</code>:</p>
+<p>Transforms generator functions for C# emission:</p>
+<ul>
+<li>Converts <code>yield</code> expressions to <code>yieldStatement</code> IR nodes</li>
+<li>Handles <code>yield*</code> delegation</li>
+<li>Transforms <code>return</code> in generators to <code>generatorReturnStatement</code></li>
+<li>Captures TNext values via receive targets</li>
+</ul>
+<pre><code class="language-typescript">// Input: const x = yield value;
+// Output: yieldStatement with receiveTarget for 'x'
+</code></pre>
+<h3 id="numeric-proof-pass">Numeric Proof Pass</h3>
+<p><code>validation/numeric-proof-pass.ts</code>:</p>
+<p>Recovers numeric intent from declarations:</p>
+<ul>
+<li>Detects <code>int</code>, <code>long</code>, <code>byte</code>, etc. from <code>@tsonic/core</code></li>
+<li>Tracks numeric type through expressions</li>
+<li>Enables clean integer emission without cosmetic casts</li>
+</ul>
+<pre><code class="language-typescript">// const x: int = 10;
+// Proof: x has numeric kind 'int32'
+</code></pre>
+<h3 id="anonymous-type-lowering-pass">Anonymous Type Lowering Pass</h3>
+<p><code>ir/validation/anonymous-type-lowering-pass.ts</code>:</p>
+<p>Transforms anonymous object type literals into synthesized nominal classes:</p>
+<ul>
+<li>Scans function signatures, variables, and class members for inline <code>{ x: T }</code> types</li>
+<li>Generates unique class names: <code>funcName_Return</code>, <code>funcName_paramName</code></li>
+<li>Replaces inline types with references to synthesized classes</li>
+<li>Hoists synthesized classes to module level</li>
+</ul>
+<pre><code class="language-typescript">// Before: function getPoint(): { x: number; y: number }
+// After:  function getPoint(): getPoint_Return
+//         class getPoint_Return { x: number; y: number }
+</code></pre>
+<h3 id="rest-type-synthesis-pass">Rest Type Synthesis Pass</h3>
+<p><code>ir/validation/rest-type-synthesis-pass.ts</code>:</p>
+<p>Handles object rest patterns (<code>{ a, ...rest }</code>) by synthesizing types for rest properties:</p>
+<ul>
+<li>Identifies all object destructuring patterns with rest properties</li>
+<li>Computes remaining members by excluding picked keys from source type</li>
+<li>Generates unique synthetic class names via content hashing</li>
+<li>Creates synthetic class declarations with computed properties</li>
+<li>Attaches shape info to rest properties for emitter use</li>
+</ul>
+<pre><code class="language-typescript">// Before: const { id, ...rest } = { id: 1, name: &quot;Alice&quot;, age: 30 }
+// Synthesizes: class __Rest_xyz with { name: string; age: number }
+</code></pre>
+<h3 id="attribute-collection-pass">Attribute Collection Pass</h3>
+<p><code>ir/validation/attribute-collection-pass.ts</code>:</p>
+<p>Collects C# attribute declarations from marker-call API:</p>
+<ul>
+<li>Scans for <code>A.on(Class).type.add(AttrType, ...args)</code> patterns</li>
+<li>Extracts attribute type and constructor arguments</li>
+<li>Attaches attribute metadata to IR class declarations</li>
+<li>Enables C# <code>[Attribute]</code> generation</li>
+</ul>
+<pre><code class="language-typescript">// Input:  A.on(User).type.add(SerializableAttribute)
+// Result: User class marked with [Serializable] in emitted C#
+</code></pre>
+<h3 id="generic-validation">Generic Validation</h3>
+<p><code>validation/generics.ts</code>:</p>
+<p>Validates generic type usage for C# compatibility:</p>
+<ul>
+<li><strong>TSN7203</strong>: Symbol keys in index signatures</li>
+<li><strong>TSN7415</strong>: Nullable unions with unconstrained generics</li>
+</ul>
+<pre><code class="language-typescript">// TSN7415: T | null where T is unconstrained
+function getValue&lt;T&gt;(value: T | null): T; // Error
+
+// Fix: Add constraint
+function getValue&lt;T extends object&gt;(value: T | null): T; // OK
+</code></pre>
+<h2 id="ir-building">IR Building</h2>
+<h3 id="statement-conversion">Statement Conversion</h3>
+<p><code>ir/converters/statements/</code>:</p>
+<pre><code class="language-typescript">// TypeScript AST -&gt; IR
+const convertStatement = (
+  node: ts.Statement,
+  checker: ts.TypeChecker
+): IrStatement =&gt; {
+  if (ts.isFunctionDeclaration(node)) {
+    return convertFunctionDeclaration(node, checker);
+  }
+  if (ts.isClassDeclaration(node)) {
+    return convertClassDeclaration(node, checker);
+  }
+  // ... other statements
+};
+</code></pre>
+<h3 id="expression-conversion">Expression Conversion</h3>
+<p><code>ir/converters/expressions/</code>:</p>
+<pre><code class="language-typescript">const convertExpression = (
+  node: ts.Expression,
+  checker: ts.TypeChecker
+): IrExpression =&gt; {
+  if (ts.isNumericLiteral(node)) {
+    return { kind: &quot;literal&quot;, value: Number(node.text), raw: node.text };
+  }
+  if (ts.isBinaryExpression(node)) {
+    return convertBinaryExpression(node, checker);
+  }
+  // ... other expressions
+};
+</code></pre>
+<h3 id="anonymous-object-synthesis">Anonymous Object Synthesis</h3>
+<p><code>ir/converters/anonymous-synthesis.ts</code>:</p>
+<p>Object literals without explicit type annotations auto-synthesize nominal types:</p>
+<pre><code class="language-typescript">// Input: const point = { x: 10, y: 20 };
+// Synthesizes: class __Anon_File_Line_Col with x, y properties
+</code></pre>
+<p>Eligible patterns: property assignments, shorthand properties, arrow functions.
+Ineligible patterns: method shorthand, getters/setters.</p>
+<h3 id="type-conversion">Type Conversion</h3>
+<p><code>ir/type-converter/</code>:</p>
+<pre><code class="language-typescript">const convertType = (node: ts.TypeNode, checker: ts.TypeChecker): IrType =&gt; {
+  if (ts.isTypeReferenceNode(node)) {
+    return convertReferenceType(node, checker);
+  }
+  if (ts.isArrayTypeNode(node)) {
+    return {
+      kind: &quot;arrayType&quot;,
+      elementType: convertType(node.elementType, checker),
+    };
+  }
+  // ... other types
+};
+</code></pre>
+<p><code>ir/type-converter/inference.ts</code>:</p>
+<p>Lambda parameter types are contextually inferred from surrounding context:</p>
+<pre><code class="language-typescript">// numbers.map(n =&gt; n * 2)
+// 'n' type is inferred from array element type
+</code></pre>
+<p>Uses <code>checker.getContextualType()</code> to extract types from call expressions.</p>
+<h2 id="dependency-graph">Dependency Graph</h2>
+<h3 id="graph-building">Graph Building</h3>
+<p><code>program/dependency-graph.ts</code>:</p>
+<pre><code class="language-typescript">const buildDependencyGraph = (
+  entryPoint: string,
+  options: CompilerOptions
+): Result&lt;DependencyGraph, Diagnostic[]&gt; =&gt; {
+  const visited = new Set&lt;string&gt;();
+  const modules: IrModule[] = [];
+
+  const visit = (filePath: string) =&gt; {
+    if (visited.has(filePath)) return;
+    visited.add(filePath);
+
+    const module = buildIrModule(filePath, ...);
+    modules.push(module);
+
+    // Visit imports
+    for (const imp of module.imports) {
+      if (imp.resolved?.isLocal) {
+        visit(imp.resolved.absolutePath);
+      }
+    }
+  };
+
+  visit(entryPoint);
+  return ok({ modules, entryModule: modules[0] });
+};
+</code></pre>
+<h3 id="circular-dependency-detection">Circular Dependency Detection</h3>
+<pre><code class="language-typescript">const detectCircular = (modules: IrModule[]): string[][] =&gt; {
+  // Tarjan's algorithm for SCC detection
+  // Returns groups of circular dependencies
+};
+</code></pre>
+<h2 id="symbol-table">Symbol Table</h2>
+<h3 id="symbol-tracking">Symbol Tracking</h3>
+<p><code>symbol-table/</code>:</p>
+<pre><code class="language-typescript">type SymbolEntry = {
+  name: string;
+  kind: &quot;variable&quot; | &quot;function&quot; | &quot;class&quot; | &quot;interface&quot; | &quot;type&quot;;
+  type?: IrType;
+  exported: boolean;
+};
+
+type SymbolTable = {
+  entries: Map&lt;string, SymbolEntry&gt;;
+  parent?: SymbolTable;
+};
+</code></pre>
+<h3 id="symbol-resolution">Symbol Resolution</h3>
+<pre><code class="language-typescript">const resolveSymbol = (
+  name: string,
+  table: SymbolTable
+): SymbolEntry | undefined =&gt; {
+  const entry = table.entries.get(name);
+  if (entry) return entry;
+  if (table.parent) return resolveSymbol(name, table.parent);
+  return undefined;
+};
+</code></pre>
+<h2 id="diagnostics">Diagnostics</h2>
+<h3 id="creating-diagnostics">Creating Diagnostics</h3>
+<pre><code class="language-typescript">import { createDiagnostic, addDiagnostic } from &quot;./types/diagnostic.js&quot;;
+
+const diagnostic = createDiagnostic(
+  &quot;TSN1001&quot;,
+  &quot;error&quot;,
+  &quot;Local imports must use .js or .ts extension&quot;,
+  { file: sourceFile.fileName, line: 10, column: 5, length: 20 },
+  &quot;Add a .js extension to the import path (recommended)&quot;
+);
+
+collector = addDiagnostic(collector, diagnostic);
+</code></pre>
+<h3 id="diagnostic-codes">Diagnostic Codes</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Category</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TSN1001</td>
+<td>Module</td>
+<td>Missing file extension</td>
+</tr>
+<tr>
+<td>TSN1002</td>
+<td>Module</td>
+<td>Cannot resolve module</td>
+</tr>
+<tr>
+<td>TSN2001</td>
+<td>Feature</td>
+<td>Unsupported feature</td>
+</tr>
+<tr>
+<td>TSN3001</td>
+<td>Type</td>
+<td>Type error</td>
+</tr>
+</tbody>
+</table>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

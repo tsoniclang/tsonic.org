@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Overview | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Overview</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Overview</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/architecture/overview.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="architecture-overview">Architecture Overview</h1>
+<p>tsbindgen transforms .NET assemblies into TypeScript declaration files through a multi-phase pipeline.</p>
+<h2 id="design-goals">Design Goals</h2>
+<ol>
+<li><strong>Complete fidelity</strong> - Preserve all type information from .NET reflection</li>
+<li><strong>Type safety</strong> - Generate TypeScript that passes <code>--strict</code> compilation</li>
+<li><strong>Deterministic output</strong> - Same input always produces identical output</li>
+<li><strong>IDE support</strong> - Full IntelliSense for all BCL types</li>
+<li><strong>Interop ergonomics</strong> - Branded primitives, friendly aliases, callable delegates</li>
+</ol>
+<h2 id="pipeline-summary">Pipeline Summary</h2>
+<pre><code>Input (.NET DLLs)
+    |
+    v
++----------+   +----------+   +----------+   +------------+
+|   LOAD   | &gt; |  MODEL   | &gt; |  SHAPE   | &gt; | NORMALIZE  |
++----------+   +----------+   +----------+   +------------+
+                                                   |
+    +----------------------------------------------+
+    v
++----------+   +------------+   +----------+
+|   PLAN   | &gt; |  PHASEGATE | &gt; |   EMIT   |
++----------+   +------------+   +----------+
+    |
+    v
+Output (.d.ts files)
+</code></pre>
+<p>See <a href="/tsbindgen/architecture/pipeline/">Pipeline Flow</a> for detailed phase descriptions.</p>
+<h2 id="core-components">Core Components</h2>
+<h3 id="buildcontext">BuildContext</h3>
+<p>Shared context passed through all phases:</p>
+<ul>
+<li><code>Policy</code> - CLI options converted to generation policy</li>
+<li><code>Renamer</code> - Central naming authority</li>
+<li><code>Diagnostics</code> - Error/warning collection</li>
+</ul>
+<h3 id="symbolgraph">SymbolGraph</h3>
+<p>Central type registry holding all namespaces and types with O(1) lookup by CLR name.</p>
+<h3 id="symbolrenamer">SymbolRenamer</h3>
+<p>Single source of truth for all TypeScript identifiers. Handles name reservation, conflict resolution, and style transforms.</p>
+<h2 id="source-layout">Source Layout</h2>
+<pre><code>src/tsbindgen/
++-- Builder.cs              # Pipeline orchestrator
++-- BuildContext.cs         # Shared context
++-- Cli/                    # Command-line interface
++-- Load/                   # Phase 1: Assembly loading
++-- Model/                  # Phase 2: Data structures
++-- Shape/                  # Phase 3: Transformations
++-- Normalize/              # Phase 3.5: Name reservation
++-- Plan/                   # Phase 4: Planning
++-- Emit/                   # Phase 5: File generation
++-- Renaming/               # Naming system
+</code></pre>
+<h2 id="functional-programming-style">Functional Programming Style</h2>
+<p>All code follows functional programming principles:</p>
+<ul>
+<li><strong>Static classes only</strong> - No instance state</li>
+<li><strong>Pure functions</strong> - No side effects (except I/O)</li>
+<li><strong>Immutable data</strong> - Records and readonly collections</li>
+</ul>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

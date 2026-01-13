@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pipeline | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Pipeline</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Pipeline</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/architecture/pipeline.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="pipeline-flow">Pipeline Flow</h1>
+<p>The tsbindgen pipeline transforms .NET assemblies through six distinct phases.</p>
+<h2 id="phase-1-load">Phase 1: Load</h2>
+<p><strong>File:</strong> <code>Load/AssemblyLoader.cs</code></p>
+<p>Loads .NET assemblies using <code>MetadataLoadContext</code> and reflects all type information.</p>
+<p><strong>Input:</strong> Assembly file paths
+<strong>Output:</strong> Initial <code>SymbolGraph</code> with raw CLR data</p>
+<p><strong>Operations:</strong></p>
+<ol>
+<li>Create <code>MetadataLoadContext</code> for isolated assembly inspection</li>
+<li>Load each assembly from disk</li>
+<li>Reflect all public types and their members</li>
+<li>Build <code>TypeSymbol</code> for each type</li>
+<li>Create <code>NamespaceSymbol</code> groupings</li>
+</ol>
+<h2 id="phase-2-model-index-building">Phase 2: Model (Index Building)</h2>
+<p><strong>File:</strong> <code>Builder.cs</code> (inline)</p>
+<p>Builds indices for fast type lookup and applies library mode filtering.</p>
+<p><strong>Operations:</strong></p>
+<ol>
+<li>Build <code>TypeIndex</code> dictionary (CLR full name to TypeSymbol)</li>
+<li>Apply <code>--lib</code> filtering (exclude types from library package)</li>
+<li>Resolve forward references between types</li>
+</ol>
+<h2 id="phase-3-shape-23-transformation-passes">Phase 3: Shape (23 Transformation Passes)</h2>
+<p><strong>File:</strong> <code>Shape/*.cs</code></p>
+<p>Transforms the symbol graph for TypeScript emission. See <a href="/tsbindgen/architecture/shape/">shape.md</a> for all passes.</p>
+<h2 id="phase-35-normalize">Phase 3.5: Normalize</h2>
+<p><strong>File:</strong> <code>Normalize/NameReservation.cs</code></p>
+<p>Reserves all TypeScript identifiers and resolves conflicts. See <a href="/tsbindgen/architecture/normalize/">normalize.md</a>.</p>
+<h2 id="phase-4-plan">Phase 4: Plan</h2>
+<p><strong>File:</strong> <code>Plan/*.cs</code></p>
+<p>Plans all import/export statements and validates invariants. See <a href="/tsbindgen/architecture/plan/">plan.md</a>.</p>
+<h2 id="phase-5-emit">Phase 5: Emit</h2>
+<p><strong>File:</strong> <code>Emit/*.cs</code></p>
+<p>Generates TypeScript declaration files. See <a href="/tsbindgen/architecture/emit/">emit.md</a>.</p>
+<h2 id="pipeline-orchestration">Pipeline Orchestration</h2>
+<p><strong>File:</strong> <code>Builder.cs</code></p>
+<pre><code class="language-csharp">public static void Build(BuildContext ctx, GenerateOptions options)
+{
+    // Phase 1: Load
+    var graph = AssemblyLoader.Load(ctx, options.Assemblies);
+
+    // Phase 2: Model
+    graph = BuildIndices(graph);
+
+    // Phase 3: Shape (23 passes)
+    graph = StructuralConformance.Analyze(ctx, graph);
+    graph = ViewPlanner.Plan(ctx, graph);
+    // ... more passes ...
+
+    // Phase 3.5: Normalize
+    NameReservation.ReserveAll(ctx, graph);
+
+    // Phase 4: Plan
+    var emissionPlan = EmissionPlanner.Plan(ctx, graph, ...);
+    PhaseGate.Validate(ctx, emissionPlan);
+
+    // Phase 5: Emit
+    InternalIndexEmitter.Emit(ctx, emissionPlan, options.OutDir);
+    FacadeEmitter.Emit(ctx, emissionPlan, options.OutDir);
+    FamilyIndexEmitter.Emit(ctx, families, options.OutDir);  // families.json
+}
+</code></pre>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

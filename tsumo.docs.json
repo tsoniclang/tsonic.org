@@ -1,0 +1,36 @@
+{
+  "siteName": "Tsonic",
+  "homeMount": "Tsonic",
+  "strictLinks": false,
+  "search": true,
+  "searchFile": "search.json",
+  "mounts": [
+    {
+      "name": "Tsonic",
+      "source": ".tmp/mounts/tsonic",
+      "prefix": "/tsonic/",
+      "repoUrl": "https://github.com/tsoniclang/tsonic",
+      "repoBranch": "main",
+      "repoPath": "docs",
+      "navPath": "README.md"
+    },
+    {
+      "name": "tsbindgen",
+      "source": ".tmp/mounts/tsbindgen",
+      "prefix": "/tsbindgen/",
+      "repoUrl": "https://github.com/tsoniclang/tsbindgen",
+      "repoBranch": "main",
+      "repoPath": "docs",
+      "navPath": "README.md"
+    },
+    {
+      "name": "nodejs",
+      "source": ".tmp/mounts/nodejs",
+      "prefix": "/nodejs/",
+      "repoUrl": "https://github.com/tsoniclang/nodejs-clr",
+      "repoBranch": "main",
+      "repoPath": "",
+      "navPath": "README.md"
+    }
+  ]
+}

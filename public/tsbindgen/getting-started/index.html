@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Getting Started | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+    <span>Getting Started</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Getting Started</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/getting-started.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="getting-started">Getting Started</h1>
+<p>This guide walks you through installing tsbindgen and generating your first declarations.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="net-10-sdk">.NET 10 SDK</h3>
+<p>Download from <a href="https://dotnet.microsoft.com/download/dotnet/10.0">dotnet.microsoft.com</a>:</p>
+<pre><code class="language-bash"># Linux (Ubuntu/Debian)
+sudo apt-get install dotnet-sdk-10.0
+
+# macOS
+brew install dotnet-sdk
+
+# Verify
+dotnet --version
+</code></pre>
+<h3 id="nodejs-18-for-validation">Node.js 18+ (for validation)</h3>
+<pre><code class="language-bash">node --version  # v18.0.0 or higher
+</code></pre>
+<h2 id="installation">Installation</h2>
+<h3 id="via-npm-recommended">Via npm (recommended)</h3>
+<pre><code class="language-bash"># Wrapper package (recommended)
+npm install tsbindgen
+
+# Or install the scoped package directly
+npm install @tsonic/tsbindgen
+</code></pre>
+<p>For using generated declarations, also install the core types package:</p>
+<pre><code class="language-bash">npm install @tsonic/core
+</code></pre>
+<p>Verify:</p>
+<pre><code class="language-bash">npx tsbindgen --help
+</code></pre>
+<h3 id="from-source">From Source</h3>
+<pre><code class="language-bash">git clone https://github.com/tsoniclang/tsbindgen
+cd tsbindgen
+dotnet build src/tsbindgen/tsbindgen.csproj
+</code></pre>
+<p>Verify:</p>
+<pre><code class="language-bash">dotnet run --project src/tsbindgen/tsbindgen.csproj -- --help
+</code></pre>
+<h2 id="generating-bcl-declarations">Generating BCL Declarations</h2>
+<h3 id="find-your-net-runtime">Find Your .NET Runtime</h3>
+<pre><code class="language-bash">dotnet --list-runtimes
+# Microsoft.NETCore.App 10.0.0 [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+</code></pre>
+<h3 id="generate">Generate</h3>
+<pre><code class="language-bash"># Via npm
+npx tsbindgen generate -d /usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.0 -o ./output
+
+# Via dotnet (from source)
+dotnet run --project src/tsbindgen/tsbindgen.csproj -- \
+  generate -d /usr/share/dotnet/shared/Microsoft.NETCore.App/10.0.0 -o ./output
+</code></pre>
+<p>This generates declarations for all 130 BCL namespaces.</p>
+<h2 id="understanding-the-output">Understanding the Output</h2>
+<p>After generation:</p>
+<pre><code>output/
++-- System.d.ts                 # Facade (public API)
++-- System.js                   # Runtime stub (throws)
++-- System/
+|   +-- bindings.json
+|   +-- internal/
+|       +-- index.d.ts          # Full declarations
+|       +-- metadata.json       # CLR semantics
++-- System.Collections.Generic.d.ts
++-- System.Collections.Generic.js
++-- System.Collections.Generic/
+|   +-- bindings.json
+|   +-- internal/
+|       +-- index.d.ts
+|       +-- metadata.json
++-- ... (130 namespaces)
+</code></pre>
+<h3 id="facade-namespacedts">Facade (<code>&lt;Namespace&gt;.d.ts</code>)</h3>
+<p>The public-facing module consumers import from. Uses curated exports (no <code>export *</code>) to prevent leaking internal <code>$instance</code>/<code>$views</code> types:</p>
+<pre><code class="language-typescript">// output/System.Collections.Generic.d.ts
+import * as Internal from './System.Collections.Generic/internal/index.js';
+
+// Value re-exports for classes (friendly names)
+export { List_1 as List } from './System.Collections.Generic/internal/index.js';
+
+// Type aliases for interfaces
+export type IEnumerable&lt;T&gt; = Internal.IEnumerable_1&lt;T&gt;;
+</code></pre>
+<h3 id="internal-namespaceinternalindexdts">Internal (<code>&lt;Namespace&gt;/internal/index.d.ts</code>)</h3>
+<p>Full type declarations:</p>
+<pre><code class="language-typescript">// output/System.Collections.Generic/internal/index.d.ts
+export interface List_1$instance&lt;T&gt; {
+    readonly count: int;
+    add(item: T): void;
+    // ...
+}
+
+export declare const List_1: {
+    new &lt;T&gt;(): List_1&lt;T&gt;;
+};
+
+export type List_1&lt;T&gt; = List_1$instance&lt;T&gt; &amp; __List_1$views&lt;T&gt;;
+</code></pre>
+<h2 id="generating-a-custom-assembly-with-dependencies">Generating a Custom Assembly (with Dependencies)</h2>
+<p>If your assembly references other DLLs outside the runtime directory, add one or
+more <code>--ref-dir</code> entries so tsbindgen can resolve the full closure.</p>
+<pre><code class="language-bash">npx tsbindgen generate -a ./MyLibrary.dll -d $DOTNET_RUNTIME -o ./my-lib-types \
+  --ref-dir ./libs
+</code></pre>
+<p>To inspect resolution without generating, use <code>resolve-closure</code>:</p>
+<pre><code class="language-bash">npx tsbindgen resolve-closure -a ./MyLibrary.dll --ref-dir $DOTNET_RUNTIME --ref-dir ./libs
+</code></pre>
+<h2 id="validating-output">Validating Output</h2>
+<p>Run TypeScript validation:</p>
+<pre><code class="language-bash">node test/validate/validate.js --strict
+</code></pre>
+<p>Expected output:</p>
+<pre><code>VALIDATION RESULTS
+Total errors: 0
+✓ STRICT VALIDATION PASSED - Zero TypeScript errors!
+</code></pre>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="/tsbindgen/cli/">CLI Reference</a> - All commands and options</li>
+<li><a href="/tsbindgen/type-mappings/">Type Mappings</a> - How types are mapped</li>
+<li><a href="/tsbindgen/naming/">Naming Conventions</a> - CLR vs JavaScript naming</li>
+<li><a href="/tsbindgen/library-mode/">Library Mode</a> - Generate for custom assemblies</li>
+</ul>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

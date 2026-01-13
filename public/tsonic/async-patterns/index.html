@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Async Patterns | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+    <span>Async Patterns</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Async Patterns</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/async-patterns.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="async-patterns">Async Patterns</h1>
+<p>Tsonic compiles TypeScript's async/await to C#'s Task-based async pattern. This guide covers async functions, for-await loops, and async generators.</p>
+<h2 id="overview">Overview</h2>
+<p>Async functions return <code>Promise&lt;T&gt;</code> in TypeScript, which compiles to <code>Task&lt;T&gt;</code> in C#:</p>
+<pre><code class="language-typescript">export async function fetchData(): Promise&lt;string&gt; {
+  return &quot;data&quot;;
+}
+</code></pre>
+<p>Generated C#:</p>
+<pre><code class="language-csharp">public static async Task&lt;string&gt; fetchData()
+{
+    return &quot;data&quot;;
+}
+</code></pre>
+<h2 id="async-functions">Async Functions</h2>
+<h3 id="basic-async-function">Basic Async Function</h3>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import { Task } from &quot;@tsonic/dotnet/System.Threading.Tasks.js&quot;;
+
+async function delay(ms: number): Promise&lt;void&gt; {
+  await Task.delay(ms);
+}
+
+export async function main(): Promise&lt;void&gt; {
+  Console.writeLine(&quot;Starting...&quot;);
+  await delay(1000);
+  Console.writeLine(&quot;Done!&quot;);
+}
+</code></pre>
+<h3 id="returning-values">Returning Values</h3>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import { Task } from &quot;@tsonic/dotnet/System.Threading.Tasks.js&quot;;
+
+type User = {
+  id: number;
+  name: string;
+};
+
+async function fetchUser(id: number): Promise&lt;User&gt; {
+  await Task.delay(10);
+  return { id, name: &quot;Alice&quot; };
+}
+
+export async function main(): Promise&lt;void&gt; {
+  const user = await fetchUser(123);
+  Console.writeLine(user.name);
+}
+</code></pre>
+<h3 id="error-handling">Error Handling</h3>
+<p>Use try/catch with async/await:</p>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import { Exception } from &quot;@tsonic/dotnet/System.js&quot;;
+
+async function riskyOperation(): Promise&lt;string&gt; {
+  throw new Exception(&quot;Something failed&quot;);
+}
+
+export async function main(): Promise&lt;void&gt; {
+  try {
+    const result = await riskyOperation();
+    Console.writeLine(result);
+  } catch (e) {
+    Console.writeLine(&quot;Error occurred&quot;);
+  }
+}
+</code></pre>
+<h2 id="for-await-loops">For-Await Loops</h2>
+<p>Use <code>for await...of</code> to iterate over async iterables.</p>
+<h3 id="basic-for-await">Basic For-Await</h3>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import { Task } from &quot;@tsonic/dotnet/System.Threading.Tasks.js&quot;;
+
+async function* asyncNumbers(): AsyncGenerator&lt;number&gt; {
+  for (let i = 0; i &lt; 5; i++) {
+    await Task.delay(100);
+    yield i;
+  }
+}
+
+export async function main(): Promise&lt;void&gt; {
+  for await (const n of asyncNumbers()) {
+    Console.writeLine(`Got: ${n}`);
+  }
+}
+</code></pre>
+<p>Generated C#:</p>
+<pre><code class="language-csharp">await foreach (var n in asyncNumbers())
+{
+    Console.WriteLine($&quot;Got: {n}&quot;);
+}
+</code></pre>
+<h3 id="with-iasyncenumerable">With IAsyncEnumerable</h3>
+<p>.NET's <code>IAsyncEnumerable&lt;T&gt;</code> works with for-await:</p>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+declare function getItemsAsync(): AsyncIterable&lt;string&gt;;
+
+export async function main(): Promise&lt;void&gt; {
+  const items = getItemsAsync();
+  for await (const item of items) {
+    Console.writeLine(item);
+  }
+}
+</code></pre>
+<h3 id="collecting-async-results">Collecting Async Results</h3>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import { Task } from &quot;@tsonic/dotnet/System.Threading.Tasks.js&quot;;
+
+type Page = { index: number };
+
+async function fetchPage(index: number): Promise&lt;Page&gt; {
+  await Task.delay(10);
+  return { index };
+}
+
+async function* fetchPages(): AsyncGenerator&lt;Page&gt; {
+  for (let i = 1; i &lt;= 10; i++) {
+    yield await fetchPage(i);
+  }
+}
+
+export async function main(): Promise&lt;void&gt; {
+  const pages: Page[] = [];
+  for await (const page of fetchPages()) {
+    pages.push(page);
+  }
+  Console.writeLine(`Fetched ${pages.length} pages`);
+}
+</code></pre>
+<h2 id="async-generators">Async Generators</h2>
+<h3 id="basic-async-generator">Basic Async Generator</h3>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+import { Task } from &quot;@tsonic/dotnet/System.Threading.Tasks.js&quot;;
+
+async function* countdown(n: number): AsyncGenerator&lt;number&gt; {
+  while (n &gt; 0) {
+    await Task.delay(1000);
+    yield n;
+    n--;
+  }
+}
+
+export async function main(): Promise&lt;void&gt; {
+  for await (const n of countdown(5)) {
+    Console.writeLine(`${n}...`);
+  }
+  Console.writeLine(&quot;Liftoff!&quot;);
+}
+</code></pre>
+<h3 id="bidirectional-async-generator">Bidirectional Async Generator</h3>
+<p>Async generators support bidirectional communication:</p>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+async function* asyncAccumulator(
+  start: number
+): AsyncGenerator&lt;number, number, number&gt; {
+  let total = start;
+  while (true) {
+    const received = yield total;
+    total = total + received;
+  }
+}
+
+export async function main(): Promise&lt;void&gt; {
+  const gen = asyncAccumulator(10);
+
+  const r1 = await gen.next();
+  Console.writeLine(`Initial: ${r1.value}`); // 10
+
+  const r2 = await gen.next(5);
+  Console.writeLine(`After +5: ${r2.value}`); // 15
+
+  const r3 = await gen.next(20);
+  Console.writeLine(`After +20: ${r3.value}`); // 35
+}
+</code></pre>
+<h3 id="async-yield-delegation">Async Yield Delegation</h3>
+<p>Delegate to other async generators with <code>yield*</code>:</p>
+<pre><code class="language-typescript">async function* inner(): AsyncGenerator&lt;string&gt; {
+  yield &quot;a&quot;;
+  await delay(100);
+  yield &quot;b&quot;;
+}
+
+async function* outer(): AsyncGenerator&lt;string&gt; {
+  yield &quot;start&quot;;
+  yield* inner(); // Delegates asynchronously
+  yield &quot;end&quot;;
+}
+
+export async function main(): Promise&lt;void&gt; {
+  for await (const s of outer()) {
+    Console.writeLine(s); // start, a, b, end
+  }
+}
+</code></pre>
+<h2 id="parallel-execution">Parallel Execution</h2>
+<h3 id="promiseall-equivalent">Promise.all Equivalent</h3>
+<p>Use array operations for parallel async:</p>
+<pre><code class="language-typescript">async function fetchAllUsers(ids: number[]): Promise&lt;User[]&gt; {
+  const results: User[] = [];
+  for (const id of ids) {
+    const user = await fetchUser(id);
+    results.push(user);
+  }
+  return results;
+}
+</code></pre>
+<p>For true parallelism, use .NET's Task APIs:</p>
+<pre><code class="language-typescript">import { Task } from &quot;@tsonic/dotnet/System.Threading.Tasks.js&quot;;
+
+// Use Task.WhenAll for parallel execution
+</code></pre>
+<h2 id="common-patterns">Common Patterns</h2>
+<h3 id="retry-pattern">Retry Pattern</h3>
+<pre><code class="language-typescript">async function withRetry&lt;T&gt;(
+  operation: () =&gt; Promise&lt;T&gt;,
+  retries: number
+): Promise&lt;T&gt; {
+  for (let i = 0; i &lt; retries; i++) {
+    try {
+      return await operation();
+    } catch (e) {
+      if (i === retries - 1) throw e;
+      await delay(1000 * (i + 1)); // Exponential backoff
+    }
+  }
+  throw new Error(&quot;Should not reach here&quot;);
+}
+</code></pre>
+<h3 id="timeout-pattern">Timeout Pattern</h3>
+<pre><code class="language-typescript">import { CancellationTokenSource } from &quot;@tsonic/dotnet/System.Threading.js&quot;;
+
+async function withTimeout&lt;T&gt;(
+  operation: () =&gt; Promise&lt;T&gt;,
+  ms: number
+): Promise&lt;T&gt; {
+  const cts = new CancellationTokenSource();
+  cts.cancelAfter(ms);
+  // Use cancellation token with operation
+  return await operation();
+}
+</code></pre>
+<h3 id="producer-consumer">Producer-Consumer</h3>
+<pre><code class="language-typescript">async function* producer(): AsyncGenerator&lt;number&gt; {
+  for (let i = 0; i &lt; 10; i++) {
+    await delay(100);
+    yield i;
+  }
+}
+
+async function consumer(): Promise&lt;number&gt; {
+  let sum = 0;
+  for await (const n of producer()) {
+    sum = sum + n;
+  }
+  return sum;
+}
+</code></pre>
+<h2 id="type-mappings">Type Mappings</h2>
+<table>
+<thead>
+<tr>
+<th>TypeScript</th>
+<th>C#</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Promise&lt;T&gt;</code></td>
+<td><code>Task&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td><code>Promise&lt;void&gt;</code></td>
+<td><code>Task</code></td>
+</tr>
+<tr>
+<td><code>AsyncGenerator&lt;T&gt;</code></td>
+<td><code>IAsyncEnumerable&lt;T&gt;</code> (simplified)</td>
+</tr>
+<tr>
+<td><code>AsyncGenerator&lt;Y, R, N&gt;</code></td>
+<td>Wrapper class with async methods</td>
+</tr>
+</tbody>
+</table>
+<h2 id="async-entry-points">Async Entry Points</h2>
+<h3 id="main-function">Main Function</h3>
+<pre><code class="language-typescript">export async function main(): Promise&lt;void&gt; {
+  await someAsyncWork();
+}
+</code></pre>
+<p>Generates:</p>
+<pre><code class="language-csharp">public static async Task Main()
+{
+    await someAsyncWork();
+}
+</code></pre>
+<h3 id="sync-to-async-boundary">Sync to Async Boundary</h3>
+<p>When calling async from sync code, use <code>.Result</code> or <code>.Wait()</code>:</p>
+<pre><code class="language-typescript">// In TypeScript, this would be at the entry point
+import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+declare function syncWrapper(): string;
+
+export function main(): void {
+  const result = syncWrapper();
+  Console.writeLine(result);
+}
+
+// This pattern is handled by the async main support
+</code></pre>
+<h2 id="limitations">Limitations</h2>
+<h3 id="no-promise-chaining">No Promise Chaining</h3>
+<p>Tsonic does not support <code>.then()</code>, <code>.catch()</code>, or <code>.finally()</code>:</p>
+<pre><code class="language-typescript">// NOT SUPPORTED
+declare const promise: Promise&lt;number&gt;;
+
+promise.then((result) =&gt; result + 1);
+promise.catch(() =&gt; 0);
+
+// USE INSTEAD
+export async function usePromise(): Promise&lt;number&gt; {
+  try {
+    const result = await promise;
+    return result + 1;
+  } catch {
+    return 0;
+  }
+}
+</code></pre>
+<p>This is a deliberate design choice to ensure clean async/await code.</p>
+<h3 id="avoid-promise-constructors">Avoid Promise Constructors</h3>
+<pre><code class="language-typescript">// Avoid Promise executor-style construction when targeting .NET tasks.
+const promise = new Promise&lt;number&gt;((resolve) =&gt; {
+  resolve(123);
+});
+
+// Prefer async functions that return Promise&lt;T&gt;.
+export async function myOperation(): Promise&lt;number&gt; {
+  return 123;
+}
+</code></pre>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="always-await-promises">Always Await Promises</h3>
+<pre><code class="language-typescript">// Good
+await asyncOperation();
+
+// Bad - promise not awaited
+asyncOperation(); // Fire-and-forget, may cause issues
+</code></pre>
+<h3 id="use-async-main">Use Async Main</h3>
+<pre><code class="language-typescript">// Preferred
+export async function main(): Promise&lt;void&gt; {
+  await setup();
+  await run();
+  await cleanup();
+}
+</code></pre>
+<h3 id="handle-errors-at-boundaries">Handle Errors at Boundaries</h3>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+export async function main(): Promise&lt;void&gt; {
+  try {
+    await application();
+  } catch (e) {
+    Console.writeLine(&quot;Fatal error&quot;);
+    // Log and exit
+  }
+}
+</code></pre>
+<h3 id="avoid-mixing-patterns">Avoid Mixing Patterns</h3>
+<pre><code class="language-typescript">declare function fetchA(): Promise&lt;number&gt;;
+declare function fetchB(): Promise&lt;number&gt;;
+declare function fetchC(): Promise&lt;number&gt;;
+
+// Good - consistent async/await
+export async function good(): Promise&lt;void&gt; {
+  const a = await fetchA();
+  const b = await fetchB();
+  const c = await fetchC();
+
+  void a;
+  void b;
+  void c;
+}
+
+// Avoid - mixing patterns
+export async function bad(): Promise&lt;void&gt; {
+  const a = await fetchA();
+  void a;
+
+  // Don't mix (also: Promise.then/catch/finally is not supported in Tsonic)
+  fetchB().then(() =&gt; {
+    // ...
+  });
+}
+</code></pre>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="/tsonic/generators/">Generators</a> - Async generators in detail</li>
+<li><a href="/tsonic/callbacks/">Callbacks</a> - Async callbacks</li>
+<li><a href="/tsonic/dotnet-interop/">.NET Interop</a> - Task-based APIs</li>
+<li><a href="/tsonic/language/">Language Reference</a> - Full language features</li>
+</ul>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

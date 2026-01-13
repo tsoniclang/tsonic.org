@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Troubleshooting | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+    <span>Troubleshooting</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Troubleshooting</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/troubleshooting.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="troubleshooting">Troubleshooting</h1>
+<p>Common issues and solutions.</p>
+<h2 id="installation-issues">Installation Issues</h2>
+<h3 id="tsonic-command-not-found">&quot;tsonic: command not found&quot;</h3>
+<p><strong>Cause</strong>: CLI not installed globally or PATH not set.</p>
+<p><strong>Solutions</strong>:</p>
+<pre><code class="language-bash"># Reinstall globally
+npm install -g tsonic
+
+# Or use npx
+npx tsonic --version
+
+# Check npm global path
+npm config get prefix
+# Add to PATH if needed
+</code></pre>
+<h3 id="net-sdk-not-found">&quot;.NET SDK not found&quot;</h3>
+<p><strong>Cause</strong>: .NET 10 SDK not installed.</p>
+<p><strong>Solutions</strong>:</p>
+<pre><code class="language-bash"># Check installation
+dotnet --version
+
+# Install from https://dotnet.microsoft.com/download/dotnet/10.0
+
+# Linux (Ubuntu/Debian)
+sudo apt-get install dotnet-sdk-10.0
+</code></pre>
+<h2 id="build-errors">Build Errors</h2>
+<h3 id="config-file-not-found">&quot;Config file not found&quot;</h3>
+<pre><code>Error: Config file not found: tsonic.json
+</code></pre>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Run from project root (where <code>tsonic.json</code> is)</li>
+<li>Create config: <code>tsonic project init</code></li>
+<li>Specify path: <code>tsonic build --config path/to/tsonic.json</code></li>
+</ol>
+<h3 id="entry-point-is-required">&quot;Entry point is required&quot;</h3>
+<pre><code>Error: Entry point is required for executable builds
+</code></pre>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Provide entry file: <code>tsonic build src/App.ts</code></li>
+<li>Add to config:
+<pre><code class="language-json">{ &quot;entryPoint&quot;: &quot;src/App.ts&quot; }
+</code></pre>
+</li>
+</ol>
+<h3 id="no-exported-main-function">&quot;No exported main() function&quot;</h3>
+<pre><code>Error: No exported main() function found
+</code></pre>
+<p><strong>Solutions</strong>:</p>
+<p>Ensure your entry file exports <code>main</code>:</p>
+<pre><code class="language-typescript">// ✅ Correct
+export function main(): void {
+  // ...
+}
+
+// ❌ Wrong - not exported
+function main(): void {
+  // ...
+}
+</code></pre>
+<h3 id="cannot-resolve-module">&quot;Cannot resolve module&quot;</h3>
+<pre><code>Error TSN1001: Cannot resolve module './User'
+</code></pre>
+<p><strong>Solutions</strong>:</p>
+<p>Add a file extension to local imports (<code>.js</code> is recommended):</p>
+<pre><code class="language-typescript">// ✅ Correct
+import { User } from &quot;./User.js&quot;;
+
+// ❌ Wrong
+import { User } from &quot;./User&quot;;
+</code></pre>
+<h3 id="typescript-compilation-failed">&quot;TypeScript compilation failed&quot;</h3>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Check TypeScript errors in output</li>
+<li>Ensure type packages are installed:
+<pre><code class="language-bash">npm install --save-dev tsonic @tsonic/core @tsonic/globals
+</code></pre>
+</li>
+<li>Run generate only to see generated C#:
+<pre><code class="language-bash">tsonic generate src/App.ts --verbose
+</code></pre>
+</li>
+</ol>
+<h3 id="dotnet-publish-failed">&quot;dotnet publish failed&quot;</h3>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><p>Check .NET SDK version:</p>
+<pre><code class="language-bash">dotnet --version  # Should be 10.x
+</code></pre>
+</li>
+<li><p>Try manual build:</p>
+<pre><code class="language-bash">cd generated
+dotnet build
+</code></pre>
+</li>
+<li><p>Check for C# compilation errors in output</p>
+</li>
+<li><p>Ensure NuGet packages exist:</p>
+<pre><code class="language-bash">dotnet restore
+</code></pre>
+</li>
+</ol>
+<h2 id="runtime-errors">Runtime Errors</h2>
+<h3 id="file-not-found-at-runtime">&quot;File not found&quot; at runtime</h3>
+<p><strong>Cause</strong>: Working directory different from expected.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Use absolute paths</li>
+<li>Use <code>Path.Combine</code> for cross-platform paths:
+<pre><code class="language-typescript">import { Path, File } from &quot;@tsonic/dotnet/System.IO.js&quot;;
+const path = Path.Combine(&quot;.&quot;, &quot;data&quot;, &quot;file.txt&quot;);
+</code></pre>
+</li>
+</ol>
+<h3 id="null-reference-exceptions">Null reference exceptions</h3>
+<p><strong>Cause</strong>: Accessing property on null value.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><p>Check for null:</p>
+<pre><code class="language-typescript">if (value !== null) {
+  // safe to use
+}
+</code></pre>
+</li>
+<li><p>Use optional chaining:</p>
+<pre><code class="language-typescript">const name = user?.profile?.name;
+</code></pre>
+</li>
+</ol>
+<h2 id="type-issues">Type Issues</h2>
+<h3 id="type-any-is-not-supported">&quot;Type 'any' is not supported&quot;</h3>
+<p><strong>Solutions</strong>:</p>
+<p>Replace <code>any</code> with specific types:</p>
+<pre><code class="language-typescript">// ❌ Wrong
+function process(data: any): any {
+  return data;
+}
+
+// ✅ Correct
+function process(data: unknown): string {
+  return String(data);
+}
+function process&lt;T&gt;(data: T): T {
+  return data;
+}
+</code></pre>
+<h3 id="promisethen-is-not-supported">&quot;Promise.then is not supported&quot;</h3>
+<p><strong>Solutions</strong>:</p>
+<p>Use async/await instead of promise chaining:</p>
+<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+declare function getData(): Promise&lt;string&gt;;
+
+export async function main(): Promise&lt;void&gt; {
+  // ❌ Wrong
+  getData().then((data) =&gt; {
+    Console.writeLine(data);
+  });
+
+  // ✅ Correct
+  const data = await getData();
+  Console.writeLine(data);
+}
+</code></pre>
+<h3 id="nullable-generics">Nullable Generics</h3>
+<pre><code>Error TSN7415: Nullable union 'T | null' with unconstrained generic type
+parameter 'T' cannot be represented in C#.
+</code></pre>
+<p><strong>Cause</strong>: C# cannot represent nullable unconstrained generics properly for value types.</p>
+<p><strong>Why this happens</strong>:</p>
+<p>In C#, <code>T?</code> behaves differently based on constraints:</p>
+<ul>
+<li><code>where T : struct</code> → <code>T?</code> becomes <code>Nullable&lt;T&gt;</code> (works)</li>
+<li><code>where T : class</code> → <code>T?</code> becomes nullable reference (works)</li>
+<li>No constraint → <code>T?</code> is just <code>T</code> for value types (broken!)</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Use <code>object | null</code></strong> to box the value:</li>
+</ol>
+<pre><code class="language-typescript">// ❌ Error
+function getValue&lt;T&gt;(value: T | null): T {
+  return value ?? getDefault();
+}
+
+// ✅ Works - uses boxing
+function getValue&lt;T&gt;(value: object | null): T {
+  return (value ?? getDefault()) as T;
+}
+</code></pre>
+<ol start="2">
+<li><strong>Add a reference type constraint</strong>:</li>
+</ol>
+<pre><code class="language-typescript">// ✅ Works - T is always a reference type
+function getValue&lt;T extends object&gt;(value: T | null): T {
+  return value ?? getDefault();
+}
+</code></pre>
+<ol start="3">
+<li><strong>Add a value type constraint</strong>:</li>
+</ol>
+<pre><code class="language-typescript">// ✅ Works - T is always a value type
+function getValue&lt;T extends struct&gt;(value: T | null): T {
+  return value ?? getDefault();
+}
+</code></pre>
+<ol start="4">
+<li><strong>Avoid nullable generic parameters</strong> when possible:</li>
+</ol>
+<pre><code class="language-typescript">// ✅ Works - nullable handling at call site
+function getValue&lt;T&gt;(value: T, fallback: T): T {
+  return value ?? fallback;
+}
+
+// Caller handles nullable
+const result = item !== null ? getValue(item, defaultItem) : defaultItem;
+</code></pre>
+<blockquote>
+<p><strong>See also:</strong> <a href="/tsonic/diagnostics/#tsn7415-nullable-union-with-unconstrained-generic">Diagnostics TSN7415</a></p>
+</blockquote>
+<h2 id="performance-issues">Performance Issues</h2>
+<h3 id="large-binary-size">Large binary size</h3>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><p>Enable trimming:</p>
+<pre><code class="language-json">{ &quot;output&quot;: { &quot;trimmed&quot;: true } }
+</code></pre>
+</li>
+<li><p>Optimize for size:</p>
+<pre><code class="language-json">{ &quot;optimize&quot;: &quot;size&quot; }
+</code></pre>
+</li>
+<li><p>Strip symbols:</p>
+<pre><code class="language-json">{ &quot;output&quot;: { &quot;stripSymbols&quot;: true } }
+</code></pre>
+</li>
+</ol>
+<h3 id="slow-compilation">Slow compilation</h3>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Use incremental builds (don't clean every time)</li>
+<li>Reduce number of source files</li>
+<li>Simplify generic usage</li>
+</ol>
+<h2 id="debugging">Debugging</h2>
+<h3 id="view-generated-c">View generated C#</h3>
+<pre><code class="language-bash">tsonic generate src/App.ts
+cat generated/src/App.cs
+</code></pre>
+<h3 id="verbose-output">Verbose output</h3>
+<pre><code class="language-bash">tsonic build src/App.ts --verbose
+</code></pre>
+<h3 id="keep-build-artifacts">Keep build artifacts</h3>
+<pre><code class="language-bash">tsonic build src/App.ts --keep-temp
+</code></pre>
+<h3 id="manual-net-build">Manual .NET build</h3>
+<pre><code class="language-bash">cd generated
+dotnet build --verbosity detailed
+</code></pre>
+<h3 id="include-debug-symbols">Include debug symbols</h3>
+<pre><code class="language-bash">tsonic build src/App.ts --no-strip
+</code></pre>
+<h2 id="getting-help">Getting Help</h2>
+<ul>
+<li><strong>Documentation</strong>: <a href=".">docs/</a></li>
+<li><strong>GitHub Issues</strong>: <a href="https://github.com/tsoniclang/tsonic/issues">https://github.com/tsoniclang/tsonic/issues</a></li>
+<li><strong>Source Code</strong>: <a href="https://github.com/tsoniclang/tsonic">https://github.com/tsoniclang/tsonic</a></li>
+</ul>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

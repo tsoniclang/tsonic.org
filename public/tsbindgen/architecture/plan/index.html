@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plan | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Plan</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Plan</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/architecture/plan.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="plan-phase">Plan Phase</h1>
+<p>The Plan phase analyzes cross-namespace dependencies and plans all import/export statements.</p>
+<h2 id="components">Components</h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ImportGraphBuilder</td>
+<td><code>ImportGraphBuilder.cs</code></td>
+<td>Build dependency graph</td>
+</tr>
+<tr>
+<td>ImportPlanner</td>
+<td><code>ImportPlanner.cs</code></td>
+<td>Generate import statements</td>
+</tr>
+<tr>
+<td>EmissionPlanner</td>
+<td><code>EmissionPlanner.cs</code></td>
+<td>Plan file generation order</td>
+</tr>
+<tr>
+<td>SCCBucketer</td>
+<td><code>SCCBucketer.cs</code></td>
+<td>Handle circular dependencies</td>
+</tr>
+<tr>
+<td>PhaseGate</td>
+<td><code>PhaseGate.cs</code></td>
+<td>Validate invariants</td>
+</tr>
+</tbody>
+</table>
+<h2 id="importgraphbuilder">ImportGraphBuilder</h2>
+<p>Builds a graph of cross-namespace type references.</p>
+<pre><code class="language-csharp">public sealed record ImportGraphData
+{
+    // Namespace A depends on Namespace B
+    public Dictionary&lt;string, HashSet&lt;string&gt;&gt; NamespaceDependencies { get; }
+
+    // Detailed references: source ns, target ns, target type, reference kind
+    public List&lt;CrossNamespaceReference&gt; CrossNamespaceReferences { get; }
+}
+
+public enum ReferenceKind
+{
+    BaseClass,      // extends clause (needs value import)
+    Interface,      // implements clause (needs value import)
+    ReturnType,     // method return type (type-only import)
+    Parameter,      // method parameter (type-only import)
+    PropertyType,   // property type (type-only import)
+    Constraint      // generic constraint (type-only import)
+}
+</code></pre>
+<h2 id="importplanner">ImportPlanner</h2>
+<p>Generates import statements for each namespace. Uses <code>FacadeFamilyIndex</code> for drift-proof multi-arity family resolution.</p>
+<pre><code class="language-csharp">public sealed record ImportPlan
+{
+    // Per-namespace imports
+    public Dictionary&lt;string, List&lt;ImportStatement&gt;&gt; NamespaceImports { get; }
+
+    // Per-namespace exports
+    public Dictionary&lt;string, List&lt;ExportStatement&gt;&gt; NamespaceExports { get; }
+
+    // Qualified names for value imports (base classes)
+    public Dictionary&lt;(string, string), string&gt; ValueImportQualifiedNames { get; }
+}
+
+public sealed record ImportStatement(
+    string ImportPath,           // &quot;../../System/internal/index.js&quot;
+    string TargetNamespace,      // &quot;System&quot;
+    List&lt;TypeImport&gt; TypeImports,
+    string NamespaceAlias);      // &quot;System_Internal&quot;
+
+public sealed record TypeImport(
+    string TypeName,
+    string? Alias,
+    bool IsValueImport);         // true for extends/implements
+</code></pre>
+<h2 id="import-classification">Import Classification</h2>
+<p><strong>Value imports</strong> (need runtime value):</p>
+<ul>
+<li>Base classes in <code>extends</code> clause</li>
+<li>Interfaces used in <code>extends</code> (for merged interface pattern)</li>
+</ul>
+<p><strong>Type-only imports</strong>:</p>
+<ul>
+<li>Return types</li>
+<li>Parameter types</li>
+<li>Property types</li>
+<li>Generic constraints</li>
+</ul>
+<pre><code class="language-typescript">// Value import - needed for extends
+import * as System_Internal from '../../System/internal/index.js';
+
+// Type-only import - just for type annotations
+import type { IEnumerable_1 } from '../../System.Collections/internal/index.js';
+</code></pre>
+<h2 id="emissionplanner">EmissionPlanner</h2>
+<p>Plans the order of file generation.</p>
+<pre><code class="language-csharp">public sealed record EmissionPlan
+{
+    public SymbolGraph Graph { get; }
+    public ImportPlan Imports { get; }
+    public EmissionOrder EmissionOrder { get; }
+
+    // Shape pass results
+    public StaticFlatteningPlan StaticFlattening { get; }
+    public StaticConflictPlan StaticConflicts { get; }
+    public OverrideConflictPlan OverrideConflicts { get; }
+    public PropertyOverridePlan PropertyOverrides { get; }
+    public SafeToExtendResult SafeToExtend { get; }
+}
+
+public sealed record EmissionOrder
+{
+    public ImmutableArray&lt;NamespaceEmitOrder&gt; Namespaces { get; }
+}
+
+public sealed record NamespaceEmitOrder
+{
+    public NamespaceSymbol Namespace { get; }
+    public ImmutableArray&lt;TypeEmitOrder&gt; OrderedTypes { get; }
+}
+</code></pre>
+<h2 id="phasegate-validation">PhaseGate Validation</h2>
+<p>Validates 50+ invariants before emission:</p>
+<pre><code class="language-csharp">public static void Validate(BuildContext ctx, EmissionPlan plan)
+{
+    // PG_TYPE_001: All types have final names
+    // PG_MEMBER_001: All members have final names
+    // PG_IMPORT_001: No circular imports
+    // PG_SCOPE_001: Correct scope usage
+    // ... 46 more rules
+}
+</code></pre>
+<p><strong>Validation categories:</strong></p>
+<ul>
+<li>Type naming invariants</li>
+<li>Member naming invariants</li>
+<li>Import/export consistency</li>
+<li>Scope correctness</li>
+<li>Generic constraint validity</li>
+</ul>
+<h2 id="circular-dependency-handling">Circular Dependency Handling</h2>
+<p>SCCBucketer handles circular namespace dependencies using Tarjan's algorithm:</p>
+<pre><code class="language-csharp">// If A imports B and B imports A:
+// 1. Detect strongly connected component {A, B}
+// 2. Emit types in topological order within SCC
+// 3. Use forward declarations where needed
+</code></pre>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Numeric Types | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+    <span>Numeric Types</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Numeric Types</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/numeric-types.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="numeric-types">Numeric Types</h1>
+<p>Tsonic provides precise control over numeric types through the <code>@tsonic/core</code> package. This guide covers when and how to use integer types in your Tsonic programs.</p>
+<h2 id="overview">Overview</h2>
+<p>When you <em>annotate</em> a value as TypeScript <code>number</code>, Tsonic emits a C# <code>double</code>.</p>
+<p>Tsonic also applies C#-style <strong>numeric literal inference</strong>:</p>
+<ul>
+<li>Integer-looking literals default to <code>int</code> (or <code>long</code> if out of 32-bit range)</li>
+<li>Floating-point literals default to <code>double</code></li>
+</ul>
+<pre><code class="language-typescript">import { int, long } from &quot;@tsonic/core/types.js&quot;;
+
+// Integer literal → int
+const i = 42; // C#: int i = 42;
+
+// Large integer literal → long
+const big = 2147483648; // C#: long big = 2147483648L;
+
+// Force double: annotate as number
+const d: number = 42; // C#: double d = 42.0;
+
+// Integer: int → System.Int32
+const count: int = 42; // C#: int count = 42;
+</code></pre>
+<h2 id="available-integer-types">Available Integer Types</h2>
+<p>Import from <code>@tsonic/core</code>:</p>
+<table>
+<thead>
+<tr>
+<th>TypeScript</th>
+<th>C# Type</th>
+<th>Range</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>byte</code></td>
+<td><code>byte</code></td>
+<td>0 to 255</td>
+<td>Binary data, small counts</td>
+</tr>
+<tr>
+<td><code>sbyte</code></td>
+<td><code>sbyte</code></td>
+<td>-128 to 127</td>
+<td>Signed byte values</td>
+</tr>
+<tr>
+<td><code>short</code></td>
+<td><code>short</code></td>
+<td>-32,768 to 32,767</td>
+<td>Small integers</td>
+</tr>
+<tr>
+<td><code>ushort</code></td>
+<td><code>ushort</code></td>
+<td>0 to 65,535</td>
+<td>Unsigned small integers</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>int</code></td>
+<td>-2B to 2B</td>
+<td>Most integer operations</td>
+</tr>
+<tr>
+<td><code>uint</code></td>
+<td><code>uint</code></td>
+<td>0 to 4B</td>
+<td>Unsigned integers</td>
+</tr>
+<tr>
+<td><code>long</code></td>
+<td><code>long</code></td>
+<td>-9Q to 9Q</td>
+<td>Large integers</td>
+</tr>
+<tr>
+<td><code>ulong</code></td>
+<td><code>ulong</code></td>
+<td>0 to 18Q</td>
+<td>Large unsigned integers</td>
+</tr>
+<tr>
+<td><code>float</code></td>
+<td><code>float</code></td>
+<td>±3.4e38</td>
+<td>Single precision floats</td>
+</tr>
+</tbody>
+</table>
+<h2 id="type-annotations-preferred">Type Annotations (Preferred)</h2>
+<p>Prefer type annotations for numeric types (especially for integers):</p>
+<pre><code class="language-typescript">import { int, byte, short, long, float } from &quot;@tsonic/core/types.js&quot;;
+
+const intValue: int = 1000; // C#: int intValue = 1000;
+const byteValue: byte = 255; // C#: byte byteValue = 255;
+const shortValue: short = 1000; // C#: short shortValue = 1000;
+const longValue: long = 1000000; // C#: long longValue = 1000000L;
+
+const floatValue: float = 1.5; // C#: float floatValue = 1.5f;
+const doubleValue: number = 1.5; // C#: double doubleValue = 1.5;
+</code></pre>
+<p>Numeric type assertions (<code>as int</code>, <code>as byte</code>, etc.) exist, but they are <strong>proof-checked</strong> and are not meant for everyday typing. Prefer annotations and contextual typing; see <a href="#explicit-narrowing-as-int">Explicit Narrowing</a>.</p>
+<h2 id="basic-usage">Basic Usage</h2>
+<h3 id="declaring-integer-variables">Declaring Integer Variables</h3>
+<p>Use a type annotation when you need an <code>int</code>:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const count: int = 10;
+const index: int = 0;
+const max: int = 100;
+</code></pre>
+<p>Or rely on expected types (no cast required):</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+function takesInt(x: int): void {
+  // ...
+}
+
+takesInt(10);
+</code></pre>
+<h3 id="integer-arithmetic">Integer Arithmetic</h3>
+<p>Integer operations produce integer results:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const x: int = 10;
+const y: int = 20;
+
+// All produce int results
+const sum = x + y; // 30
+const diff = y - x; // 10
+const product = x * y; // 200
+</code></pre>
+<h3 id="integer-division">Integer Division</h3>
+<p>Integer division truncates toward zero (unlike JavaScript):</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const a: int = 10;
+const b: int = 3;
+const result = a / b; // 3 (not 3.333...)
+
+const c: int = 100;
+const d: int = 33;
+const quotient = c / d; // 3
+</code></pre>
+<h2 id="when-to-use-integer-types">When to Use Integer Types</h2>
+<h3 id="required-net-api-compatibility">Required: .NET API Compatibility</h3>
+<p>Many .NET APIs require integer parameters:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+
+const list = new List&lt;string&gt;();
+list.add(&quot;one&quot;);
+list.add(&quot;two&quot;);
+
+// List indexers require an int index
+const idx: int = 0;
+const item = list[idx];
+</code></pre>
+<h3 id="required-linq-operations">Required: LINQ Operations</h3>
+<p>Some LINQ methods require integer return values:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
+
+const numbers = new List&lt;int&gt;();
+// ... populate list
+
+// Sum() returns int when input is int
+const total = Enumerable.sum(numbers);
+</code></pre>
+<h3 id="recommended-array-indexing">Recommended: Array Indexing</h3>
+<p>Use integers for array access to avoid floating-point issues:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const items: string[] = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;];
+const idx: int = 2;
+const item = items[idx]; // &quot;c&quot;
+
+// Arithmetic works naturally
+const nextIdx = idx + 1;
+const nextItem = items[nextIdx]; // &quot;d&quot;
+</code></pre>
+<h3 id="recommended-loop-counters">Recommended: Loop Counters</h3>
+<p>Use integers for loop counters:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const max: int = 10;
+for (let i: int = 0; i &lt; max; i = i + 1) {
+  // i is int throughout
+}
+</code></pre>
+<h3 id="not-needed-general-math">Not Needed: General Math</h3>
+<p>For general calculations, <code>number</code> (double) is usually fine:</p>
+<pre><code class="language-typescript">// double is fine for general math
+const price = 19.99;
+const tax = price * 0.08;
+const total = price + tax;
+</code></pre>
+<h2 id="explicit-narrowing-as-int">Explicit Narrowing (<code>as int</code>)</h2>
+<p>You generally <strong>don't</strong> need <code>as int</code> when an <code>int</code> is already expected (variable type annotation, function parameter, indexer, etc.).</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const a: int = 10;
+const b: int = 3;
+
+// No cast needed: int context drives typing
+const result: int = (a + b) * 2;
+</code></pre>
+<p><code>as int</code> is proof-checked and cannot be used as a general-purpose float→int truncation. In most code, prefer <code>: int</code> and let expected types drive typing.</p>
+<h2 id="function-signatures">Function Signatures</h2>
+<h3 id="integer-parameters">Integer Parameters</h3>
+<p>Declare function parameters with integer types:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+function factorial(n: int): int {
+  if (n &lt;= 1) return 1;
+  return n * factorial(n - 1);
+}
+
+const result = factorial(5); // 120
+</code></pre>
+<h3 id="integer-return-types">Integer Return Types</h3>
+<p>Functions can return integer types:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+function sumRange(start: int, end: int): int {
+  let total: int = 0;
+  for (let i: int = start; i &lt;= end; i = i + 1) {
+    total = total + i;
+  }
+  return total;
+}
+</code></pre>
+<h2 id="common-patterns">Common Patterns</h2>
+<h3 id="counter-variables">Counter Variables</h3>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+let count: int = 0;
+count = count + 1;
+</code></pre>
+<h3 id="array-length-access">Array Length Access</h3>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const items: string[] = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
+const len: int = items.length;
+const lastIdx: int = len - 1;
+const lastItem = items[lastIdx];
+</code></pre>
+<h3 id="modulo-operations">Modulo Operations</h3>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const value: int = 17;
+const divisor: int = 5;
+const remainder = value % divisor; // 2
+</code></pre>
+<h3 id="bitwise-operations">Bitwise Operations</h3>
+<p>Integer types support all bitwise operations:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const a: int = 0b1010; // 10
+const b: int = 0b1100; // 12
+
+const and = a &amp; b; // 8 (0b1000)
+const or = a | b; // 14 (0b1110)
+const xor = a ^ b; // 6 (0b0110)
+const not = ~a; // -11
+const left = a &lt;&lt; 2; // 40
+const right = a &gt;&gt; 1; // 5
+</code></pre>
+<h2 id="array-type-inference">Array Type Inference</h2>
+<p>Tsonic infers numeric array types based on the values in the array literal:</p>
+<h3 id="integer-arrays">Integer Arrays</h3>
+<pre><code class="language-typescript">// Integer literals infer to int[]
+const numbers = [1, 2, 3]; // Emits: int[] numbers = [1, 2, 3];
+
+// Floating-point values infer to double[]
+const floats = [1.5, 2.5, 3.5]; // Emits: double[] floats = [1.5, 2.5, 3.5];
+
+// Mixed int and float → double[]
+const mixed = [1, 2.5, 3]; // Emits: double[] mixed = [1, 2.5, 3];
+</code></pre>
+<h3 id="long-arrays-large-integers">Long Arrays (Large Integers)</h3>
+<p>When an integer literal exceeds the 32-bit int range (-2,147,483,648 to 2,147,483,647), the entire array is inferred as <code>long[]</code>:</p>
+<pre><code class="language-typescript">// Large number causes long[] inference
+const bigNumbers = [1, 2, 2147483648]; // Emits: long[] bigNumbers = [1L, 2L, 2147483648L];
+
+const timestamps = [1609459200000, 1609545600000]; // Emits: long[] (JS millisecond timestamps)
+</code></pre>
+<h3 id="inference-rules">Inference Rules</h3>
+<table>
+<thead>
+<tr>
+<th>Array Contents</th>
+<th>Inferred Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All integers within int range</td>
+<td><code>int[]</code></td>
+</tr>
+<tr>
+<td>Any integer &gt; int max</td>
+<td><code>long[]</code></td>
+</tr>
+<tr>
+<td>Any floating-point value</td>
+<td><code>double[]</code></td>
+</tr>
+<tr>
+<td>Mixed int and float</td>
+<td><code>double[]</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="explicit-type-annotations">Explicit Type Annotations</h3>
+<p>Override inference with explicit type annotations:</p>
+<pre><code class="language-typescript">import { long, float } from &quot;@tsonic/core/types.js&quot;;
+
+// Force long[] even with small values
+const smallLongs: long[] = [1, 2, 3];
+
+// Force float[] instead of double[]
+const floatArray: float[] = [1.0, 2.0, 3.0];
+
+// Force int[] (error if value exceeds range)
+const ints: int[] = [1, 2, 3];
+</code></pre>
+<h3 id="empty-arrays">Empty Arrays</h3>
+<p>Empty array literals require explicit type annotation:</p>
+<pre><code class="language-typescript">// Error: Cannot infer element type
+const arr = [];
+
+// Correct
+const numbers: int[] = [];
+const strings: string[] = [];
+</code></pre>
+<blockquote>
+<p><strong>See also:</strong> <a href="/tsonic/diagnostics/#tsn7417-empty-array-literal-requires-type">TSN7417: Empty Array Literal Requires Type</a></p>
+</blockquote>
+<h2 id="comparison-with-javascript">Comparison with JavaScript</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>JavaScript</th>
+<th>Tsonic (int)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>10 / 3</code></td>
+<td>3.333...</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>10 / 4</code></td>
+<td>2.5</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>(-7) / 3</code></td>
+<td>-2.333...</td>
+<td>-2</td>
+</tr>
+<tr>
+<td>Array index</td>
+<td>Any number</td>
+<td>Exact int</td>
+</tr>
+<tr>
+<td>Overflow</td>
+<td>Infinity</td>
+<td>Wraps (C# behavior)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="generated-c-code">Generated C# Code</h2>
+<p>Tsonic generates clean C# without unnecessary casts:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const x: int = 10;
+const y: int = 20;
+const sum = x + y;
+</code></pre>
+<p>Generates:</p>
+<pre><code class="language-csharp">var x = 10;
+var y = 20;
+var sum = x + y;
+</code></pre>
+<p>Not:</p>
+<pre><code class="language-csharp">var x = (int)10.0;
+var y = (int)20.0;
+var sum = (int)(x + y); // Wrong - unnecessary casts
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="cannot-assign-number-to-int">&quot;Cannot assign number to int&quot;</h3>
+<p>Use <code>int</code>-typed values (or an explicit narrowing) when you need an integer:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+// OK: integer literal in int context
+const a: int = 10;
+const b: int = 5;
+const x: int = a + b;
+
+// Error: floating-point literal is not an integer value
+const y: int = 10.5;
+</code></pre>
+<h3 id="array-index-errors">Array Index Errors</h3>
+<p>Ensure array indices are integers:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+
+const items: string[] = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
+const idx: int = 1;
+const item = items[idx]; // OK
+</code></pre>
+<h3 id="linq-type-mismatches">LINQ Type Mismatches</h3>
+<p>Use integer types for LINQ operations that expect them:</p>
+<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+
+const nums = new List&lt;int&gt;();
+nums.add(1);
+nums.add(2);
+// Now LINQ operations work correctly
+</code></pre>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="/tsonic/type-system/">Type System</a> - Complete type mapping reference</li>
+<li><a href="/tsonic/dotnet-interop/">.NET Interop</a> - Working with .NET APIs</li>
+<li><a href="/tsonic/examples/arrays/">LINQ Operations</a> - Array and LINQ examples</li>
+</ul>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

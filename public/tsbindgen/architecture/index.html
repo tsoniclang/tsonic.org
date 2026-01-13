@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Architecture | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link " href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link active" href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Type Generation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Validation</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsbindgen/">tsbindgen</a>
+      <span class="sep">/</span>
+    
+    <span>Architecture</span>
+  </nav>
+
+  <h1>Architecture</h1>
+  <div class="content"><h1 id="tsbindgen-architecture">tsbindgen Architecture</h1>
+<p>This documentation covers the internal architecture of tsbindgen, the TypeScript declaration generator for .NET assemblies.</p>
+<h2 id="documentation-index">Documentation Index</h2>
+<h3 id="core-architecture">Core Architecture</h3>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/tsbindgen/architecture/overview/">Overview</a></td>
+<td>High-level architecture and design principles</td>
+</tr>
+<tr>
+<td><a href="/tsbindgen/architecture/pipeline/">Pipeline</a></td>
+<td>Complete pipeline flow from input to output</td>
+</tr>
+<tr>
+<td><a href="/tsbindgen/architecture/concepts/">Key Concepts</a></td>
+<td>Facades, views, EmitScope, dual-scope naming, etc.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pipeline-phases">Pipeline Phases</h3>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/tsbindgen/architecture/load/">Load Phase</a></td>
+<td>Assembly loading and reflection</td>
+</tr>
+<tr>
+<td><a href="/tsbindgen/architecture/model/">Model</a></td>
+<td>Symbol graph data structures (TypeReference, StableId)</td>
+</tr>
+<tr>
+<td><a href="/tsbindgen/architecture/shape/">Shape Phase</a></td>
+<td>29 transformation passes</td>
+</tr>
+<tr>
+<td><a href="/tsbindgen/architecture/normalize/">Normalize Phase</a></td>
+<td>Name reservation and conflict resolution</td>
+</tr>
+<tr>
+<td><a href="/tsbindgen/architecture/plan/">Plan Phase</a></td>
+<td>Import/export planning and validation</td>
+</tr>
+<tr>
+<td><a href="/tsbindgen/architecture/phasegate/">Phase Gate</a></td>
+<td>Validation checkpoint (50+ rules, all diagnostic codes)</td>
+</tr>
+<tr>
+<td><a href="/tsbindgen/architecture/emit/">Emit Phase</a></td>
+<td>TypeScript file generation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reference">Reference</h3>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/tsbindgen/architecture/output-files/">Output Files</a></td>
+<td>Generated file formats and schemas</td>
+</tr>
+<tr>
+<td><a href="/tsbindgen/architecture/renaming/">Renaming</a></td>
+<td>Naming system and style transforms</td>
+</tr>
+</tbody>
+</table>
+<h2 id="quick-reference">Quick Reference</h2>
+<h3 id="pipeline-phases-1">Pipeline Phases</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│                         TSBINDGEN PIPELINE                          │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────────────┐  │
+│  │  LOAD   │ -&gt; │  MODEL  │ -&gt; │  SHAPE  │ -&gt; │    NORMALIZE    │  │
+│  │         │    │         │    │         │    │                 │  │
+│  │ DLLs    │    │ Symbol  │    │ 23      │    │ Name            │  │
+│  │ ↓       │    │ Graph   │    │ Passes  │    │ Reservation     │  │
+│  │ Reflect │    │         │    │         │    │                 │  │
+│  └─────────┘    └─────────┘    └─────────┘    └─────────────────┘  │
+│                                                                     │
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐  │
+│  │      PLAN       │ -&gt; │    PHASEGATE    │ -&gt; │      EMIT       │  │
+│  │                 │    │                 │    │                 │  │
+│  │ Import Planning │    │ Validation      │    │ .d.ts Files     │  │
+│  │ Export Planning │    │ (50+ rules)     │    │ Facades         │  │
+│  │ SCC Analysis    │    │                 │    │                 │  │
+│  └─────────────────┘    └─────────────────┘    └─────────────────┘  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="key-data-structures">Key Data Structures</h3>
+<table>
+<thead>
+<tr>
+<th>Structure</th>
+<th>Phase</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SymbolGraph</code></td>
+<td>Load → Emit</td>
+<td>Central type registry with namespaces and types</td>
+</tr>
+<tr>
+<td><code>TypeSymbol</code></td>
+<td>All</td>
+<td>Represents a CLR type with members</td>
+</tr>
+<tr>
+<td><code>NamespaceSymbol</code></td>
+<td>All</td>
+<td>Collection of types in a namespace</td>
+</tr>
+<tr>
+<td><code>TypeReference</code></td>
+<td>All</td>
+<td>Reference to a type (named, generic, array, etc.)</td>
+</tr>
+<tr>
+<td><code>EmissionPlan</code></td>
+<td>Plan → Emit</td>
+<td>Complete plan for file generation</td>
+</tr>
+<tr>
+<td><code>ImportPlan</code></td>
+<td>Plan → Emit</td>
+<td>Import/export statements per namespace</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-components">Key Components</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Location</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Builder</code></td>
+<td><code>Builder.cs</code></td>
+<td>Pipeline orchestrator</td>
+</tr>
+<tr>
+<td><code>BuildContext</code></td>
+<td><code>BuildContext.cs</code></td>
+<td>Shared services and configuration</td>
+</tr>
+<tr>
+<td><code>SymbolRenamer</code></td>
+<td><code>Renaming/SymbolRenamer.cs</code></td>
+<td>Name reservation and conflict resolution</td>
+</tr>
+<tr>
+<td><code>GenerationPolicy</code></td>
+<td><code>Core/Policy/GenerationPolicy.cs</code></td>
+<td>Configuration options</td>
+</tr>
+<tr>
+<td><code>ClassPrinter</code></td>
+<td><code>Emit/Printers/ClassPrinter.cs</code></td>
+<td>Type declaration emission</td>
+</tr>
+<tr>
+<td><code>TypeRefPrinter</code></td>
+<td><code>Emit/Printers/TypeRefPrinter.cs</code></td>
+<td>Type reference emission</td>
+</tr>
+</tbody>
+</table>
+<h2 id="design-principles">Design Principles</h2>
+<ol>
+<li><strong>Immutability</strong>: All model types are immutable records</li>
+<li><strong>Functional style</strong>: Static classes with pure functions (no instance state)</li>
+<li><strong>Phase separation</strong>: Clear boundaries between phases</li>
+<li><strong>Determinism</strong>: Same input always produces identical output</li>
+<li><strong>Validation</strong>: PhaseGate validates invariants before emission</li>
+</ol>
+<h2 id="source-layout">Source Layout</h2>
+<pre><code>src/tsbindgen/
+├── Builder.cs              # Pipeline orchestrator
+├── BuildContext.cs         # Shared context
+├── Cli/                    # Command-line interface
+│   ├── Program.cs
+│   ├── GenerateCommand.cs
+│   └── ResolveClosureCommand.cs
+├── Core/
+│   ├── Diagnostics/        # Error/warning infrastructure
+│   └── Policy/             # Configuration
+├── Load/                   # Phase 1: Assembly loading
+│   └── AssemblyLoader.cs
+├── Model/                  # Phase 2: Data structures
+│   ├── SymbolGraph.cs
+│   ├── Symbols/            # Type, Method, Property, etc.
+│   └── Types/              # TypeReference hierarchy
+├── Shape/                  # Phase 3: Transformations
+│   ├── StructuralConformance.cs
+│   ├── ViewPlanner.cs
+│   └── ... (23 passes)
+├── Normalize/              # Phase 3.5: Name reservation
+│   └── NameReservation.cs
+├── Plan/                   # Phase 4: Import/export planning
+│   ├── ImportPlanner.cs
+│   ├── EmissionPlanner.cs
+│   └── ... (validators)
+├── Emit/                   # Phase 5: File generation
+│   ├── FacadeEmitter.cs
+│   ├── InternalIndexEmitter.cs
+│   └── Printers/           # TypeScript code printers
+└── Renaming/               # Naming system
+    ├── SymbolRenamer.cs
+    ├── RenameScope.cs
+    └── TypeScriptReservedWords.cs
+</code></pre>
+</div>
+
+  
+    <ul class="page-list">
+      
+        <li><a href="/tsbindgen/architecture/concepts/">Concepts</a></li>
+      
+        <li><a href="/tsbindgen/architecture/emit/">Emit</a></li>
+      
+        <li><a href="/tsbindgen/architecture/load/">Load</a></li>
+      
+        <li><a href="/tsbindgen/architecture/model/">Model</a></li>
+      
+        <li><a href="/tsbindgen/architecture/normalize/">Normalize</a></li>
+      
+        <li><a href="/tsbindgen/architecture/output-files/">Output Files</a></li>
+      
+        <li><a href="/tsbindgen/architecture/overview/">Overview</a></li>
+      
+        <li><a href="/tsbindgen/architecture/phasegate/">Phasegate</a></li>
+      
+        <li><a href="/tsbindgen/architecture/pipeline/">Pipeline</a></li>
+      
+        <li><a href="/tsbindgen/architecture/plan/">Plan</a></li>
+      
+        <li><a href="/tsbindgen/architecture/renaming/">Renaming</a></li>
+      
+        <li><a href="/tsbindgen/architecture/shape/">Shape</a></li>
+      
+    </ul>
+  
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

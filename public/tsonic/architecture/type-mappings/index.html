@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Type Mappings | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Type Mappings</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Type Mappings</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/type-mappings.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="type-mappings">Type Mappings</h1>
+<p>How TypeScript types are converted to C# types.</p>
+<h2 id="primitive-types">Primitive Types</h2>
+<table>
+<thead>
+<tr>
+<th>TypeScript</th>
+<th>C#</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>number</code></td>
+<td><code>double</code></td>
+<td>64-bit floating point</td>
+</tr>
+<tr>
+<td><code>string</code></td>
+<td><code>string</code></td>
+<td>.NET System.String</td>
+</tr>
+<tr>
+<td><code>boolean</code></td>
+<td><code>bool</code></td>
+<td>.NET System.Boolean</td>
+</tr>
+<tr>
+<td><code>null</code></td>
+<td><code>null</code></td>
+<td>Nullable reference</td>
+</tr>
+<tr>
+<td><code>undefined</code></td>
+<td><code>null</code></td>
+<td>Maps to null</td>
+</tr>
+<tr>
+<td><code>void</code></td>
+<td><code>void</code></td>
+<td>No return value</td>
+</tr>
+<tr>
+<td><code>never</code></td>
+<td>N/A</td>
+<td>Compile error</td>
+</tr>
+<tr>
+<td><code>any</code></td>
+<td>N/A</td>
+<td>Not supported</td>
+</tr>
+<tr>
+<td><code>unknown</code></td>
+<td><code>object</code></td>
+<td>Base object type</td>
+</tr>
+</tbody>
+</table>
+<h2 id="explicit-clr-types">Explicit CLR Types</h2>
+<p>From <code>@tsonic/core</code> (numeric + other CLR primitives):</p>
+<table>
+<thead>
+<tr>
+<th>TypeScript</th>
+<th>C#</th>
+<th>.NET Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int</code></td>
+<td><code>int</code></td>
+<td>System.Int32</td>
+</tr>
+<tr>
+<td><code>float</code></td>
+<td><code>float</code></td>
+<td>System.Single</td>
+</tr>
+<tr>
+<td><code>long</code></td>
+<td><code>long</code></td>
+<td>System.Int64</td>
+</tr>
+<tr>
+<td><code>byte</code></td>
+<td><code>byte</code></td>
+<td>System.Byte</td>
+</tr>
+<tr>
+<td><code>short</code></td>
+<td><code>short</code></td>
+<td>System.Int16</td>
+</tr>
+<tr>
+<td><code>uint</code></td>
+<td><code>uint</code></td>
+<td>System.UInt32</td>
+</tr>
+<tr>
+<td><code>ulong</code></td>
+<td><code>ulong</code></td>
+<td>System.UInt64</td>
+</tr>
+<tr>
+<td><code>decimal</code></td>
+<td><code>decimal</code></td>
+<td>System.Decimal</td>
+</tr>
+<tr>
+<td><code>char</code></td>
+<td><code>char</code></td>
+<td>System.Char</td>
+</tr>
+</tbody>
+</table>
+<h2 id="array-types">Array Types</h2>
+<p>Arrays emit as native C# arrays:</p>
+<pre><code class="language-typescript">// TypeScript
+const arr: number[] = [1, 2, 3];
+const strings: Array&lt;string&gt; = [&quot;a&quot;, &quot;b&quot;];
+
+// C#
+double[] arr = [1, 2, 3];
+string[] strings = [&quot;a&quot;, &quot;b&quot;];
+</code></pre>
+<p>Both <code>T[]</code> and <code>Array&lt;T&gt;</code> syntax emit as native arrays.</p>
+<h3 id="list-for-dynamic-collections">List<T> for Dynamic Collections</h3>
+<p>Use <code>List&lt;T&gt;</code> when you need add/remove operations:</p>
+<pre><code class="language-typescript">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+
+const list = new List&lt;number&gt;();
+list.add(1);
+list.add(2);
+list.add(3);
+list.add(4);
+</code></pre>
+<h2 id="tuple-types">Tuple Types</h2>
+<pre><code class="language-typescript">// TypeScript
+const point: [number, number] = [10, 20];
+const record: [string, number, boolean] = [&quot;name&quot;, 42, true];
+
+// C#
+ValueTuple&lt;double, double&gt; point = (10, 20);
+ValueTuple&lt;string, double, bool&gt; record = (&quot;name&quot;, 42, true);
+</code></pre>
+<p>Tuples with 8+ elements use nested ValueTuple with TRest.</p>
+<h2 id="dictionary-and-hashset-types">Dictionary and HashSet Types</h2>
+<p>Tsonic does not include JavaScript <code>Map</code>/<code>Set</code> in the default globals. Use .NET collections:</p>
+<pre><code class="language-typescript">import { Dictionary, HashSet } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+
+// TypeScript
+const map = new Dictionary&lt;string, number&gt;();
+const set = new HashSet&lt;number&gt;();
+
+// C#
+var map = new Dictionary&lt;string, double&gt;();
+var set = new HashSet&lt;double&gt;();
+</code></pre>
+<h2 id="generic-types">Generic Types</h2>
+<h3 id="type-parameters">Type Parameters</h3>
+<pre><code class="language-typescript">// TypeScript
+function identity&lt;T&gt;(x: T): T { return x; }
+
+// C#
+public static T identity&lt;T&gt;(T x) { return x; }
+</code></pre>
+<h3 id="generic-classes">Generic Classes</h3>
+<pre><code class="language-typescript">// TypeScript
+class Box&lt;T&gt; {
+  constructor(private value: T) {}
+  get(): T { return this.value; }
+}
+
+// C#
+public class Box&lt;T&gt;
+{
+    private T value;
+    public Box(T value) { this.value = value; }
+    public T get() { return value; }
+}
+</code></pre>
+<h3 id="type-constraints">Type Constraints</h3>
+<pre><code class="language-typescript">// TypeScript
+interface HasId { id: number; }
+function getId&lt;T extends HasId&gt;(item: T): number {
+  return item.id;
+}
+
+// C#
+public static double getId&lt;T&gt;(T item) where T : HasId
+{
+    return item.id;
+}
+</code></pre>
+<h3 id="null-in-generic-contexts">Null in Generic Contexts</h3>
+<p>In generic contexts, <code>null</code> emits as <code>default</code> to handle both reference and value types:</p>
+<pre><code class="language-typescript">// TypeScript
+function orNull&lt;T&gt;(value: T): T | null {
+  return condition ? value : null;
+}
+
+// C#
+public static T orNull&lt;T&gt;(T value)
+{
+    return condition ? value : default;
+}
+</code></pre>
+<h2 id="function-types">Function Types</h2>
+<h3 id="function-signatures">Function Signatures</h3>
+<pre><code class="language-typescript">// TypeScript
+type Handler = (event: Event) =&gt; void;
+
+// C#
+// Func&lt;Event, void&gt; doesn't exist, so:
+// Action&lt;Event&gt;
+
+type Transform&lt;T, U&gt; = (input: T) =&gt; U;
+// C#: Func&lt;T, U&gt;
+</code></pre>
+<h3 id="mapping-table">Mapping Table</h3>
+<table>
+<thead>
+<tr>
+<th>TypeScript</th>
+<th>C#</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>() =&gt; void</code></td>
+<td><code>Action</code></td>
+</tr>
+<tr>
+<td><code>(a: T) =&gt; void</code></td>
+<td><code>Action&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td><code>() =&gt; T</code></td>
+<td><code>Func&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td><code>(a: T) =&gt; U</code></td>
+<td><code>Func&lt;T, U&gt;</code></td>
+</tr>
+<tr>
+<td><code>(a: T, b: U) =&gt; V</code></td>
+<td><code>Func&lt;T, U, V&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="object-types">Object Types</h2>
+<h3 id="interfaces">Interfaces</h3>
+<pre><code class="language-typescript">// TypeScript
+interface User {
+  id: number;
+  name: string;
+  email?: string;
+}
+
+// C#
+public class User
+{
+    public double id { get; set; }
+    public string name { get; set; }
+    public string? email { get; set; }
+}
+</code></pre>
+<h3 id="anonymous-objects">Anonymous Objects</h3>
+<p>Simple object literals auto-synthesize nominal types:</p>
+<pre><code class="language-typescript">// TypeScript
+const point = { x: 10, y: 20 };
+
+// C# (synthesized class generated)
+// class __Anon_File_Line_Col {
+//     public double x { get; set; }
+//     public double y { get; set; }
+// }
+var point = new __Anon_File_Line_Col { x = 10, y = 20 };
+</code></pre>
+<p>Method shorthand and getters/setters require explicit type annotation.</p>
+<h2 id="union-types">Union Types</h2>
+<h3 id="nullable-unions">Nullable Unions</h3>
+<pre><code class="language-typescript">// TypeScript
+type MaybeString = string | null;
+
+// C#
+string?
+</code></pre>
+<h3 id="discriminated-unions">Discriminated Unions</h3>
+<pre><code class="language-typescript">// TypeScript
+type Result&lt;T&gt; =
+  | { ok: true; value: T }
+  | { ok: false; error: string };
+
+// C# (generates base class + variants)
+public abstract class Result&lt;T&gt; { }
+public class ResultOk&lt;T&gt; : Result&lt;T&gt;
+{
+    public bool ok =&gt; true;
+    public T value { get; set; }
+}
+public class ResultError&lt;T&gt; : Result&lt;T&gt;
+{
+    public bool ok =&gt; false;
+    public string error { get; set; }
+}
+</code></pre>
+<h3 id="general-unions">General Unions</h3>
+<pre><code class="language-typescript">// TypeScript
+type StringOrNumber = string | number;
+
+// C# (fallback to object)
+object;
+</code></pre>
+<h2 id="intersection-types">Intersection Types</h2>
+<p><strong>NOT SUPPORTED</strong> - Intersection types (<code>A &amp; B</code>) cannot be compiled to C#.</p>
+<pre><code class="language-typescript">// Error TSN7410
+type Named = { name: string };
+type Aged = { age: number };
+type Person = Named &amp; Aged; // Not supported
+</code></pre>
+<p><strong>Workaround:</strong> Create an explicit interface combining both types:</p>
+<pre><code class="language-typescript">interface Person {
+  name: string;
+  age: number;
+}
+</code></pre>
+<h2 id="literal-types">Literal Types</h2>
+<pre><code class="language-typescript">// TypeScript
+type Direction = &quot;north&quot; | &quot;south&quot; | &quot;east&quot; | &quot;west&quot;;
+
+// C# (string constants or enum)
+// Context-dependent
+</code></pre>
+<h2 id="enum-types">Enum Types</h2>
+<h3 id="numeric-enums">Numeric Enums</h3>
+<pre><code class="language-typescript">// TypeScript
+enum Status {
+  Pending = 0,
+  Active = 1,
+  Complete = 2
+}
+
+// C#
+public enum Status
+{
+    Pending = 0,
+    Active = 1,
+    Complete = 2
+}
+</code></pre>
+<h3 id="string-enums">String Enums</h3>
+<pre><code class="language-typescript">// TypeScript
+enum Color {
+  Red = &quot;red&quot;,
+  Green = &quot;green&quot;
+}
+
+// C# (class with constants)
+public static class Color
+{
+    public const string Red = &quot;red&quot;;
+    public const string Green = &quot;green&quot;;
+}
+</code></pre>
+<h2 id="clr-type-mappings">CLR Type Mappings</h2>
+<p>When importing .NET types:</p>
+<table>
+<thead>
+<tr>
+<th>Import</th>
+<th>C# Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>List&lt;T&gt;</code></td>
+<td><code>System.Collections.Generic.List&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td><code>Dictionary&lt;K,V&gt;</code></td>
+<td><code>System.Collections.Generic.Dictionary&lt;K,V&gt;</code></td>
+</tr>
+<tr>
+<td><code>HashSet&lt;T&gt;</code></td>
+<td><code>System.Collections.Generic.HashSet&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td><code>Task&lt;T&gt;</code></td>
+<td><code>System.Threading.Tasks.Task&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td><code>DateTime</code></td>
+<td><code>System.DateTime</code></td>
+</tr>
+<tr>
+<td><code>TimeSpan</code></td>
+<td><code>System.TimeSpan</code></td>
+</tr>
+<tr>
+<td><code>Guid</code></td>
+<td><code>System.Guid</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="special-considerations">Special Considerations</h2>
+<h3 id="optional-properties">Optional Properties</h3>
+<pre><code class="language-typescript">interface Config {
+  required: string;
+  optional?: number;
+}
+</code></pre>
+<p><code>optional</code> becomes nullable: <code>double?</code></p>
+<h3 id="readonly-properties">Readonly Properties</h3>
+<pre><code class="language-typescript">interface Point {
+  readonly x: number;
+  readonly y: number;
+}
+</code></pre>
+<p>Generated with only getter: <code>public double x { get; }</code></p>
+<h3 id="asyncawait">Async/Await</h3>
+<pre><code class="language-typescript">async function getData(): Promise&lt;string&gt; {
+  return &quot;data&quot;;
+}
+</code></pre>
+<p>Becomes:</p>
+<pre><code class="language-csharp">public static async Task&lt;string&gt; getData()
+{
+    return &quot;data&quot;;
+}
+</code></pre>
+<h2 id="generator-types">Generator Types</h2>
+<h3 id="simple-generators">Simple Generators</h3>
+<pre><code class="language-typescript">// TypeScript
+function* counter(): Generator&lt;number&gt; {
+  yield 1;
+  yield 2;
+}
+</code></pre>
+<p>Becomes:</p>
+<pre><code class="language-csharp">public static IEnumerable&lt;double&gt; counter()
+{
+    yield return 1.0;
+    yield return 2.0;
+}
+</code></pre>
+<h3 id="bidirectional-generators">Bidirectional Generators</h3>
+<pre><code class="language-typescript">// TypeScript
+function* acc(): Generator&lt;number, void, number&gt; {
+  let total = 0;
+  while (true) {
+    const v = yield total;
+    total += v;
+  }
+}
+</code></pre>
+<p>Generates wrapper classes for bidirectional communication:</p>
+<pre><code class="language-csharp">// Exchange class for passing values
+public sealed class acc_exchange { ... }
+
+// Wrapper with JS-style API
+public sealed class acc_Generator {
+    public IteratorResult&lt;double&gt; next(double? value = default) { ... }
+    public IteratorResult&lt;double&gt; @return(object? value = default) { ... }
+}
+</code></pre>
+<h3 id="async-generators">Async Generators</h3>
+<pre><code class="language-typescript">// TypeScript
+async function* stream(): AsyncGenerator&lt;string&gt; {
+  yield &quot;a&quot;;
+  yield &quot;b&quot;;
+}
+</code></pre>
+<p>Becomes:</p>
+<pre><code class="language-csharp">public static IAsyncEnumerable&lt;string&gt; stream()
+{
+    // async iterator implementation
+}
+</code></pre>
+<blockquote>
+<p><strong>See also:</strong> <a href="/tsonic/generators/">Generators Guide</a> for complete documentation.</p>
+</blockquote>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+

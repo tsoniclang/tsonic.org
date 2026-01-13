@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Backend | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <a class="brand" href="/">Tsonic</a>
+
+  <nav class="mount-nav">
+    
+      <a class="mount-link active" href="/tsonic/">Tsonic</a>
+    
+      <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+    
+      <a class="mount-link " href="/nodejs/">nodejs</a>
+    
+  </nav>
+
+  <div class="search">
+    <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</header>
+
+
+    <div class="layout">
+      <aside class="sidebar">
+  
+    
+      
+  <nav class="nav">
+    
+      
+        <div class="nav-group">Getting Started</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Language</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/generators/">Generators</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Build</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
+            </li>
+          
+        </ul>
+      
+    
+      
+        <div class="nav-group">Reference</div>
+        <ul class="nav-items">
+          
+            <li>
+              <a class="nav-link " href="/tsonic/examples/">Examples</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
+            </li>
+          
+            <li>
+              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
+            </li>
+          
+        </ul>
+      
+    
+  </nav>
+
+
+
+    
+  
+    
+  
+    
+  
+
+
+</aside>
+      <main class="main">
+<article class="doc">
+  <nav class="breadcrumbs">
+    
+      <a href="/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/">Tsonic</a>
+      <span class="sep">/</span>
+    
+      <a href="/tsonic/architecture/">Architecture</a>
+      <span class="sep">/</span>
+    
+    <span>Backend</span>
+  </nav>
+
+  <div class="doc-head">
+    <h1>Backend</h1>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/backend.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="backend-package">Backend Package</h1>
+<p>The backend handles .NET compilation.</p>
+<h2 id="overview">Overview</h2>
+<p>The backend:</p>
+<ol>
+<li>Generates .csproj project files</li>
+<li>Generates Program.cs entry points</li>
+<li>Invokes dotnet CLI commands</li>
+<li>Handles NativeAOT configuration</li>
+</ol>
+<h2 id="project-generation">Project Generation</h2>
+<h3 id="generatecsproj">generateCsproj</h3>
+<p><code>project-generator.ts</code>:</p>
+<pre><code class="language-typescript">const csproj = generateCsproj({
+  rootNamespace: &quot;MyApp&quot;,
+  outputName: &quot;app&quot;,
+  dotnetVersion: &quot;net10.0&quot;,
+  outputConfig: {
+    type: &quot;executable&quot;,
+    nativeAot: true,
+    singleFile: true,
+    trimmed: true,
+    stripSymbols: true,
+    optimization: &quot;Speed&quot;,
+    invariantGlobalization: true,
+    selfContained: true,
+  },
+  packages: [{ name: &quot;Newtonsoft.Json&quot;, version: &quot;13.0.3&quot; }],
+  assemblyReferences: [
+    { name: &quot;Tsonic.Runtime&quot;, hintPath: &quot;../runtime/Tsonic.Runtime.dll&quot; },
+  ],
+});
+</code></pre>
+<h3 id="generated-csproj">Generated .csproj</h3>
+<pre><code class="language-xml">&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;RootNamespace&gt;MyApp&lt;/RootNamespace&gt;
+    &lt;AssemblyName&gt;app&lt;/AssemblyName&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;ImplicitUsings&gt;false&lt;/ImplicitUsings&gt;
+
+    &lt;!-- NativeAOT settings --&gt;
+    &lt;PublishAot&gt;true&lt;/PublishAot&gt;
+    &lt;PublishSingleFile&gt;true&lt;/PublishSingleFile&gt;
+    &lt;PublishTrimmed&gt;true&lt;/PublishTrimmed&gt;
+    &lt;InvariantGlobalization&gt;true&lt;/InvariantGlobalization&gt;
+    &lt;StripSymbols&gt;true&lt;/StripSymbols&gt;
+
+    &lt;!-- Optimization --&gt;
+    &lt;OptimizationPreference&gt;Speed&lt;/OptimizationPreference&gt;
+    &lt;IlcOptimizationPreference&gt;Speed&lt;/IlcOptimizationPreference&gt;
+  &lt;/PropertyGroup&gt;
+
+  &lt;ItemGroup&gt;
+    &lt;PackageReference Include=&quot;Newtonsoft.Json&quot; Version=&quot;13.0.3&quot; /&gt;
+  &lt;/ItemGroup&gt;
+
+  &lt;ItemGroup&gt;
+    &lt;Reference Include=&quot;Tsonic.Runtime&quot;&gt;
+      &lt;HintPath&gt;../runtime/Tsonic.Runtime.dll&lt;/HintPath&gt;
+    &lt;/Reference&gt;
+  &lt;/ItemGroup&gt;
+&lt;/Project&gt;
+</code></pre>
+<h2 id="program-generation">Program Generation</h2>
+<h3 id="generateprogramcs">generateProgramCs</h3>
+<p><code>program-generator.ts</code>:</p>
+<pre><code class="language-typescript">const programCs = generateProgramCs({
+  namespace: &quot;MyApp&quot;,
+  className: &quot;App&quot;,
+  methodName: &quot;main&quot;,
+  isAsync: false,
+  needsProgram: true,
+});
+</code></pre>
+<h3 id="generated-programcs">Generated Program.cs</h3>
+<p>Sync main:</p>
+<pre><code class="language-csharp">public static class Program
+{
+    public static void Main(string[] args)
+    {
+        global::MyApp.App.main();
+    }
+}
+</code></pre>
+<p>Async main:</p>
+<pre><code class="language-csharp">public static class Program
+{
+    public static async Task Main(string[] args)
+    {
+        await global::MyApp.App.main();
+    }
+}
+</code></pre>
+<h2 id="dotnet-cli-wrapper">dotnet CLI Wrapper</h2>
+<h3 id="checkdotnetinstalled">checkDotnetInstalled</h3>
+<p><code>dotnet.ts</code>:</p>
+<pre><code class="language-typescript">const checkDotnetInstalled = (): Result&lt;string, string&gt; =&gt; {
+  const result = spawnSync(&quot;dotnet&quot;, [&quot;--version&quot;]);
+  if (result.status !== 0) {
+    return error(&quot;dotnet SDK not found&quot;);
+  }
+  return ok(result.stdout.toString().trim());
+};
+</code></pre>
+<h3 id="detectrid">detectRid</h3>
+<p>Runtime identifier detection:</p>
+<pre><code class="language-typescript">const detectRid = (): string =&gt; {
+  const platform = process.platform;
+  const arch = process.arch;
+
+  const platformMap: Record&lt;string, string&gt; = {
+    linux: &quot;linux&quot;,
+    darwin: &quot;osx&quot;,
+    win32: &quot;win&quot;,
+  };
+
+  const archMap: Record&lt;string, string&gt; = {
+    x64: &quot;x64&quot;,
+    arm64: &quot;arm64&quot;,
+  };
+
+  return `${platformMap[platform]}-${archMap[arch]}`;
+};
+</code></pre>
+<h2 id="build-orchestration">Build Orchestration</h2>
+<h3 id="executable-build">Executable Build</h3>
+<pre><code class="language-typescript">const buildExecutable = (config, generatedDir): Result&lt;string, string&gt; =&gt; {
+  // 1. Run dotnet publish
+  const publishArgs = [
+    &quot;publish&quot;,
+    &quot;tsonic.csproj&quot;,
+    &quot;-c&quot;,
+    &quot;Release&quot;,
+    &quot;-r&quot;,
+    config.rid,
+    &quot;--nologo&quot;,
+  ];
+
+  const result = spawnSync(&quot;dotnet&quot;, publishArgs, {
+    cwd: generatedDir,
+  });
+
+  if (result.status !== 0) {
+    return error(`dotnet publish failed: ${result.stderr}`);
+  }
+
+  // 2. Copy output binary
+  const publishDir = `${generatedDir}/bin/Release/${config.dotnetVersion}/${config.rid}/publish`;
+  const sourceBinary = `${publishDir}/${config.outputName}`;
+  const targetBinary = `out/${config.outputName}`;
+
+  copyFileSync(sourceBinary, targetBinary);
+  chmodSync(targetBinary, 0o755);
+
+  return ok(targetBinary);
+};
+</code></pre>
+<h3 id="library-build">Library Build</h3>
+<pre><code class="language-typescript">const buildLibrary = (config, generatedDir): Result&lt;string, string&gt; =&gt; {
+  // 1. Run dotnet build
+  const buildArgs = [&quot;build&quot;, &quot;tsonic.csproj&quot;, &quot;-c&quot;, &quot;Release&quot;, &quot;--nologo&quot;];
+
+  const result = spawnSync(&quot;dotnet&quot;, buildArgs, {
+    cwd: generatedDir,
+  });
+
+  // 2. Copy artifacts to dist/
+  for (const framework of config.targetFrameworks) {
+    const buildDir = `${generatedDir}/bin/Release/${framework}`;
+    copyFileSync(`${buildDir}/${config.outputName}.dll`, `dist/${framework}/`);
+  }
+
+  return ok(&quot;dist/&quot;);
+};
+</code></pre>
+<h2 id="output-types">Output Types</h2>
+<h3 id="executableconfig">ExecutableConfig</h3>
+<pre><code class="language-typescript">type ExecutableConfig = {
+  type: &quot;executable&quot;;
+  nativeAot: boolean;
+  singleFile: boolean;
+  trimmed: boolean;
+  stripSymbols: boolean;
+  optimization: &quot;Size&quot; | &quot;Speed&quot;;
+  invariantGlobalization: boolean;
+  selfContained: boolean;
+};
+</code></pre>
+<h3 id="libraryconfig">LibraryConfig</h3>
+<pre><code class="language-typescript">type LibraryConfig = {
+  type: &quot;library&quot;;
+  targetFrameworks: string[];
+  generateDocumentation: boolean;
+  includeSymbols: boolean;
+  packable: boolean;
+  packageMetadata?: PackageMetadata;
+};
+</code></pre>
+<h3 id="consoleappconfig">ConsoleAppConfig</h3>
+<p>Non-AOT executable:</p>
+<pre><code class="language-typescript">type ConsoleAppConfig = {
+  type: &quot;console-app&quot;;
+  selfContained: boolean;
+  singleFile: boolean;
+  targetFramework: string;
+};
+</code></pre>
+<h2 id="nuget-integration">NuGet Integration</h2>
+<h3 id="package-references">Package References</h3>
+<pre><code class="language-typescript">type NuGetPackage = {
+  name: string;
+  version: string;
+};
+
+// In .csproj
+&lt;PackageReference Include=&quot;Newtonsoft.Json&quot; Version=&quot;13.0.3&quot; /&gt;
+</code></pre>
+<h3 id="assembly-references">Assembly References</h3>
+<p>For local DLLs (like Tsonic.Runtime):</p>
+<pre><code class="language-typescript">type AssemblyReference = {
+  name: string;
+  hintPath: string;
+};
+
+// In .csproj
+&lt;Reference Include=&quot;Tsonic.Runtime&quot;&gt;
+  &lt;HintPath&gt;../runtime/Tsonic.Runtime.dll&lt;/HintPath&gt;
+&lt;/Reference&gt;
+</code></pre>
+<h2 id="error-handling">Error Handling</h2>
+<p>Build errors include:</p>
+<ul>
+<li>dotnet not installed</li>
+<li>Compilation errors</li>
+<li>Missing dependencies</li>
+<li>NativeAOT failures</li>
+</ul>
+<pre><code class="language-typescript">type BuildResult =
+  | { ok: true; outputPath: string; buildDir: string }
+  | { ok: false; error: string; buildDir?: string };
+</code></pre>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>
+
