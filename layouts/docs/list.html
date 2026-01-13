@@ -1,15 +1,17 @@
 {{ define "main" }}
 <article class="doc">
-  <nav class="breadcrumbs">
-    {{ range .Ancestors }}
-      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-      <span class="sep">/</span>
-    {{ end }}
-    <span>{{ .Title }}</span>
-  </nav>
+  <div class="doc-top">
+    <nav class="breadcrumbs">
+      {{ range .Ancestors }}
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <span class="sep">/</span>
+      {{ end }}
+      <span>{{ .Title }}</span>
+    </nav>
+    {{ with .Params.editURL }}<a class="edit" href="{{ . }}">Edit on GitHub</a>{{ end }}
+  </div>
 
-  <h1>{{ .Title }}</h1>
-  {{ with .Content }}<div class="content">{{ . }}</div>{{ end }}
+  {{ with .Content }}<div class="content">{{ . }}</div>{{ else }}<h1 class="page-title">{{ .Title }}</h1>{{ end }}
 
   {{ if .Pages }}
     <ul class="page-list">
@@ -20,4 +22,3 @@
   {{ end }}
 </article>
 {{ end }}
-
