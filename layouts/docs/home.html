@@ -1,11 +1,9 @@
 {{ define "main" }}
 <article class="doc">
-  <h1>{{ .Site.Title }}</h1>
-  <p class="lead">
-    Documentation for the Tsonic compiler and its ecosystem.
-  </p>
+  <h1 class="site-title">{{ .Site.Title }}</h1>
+  <p class="lead">Documentation for the Tsonic compiler and its ecosystem.</p>
 
-  <h2>Projects</h2>
+  <h2 class="section-title">Projects</h2>
   <ul class="mounts">
     {{ range .Site.Mounts }}
       <li><a href="{{ .UrlPrefix }}">{{ .Name }}</a></li>
@@ -13,4 +11,3 @@
   </ul>
 </article>
 {{ end }}
-
