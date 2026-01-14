@@ -268,6 +268,50 @@ export function main(): void {
   console.log(typeof X509CertificateExtensions.parseCertificate);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="certificate"><code>Certificate</code></h3>
+<pre><code class="language-ts">export declare const Certificate: {
+  exportChallenge(spkac: byte[]): byte[];
+  exportChallenge(spkac: string): byte[];
+  exportPublicKey(spkac: byte[]): byte[];
+  exportPublicKey(spkac: string): byte[];
+  verifySpkac(spkac: byte[]): boolean;
+  verifySpkac(spkac: string): boolean;
+};
+</code></pre>
+<h3 id="x509certificateextensions"><code>X509CertificateExtensions</code></h3>
+<pre><code class="language-ts">export declare const X509CertificateExtensions: {
+  parseCertificate(certificate: byte[]): X509CertificateInfo;
+  parseCertificate(certificate: string): X509CertificateInfo;
+};
+</code></pre>
+<h3 id="x509certificateinfo"><code>X509CertificateInfo</code></h3>
+<pre><code class="language-ts">export interface X509CertificateInfo {
+    readonly fingerprint: string;
+    readonly fingerprint256: string;
+    readonly fingerprint512: string;
+    readonly issuer: string;
+    readonly publicKey: byte[];
+    readonly raw: byte[];
+    readonly serialNumber: string;
+    readonly subject: string;
+    readonly validFrom: DateTime;
+    readonly validTo: DateTime;
+    checkEmail(email: string): string | undefined;
+    checkHost(hostname: string): string | undefined;
+    checkIP(ip: string): string | undefined;
+    checkIssued(otherCert: X509CertificateInfo): string | undefined;
+    toPEM(): string;
+    toString(): string;
+    verify(issuerCert: X509CertificateInfo): boolean;
+}
+
+export const X509CertificateInfo: {
+    new(): X509CertificateInfo;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

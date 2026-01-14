@@ -265,6 +265,67 @@ export function main(): void {
   console.log(path.dirname(&quot;/tmp/file.txt&quot;));
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="parsedpath"><code>ParsedPath</code></h3>
+<pre><code class="language-ts">export interface ParsedPath {
+    base: string;
+    dir: string;
+    ext: string;
+    name: string;
+    root: string;
+}
+
+export const ParsedPath: {
+    new(): ParsedPath;
+};
+</code></pre>
+<h3 id="path-1"><code>path</code></h3>
+<pre><code class="language-ts">export declare const path: {
+  readonly sep: string;
+  readonly delimiter: string;
+  readonly posix: PathModule;
+  readonly win32: PathModule;
+  basename(path: string, suffix?: string): string;
+  dirname(path: string): string;
+  extname(path: string): string;
+  format(pathObject: ParsedPath): string;
+  isAbsolute(path: string): boolean;
+  join(...paths: string[]): string;
+  matchesGlob(path: string, pattern: string): boolean;
+  normalize(path: string): string;
+  parse(path: string): ParsedPath;
+  relative(from_: string, to: string): string;
+  resolve(...paths: string[]): string;
+  toNamespacedPath(path: string): string;
+};
+</code></pre>
+<h3 id="pathmodule"><code>PathModule</code></h3>
+<pre><code class="language-ts">export interface PathModule {
+    readonly delimiter: string;
+    readonly posix: PathModule;
+    readonly sep: string;
+    readonly win32: PathModule;
+    basename(path: string, suffix?: string): string;
+    dirname(path: string): string;
+    extname(path: string): string;
+    format(pathObject: ParsedPath): string;
+    isAbsolute(path: string): boolean;
+    join(...paths: string[]): string;
+    matchesGlob(path: string, pattern: string): boolean;
+    normalize(path: string): string;
+    parse(path: string): ParsedPath;
+    relative(from_: string, to: string): string;
+    resolve(...paths: string[]): string;
+    toNamespacedPath(path: string): string;
+}
+
+export const PathModule: {
+    new(): PathModule;
+    readonly instance: PathModule;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

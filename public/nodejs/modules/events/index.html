@@ -266,6 +266,34 @@ export function main(): void {
   emitter.emit(&quot;data&quot;, &quot;hello&quot;);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="eventemitter"><code>EventEmitter</code></h3>
+<pre><code class="language-ts">export interface EventEmitter {
+    addListener(eventName: string, listener: Function): EventEmitter;
+    emit(eventName: string, ...args: unknown[]): boolean;
+    eventNames(): string[];
+    getMaxListeners(): int;
+    listenerCount(eventName: string): int;
+    listeners(eventName: string): Function[];
+    off(eventName: string, listener: Function): EventEmitter;
+    on(eventName: string, listener: Function): EventEmitter;
+    once(eventName: string, listener: Function): EventEmitter;
+    prependListener(eventName: string, listener: Function): EventEmitter;
+    prependOnceListener(eventName: string, listener: Function): EventEmitter;
+    rawListeners(eventName: string): Function[];
+    removeAllListeners(eventName?: string): EventEmitter;
+    removeListener(eventName: string, listener: Function): EventEmitter;
+    setMaxListeners(n: int): EventEmitter;
+}
+
+export const EventEmitter: {
+    new(): EventEmitter;
+    defaultMaxListeners: int;
+    once(emitter: EventEmitter, eventName: string): Task&lt;(unknown | undefined)[]&gt;;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

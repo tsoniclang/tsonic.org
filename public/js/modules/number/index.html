@@ -219,6 +219,27 @@ export function main(): void {
   console.log(Number.parseInt(&quot;10&quot;));
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="number-1"><code>Number</code></h3>
+<pre><code class="language-ts">export declare const Number: {
+  readonly MAX_VALUE: double;
+  readonly MIN_VALUE: double;
+  readonly MAX_SAFE_INTEGER: double;
+  readonly MIN_SAFE_INTEGER: double;
+  readonly POSITIVE_INFINITY: double;
+  readonly NEGATIVE_INFINITY: double;
+  readonly naN: double;
+  readonly EPSILON: double;
+  isFinite(value: double): boolean;
+  isInteger(value: double): boolean;
+  isNaN(value: double): boolean;
+  isSafeInteger(value: double): boolean;
+  parseFloat(str: string): double;
+  parseInt(str: string, radix?: Nullable&lt;System_Internal.Int32&gt;): Nullable&lt;System_Internal.Int64&gt;;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

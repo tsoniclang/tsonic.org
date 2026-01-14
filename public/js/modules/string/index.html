@@ -219,6 +219,54 @@ export function main(): void {
   console.log(String.toUpperCase(&quot;hello&quot;));
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="string-1"><code>String</code></h3>
+<pre><code class="language-ts">export declare const String: {
+  at(str: string, index: int): string;
+  charAt(str: string, index: int): string;
+  charCodeAt(str: string, index: int): int;
+  codePointAt(str: string, index: int): int;
+  concat(str: string, ...strings: string[]): string;
+  endsWith(str: string, searchString: string): boolean;
+  fromCharCode(...codes: int[]): string;
+  fromCodePoint(...codePoints: int[]): string;
+  includes(str: string, searchString: string): boolean;
+  indexOf(str: string, searchString: string, position?: int): int;
+  isWellFormed(str: string): boolean;
+  lastIndexOf(str: string, searchString: string, position?: Nullable&lt;System_Internal.Int32&gt;): int;
+  length(str: string): int;
+  localeCompare(str: string, compareString: string): int;
+  match(str: string, pattern: string): List&lt;System_Internal.String&gt; | undefined;
+  matchAll(str: string, pattern: string): List&lt;List&lt;System_Internal.String&gt;&gt;;
+  normalize(str: string, form?: string): string;
+  padEnd(str: string, targetLength: int, padString?: string): string;
+  padStart(str: string, targetLength: int, padString?: string): string;
+  raw(template: List&lt;System_Internal.String&gt;, ...substitutions: unknown[]): string;
+  repeat(str: string, count: int): string;
+  replace(str: string, search: string, replacement: string): string;
+  replaceAll(str: string, search: string, replacement: string): string;
+  search(str: string, pattern: string): int;
+  slice(str: string, start: int, end?: Nullable&lt;System_Internal.Int32&gt;): string;
+  split(str: string, separator: string, limit?: Nullable&lt;System_Internal.Int32&gt;): List&lt;System_Internal.String&gt;;
+  startsWith(str: string, searchString: string): boolean;
+  substr(str: string, start: int, length?: Nullable&lt;System_Internal.Int32&gt;): string;
+  substring(str: string, start: int, end?: Nullable&lt;System_Internal.Int32&gt;): string;
+  toLocaleLowerCase(str: string): string;
+  toLocaleUpperCase(str: string): string;
+  toLowerCase(str: string): string;
+  toString(str: string): string;
+  toUpperCase(str: string): string;
+  toWellFormed(str: string): string;
+  trim(str: string): string;
+  trimEnd(str: string): string;
+  trimLeft(str: string): string;
+  trimRight(str: string): string;
+  trimStart(str: string): string;
+  valueOf(str: string): string;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

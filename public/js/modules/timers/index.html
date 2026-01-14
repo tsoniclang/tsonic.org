@@ -220,6 +220,19 @@ export function main(): void {
   Thread.sleep(100);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="timers-1"><code>Timers</code></h3>
+<pre><code class="language-ts">export declare const Timers: {
+  clearInterval(id: int): void;
+  clearTimeout(id: int): void;
+  setInterval&lt;T&gt;(callback: Action&lt;T&gt;, intervalMs: int, arg: T): int;
+  setInterval(callback: Action, intervalMs: int): int;
+  setTimeout&lt;T&gt;(callback: Action&lt;T&gt;, delayMs: int, arg: T): int;
+  setTimeout(callback: Action, delayMs?: int): int;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

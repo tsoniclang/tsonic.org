@@ -264,6 +264,97 @@ export function main(): void {
   socket.close();
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="bindoptions"><code>BindOptions</code></h3>
+<pre><code class="language-ts">export interface BindOptions {
+    address: string;
+    exclusive: boolean;
+    fd: Nullable&lt;System_Internal.Int32&gt;;
+    port: Nullable&lt;System_Internal.Int32&gt;;
+}
+
+export const BindOptions: {
+    new(): BindOptions;
+};
+</code></pre>
+<h3 id="dgram-1"><code>dgram</code></h3>
+<pre><code class="language-ts">export declare const dgram: {
+  createSocket(options: SocketOptions, callback?: Action&lt;byte[], RemoteInfo&gt;): DgramSocket;
+  createSocket(type_: string, callback?: Action&lt;byte[], RemoteInfo&gt;): DgramSocket;
+};
+</code></pre>
+<h3 id="dgramsocket"><code>DgramSocket</code></h3>
+<pre><code class="language-ts">export interface DgramSocket extends EventEmitter {
+    addMembership(multicastAddress: string, multicastInterface?: string): void;
+    address(): AddressInfo;
+    addSourceSpecificMembership(sourceAddress: string, groupAddress: string, multicastInterface?: string): void;
+    bind(port?: int, address?: string, callback?: Action): DgramSocket;
+    bind(port: int, callback: Action): DgramSocket;
+    bind(callback: Action): DgramSocket;
+    bind(options: BindOptions, callback?: Action): DgramSocket;
+    close(callback?: Action): DgramSocket;
+    connect(port: int, address?: string, callback?: Action): void;
+    connect(port: int, callback: Action): void;
+    disconnect(): void;
+    dropMembership(multicastAddress: string): void;
+    dropSourceSpecificMembership(sourceAddress: string, groupAddress: string, multicastInterface?: string): void;
+    getRecvBufferSize(): int;
+    getSendBufferSize(): int;
+    getSendQueueCount(): int;
+    getSendQueueSize(): int;
+    ref(): DgramSocket;
+    remoteAddress(): AddressInfo;
+    send(msg: byte[], port?: Nullable&lt;System_Internal.Int32&gt;, address?: string, callback?: Action&lt;Exception, System_Internal.Int32&gt;): void;
+    send(msg: string, port?: Nullable&lt;System_Internal.Int32&gt;, address?: string, callback?: Action&lt;Exception, System_Internal.Int32&gt;): void;
+    send(msg: byte[], port: int, callback: Action&lt;Exception, System_Internal.Int32&gt;): void;
+    send(msg: string, port: int, callback: Action&lt;Exception, System_Internal.Int32&gt;): void;
+    send(msg: byte[], callback: Action&lt;Exception, System_Internal.Int32&gt;): void;
+    send(msg: string, callback: Action&lt;Exception, System_Internal.Int32&gt;): void;
+    send(msg: byte[], offset: int, length: int, port?: Nullable&lt;System_Internal.Int32&gt;, address?: string, callback?: Action&lt;Exception, System_Internal.Int32&gt;): void;
+    send(msg: byte[], offset: int, length: int, port: int, callback: Action&lt;Exception, System_Internal.Int32&gt;): void;
+    send(msg: byte[], offset: int, length: int, callback: Action&lt;Exception, System_Internal.Int32&gt;): void;
+    setBroadcast(flag: boolean): void;
+    setMulticastInterface(multicastInterface: string): void;
+    setMulticastLoopback(flag: boolean): boolean;
+    setMulticastTTL(ttl: int): int;
+    setRecvBufferSize(size: int): void;
+    setSendBufferSize(size: int): void;
+    setTTL(ttl: int): int;
+    unref(): DgramSocket;
+}
+
+export const DgramSocket: {
+    new(): DgramSocket;
+};
+</code></pre>
+<h3 id="remoteinfo"><code>RemoteInfo</code></h3>
+<pre><code class="language-ts">export interface RemoteInfo {
+    address: string;
+    family: string;
+    port: int;
+    size: int;
+}
+
+export const RemoteInfo: {
+    new(): RemoteInfo;
+};
+</code></pre>
+<h3 id="socketoptions"><code>SocketOptions</code></h3>
+<pre><code class="language-ts">export interface SocketOptions {
+    ipv6Only: boolean;
+    recvBufferSize: Nullable&lt;System_Internal.Int32&gt;;
+    reuseAddr: boolean;
+    reusePort: boolean;
+    sendBufferSize: Nullable&lt;System_Internal.Int32&gt;;
+    type_: string;
+}
+
+export const SocketOptions: {
+    new(): SocketOptions;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

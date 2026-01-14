@@ -264,6 +264,99 @@ export function main(): void {
   console.log(typeof stream.pipeline);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="duplex"><code>Duplex</code></h3>
+<pre><code class="language-ts">export interface Duplex extends Readable {
+    readonly writable: boolean;
+    readonly writableCorked: boolean;
+    readonly writableEnded: boolean;
+    readonly writableLength: int;
+    cork(): void;
+    destroy(error?: Exception): void;
+    end(chunk?: unknown, encoding?: string, callback?: Action): void;
+    uncork(): void;
+    write(chunk: unknown, encoding?: string, callback?: Action): boolean;
+}
+
+export const Duplex: {
+    new(): Duplex;
+};
+</code></pre>
+<h3 id="passthrough"><code>PassThrough</code></h3>
+<pre><code class="language-ts">export interface PassThrough extends Transform {
+}
+
+export const PassThrough: {
+    new(): PassThrough;
+};
+</code></pre>
+<h3 id="readable"><code>Readable</code></h3>
+<pre><code class="language-ts">export interface Readable extends Stream {
+    readonly destroyed: boolean;
+    readonly readable: boolean;
+    readonly readableEnded: boolean;
+    readonly readableFlowing: Nullable&lt;System_Internal.Boolean&gt;;
+    readonly readableLength: int;
+    destroy(error?: Exception): void;
+    isPaused(): boolean;
+    pause(): Readable;
+    push(chunk: unknown, encoding?: string): boolean;
+    read(size?: Nullable&lt;System_Internal.Int32&gt;): unknown | undefined;
+    resume(): Readable;
+    setEncoding(encoding: string): Readable;
+    unpipe(destination?: Stream): Readable;
+    unshift(chunk: unknown): void;
+}
+
+export const Readable: {
+    new(): Readable;
+};
+</code></pre>
+<h3 id="stream-1"><code>stream</code></h3>
+<pre><code class="language-ts">export declare const stream: {
+  finished(stream: Stream, callback: Action&lt;Exception&gt;): void;
+  finished(stream: Stream): Task;
+  pipeline(...streams: unknown[]): void;
+};
+</code></pre>
+<h3 id="stream-2"><code>Stream</code></h3>
+<pre><code class="language-ts">export interface Stream extends EventEmitter {
+    destroy(error?: Exception): void;
+    pipe(destination: Stream, end?: boolean): Stream;
+}
+
+export const Stream: {
+    new(): Stream;
+};
+</code></pre>
+<h3 id="transform"><code>Transform</code></h3>
+<pre><code class="language-ts">export interface Transform extends Duplex {
+}
+
+export const Transform: {
+    new(): Transform;
+};
+</code></pre>
+<h3 id="writable"><code>Writable</code></h3>
+<pre><code class="language-ts">export interface Writable extends Stream {
+    readonly destroyed: boolean;
+    readonly writable: boolean;
+    readonly writableCorked: boolean;
+    readonly writableEnded: boolean;
+    readonly writableLength: int;
+    cork(): void;
+    destroy(error?: Exception): void;
+    end(chunk?: unknown, encoding?: string, callback?: Action): void;
+    uncork(): void;
+    write(chunk: unknown, encoding?: string, callback?: Action): boolean;
+}
+
+export const Writable: {
+    new(): Writable;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

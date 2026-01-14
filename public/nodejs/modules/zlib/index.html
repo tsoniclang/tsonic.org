@@ -265,6 +265,49 @@ export function main(): void {
   console.log(roundtrip.length);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="brotlioptions"><code>BrotliOptions</code></h3>
+<pre><code class="language-ts">export interface BrotliOptions {
+    chunkSize: Nullable&lt;System_Internal.Int32&gt;;
+    maxOutputLength: Nullable&lt;System_Internal.Int32&gt;;
+    quality: Nullable&lt;System_Internal.Int32&gt;;
+}
+
+export const BrotliOptions: {
+    new(): BrotliOptions;
+};
+</code></pre>
+<h3 id="zlib-1"><code>zlib</code></h3>
+<pre><code class="language-ts">export declare const zlib: {
+  brotliCompressSync(buffer: byte[], options?: BrotliOptions): byte[];
+  brotliDecompressSync(buffer: byte[], options?: BrotliOptions): byte[];
+  crc32(data: byte[], value?: uint): uint;
+  crc32(data: string, value?: uint): uint;
+  deflateRawSync(buffer: byte[], options?: ZlibOptions): byte[];
+  deflateSync(buffer: byte[], options?: ZlibOptions): byte[];
+  gunzipSync(buffer: byte[], options?: ZlibOptions): byte[];
+  gzipSync(buffer: byte[], options?: ZlibOptions): byte[];
+  inflateRawSync(buffer: byte[], options?: ZlibOptions): byte[];
+  inflateSync(buffer: byte[], options?: ZlibOptions): byte[];
+  unzipSync(buffer: byte[], options?: ZlibOptions): byte[];
+};
+</code></pre>
+<h3 id="zliboptions"><code>ZlibOptions</code></h3>
+<pre><code class="language-ts">export interface ZlibOptions {
+    chunkSize: Nullable&lt;System_Internal.Int32&gt;;
+    level: Nullable&lt;System_Internal.Int32&gt;;
+    maxOutputLength: Nullable&lt;System_Internal.Int32&gt;;
+    memLevel: Nullable&lt;System_Internal.Int32&gt;;
+    strategy: Nullable&lt;System_Internal.Int32&gt;;
+    windowBits: Nullable&lt;System_Internal.Int32&gt;;
+}
+
+export const ZlibOptions: {
+    new(): ZlibOptions;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>
