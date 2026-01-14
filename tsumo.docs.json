@@ -36,9 +36,9 @@
       "name": "nodejs",
       "source": ".tmp/mounts/nodejs",
       "prefix": "/nodejs/",
-      "repoUrl": "https://github.com/tsoniclang/nodejs-clr",
+      "repoUrl": "https://github.com/tsoniclang/nodejs",
       "repoBranch": "main",
-      "repoPath": "docs",
+      "repoPath": "",
       "navPath": "README.md"
     }
   ]

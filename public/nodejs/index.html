@@ -136,58 +136,74 @@
       
       <span>nodejs</span>
     </nav>
-    <a class="edit" href="https://github.com/tsoniclang/nodejs-clr/blob/main/docs/README.md">Edit on GitHub</a>
+    <a class="edit" href="https://github.com/tsoniclang/nodejs/blob/main/README.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="nodejs-compatibility-tsonicnodejs">Node.js Compatibility (<code>@tsonic/nodejs</code>)</h1>
-<p>Tsonic targets the .NET BCL by default. If you want <strong>Node-style APIs</strong> (like <code>fs</code>, <code>path</code>, <code>crypto</code>, <code>net</code>, <code>process</code>, etc.), use <code>@tsonic/nodejs</code>.</p>
-<p>This is <strong>not</strong> Node.js itself, and it is <strong>not a byte-for-byte clone</strong> of the Node standard library. It is a curated, Node-inspired API surface implemented on .NET for Tsonic projects.</p>
-<h2 id="table-of-contents">Table of Contents</h2>
-<h3 id="getting-started">Getting Started</h3>
-<ol>
-<li><a href="/nodejs/getting-started/">Getting Started</a> - enable <code>@tsonic/nodejs</code> in a Tsonic project</li>
-<li><a href="/nodejs/imports/">Importing Modules</a> - what to import from <code>@tsonic/nodejs/index.js</code> vs submodules</li>
-</ol>
-<h3 id="modules">Modules</h3>
-<ol start="3">
-<li><a href="/nodejs/modules/path/"><code>path</code></a></li>
-<li><a href="/nodejs/modules/fs/"><code>fs</code></a></li>
-<li><a href="/nodejs/modules/events/"><code>events</code></a></li>
-<li><a href="/nodejs/modules/crypto/"><code>crypto</code></a></li>
-<li><a href="/nodejs/modules/process/"><code>process</code></a></li>
-<li><a href="/nodejs/modules/http/"><code>http</code></a> (separate submodule)</li>
-</ol>
-<h2 id="overview">Overview</h2>
-<p>In Tsonic projects you import Node-style APIs from <code>@tsonic/nodejs/index.js</code>:</p>
-<pre><code class="language-ts">import { console, fs, path } from &quot;@tsonic/nodejs/index.js&quot;;
-
-export function main(): void {
-  console.log(path.join(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;));
-  const text = fs.readFileSync(&quot;./README.md&quot;, &quot;utf-8&quot;);
-  console.log(text);
-}
-</code></pre>
-<p>Some namespaces are emitted as separate ESM entry points (for example <code>nodejs.Http</code>), and you import those via a subpath:</p>
-<pre><code class="language-ts">import { http } from &quot;@tsonic/nodejs/nodejs.Http.js&quot;;
-</code></pre>
-<h2 id="relationship-to-tsonicjs">Relationship to <code>@tsonic/js</code></h2>
+  <div class="content"><h1 id="tsonicnodejs">@tsonic/nodejs</h1>
+<p>TypeScript type definitions for the Node.js CLR library.</p>
+<h2 id="features">Features</h2>
 <ul>
-<li><code>@tsonic/js</code> provides JavaScript runtime APIs (e.g. <code>JSON</code>, JS-style <code>console</code>, timers).</li>
-<li><code>@tsonic/nodejs</code> provides Node-style APIs (e.g. <code>fs</code>, <code>path</code>, <code>crypto</code>, <code>http</code>).</li>
+<li><strong>Node.js-like APIs for .NET</strong> - fs, path, events, http, and more</li>
+<li><strong>camelCase members</strong> - TypeScript-friendly naming conventions</li>
+<li><strong>Primitive aliases</strong> - <code>int</code>, <code>long</code>, <code>decimal</code>, etc. via <code>@tsonic/core</code></li>
+<li><strong>Full type safety</strong> - Complete TypeScript declarations</li>
 </ul>
-<p>You can enable either or both in a project.</p>
+<h2 id="installation">Installation</h2>
+<pre><code class="language-bash">npm install @tsonic/nodejs @tsonic/dotnet @tsonic/core
+</code></pre>
+<h2 id="usage">Usage</h2>
+<h3 id="file-system">File System</h3>
+<pre><code class="language-typescript">import { fs } from &quot;@tsonic/nodejs/index.js&quot;;
+
+// Read file
+const content = fs.readFileSync(&quot;./package.json&quot;, &quot;utf-8&quot;);
+
+// Write file
+fs.writeFileSync(&quot;./output.txt&quot;, &quot;Hello from Tsonic!&quot;);
+</code></pre>
+<h3 id="path-operations">Path Operations</h3>
+<pre><code class="language-typescript">import { path } from &quot;@tsonic/nodejs/index.js&quot;;
+
+const fullPath = path.join(&quot;config&quot;, &quot;settings.json&quot;);
+const ext = path.extname(fullPath);  // &quot;.json&quot;
+const dir = path.dirname(fullPath);
+</code></pre>
+<h3 id="events">Events</h3>
+<pre><code class="language-typescript">import { EventEmitter } from &quot;@tsonic/nodejs/index.js&quot;;
+
+class MyEmitter extends EventEmitter {}
+const emitter = new MyEmitter();
+emitter.on(&quot;data&quot;, (chunk) =&gt; console.log(chunk));
+</code></pre>
+<h3 id="http">HTTP</h3>
+<pre><code class="language-typescript">import { http } from &quot;@tsonic/nodejs/nodejs.Http.js&quot;;
+</code></pre>
+<h2 id="naming-conventions">Naming Conventions</h2>
+<ul>
+<li><strong>Types</strong>: PascalCase (matches .NET)</li>
+<li><strong>Members</strong>: camelCase (TypeScript convention)</li>
+</ul>
+<p>To generate CLR/PascalCase member names, regenerate with <code>--naming clr</code> (or omit <code>--naming js</code>).</p>
+<h2 id="development">Development</h2>
+<h3 id="regenerating-types">Regenerating Types</h3>
+<p>To regenerate TypeScript declarations:</p>
+<pre><code class="language-bash">./__build/scripts/generate.sh
+</code></pre>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li>.NET 10 SDK installed</li>
+<li><code>tsbindgen</code> repository at <code>../tsbindgen</code></li>
+<li><code>nodejs-clr</code> repository at <code>../nodejs-clr</code> (built with <code>dotnet build -c Release</code>)</li>
+</ul>
+<p><strong>Environment variables:</strong></p>
+<ul>
+<li><code>DOTNET_VERSION</code> - .NET runtime version (default: <code>10.0.0</code>)</li>
+<li><code>DOTNET_HOME</code> - .NET installation directory (default: <code>$HOME/.dotnet</code>)</li>
+</ul>
+<h2 id="license">License</h2>
+<p>MIT</p>
 </div>
 
-  
-    <ul class="page-list">
-      
-        <li><a href="/nodejs/modules/">Modules</a></li>
-      
-        <li><a href="/nodejs/getting-started/">Getting Started</a></li>
-      
-        <li><a href="/nodejs/imports/">Imports</a></li>
-      
-    </ul>
   
 </article>
 </main>
