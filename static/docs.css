@@ -261,10 +261,7 @@ a:hover {
 }
 
 .home-mount {
-  padding: 10px 10px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: rgba(15, 23, 42, 0.015);
+  padding: 0;
 }
 
 .home-mount-title {
