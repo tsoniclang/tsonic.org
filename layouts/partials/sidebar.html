@@ -7,12 +7,25 @@
 {{ else }}
   <div class="sidebar-home">
     <div class="sidebar-title">Docs</div>
-    <ul>
+    <div class="home-mounts">
       {{ range .Site.Mounts }}
         {{ if ne .Name "Home" }}
-          <li><a href="{{ .UrlPrefix }}">{{ .Name }}</a></li>
+          <section class="home-mount">
+            <h3 class="home-mount-title">
+              <a href="{{ .UrlPrefix }}">{{ .Name }}</a>
+            </h3>
+            {{ if eq .Name "Tsonic" }}
+              <p class="home-mount-desc">Compiler, CLI, language features, configuration, and architecture docs.</p>
+            {{ else if eq .Name "tsbindgen" }}
+              <p class="home-mount-desc">Generate CLR bindings from assemblies and NuGet packages.</p>
+            {{ else if eq .Name "nodejs" }}
+              <p class="home-mount-desc">Node-style APIs (fs, path, http, crypto) implemented for Tsonic.</p>
+            {{ else }}
+              <p class="home-mount-desc">Documentation.</p>
+            {{ end }}
+          </section>
         {{ end }}
       {{ end }}
-    </ul>
+    </div>
   </div>
 {{ end }}

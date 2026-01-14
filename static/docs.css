@@ -254,6 +254,40 @@ a:hover {
   color: var(--muted);
 }
 
+.home-mounts {
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.home-mount {
+  padding: 10px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.015);
+}
+
+.home-mount-title {
+  margin: 0;
+  font-size: 14px;
+}
+
+.home-mount-title a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.home-mount-title a:hover {
+  text-decoration: underline;
+}
+
+.home-mount-desc {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .main {
   padding: 28px 18px;
   display: flex;
