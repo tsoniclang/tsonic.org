@@ -1,4 +1,16 @@
 <header class="top">
+  <button
+    class="menu-toggle"
+    id="menuToggle"
+    type="button"
+    aria-label="Open navigation menu"
+    aria-controls="sidebar"
+    aria-expanded="false"
+  >
+    <span class="menu-bars" aria-hidden="true"></span>
+    <span class="sr-only">Menu</span>
+  </button>
+
   <a class="brand" href="{{ relURL "/" }}">{{ .Site.Title }}</a>
 
   <nav class="mount-nav">

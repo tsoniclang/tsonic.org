@@ -7,9 +7,22 @@
     <meta name="description" content="Tsonic" />
     <link rel="stylesheet" href="/docs.css" />
     <script defer src="/search.js"></script>
+    <script defer src="/nav.js"></script>
   </head>
   <body>
     <header class="top">
+  <button
+    class="menu-toggle"
+    id="menuToggle"
+    type="button"
+    aria-label="Open navigation menu"
+    aria-controls="sidebar"
+    aria-expanded="false"
+  >
+    <span class="menu-bars" aria-hidden="true"></span>
+    <span class="sr-only">Menu</span>
+  </button>
+
   <a class="brand" href="/">Tsonic</a>
 
   <nav class="mount-nav">
@@ -38,8 +51,15 @@
   </div>
 </header>
 
+    <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
     <div class="layout">
-      <aside class="sidebar">
+      <aside id="sidebar" class="sidebar" aria-label="Site navigation">
+        <div class="sidebar-mobile-top">
+          <button class="menu-close" id="menuClose" type="button" aria-label="Close navigation menu">
+            Close
+          </button>
+        </div>
+        <div class="sidebar-inner">
   
     
   
@@ -107,7 +127,8 @@
     
   
 
-</aside>
+</div>
+      </aside>
       <main class="main">
 <article class="doc">
   <div class="doc-top">
@@ -279,4 +300,3 @@ public static (string Sanitized, bool WasSanitized) Sanitize(string name)
 
   </body>
 </html>
-

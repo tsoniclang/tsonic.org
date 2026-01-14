@@ -7,9 +7,22 @@
     <meta name="description" content="Tsonic" />
     <link rel="stylesheet" href="/docs.css" />
     <script defer src="/search.js"></script>
+    <script defer src="/nav.js"></script>
   </head>
   <body>
     <header class="top">
+  <button
+    class="menu-toggle"
+    id="menuToggle"
+    type="button"
+    aria-label="Open navigation menu"
+    aria-controls="sidebar"
+    aria-expanded="false"
+  >
+    <span class="menu-bars" aria-hidden="true"></span>
+    <span class="sr-only">Menu</span>
+  </button>
+
   <a class="brand" href="/">Tsonic</a>
 
   <nav class="mount-nav">
@@ -38,8 +51,15 @@
   </div>
 </header>
 
+    <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
     <div class="layout">
-      <aside class="sidebar">
+      <aside id="sidebar" class="sidebar" aria-label="Site navigation">
+        <div class="sidebar-mobile-top">
+          <button class="menu-close" id="menuClose" type="button" aria-label="Close navigation menu">
+            Close
+          </button>
+        </div>
+        <div class="sidebar-inner">
   <div class="sidebar-home">
     <div class="sidebar-title">Docs</div>
     <ul>
@@ -61,7 +81,8 @@
     </ul>
   </div>
 
-</aside>
+</div>
+      </aside>
       <main class="main">
 <article class="doc">
   <div class="doc-top">
@@ -69,9 +90,9 @@
   </div>
 
   <div class="content"><h1 id="tsonic">Tsonic</h1>
-<p>Tsonic is a TypeScript to C# compiler that produces native executables via .NET NativeAOT. Write TypeScript, get fast native binaries.</p>
+<p>Tsonic is a TypeScript to C# compiler that produces native executables via .NET NativeAOT. Write TypeScript, get fast native binaries. Opt into <code>@tsonic/js</code> (JavaScript runtime APIs) and <code>@tsonic/nodejs</code> (Node-style APIs) when you want them.</p>
 <h2 id="why-tsonic">Why Tsonic?</h2>
-<p>Tsonic lets TypeScript/JavaScript developers build fast native apps on .NET:</p>
+<p>Tsonic lets TypeScript/JavaScript developers build fast native binaries for x64 and ARM64:</p>
 <ul>
 <li><strong>Native binaries</strong> (no JS runtime).</li>
 <li><strong>.NET standard library</strong>: use the .NET runtime + BCL (files, networking, crypto, concurrency, etc.).</li>
@@ -94,6 +115,7 @@
 <h2 id="key-features">Key Features</h2>
 <ul>
 <li><strong>TypeScript to Native</strong>: Compile TypeScript directly to native executables</li>
+<li><strong>Optional JS/Node compatibility</strong>: <code>@tsonic/js</code> (JS runtime APIs) and <code>@tsonic/nodejs</code> (Node-style APIs)</li>
 <li><strong>Direct .NET Access</strong>: Full access to .NET BCL with native performance</li>
 <li><strong>NativeAOT Compilation</strong>: Single-file, self-contained executables</li>
 <li><strong>Full .NET Interop</strong>: Import and use any .NET library</li>
@@ -445,4 +467,3 @@ tsonic add nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
 
   </body>
 </html>
-
