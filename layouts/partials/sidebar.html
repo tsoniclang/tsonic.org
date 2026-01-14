@@ -20,6 +20,8 @@
               <p class="home-mount-desc">Generate CLR bindings from assemblies and NuGet packages.</p>
             {{ else if eq .Name "nodejs" }}
               <p class="home-mount-desc">Node-style APIs (fs, path, http, crypto) implemented for Tsonic.</p>
+            {{ else if eq .Name "js compat" }}
+              <p class="home-mount-desc">JavaScript runtime APIs (JSON, Math, Date, timers) for Tsonic.</p>
             {{ else }}
               <p class="home-mount-desc">Documentation.</p>
             {{ end }}

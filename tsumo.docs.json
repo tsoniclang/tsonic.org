@@ -36,9 +36,18 @@
       "name": "nodejs",
       "source": ".tmp/mounts/nodejs",
       "prefix": "/nodejs/",
-      "repoUrl": "https://github.com/tsoniclang/nodejs",
+      "repoUrl": "https://github.com/tsoniclang/nodejs-clr",
       "repoBranch": "main",
-      "repoPath": "",
+      "repoPath": "docs",
+      "navPath": "README.md"
+    },
+    {
+      "name": "js compat",
+      "source": ".tmp/mounts/js",
+      "prefix": "/js/",
+      "repoUrl": "https://github.com/tsoniclang/js-runtime",
+      "repoBranch": "main",
+      "repoPath": "docs",
       "navPath": "README.md"
     }
   ]
