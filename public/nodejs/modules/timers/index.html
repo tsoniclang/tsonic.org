@@ -264,6 +264,46 @@ export function main(): void {
   Thread.sleep(100);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="immediate"><code>Immediate</code></h3>
+<pre><code class="language-ts">export interface Immediate {
+    dispose(): void;
+    hasRef(): boolean;
+    ref(): Immediate;
+    unref(): Immediate;
+}
+
+export const Immediate: {
+    new(): Immediate;
+};
+</code></pre>
+<h3 id="timeout"><code>Timeout</code></h3>
+<pre><code class="language-ts">export interface Timeout {
+    close(): void;
+    dispose(): void;
+    hasRef(): boolean;
+    ref(): Timeout;
+    refresh(): Timeout;
+    unref(): Timeout;
+}
+
+export const Timeout: {
+    new(): Timeout;
+};
+</code></pre>
+<h3 id="timers-1"><code>timers</code></h3>
+<pre><code class="language-ts">export declare const timers: {
+  clearImmediate(immediate: Immediate): void;
+  clearInterval(timeout: Timeout): void;
+  clearTimeout(timeout: Timeout): void;
+  queueMicrotask(callback: Action): void;
+  setImmediate(callback: Action): Immediate;
+  setInterval(callback: Action, delay?: int): Timeout;
+  setTimeout(callback: Action, delay?: int): Timeout;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

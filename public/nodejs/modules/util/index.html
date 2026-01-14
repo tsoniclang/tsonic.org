@@ -263,6 +263,21 @@ export function main(): void {
   console.log(util.inspect({ a: 1, b: [1, 2, 3] }));
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="util-1"><code>util</code></h3>
+<pre><code class="language-ts">export declare const util: {
+  debuglog(section: string): DebugLogFunction;
+  deprecate&lt;TResult&gt;(fn: Func&lt;TResult&gt;, msg: string, code?: string): Func&lt;TResult&gt;;
+  deprecate(action: Action, msg: string, code?: string): Action;
+  format(format: unknown, ...args: unknown[]): string;
+  inherits(constructor_: unknown, superConstructor: unknown): void;
+  inspect(obj: unknown): string;
+  isArray(obj: unknown): boolean;
+  isDeepStrictEqual(val1: unknown, val2: unknown): boolean;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

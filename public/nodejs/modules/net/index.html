@@ -263,6 +263,201 @@ export function main(): void {
   console.log(typeof server.listen);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="addressinfo"><code>AddressInfo</code></h3>
+<pre><code class="language-ts">export interface AddressInfo {
+    address: string;
+    family: string;
+    port: int;
+}
+
+export const AddressInfo: {
+    new(): AddressInfo;
+};
+</code></pre>
+<h3 id="blocklist"><code>BlockList</code></h3>
+<pre><code class="language-ts">export interface BlockList {
+    addAddress(address: string, type_?: string): void;
+    addRange(start: string, end: string, type_?: string): void;
+    addSubnet(network: string, prefix: int, type_?: string): void;
+    check(address: string, type_?: string): boolean;
+    getRules(): string[];
+}
+
+export const BlockList: {
+    new(): BlockList;
+};
+</code></pre>
+<h3 id="ipcsocketconnectopts"><code>IpcSocketConnectOpts</code></h3>
+<pre><code class="language-ts">export interface IpcSocketConnectOpts {
+    path: string;
+}
+
+export const IpcSocketConnectOpts: {
+    new(): IpcSocketConnectOpts;
+};
+</code></pre>
+<h3 id="listenoptions"><code>ListenOptions</code></h3>
+<pre><code class="language-ts">export interface ListenOptions {
+    backlog: Nullable&lt;System_Internal.Int32&gt;;
+    host: string;
+    ipv6Only: Nullable&lt;System_Internal.Boolean&gt;;
+    path: string;
+    port: Nullable&lt;System_Internal.Int32&gt;;
+}
+
+export const ListenOptions: {
+    new(): ListenOptions;
+};
+</code></pre>
+<h3 id="net-1"><code>net</code></h3>
+<pre><code class="language-ts">export declare const net: {
+  connect(options: TcpSocketConnectOpts, connectionListener?: Action): Socket;
+  connect(port: int, host?: string, connectionListener?: Action): Socket;
+  connect(path: string, connectionListener?: Action): Socket;
+  createConnection(options: TcpSocketConnectOpts, connectionListener?: Action): Socket;
+  createConnection(port: int, host?: string, connectionListener?: Action): Socket;
+  createConnection(path: string, connectionListener?: Action): Socket;
+  createServer(options: ServerOpts, connectionListener?: Action&lt;Socket&gt;): Server;
+  createServer(connectionListener?: Action&lt;Socket&gt;): Server;
+  getDefaultAutoSelectFamily(): boolean;
+  getDefaultAutoSelectFamilyAttemptTimeout(): int;
+  isIP(input: string): int;
+  isIPv4(input: string): boolean;
+  isIPv6(input: string): boolean;
+  setDefaultAutoSelectFamily(value: boolean): void;
+  setDefaultAutoSelectFamilyAttemptTimeout(value: int): void;
+};
+</code></pre>
+<h3 id="server"><code>Server</code></h3>
+<pre><code class="language-ts">export interface Server extends EventEmitter {
+    readonly listening: boolean;
+    maxConnections: int;
+    address(): unknown;
+    close(callback?: Action&lt;Exception&gt;): Server;
+    getConnections(callback: Action&lt;Exception, System_Internal.Int32&gt;): void;
+    listen(port: int, hostname: string, backlog: int, listeningListener?: Action): Server;
+    listen(port: int, hostname: string, listeningListener?: Action): Server;
+    listen(port: int, backlog: int, listeningListener?: Action): Server;
+    listen(port: int, listeningListener?: Action): Server;
+    listen(options: ListenOptions, listeningListener?: Action): Server;
+    ref(): Server;
+    unref(): Server;
+}
+
+export const Server: {
+    new(): Server;
+    new(connectionListener: Action&lt;Socket&gt;): Server;
+    new(options: ServerOpts, connectionListener: Action&lt;Socket&gt;): Server;
+};
+</code></pre>
+<h3 id="serveropts"><code>ServerOpts</code></h3>
+<pre><code class="language-ts">export interface ServerOpts {
+    allowHalfOpen: Nullable&lt;System_Internal.Boolean&gt;;
+    pauseOnConnect: Nullable&lt;System_Internal.Boolean&gt;;
+}
+
+export const ServerOpts: {
+    new(): ServerOpts;
+};
+</code></pre>
+<h3 id="socket"><code>Socket</code></h3>
+<pre><code class="language-ts">export interface Socket extends Stream {
+    readonly bytesRead: long;
+    readonly bytesWritten: long;
+    readonly connecting: boolean;
+    readonly destroyed: boolean;
+    readonly localAddress: string | undefined;
+    readonly localFamily: string | undefined;
+    readonly localPort: Nullable&lt;System_Internal.Int32&gt;;
+    readonly readyState: string;
+    readonly remoteAddress: string | undefined;
+    readonly remoteFamily: string | undefined;
+    readonly remotePort: Nullable&lt;System_Internal.Int32&gt;;
+    address(): unknown;
+    connect(port: int, host?: string, connectionListener?: Action): Socket;
+    connect(options: TcpSocketConnectOpts, connectionListener?: Action): Socket;
+    connect(path: string, connectionListener?: Action): Socket;
+    destroy(error?: Exception): Socket;
+    destroy(error?: Exception): void;
+    destroySoon(): void;
+    end(callback?: Action): Socket;
+    end(data: byte[], callback?: Action): Socket;
+    end(data: string, encoding?: string, callback?: Action): Socket;
+    pause(): Socket;
+    ref(): Socket;
+    resetAndDestroy(): Socket;
+    resume(): Socket;
+    setEncoding(encoding?: string): Socket;
+    setKeepAlive(enable?: boolean, initialDelay?: int): Socket;
+    setNoDelay(noDelay?: boolean): Socket;
+    setTimeout(timeout: int, callback?: Action): Socket;
+    unref(): Socket;
+    write(data: byte[], callback?: Action&lt;Exception&gt;): boolean;
+    write(data: string, encoding?: string, callback?: Action&lt;Exception&gt;): boolean;
+}
+
+export const Socket: {
+    new(): Socket;
+    new(options: SocketConstructorOpts): Socket;
+};
+</code></pre>
+<h3 id="socketaddress"><code>SocketAddress</code></h3>
+<pre><code class="language-ts">export interface SocketAddress {
+    readonly address: string;
+    readonly family: string;
+    readonly flowlabel: Nullable&lt;System_Internal.Int32&gt;;
+    readonly port: int;
+}
+
+export const SocketAddress: {
+    new(options: SocketAddressInitOptions): SocketAddress;
+};
+</code></pre>
+<h3 id="socketaddressinitoptions"><code>SocketAddressInitOptions</code></h3>
+<pre><code class="language-ts">export interface SocketAddressInitOptions {
+    address: string;
+    family: string;
+    flowlabel: Nullable&lt;System_Internal.Int32&gt;;
+    port: Nullable&lt;System_Internal.Int32&gt;;
+}
+
+export const SocketAddressInitOptions: {
+    new(): SocketAddressInitOptions;
+};
+</code></pre>
+<h3 id="socketconstructoropts"><code>SocketConstructorOpts</code></h3>
+<pre><code class="language-ts">export interface SocketConstructorOpts {
+    allowHalfOpen: Nullable&lt;System_Internal.Boolean&gt;;
+    fd: Nullable&lt;System_Internal.Int32&gt;;
+    readable: Nullable&lt;System_Internal.Boolean&gt;;
+    writable: Nullable&lt;System_Internal.Boolean&gt;;
+}
+
+export const SocketConstructorOpts: {
+    new(): SocketConstructorOpts;
+};
+</code></pre>
+<h3 id="tcpsocketconnectopts"><code>TcpSocketConnectOpts</code></h3>
+<pre><code class="language-ts">export interface TcpSocketConnectOpts {
+    family: Nullable&lt;System_Internal.Int32&gt;;
+    hints: Nullable&lt;System_Internal.Int32&gt;;
+    host: string;
+    keepAlive: Nullable&lt;System_Internal.Boolean&gt;;
+    keepAliveInitialDelay: Nullable&lt;System_Internal.Int32&gt;;
+    get localAddress(): string | undefined;
+    set localAddress(value: string);
+    localPort: Nullable&lt;System_Internal.Int32&gt;;
+    noDelay: Nullable&lt;System_Internal.Boolean&gt;;
+    port: int;
+}
+
+export const TcpSocketConnectOpts: {
+    new(): TcpSocketConnectOpts;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

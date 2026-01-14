@@ -222,6 +222,245 @@ export function main(): void {
   console.log(view.at(0));
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="arraybuffer"><code>ArrayBuffer</code></h3>
+<pre><code class="language-ts">export interface ArrayBuffer {
+    readonly byteLength: int;
+    slice(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): ArrayBuffer;
+}
+
+export const ArrayBuffer: {
+    new(byteLength: int): ArrayBuffer;
+};
+</code></pre>
+<h3 id="int8array"><code>Int8Array</code></h3>
+<pre><code class="language-ts">export interface Int8Array {
+    readonly byteLength: int;
+    item: sbyte;
+    readonly length: int;
+    at(index: int): Nullable&lt;System_Internal.SByte&gt;;
+    fill(value: sbyte, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Int8Array;
+    getEnumerator(): IEnumerator&lt;System_Internal.SByte&gt;;
+    includes(value: sbyte, fromIndex?: int): boolean;
+    indexOf(value: sbyte, fromIndex?: int): int;
+    join(separator?: string): string;
+    reverse(): Int8Array;
+    set_(array: IEnumerable__System_Collections_Generic&lt;System_Internal.SByte&gt;, offset?: int): void;
+    slice(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Int8Array;
+    sort(compareFn?: Comparison&lt;System_Internal.SByte&gt;): Int8Array;
+    subarray(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Int8Array;
+}
+
+export const Int8Array: {
+    new(length: int): Int8Array;
+    new(values: IEnumerable__System_Collections_Generic&lt;System_Internal.SByte&gt;): Int8Array;
+    new(values: sbyte[]): Int8Array;
+    readonly BYTES_PER_ELEMENT: int;
+};
+</code></pre>
+<h3 id="uint8array"><code>Uint8Array</code></h3>
+<pre><code class="language-ts">export interface Uint8Array {
+    readonly byteLength: int;
+    item: byte;
+    readonly length: int;
+    at(index: int): Nullable&lt;System_Internal.Byte&gt;;
+    fill(value: byte, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint8Array;
+    getEnumerator(): IEnumerator&lt;System_Internal.Byte&gt;;
+    includes(value: byte, fromIndex?: int): boolean;
+    indexOf(value: byte, fromIndex?: int): int;
+    join(separator?: string): string;
+    reverse(): Uint8Array;
+    set_(array: IEnumerable__System_Collections_Generic&lt;System_Internal.Byte&gt;, offset?: int): void;
+    slice(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint8Array;
+    sort(compareFn?: Comparison&lt;System_Internal.Byte&gt;): Uint8Array;
+    subarray(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint8Array;
+}
+
+export const Uint8Array: {
+    new(length: int): Uint8Array;
+    new(values: IEnumerable__System_Collections_Generic&lt;System_Internal.Byte&gt;): Uint8Array;
+    new(values: byte[]): Uint8Array;
+    readonly BYTES_PER_ELEMENT: int;
+};
+</code></pre>
+<h3 id="uint8clampedarray"><code>Uint8ClampedArray</code></h3>
+<pre><code class="language-ts">export interface Uint8ClampedArray {
+    readonly byteLength: int;
+    item: byte;
+    readonly length: int;
+    at(index: int): Nullable&lt;System_Internal.Byte&gt;;
+    fill(value: byte, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint8ClampedArray;
+    getEnumerator(): IEnumerator&lt;System_Internal.Byte&gt;;
+    includes(value: byte, fromIndex?: int): boolean;
+    indexOf(value: byte, fromIndex?: int): int;
+    join(separator?: string): string;
+    reverse(): Uint8ClampedArray;
+    set_(array: IEnumerable__System_Collections_Generic&lt;System_Internal.Byte&gt;, offset?: int): void;
+    setClamped(index: int, value: int): void;
+    slice(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint8ClampedArray;
+    sort(compareFn?: Comparison&lt;System_Internal.Byte&gt;): Uint8ClampedArray;
+    subarray(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint8ClampedArray;
+}
+
+export const Uint8ClampedArray: {
+    new(length: int): Uint8ClampedArray;
+    new(values: IEnumerable__System_Collections_Generic&lt;System_Internal.Byte&gt;): Uint8ClampedArray;
+    new(values: byte[]): Uint8ClampedArray;
+    readonly BYTES_PER_ELEMENT: int;
+};
+</code></pre>
+<h3 id="int16array"><code>Int16Array</code></h3>
+<pre><code class="language-ts">export interface Int16Array {
+    readonly byteLength: int;
+    item: short;
+    readonly length: int;
+    at(index: int): Nullable&lt;System_Internal.Int16&gt;;
+    fill(value: short, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Int16Array;
+    getEnumerator(): IEnumerator&lt;System_Internal.Int16&gt;;
+    includes(value: short, fromIndex?: int): boolean;
+    indexOf(value: short, fromIndex?: int): int;
+    join(separator?: string): string;
+    reverse(): Int16Array;
+    set_(array: IEnumerable__System_Collections_Generic&lt;System_Internal.Int16&gt;, offset?: int): void;
+    slice(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Int16Array;
+    sort(compareFn?: Comparison&lt;System_Internal.Int16&gt;): Int16Array;
+    subarray(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Int16Array;
+}
+
+export const Int16Array: {
+    new(length: int): Int16Array;
+    new(values: IEnumerable__System_Collections_Generic&lt;System_Internal.Int16&gt;): Int16Array;
+    new(values: short[]): Int16Array;
+    readonly BYTES_PER_ELEMENT: int;
+};
+</code></pre>
+<h3 id="uint16array"><code>Uint16Array</code></h3>
+<pre><code class="language-ts">export interface Uint16Array {
+    readonly byteLength: int;
+    item: ushort;
+    readonly length: int;
+    at(index: int): Nullable&lt;System_Internal.UInt16&gt;;
+    fill(value: ushort, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint16Array;
+    getEnumerator(): IEnumerator&lt;System_Internal.UInt16&gt;;
+    includes(value: ushort, fromIndex?: int): boolean;
+    indexOf(value: ushort, fromIndex?: int): int;
+    join(separator?: string): string;
+    reverse(): Uint16Array;
+    set_(array: IEnumerable__System_Collections_Generic&lt;System_Internal.UInt16&gt;, offset?: int): void;
+    slice(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint16Array;
+    sort(compareFn?: Comparison&lt;System_Internal.UInt16&gt;): Uint16Array;
+    subarray(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint16Array;
+}
+
+export const Uint16Array: {
+    new(length: int): Uint16Array;
+    new(values: IEnumerable__System_Collections_Generic&lt;System_Internal.UInt16&gt;): Uint16Array;
+    new(values: ushort[]): Uint16Array;
+    readonly BYTES_PER_ELEMENT: int;
+};
+</code></pre>
+<h3 id="int32array"><code>Int32Array</code></h3>
+<pre><code class="language-ts">export interface Int32Array {
+    readonly byteLength: int;
+    item: int;
+    readonly length: int;
+    at(index: int): Nullable&lt;System_Internal.Int32&gt;;
+    fill(value: int, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Int32Array;
+    getEnumerator(): IEnumerator&lt;System_Internal.Int32&gt;;
+    includes(value: int, fromIndex?: int): boolean;
+    indexOf(value: int, fromIndex?: int): int;
+    join(separator?: string): string;
+    reverse(): Int32Array;
+    set_(array: IEnumerable__System_Collections_Generic&lt;System_Internal.Int32&gt;, offset?: int): void;
+    slice(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Int32Array;
+    sort(compareFn?: Comparison&lt;System_Internal.Int32&gt;): Int32Array;
+    subarray(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Int32Array;
+}
+
+export const Int32Array: {
+    new(length: int): Int32Array;
+    new(values: IEnumerable__System_Collections_Generic&lt;System_Internal.Int32&gt;): Int32Array;
+    new(values: int[]): Int32Array;
+    readonly BYTES_PER_ELEMENT: int;
+};
+</code></pre>
+<h3 id="uint32array"><code>Uint32Array</code></h3>
+<pre><code class="language-ts">export interface Uint32Array {
+    readonly byteLength: int;
+    item: uint;
+    readonly length: int;
+    at(index: int): Nullable&lt;System_Internal.UInt32&gt;;
+    fill(value: uint, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint32Array;
+    getEnumerator(): IEnumerator&lt;System_Internal.UInt32&gt;;
+    includes(value: uint, fromIndex?: int): boolean;
+    indexOf(value: uint, fromIndex?: int): int;
+    join(separator?: string): string;
+    reverse(): Uint32Array;
+    set_(array: IEnumerable__System_Collections_Generic&lt;System_Internal.UInt32&gt;, offset?: int): void;
+    slice(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint32Array;
+    sort(compareFn?: Comparison&lt;System_Internal.UInt32&gt;): Uint32Array;
+    subarray(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Uint32Array;
+}
+
+export const Uint32Array: {
+    new(length: int): Uint32Array;
+    new(values: IEnumerable__System_Collections_Generic&lt;System_Internal.UInt32&gt;): Uint32Array;
+    new(values: uint[]): Uint32Array;
+    readonly BYTES_PER_ELEMENT: int;
+};
+</code></pre>
+<h3 id="float32array"><code>Float32Array</code></h3>
+<pre><code class="language-ts">export interface Float32Array {
+    readonly byteLength: int;
+    item: float;
+    readonly length: int;
+    at(index: int): Nullable&lt;System_Internal.Single&gt;;
+    fill(value: float, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Float32Array;
+    getEnumerator(): IEnumerator&lt;System_Internal.Single&gt;;
+    includes(value: float, fromIndex?: int): boolean;
+    indexOf(value: float, fromIndex?: int): int;
+    join(separator?: string): string;
+    reverse(): Float32Array;
+    set_(array: IEnumerable__System_Collections_Generic&lt;System_Internal.Single&gt;, offset?: int): void;
+    slice(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Float32Array;
+    sort(compareFn?: Comparison&lt;System_Internal.Single&gt;): Float32Array;
+    subarray(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Float32Array;
+}
+
+export const Float32Array: {
+    new(length: int): Float32Array;
+    new(values: IEnumerable__System_Collections_Generic&lt;System_Internal.Single&gt;): Float32Array;
+    new(values: float[]): Float32Array;
+    readonly BYTES_PER_ELEMENT: int;
+};
+</code></pre>
+<h3 id="float64array"><code>Float64Array</code></h3>
+<pre><code class="language-ts">export interface Float64Array {
+    readonly byteLength: int;
+    item: double;
+    readonly length: int;
+    at(index: int): Nullable&lt;System_Internal.Double&gt;;
+    fill(value: double, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Float64Array;
+    getEnumerator(): IEnumerator&lt;System_Internal.Double&gt;;
+    includes(value: double, fromIndex?: int): boolean;
+    indexOf(value: double, fromIndex?: int): int;
+    join(separator?: string): string;
+    reverse(): Float64Array;
+    set_(array: IEnumerable__System_Collections_Generic&lt;System_Internal.Double&gt;, offset?: int): void;
+    slice(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Float64Array;
+    sort(compareFn?: Comparison&lt;System_Internal.Double&gt;): Float64Array;
+    subarray(begin?: int, end?: Nullable&lt;System_Internal.Int32&gt;): Float64Array;
+}
+
+export const Float64Array: {
+    new(length: int): Float64Array;
+    new(values: IEnumerable__System_Collections_Generic&lt;System_Internal.Double&gt;): Float64Array;
+    new(values: double[]): Float64Array;
+    readonly BYTES_PER_ELEMENT: int;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

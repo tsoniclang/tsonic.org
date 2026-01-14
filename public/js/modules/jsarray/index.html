@@ -221,6 +221,92 @@ export function main(): void {
   console.log(xs.join(&quot;,&quot;));
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="jsarray-1"><code>JSArray</code></h3>
+<pre><code class="language-ts">export interface JSArray&lt;T&gt; {
+    item: T;
+    readonly length: int;
+    at(index: int): T;
+    concat(...items: unknown[]): JSArray&lt;T&gt;;
+    copyWithin(target: int, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): JSArray&lt;T&gt;;
+    entries(): IEnumerable__System_Collections_Generic&lt;ValueTuple&lt;System_Internal.Int32, T&gt;&gt;;
+    every(callback: Func&lt;T, System_Internal.Boolean&gt;): boolean;
+    every(callback: Func&lt;T, System_Internal.Int32, JSArray&lt;T&gt;, System_Internal.Boolean&gt;): boolean;
+    fill(value: T, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): JSArray&lt;T&gt;;
+    filter(callback: Func&lt;T, System_Internal.Boolean&gt;): JSArray&lt;T&gt;;
+    filter(callback: Func&lt;T, System_Internal.Int32, System_Internal.Boolean&gt;): JSArray&lt;T&gt;;
+    filter(callback: Func&lt;T, System_Internal.Int32, JSArray&lt;T&gt;, System_Internal.Boolean&gt;): JSArray&lt;T&gt;;
+    find(callback: Func&lt;T, System_Internal.Boolean&gt;): T;
+    find(callback: Func&lt;T, System_Internal.Int32, System_Internal.Boolean&gt;): T;
+    find(callback: Func&lt;T, System_Internal.Int32, JSArray&lt;T&gt;, System_Internal.Boolean&gt;): T;
+    findIndex(callback: Func&lt;T, System_Internal.Boolean&gt;): int;
+    findIndex(callback: Func&lt;T, System_Internal.Int32, System_Internal.Boolean&gt;): int;
+    findIndex(callback: Func&lt;T, System_Internal.Int32, JSArray&lt;T&gt;, System_Internal.Boolean&gt;): int;
+    findLast(callback: Func&lt;T, System_Internal.Boolean&gt;): T;
+    findLast(callback: Func&lt;T, System_Internal.Int32, System_Internal.Boolean&gt;): T;
+    findLast(callback: Func&lt;T, System_Internal.Int32, JSArray&lt;T&gt;, System_Internal.Boolean&gt;): T;
+    findLastIndex(callback: Func&lt;T, System_Internal.Boolean&gt;): int;
+    findLastIndex(callback: Func&lt;T, System_Internal.Int32, System_Internal.Boolean&gt;): int;
+    findLastIndex(callback: Func&lt;T, System_Internal.Int32, JSArray&lt;T&gt;, System_Internal.Boolean&gt;): int;
+    flat(depth?: int): JSArray&lt;unknown&gt;;
+    flatMap&lt;TResult&gt;(callback: Func&lt;T, System_Internal.Int32, JSArray&lt;T&gt;, unknown&gt;): JSArray&lt;TResult&gt;;
+    forEach(callback: Action&lt;T&gt;): void;
+    forEach(callback: Action&lt;T, System_Internal.Int32&gt;): void;
+    forEach(callback: Action&lt;T, System_Internal.Int32, JSArray&lt;T&gt;&gt;): void;
+    getEnumerator(): IEnumerator&lt;T&gt;;
+    includes(searchElement: T): boolean;
+    indexOf(searchElement: T, fromIndex?: int): int;
+    join(separator?: string): string;
+    keys(): IEnumerable__System_Collections_Generic&lt;System_Internal.Int32&gt;;
+    lastIndexOf(searchElement: T, fromIndex?: Nullable&lt;System_Internal.Int32&gt;): int;
+    map&lt;TResult&gt;(callback: Func&lt;T, TResult&gt;): JSArray&lt;TResult&gt;;
+    map&lt;TResult&gt;(callback: Func&lt;T, System_Internal.Int32, TResult&gt;): JSArray&lt;TResult&gt;;
+    map&lt;TResult&gt;(callback: Func&lt;T, System_Internal.Int32, JSArray&lt;T&gt;, TResult&gt;): JSArray&lt;TResult&gt;;
+    pop(): T;
+    push(item: T): int;
+    push(...items: T[]): int;
+    reduce&lt;TResult&gt;(callback: Func&lt;TResult, T, TResult&gt;, initialValue: TResult): TResult;
+    reduce&lt;TResult&gt;(callback: Func&lt;TResult, T, System_Internal.Int32, TResult&gt;, initialValue: TResult): TResult;
+    reduce&lt;TResult&gt;(callback: Func&lt;TResult, T, System_Internal.Int32, JSArray&lt;T&gt;, TResult&gt;, initialValue: TResult): TResult;
+    reduce(callback: Func&lt;T, T, T&gt;): T;
+    reduceRight&lt;TResult&gt;(callback: Func&lt;TResult, T, TResult&gt;, initialValue: TResult): TResult;
+    reduceRight&lt;TResult&gt;(callback: Func&lt;TResult, T, System_Internal.Int32, TResult&gt;, initialValue: TResult): TResult;
+    reduceRight&lt;TResult&gt;(callback: Func&lt;TResult, T, System_Internal.Int32, JSArray&lt;T&gt;, TResult&gt;, initialValue: TResult): TResult;
+    reverse(): JSArray&lt;T&gt;;
+    setLength(newLength: int): void;
+    shift(): T;
+    slice(start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): JSArray&lt;T&gt;;
+    some(callback: Func&lt;T, System_Internal.Boolean&gt;): boolean;
+    some(callback: Func&lt;T, System_Internal.Int32, JSArray&lt;T&gt;, System_Internal.Boolean&gt;): boolean;
+    sort(compareFunc?: Func&lt;T, T, System_Internal.Double&gt;): JSArray&lt;T&gt;;
+    splice(start: int, deleteCount?: Nullable&lt;System_Internal.Int32&gt;, ...items: T[]): JSArray&lt;T&gt;;
+    toArray(): T[];
+    toList(): List&lt;T&gt;;
+    toLocaleString(): string;
+    toReversed(): JSArray&lt;T&gt;;
+    toSorted(compareFunc?: Func&lt;T, T, System_Internal.Double&gt;): JSArray&lt;T&gt;;
+    toSpliced(start: int, deleteCount?: Nullable&lt;System_Internal.Int32&gt;, ...items: T[]): JSArray&lt;T&gt;;
+    toString(): string;
+    unshift(item: T): int;
+    unshift(...items: T[]): int;
+    values(): IEnumerable__System_Collections_Generic&lt;T&gt;;
+    with_(index: int, value: T): JSArray&lt;T&gt;;
+}
+
+export const JSArray: {
+    new&lt;T&gt;(): JSArray&lt;T&gt;;
+    new&lt;T&gt;(capacity: int): JSArray&lt;T&gt;;
+    new&lt;T&gt;(source: T[]): JSArray&lt;T&gt;;
+    new&lt;T&gt;(source: List&lt;T&gt;): JSArray&lt;T&gt;;
+    new&lt;T&gt;(source: IEnumerable__System_Collections_Generic&lt;T&gt;): JSArray&lt;T&gt;;
+    from_&lt;T, TSource, TResult&gt;(iterable: IEnumerable__System_Collections_Generic&lt;TSource&gt;, mapFunc: Func&lt;TSource, System_Internal.Int32, TResult&gt;): JSArray&lt;TResult&gt;;
+    from_&lt;T&gt;(iterable: IEnumerable__System_Collections_Generic&lt;T&gt;): JSArray&lt;T&gt;;
+    isArray&lt;T&gt;(value: unknown): boolean;
+    of_&lt;T&gt;(...items: T[]): JSArray&lt;T&gt;;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

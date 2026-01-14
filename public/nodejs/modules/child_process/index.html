@@ -263,6 +263,95 @@ export function main(): void {
   console.log(result);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="child_process-1"><code>child_process</code></h3>
+<pre><code class="language-ts">export declare const child_process: {
+  exec(command: string, options: ExecOptions, callback: Action&lt;Exception, System_Internal.String, System_Internal.String&gt;): void;
+  exec(command: string, callback: Action&lt;Exception, System_Internal.String, System_Internal.String&gt;): void;
+  execFile(file: string, args: string[], options: ExecOptions, callback: Action&lt;Exception, System_Internal.String, System_Internal.String&gt;): void;
+  execFileSync(file: string, args?: string[], options?: ExecOptions): unknown;
+  execSync(command: string, options: ExecOptions): unknown;
+  execSync(command: string): byte[];
+  fork(modulePath: string, args?: string[], options?: ExecOptions): ChildProcess;
+  spawn(command: string, args?: string[], options?: ExecOptions): ChildProcess;
+  spawnSync(command: string, args?: string[], options?: ExecOptions): SpawnSyncReturns&lt;byte[]&gt;;
+  spawnSyncString(command: string, args?: string[], options?: ExecOptions): SpawnSyncReturns&lt;System_Internal.String&gt;;
+};
+</code></pre>
+<h3 id="childprocess"><code>ChildProcess</code></h3>
+<pre><code class="language-ts">export interface ChildProcess extends EventEmitter {
+    readonly connected: boolean;
+    readonly exitCode: Nullable&lt;System_Internal.Int32&gt;;
+    readonly killed: boolean;
+    readonly pid: int;
+    readonly referenced: boolean;
+    readonly signalCode: string | undefined;
+    readonly spawnargs: string[];
+    readonly spawnfile: string;
+    readonly stderr: Readable;
+    readonly stdin: Writable | undefined;
+    readonly stdout: Readable;
+    disconnect(): void;
+    kill(signal?: string): boolean;
+    ref(): void;
+    send(message: unknown, sendHandle?: unknown, options?: unknown, callback?: Action&lt;Exception&gt;): boolean;
+    unref(): void;
+}
+
+export const ChildProcess: {
+    new(): ChildProcess;
+};
+</code></pre>
+<h3 id="execoptions"><code>ExecOptions</code></h3>
+<pre><code class="language-ts">export interface ExecOptions {
+    get argv0(): string | undefined;
+    set argv0(value: string);
+    get cwd(): string | undefined;
+    set cwd(value: string);
+    detached: boolean;
+    get encoding(): string | undefined;
+    set encoding(value: string);
+    get env(): unknown | undefined;
+    set env(value: unknown);
+    gid: Nullable&lt;System_Internal.Int32&gt;;
+    get input(): string | undefined;
+    set input(value: string);
+    get killSignal(): string | undefined;
+    set killSignal(value: string);
+    maxBuffer: int;
+    get shell(): string | undefined;
+    set shell(value: string);
+    get stdio(): string | undefined;
+    set stdio(value: string);
+    timeout: int;
+    uid: Nullable&lt;System_Internal.Int32&gt;;
+    windowsHide: boolean;
+    windowsVerbatimArguments: boolean;
+}
+
+export const ExecOptions: {
+    new(): ExecOptions;
+};
+</code></pre>
+<h3 id="spawnsyncreturns"><code>SpawnSyncReturns</code></h3>
+<pre><code class="language-ts">export interface SpawnSyncReturns&lt;T&gt; {
+    get error(): Exception | undefined;
+    set error(value: Exception);
+    output: (T | undefined)[];
+    pid: int;
+    get signal(): string | undefined;
+    set signal(value: string);
+    status: Nullable&lt;System_Internal.Int32&gt;;
+    stderr: T;
+    stdout: T;
+}
+
+export const SpawnSyncReturns: {
+    new&lt;T&gt;(): SpawnSyncReturns&lt;T&gt;;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

@@ -225,6 +225,82 @@ export function main(): void {
 }
 </code></pre>
 <p>Note: some methods are suffixed with <code>_</code> (example: <code>set_</code>, <code>get_</code>, <code>delete_</code>) to avoid clashes with reserved words and runtime naming rules.</p>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="map"><code>Map</code></h3>
+<pre><code class="language-ts">export interface Map&lt;K, V&gt; {
+    readonly size: int;
+    clear(): void;
+    delete_(key: K): boolean;
+    entries(): IEnumerable__System_Collections_Generic&lt;ValueTuple&lt;K, V&gt;&gt;;
+    forEach(callback: Action&lt;V, K, Map&lt;K, V&gt;&gt;): void;
+    forEach(callback: Action&lt;V, K&gt;): void;
+    forEach(callback: Action&lt;V&gt;): void;
+    get_(key: K): V | undefined;
+    getEnumerator(): IEnumerator&lt;KeyValuePair&lt;K, V&gt;&gt;;
+    has(key: K): boolean;
+    keys(): IEnumerable__System_Collections_Generic&lt;K&gt;;
+    set_(key: K, value: V): Map&lt;K, V&gt;;
+    values(): IEnumerable__System_Collections_Generic&lt;V&gt;;
+}
+
+export const Map: {
+    new&lt;K, V&gt;(): Map&lt;K, V&gt;;
+    new&lt;K, V&gt;(entries: IEnumerable__System_Collections_Generic&lt;ValueTuple&lt;K, V&gt;&gt;): Map&lt;K, V&gt;;
+};
+</code></pre>
+<h3 id="set"><code>Set</code></h3>
+<pre><code class="language-ts">export interface Set&lt;T&gt; {
+    readonly size: int;
+    add(value: T): Set&lt;T&gt;;
+    clear(): void;
+    delete_(value: T): boolean;
+    difference(other: Set&lt;T&gt;): Set&lt;T&gt;;
+    entries(): IEnumerable__System_Collections_Generic&lt;ValueTuple&lt;T, T&gt;&gt;;
+    forEach(callback: Action&lt;T, T, Set&lt;T&gt;&gt;): void;
+    forEach(callback: Action&lt;T, T&gt;): void;
+    forEach(callback: Action&lt;T&gt;): void;
+    getEnumerator(): IEnumerator&lt;T&gt;;
+    has(value: T): boolean;
+    intersection(other: Set&lt;T&gt;): Set&lt;T&gt;;
+    isDisjointFrom(other: Set&lt;T&gt;): boolean;
+    isSubsetOf(other: Set&lt;T&gt;): boolean;
+    isSupersetOf(other: Set&lt;T&gt;): boolean;
+    keys(): IEnumerable__System_Collections_Generic&lt;T&gt;;
+    symmetricDifference(other: Set&lt;T&gt;): Set&lt;T&gt;;
+    union(other: Set&lt;T&gt;): Set&lt;T&gt;;
+    values(): IEnumerable__System_Collections_Generic&lt;T&gt;;
+}
+
+export const Set: {
+    new&lt;T&gt;(): Set&lt;T&gt;;
+    new&lt;T&gt;(values: IEnumerable__System_Collections_Generic&lt;T&gt;): Set&lt;T&gt;;
+};
+</code></pre>
+<h3 id="weakmap"><code>WeakMap</code></h3>
+<pre><code class="language-ts">export interface WeakMap&lt;K, V&gt; {
+    delete_(key: K): boolean;
+    get_(key: K): V | undefined;
+    has(key: K): boolean;
+    set_(key: K, value: V): WeakMap&lt;K, V&gt;;
+}
+
+export const WeakMap: {
+    new&lt;K, V&gt;(): WeakMap&lt;K, V&gt;;
+};
+</code></pre>
+<h3 id="weakset"><code>WeakSet</code></h3>
+<pre><code class="language-ts">export interface WeakSet&lt;T&gt; {
+    add(value: T): WeakSet&lt;T&gt;;
+    delete_(value: T): boolean;
+    has(value: T): boolean;
+}
+
+export const WeakSet: {
+    new&lt;T&gt;(): WeakSet&lt;T&gt;;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

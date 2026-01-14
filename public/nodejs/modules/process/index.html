@@ -264,6 +264,64 @@ export function main(): void {
   console.log(`cwd: ${process.cwd()}`);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="process-1"><code>process</code></h3>
+<pre><code class="language-ts">export declare const process: {
+  readonly arch: string;
+  argv: string[];
+  argv0: string;
+  readonly env: ProcessEnv;
+  readonly execPath: string;
+  exitCode: Nullable&lt;System_Internal.Int32&gt;;
+  readonly pid: int;
+  readonly ppid: int;
+  readonly platform: string;
+  readonly version: string;
+  readonly versions: ProcessVersions;
+  chdir(directory: string): void;
+  cwd(): string;
+  exit(code?: Nullable&lt;System_Internal.Int32&gt;): void;
+  kill(pid: int, signal?: unknown): boolean;
+};
+</code></pre>
+<h3 id="processenv"><code>ProcessEnv</code></h3>
+<pre><code class="language-ts">export interface ProcessEnv {
+    readonly count: int;
+    readonly isReadOnly: boolean;
+    get item(): string | undefined;
+    set item(value: string);
+    readonly keys: ICollection&lt;System_Internal.String&gt;;
+    readonly values: ICollection&lt;string | undefined&gt;;
+    add(key: string, value: string): void;
+    add(item: KeyValuePair&lt;System_Internal.String, System_Internal.String&gt;): void;
+    clear(): void;
+    contains(item: KeyValuePair&lt;System_Internal.String, System_Internal.String&gt;): boolean;
+    containsKey(key: string): boolean;
+    copyTo(array: KeyValuePair&lt;System_Internal.String, System_Internal.String&gt;[], arrayIndex: int): void;
+    getEnumerator(): IEnumerator&lt;KeyValuePair&lt;System_Internal.String, System_Internal.String&gt;&gt;;
+    remove(key: string): boolean;
+    remove(item: KeyValuePair&lt;System_Internal.String, System_Internal.String&gt;): boolean;
+    tryGetValue(key: string, value: string): boolean;
+}
+
+export const ProcessEnv: {
+    new(): ProcessEnv;
+};
+</code></pre>
+<h3 id="processversions"><code>ProcessVersions</code></h3>
+<pre><code class="language-ts">export interface ProcessVersions {
+    dotnet: string;
+    node: string;
+    tsonic: string;
+    v8: string;
+}
+
+export const ProcessVersions: {
+    new(): ProcessVersions;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

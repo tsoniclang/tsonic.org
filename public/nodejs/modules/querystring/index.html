@@ -264,6 +264,19 @@ export function main(): void {
   console.log(querystring.stringify(parsed));
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="querystring-1"><code>querystring</code></h3>
+<pre><code class="language-ts">export declare const querystring: {
+  decode(str: string, sep?: string, eq?: string, maxKeys?: int): Dictionary&lt;System_Internal.String, unknown&gt;;
+  encode(obj: Dictionary&lt;System_Internal.String, unknown&gt;, sep?: string, eq?: string): string;
+  escape(str: string): string;
+  parse(str: string, sep?: string, eq?: string, maxKeys?: int): Dictionary&lt;System_Internal.String, unknown&gt;;
+  stringify(obj: Dictionary&lt;System_Internal.String, unknown&gt;, sep?: string, eq?: string): string;
+  unescape(str: string): string;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

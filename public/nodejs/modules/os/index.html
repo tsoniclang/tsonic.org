@@ -264,6 +264,68 @@ export function main(): void {
   console.log(os.homedir());
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="cpuinfo"><code>CpuInfo</code></h3>
+<pre><code class="language-ts">export interface CpuInfo {
+    model: string;
+    speed: int;
+    times: CpuTimes;
+}
+
+export const CpuInfo: {
+    new(): CpuInfo;
+};
+</code></pre>
+<h3 id="cputimes"><code>CpuTimes</code></h3>
+<pre><code class="language-ts">export interface CpuTimes {
+    idle: long;
+    irq: long;
+    nice: long;
+    sys: long;
+    user: long;
+}
+
+export const CpuTimes: {
+    new(): CpuTimes;
+};
+</code></pre>
+<h3 id="os-1"><code>os</code></h3>
+<pre><code class="language-ts">export declare const os: {
+  readonly devNull: string;
+  readonly EOL: string;
+  arch(): string;
+  availableParallelism(): int;
+  cpus(): CpuInfo[];
+  endianness(): string;
+  freemem(): long;
+  homedir(): string;
+  hostname(): string;
+  loadavg(): double[];
+  platform(): string;
+  release(): string;
+  tmpdir(): string;
+  totalmem(): long;
+  type_(): string;
+  uptime(): long;
+  userInfo(): UserInfo;
+};
+</code></pre>
+<h3 id="userinfo"><code>UserInfo</code></h3>
+<pre><code class="language-ts">export interface UserInfo {
+    gid: int;
+    homedir: string;
+    get shell(): string | undefined;
+    set shell(value: string);
+    uid: int;
+    username: string;
+}
+
+export const UserInfo: {
+    new(): UserInfo;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

@@ -264,6 +264,111 @@ export function main(): void {
   console.log(buf.length);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="buffer-1"><code>Buffer</code></h3>
+<pre><code class="language-ts">export interface Buffer {
+    item: byte;
+    readonly length: int;
+    compare(target: Buffer, targetStart?: Nullable&lt;System_Internal.Int32&gt;, targetEnd?: Nullable&lt;System_Internal.Int32&gt;, sourceStart?: Nullable&lt;System_Internal.Int32&gt;, sourceEnd?: Nullable&lt;System_Internal.Int32&gt;): int;
+    copy(target: Buffer, targetStart?: int, sourceStart?: Nullable&lt;System_Internal.Int32&gt;, sourceEnd?: Nullable&lt;System_Internal.Int32&gt;): int;
+    equals(otherBuffer: Buffer): boolean;
+    fill(value: unknown, offset?: int, end?: Nullable&lt;System_Internal.Int32&gt;, encoding?: string): Buffer;
+    includes(value: unknown, byteOffset?: int, encoding?: string): boolean;
+    indexOf(value: unknown, byteOffset?: int, encoding?: string): int;
+    lastIndexOf(value: unknown, byteOffset?: Nullable&lt;System_Internal.Int32&gt;, encoding?: string): int;
+    readBigInt64BE(offset?: int): long;
+    readBigInt64LE(offset?: int): long;
+    readBigUint64BE(offset?: int): ulong;
+    readBigUInt64BE(offset?: int): ulong;
+    readBigUint64LE(offset?: int): ulong;
+    readBigUInt64LE(offset?: int): ulong;
+    readDoubleBE(offset?: int): double;
+    readDoubleLE(offset?: int): double;
+    readFloatBE(offset?: int): float;
+    readFloatLE(offset?: int): float;
+    readInt16BE(offset?: int): short;
+    readInt16LE(offset?: int): short;
+    readInt32BE(offset?: int): int;
+    readInt32LE(offset?: int): int;
+    readInt8(offset?: int): sbyte;
+    readIntBE(offset: int, byteLength: int): long;
+    readIntLE(offset: int, byteLength: int): long;
+    readUint16BE(offset?: int): ushort;
+    readUInt16BE(offset?: int): ushort;
+    readUint16LE(offset?: int): ushort;
+    readUInt16LE(offset?: int): ushort;
+    readUint32BE(offset?: int): uint;
+    readUInt32BE(offset?: int): uint;
+    readUint32LE(offset?: int): uint;
+    readUInt32LE(offset?: int): uint;
+    readUint8(offset?: int): byte;
+    readUInt8(offset?: int): byte;
+    readUintBE(offset: int, byteLength: int): ulong;
+    readUIntBE(offset: int, byteLength: int): ulong;
+    readUintLE(offset: int, byteLength: int): ulong;
+    readUIntLE(offset: int, byteLength: int): ulong;
+    reverse(): Buffer;
+    slice(start?: Nullable&lt;System_Internal.Int32&gt;, end?: Nullable&lt;System_Internal.Int32&gt;): Buffer;
+    subarray(start?: Nullable&lt;System_Internal.Int32&gt;, end?: Nullable&lt;System_Internal.Int32&gt;): Buffer;
+    swap16(): Buffer;
+    swap32(): Buffer;
+    swap64(): Buffer;
+    toJSON(): unknown;
+    toString(encoding?: string, start?: int, end?: Nullable&lt;System_Internal.Int32&gt;): string;
+    write(str: string, offset?: int, length?: Nullable&lt;System_Internal.Int32&gt;, encoding?: string): int;
+    writeBigInt64BE(value: long, offset?: int): int;
+    writeBigInt64LE(value: long, offset?: int): int;
+    writeBigUint64BE(value: ulong, offset?: int): int;
+    writeBigUInt64BE(value: ulong, offset?: int): int;
+    writeBigUint64LE(value: ulong, offset?: int): int;
+    writeBigUInt64LE(value: ulong, offset?: int): int;
+    writeDoubleBE(value: double, offset?: int): int;
+    writeDoubleLE(value: double, offset?: int): int;
+    writeFloatBE(value: float, offset?: int): int;
+    writeFloatLE(value: float, offset?: int): int;
+    writeInt16BE(value: short, offset?: int): int;
+    writeInt16LE(value: short, offset?: int): int;
+    writeInt32BE(value: int, offset?: int): int;
+    writeInt32LE(value: int, offset?: int): int;
+    writeInt8(value: sbyte, offset?: int): int;
+    writeIntBE(value: long, offset: int, byteLength: int): int;
+    writeIntLE(value: long, offset: int, byteLength: int): int;
+    writeUint16BE(value: ushort, offset?: int): int;
+    writeUInt16BE(value: ushort, offset?: int): int;
+    writeUint16LE(value: ushort, offset?: int): int;
+    writeUInt16LE(value: ushort, offset?: int): int;
+    writeUint32BE(value: uint, offset?: int): int;
+    writeUInt32BE(value: uint, offset?: int): int;
+    writeUint32LE(value: uint, offset?: int): int;
+    writeUInt32LE(value: uint, offset?: int): int;
+    writeUint8(value: byte, offset?: int): int;
+    writeUInt8(value: byte, offset?: int): int;
+    writeUintBE(value: ulong, offset: int, byteLength: int): int;
+    writeUIntBE(value: ulong, offset: int, byteLength: int): int;
+    writeUintLE(value: ulong, offset: int, byteLength: int): int;
+    writeUIntLE(value: ulong, offset: int, byteLength: int): int;
+}
+
+export const Buffer: {
+    new(): Buffer;
+    poolSize: int;
+    alloc(size: int, fill?: unknown, encoding?: string): Buffer;
+    allocUnsafe(size: int): Buffer;
+    allocUnsafeSlow(size: int): Buffer;
+    byteLength(str: string, encoding?: string): int;
+    compare(buf1: Buffer, buf2: Buffer): int;
+    concat(list: Buffer[], totalLength?: Nullable&lt;System_Internal.Int32&gt;): Buffer;
+    from_(buffer: Buffer): Buffer;
+    from_(array: byte[]): Buffer;
+    from_(array: int[]): Buffer;
+    from_(str: string, encoding?: string): Buffer;
+    isBuffer(obj: unknown): boolean;
+    isEncoding(encoding: string): boolean;
+    of_(...items: int[]): Buffer;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

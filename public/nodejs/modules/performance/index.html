@@ -265,6 +265,112 @@ export function main(): void {
   console.log(`elapsed: ${end - start}ms`);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="markoptions"><code>MarkOptions</code></h3>
+<pre><code class="language-ts">export interface MarkOptions {
+    get detail(): unknown | undefined;
+    set detail(value: unknown);
+    startTime: Nullable&lt;System_Internal.Double&gt;;
+}
+
+export const MarkOptions: {
+    new(): MarkOptions;
+};
+</code></pre>
+<h3 id="measureoptions"><code>MeasureOptions</code></h3>
+<pre><code class="language-ts">export interface MeasureOptions {
+    get detail(): unknown | undefined;
+    set detail(value: unknown);
+    end: Nullable&lt;System_Internal.Double&gt;;
+    get endMark(): string | undefined;
+    set endMark(value: string);
+    start: Nullable&lt;System_Internal.Double&gt;;
+    get startMark(): string | undefined;
+    set startMark(value: string);
+}
+
+export const MeasureOptions: {
+    new(): MeasureOptions;
+};
+</code></pre>
+<h3 id="performance-1"><code>performance</code></h3>
+<pre><code class="language-ts">export declare const performance: {
+  clearMarks(name?: string): void;
+  clearMeasures(name?: string): void;
+  getEntries(): PerformanceEntry[];
+  getEntriesByName(name: string, type_?: string): PerformanceEntry[];
+  getEntriesByType(type_: string): PerformanceEntry[];
+  mark(name: string, options?: MarkOptions): PerformanceMark;
+  measure(name: string, startOrOptions?: unknown, endMark?: string): PerformanceMeasure;
+  now(): double;
+};
+</code></pre>
+<h3 id="performanceentry"><code>PerformanceEntry</code></h3>
+<pre><code class="language-ts">export interface PerformanceEntry {
+    readonly duration: double;
+    readonly entryType: string;
+    readonly name: string;
+    readonly startTime: double;
+}
+
+export const PerformanceEntry: {
+    new(): PerformanceEntry;
+};
+</code></pre>
+<h3 id="performancemark"><code>PerformanceMark</code></h3>
+<pre><code class="language-ts">export interface PerformanceMark extends PerformanceEntry {
+    readonly detail: unknown | undefined;
+}
+
+export const PerformanceMark: {
+    new(name: string, startTime: double, detail: unknown): PerformanceMark;
+};
+</code></pre>
+<h3 id="performancemeasure"><code>PerformanceMeasure</code></h3>
+<pre><code class="language-ts">export interface PerformanceMeasure extends PerformanceEntry {
+    readonly detail: unknown | undefined;
+}
+
+export const PerformanceMeasure: {
+    new(name: string, startTime: double, duration: double, detail: unknown): PerformanceMeasure;
+};
+</code></pre>
+<h3 id="performanceobserver"><code>PerformanceObserver</code></h3>
+<pre><code class="language-ts">export interface PerformanceObserver {
+    disconnect(): void;
+    observe(options: PerformanceObserverOptions): void;
+    takeRecords(): PerformanceObserverEntryList;
+}
+
+export const PerformanceObserver: {
+    new(callback: Action&lt;PerformanceObserverEntryList, PerformanceObserver&gt;): PerformanceObserver;
+    supportedEntryTypes(): string[];
+};
+</code></pre>
+<h3 id="performanceobserverentrylist"><code>PerformanceObserverEntryList</code></h3>
+<pre><code class="language-ts">export interface PerformanceObserverEntryList {
+    getEntries(): PerformanceEntry[];
+    getEntriesByName(name: string, type_?: string): PerformanceEntry[];
+    getEntriesByType(type_: string): PerformanceEntry[];
+}
+
+export const PerformanceObserverEntryList: {
+    new(entries: PerformanceEntry[]): PerformanceObserverEntryList;
+};
+</code></pre>
+<h3 id="performanceobserveroptions"><code>PerformanceObserverOptions</code></h3>
+<pre><code class="language-ts">export interface PerformanceObserverOptions {
+    buffered: boolean;
+    get entryTypes(): string[] | undefined;
+    set entryTypes(value: string[]);
+}
+
+export const PerformanceObserverOptions: {
+    new(): PerformanceObserverOptions;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>

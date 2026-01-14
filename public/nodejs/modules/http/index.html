@@ -276,6 +276,148 @@ export function main(): void {
   Thread.sleep(Timeout.infinite);
 }
 </code></pre>
+<h2 id="api-reference">API Reference</h2>
+<!-- API:START -->
+<h3 id="addressinfo"><code>AddressInfo</code></h3>
+<pre><code class="language-ts">export interface AddressInfo {
+    address: string;
+    family: string;
+    port: int;
+}
+
+export const AddressInfo: {
+    new(): AddressInfo;
+};
+</code></pre>
+<h3 id="clientrequest"><code>ClientRequest</code></h3>
+<pre><code class="language-ts">export interface ClientRequest extends EventEmitter {
+    readonly aborted: boolean;
+    readonly host: string;
+    readonly method: string;
+    readonly path: string;
+    readonly protocol: string;
+    abort(): void;
+    end(chunk?: string, encoding?: string, callback?: Action): Task;
+    getHeader(name: string): string | undefined;
+    getHeaderNames(): string[];
+    removeHeader(name: string): void;
+    setHeader(name: string, value: string): void;
+    setTimeout(msecs: int, callback?: Action): ClientRequest;
+    write(chunk: string, encoding?: string, callback?: Action): boolean;
+}
+
+export const ClientRequest: {
+    new(): ClientRequest;
+};
+</code></pre>
+<h3 id="http"><code>http</code></h3>
+<pre><code class="language-ts">export declare const http: {
+  globalAgent_maxSockets: Nullable&lt;System_Internal.Int32&gt;;
+  globalAgent_maxFreeSockets: int;
+  globalAgent_timeout: int;
+  maxHeaderSize: int;
+  createServer(requestListener?: Action&lt;IncomingMessage, ServerResponse&gt;): Server;
+  get_(options: RequestOptions, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
+  get_(url: string, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
+  request(options: RequestOptions, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
+  request(url: string, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
+  validateHeaderName(name: string): void;
+  validateHeaderValue(name: string, value: unknown): void;
+};
+</code></pre>
+<h3 id="incomingmessage"><code>IncomingMessage</code></h3>
+<pre><code class="language-ts">export interface IncomingMessage extends EventEmitter {
+    readonly complete: boolean;
+    readonly headers: Dictionary&lt;System_Internal.String, System_Internal.String&gt;;
+    readonly httpVersion: string;
+    readonly method: string;
+    readonly statusCode: Nullable&lt;System_Internal.Int32&gt;;
+    readonly statusMessage: string;
+    readonly url: string | undefined;
+    destroy(): void;
+    onClose(callback: Action): void;
+    onData(callback: Action&lt;System_Internal.String&gt;): void;
+    onEnd(callback: Action): void;
+    readAll(): Task&lt;System_Internal.String&gt;;
+    setTimeout(msecs: int, callback?: Action): IncomingMessage;
+}
+
+export const IncomingMessage: {
+    new(): IncomingMessage;
+};
+</code></pre>
+<h3 id="requestoptions"><code>RequestOptions</code></h3>
+<pre><code class="language-ts">export interface RequestOptions {
+    get agent(): unknown | undefined;
+    set agent(value: unknown);
+    get auth(): string | undefined;
+    set auth(value: string);
+    headers: Dictionary&lt;System_Internal.String, System_Internal.String&gt;;
+    host: string;
+    hostname: string;
+    method: string;
+    path: string;
+    port: int;
+    protocol: string;
+    timeout: Nullable&lt;System_Internal.Int32&gt;;
+}
+
+export const RequestOptions: {
+    new(): RequestOptions;
+};
+</code></pre>
+<h3 id="server"><code>Server</code></h3>
+<pre><code class="language-ts">export interface Server extends EventEmitter {
+    headersTimeout: int;
+    keepAliveTimeout: int;
+    readonly listening: boolean;
+    maxHeadersCount: int;
+    requestTimeout: int;
+    timeout: int;
+    address(): AddressInfo;
+    close(callback?: Action): Server;
+    listen(port: int, hostname?: string, backlog?: Nullable&lt;System_Internal.Int32&gt;, callback?: Action): Server;
+    listen(port: int, callback: Action): Server;
+    setTimeout(msecs: int, callback?: Action): Server;
+}
+
+export const Server: {
+    new(requestListener: Action&lt;IncomingMessage, ServerResponse&gt;): Server;
+};
+</code></pre>
+<h3 id="serverresponse"><code>ServerResponse</code></h3>
+<pre><code class="language-ts">export interface ServerResponse extends EventEmitter {
+    readonly finished: boolean;
+    readonly headersSent: boolean;
+    statusCode: int;
+    statusMessage: string;
+    end(chunk?: string, encoding?: string, callback?: Action): ServerResponse;
+    flushHeaders(): void;
+    getHeader(name: string): string | undefined;
+    getHeaderNames(): string[];
+    getHeaders(): Dictionary&lt;System_Internal.String, System_Internal.String&gt;;
+    hasHeader(name: string): boolean;
+    removeHeader(name: string): void;
+    setHeader(name: string, value: string): ServerResponse;
+    setTimeout(msecs: int, callback?: Action): ServerResponse;
+    write(chunk: string, encoding?: string, callback?: Action): boolean;
+    writeHead(statusCode: int, statusMessage?: string, headers?: Dictionary&lt;System_Internal.String, System_Internal.String&gt;): ServerResponse;
+    writeHead(statusCode: int, headers: Dictionary&lt;System_Internal.String, System_Internal.String&gt;): ServerResponse;
+}
+
+export const ServerResponse: {
+    new(): ServerResponse;
+};
+</code></pre>
+<h3 id="typeerror"><code>TypeError</code></h3>
+<pre><code class="language-ts">export interface TypeError extends Exception {
+}
+
+export const TypeError: {
+    new(message: string): TypeError;
+};
+</code></pre>
+<!-- API:END -->
 </div>
 </article>
 </main>
