@@ -3,7 +3,9 @@
 
   <nav class="mount-nav">
     {{ range .Site.Mounts }}
-      <a class="mount-link {{ if eq .Name $.Params.mount }}active{{ end }}" href="{{ .UrlPrefix }}">{{ .Name }}</a>
+      {{ if ne .Name "Home" }}
+        <a class="mount-link {{ if eq .Name $.Params.mount }}active{{ end }}" href="{{ .UrlPrefix }}">{{ .Name }}</a>
+      {{ end }}
     {{ end }}
   </nav>
 

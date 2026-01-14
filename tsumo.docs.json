@@ -1,10 +1,19 @@
 {
   "siteName": "Tsonic",
-  "homeMount": "Tsonic",
+  "homeMount": "Home",
   "strictLinks": false,
   "search": true,
   "searchFile": "search.json",
   "mounts": [
+    {
+      "name": "Home",
+      "source": ".tmp/mounts/home",
+      "prefix": "/",
+      "repoUrl": "https://github.com/tsoniclang/tsonic",
+      "repoBranch": "main",
+      "repoPath": "",
+      "navPath": "README.md"
+    },
     {
       "name": "Tsonic",
       "source": ".tmp/mounts/tsonic",
