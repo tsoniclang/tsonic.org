@@ -205,7 +205,7 @@
     &quot;typeRoots&quot;: [&quot;node_modules/@tsonic/globals&quot;],
     &quot;packageReferences&quot;: [{ &quot;id&quot;: &quot;Newtonsoft.Json&quot;, &quot;version&quot;: &quot;13.0.3&quot; }],
     &quot;frameworkReferences&quot;: [&quot;Microsoft.AspNetCore.App&quot;],
-    &quot;libraries&quot;: [&quot;./libs/MyLib&quot;]
+    &quot;libraries&quot;: [&quot;lib/MyLib.dll&quot;]
   }
 }
 </code></pre>
@@ -275,7 +275,9 @@
   &quot;entryPoint&quot;: &quot;src/App.ts&quot;
 }
 </code></pre>
-<p><strong>Required for executables</strong>, optional for libraries.</p>
+<p><strong>Required for executables.</strong> Today, <code>entryPoint</code> is also required for library builds.</p>
+<p>For libraries, set <code>entryPoint</code> to a library root file (for example <code>src/index.ts</code>)
+that imports/exports your public API.</p>
 <h4 id="sourceroot">sourceRoot</h4>
 <p>The root directory containing source files.</p>
 <pre><code class="language-json">{
@@ -519,6 +521,47 @@
 </tr>
 </tbody>
 </table>
+<h4 id="console-app-options">Console App Options</h4>
+<p>Non-NativeAOT executable (regular <code>dotnet publish</code>).</p>
+<pre><code class="language-json">{
+  &quot;output&quot;: {
+    &quot;type&quot;: &quot;console-app&quot;,
+    &quot;targetFramework&quot;: &quot;net10.0&quot;,
+    &quot;singleFile&quot;: true,
+    &quot;selfContained&quot;: true
+  }
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>targetFramework</code></td>
+<td>string</td>
+<td><code>net10.0</code></td>
+<td>Target framework</td>
+</tr>
+<tr>
+<td><code>singleFile</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Single-file publish output</td>
+</tr>
+<tr>
+<td><code>selfContained</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Include runtime in output</td>
+</tr>
+</tbody>
+</table>
 <h3 id="net-configuration">.NET Configuration</h3>
 <h4 id="dotnettyperoots">dotnet.typeRoots</h4>
 <p>Paths to type declaration directories.</p>
@@ -535,16 +578,44 @@
   &quot;dotnet&quot;: {
     &quot;packageReferences&quot;: [
       { &quot;id&quot;: &quot;Newtonsoft.Json&quot;, &quot;version&quot;: &quot;13.0.3&quot; },
+      { &quot;id&quot;: &quot;Microsoft.EntityFrameworkCore&quot;, &quot;version&quot;: &quot;10.0.1&quot;, &quot;types&quot;: &quot;@tsonic/efcore&quot; },
       { &quot;id&quot;: &quot;System.Text.Json&quot;, &quot;version&quot;: &quot;8.0.0&quot; }
     ]
   }
 }
 </code></pre>
-<h4 id="dotnetlibraries">dotnet.libraries</h4>
-<p>Paths to external .NET library bindings.</p>
+<p>If you provide <code>types</code>, Tsonic will use that npm package for bindings and will not
+auto-generate bindings for that entry during <code>tsonic restore</code>.</p>
+<h4 id="dotnetframeworkreferences">dotnet.frameworkReferences</h4>
+<p>Additional shared frameworks (emitted as <code>FrameworkReference</code> in the generated <code>.csproj</code>).</p>
 <pre><code class="language-json">{
   &quot;dotnet&quot;: {
-    &quot;libraries&quot;: [&quot;./libs/custom-lib&quot;, &quot;../shared/common&quot;]
+    &quot;frameworkReferences&quot;: [
+      &quot;Microsoft.AspNetCore.App&quot;
+    ]
+  }
+}
+</code></pre>
+<p>If you provide <code>types</code>, Tsonic will use that npm package for bindings and will not
+auto-generate bindings for that entry during <code>tsonic restore</code>.</p>
+<p>Example with a published bindings package:</p>
+<pre><code class="language-json">{
+  &quot;dotnet&quot;: {
+    &quot;frameworkReferences&quot;: [
+      { &quot;id&quot;: &quot;Microsoft.AspNetCore.App&quot;, &quot;types&quot;: &quot;@tsonic/aspnetcore&quot; }
+    ]
+  }
+}
+</code></pre>
+<h4 id="dotnetlibraries">dotnet.libraries</h4>
+<p>Extra library inputs for the compiler.</p>
+<ul>
+<li>Entries ending with <code>.dll</code> are treated as <strong>assembly references</strong> (added to the generated <code>.csproj</code>).</li>
+<li>Other entries are treated as <strong>additional TypeScript type roots</strong> (passed to the TypeScript compiler).</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;dotnet&quot;: {
+    &quot;libraries&quot;: [&quot;lib/MyLib.dll&quot;, &quot;./types&quot;, &quot;../shared/common&quot;]
   }
 }
 </code></pre>
@@ -580,6 +651,7 @@
 <h3 id="class-library">Class Library</h3>
 <pre><code class="language-json">{
   &quot;rootNamespace&quot;: &quot;MyLibrary&quot;,
+  &quot;entryPoint&quot;: &quot;src/index.ts&quot;,
   &quot;sourceRoot&quot;: &quot;src&quot;,
   &quot;output&quot;: {
     &quot;type&quot;: &quot;library&quot;,

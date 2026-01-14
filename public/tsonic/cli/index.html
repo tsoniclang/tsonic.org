@@ -234,7 +234,7 @@ tsonic project init --types-version &lt;ver&gt;
 </ul>
 <h3 id="generate">generate</h3>
 <p>Generate C# code from TypeScript without compiling.</p>
-<pre><code class="language-bash">tsonic generate &lt;entry&gt; [options]
+<pre><code class="language-bash">tsonic generate [entry] [options]
 </code></pre>
 <p><strong>Arguments:</strong></p>
 <table>
@@ -249,7 +249,7 @@ tsonic project init --types-version &lt;ver&gt;
 <tr>
 <td><code>&lt;entry&gt;</code></td>
 <td>Entry point file (e.g., <code>src/App.ts</code>)</td>
-<td>Yes</td>
+<td>No (defaults to <code>entryPoint</code> in config)</td>
 </tr>
 </tbody>
 </table>
@@ -279,7 +279,7 @@ tsonic project init --types-version &lt;ver&gt;
 <tr>
 <td><code>--out &lt;name&gt;</code></td>
 <td><code>-o</code></td>
-<td>Output name (assembly/binary)</td>
+<td>Output name (binary/assembly)</td>
 <td>From config</td>
 </tr>
 <tr>
@@ -303,7 +303,7 @@ tsonic project init --types-version &lt;ver&gt;
 <tr>
 <td><code>--lib &lt;path&gt;</code></td>
 <td><code>-L</code></td>
-<td>External library path</td>
+<td>External library path (repeatable)</td>
 <td>None</td>
 </tr>
 </tbody>
@@ -315,8 +315,11 @@ tsonic generate src/App.ts
 # Override output name (assembly/binary)
 tsonic generate src/App.ts --out my-app
 
-# With external library
-tsonic generate src/App.ts --lib ./libs/MyLib
+# With external DLL reference
+tsonic generate src/App.ts --lib ./lib/MyLib.dll
+
+# With additional type roots (for custom bindings / declarations)
+tsonic generate src/App.ts --lib ./types
 </code></pre>
 <p><strong>Output:</strong></p>
 <pre><code>generated/
@@ -326,8 +329,8 @@ tsonic generate src/App.ts --lib ./libs/MyLib
 └── tsonic.csproj        # .NET project file
 </code></pre>
 <h3 id="build">build</h3>
-<p>Build a native executable from TypeScript.</p>
-<pre><code class="language-bash">tsonic build &lt;entry&gt; [options]
+<p>Build an executable (NativeAOT by default) or a library, depending on <code>output.type</code>.</p>
+<pre><code class="language-bash">tsonic build [entry] [options]
 </code></pre>
 <p><strong>Arguments:</strong></p>
 <table>
@@ -342,7 +345,7 @@ tsonic generate src/App.ts --lib ./libs/MyLib
 <tr>
 <td><code>&lt;entry&gt;</code></td>
 <td>Entry point file</td>
-<td>Yes</td>
+<td>No (defaults to <code>entryPoint</code> in config)</td>
 </tr>
 </tbody>
 </table>
@@ -420,7 +423,7 @@ tsonic generate src/App.ts --lib ./libs/MyLib
 <tr>
 <td><code>--lib &lt;path&gt;</code></td>
 <td><code>-L</code></td>
-<td>External library path</td>
+<td>External library path (repeatable)</td>
 <td>None</td>
 </tr>
 </tbody>
@@ -476,12 +479,12 @@ tsonic build src/App.ts --keep-temp --no-strip
 <p><strong>Build Steps:</strong></p>
 <ol>
 <li><strong>Step 1/3</strong>: Generate C# code (same as <code>generate</code>)</li>
-<li><strong>Step 2/3</strong>: Run <code>dotnet publish</code> with NativeAOT</li>
-<li><strong>Step 3/3</strong>: Copy output to <code>out/</code></li>
+<li><strong>Step 2/3</strong>: Run <code>dotnet</code> (<code>publish</code> for executables / <code>console-app</code>, <code>build</code> for libraries)</li>
+<li><strong>Step 3/3</strong>: Copy output to <code>out/</code> (executables) or <code>dist/</code> (libraries)</li>
 </ol>
 <h3 id="run">run</h3>
 <p>Build and run the executable in one step.</p>
-<pre><code class="language-bash">tsonic run &lt;entry&gt; [-- args...]
+<pre><code class="language-bash">tsonic run [entry] [-- args...]
 </code></pre>
 <p><strong>Arguments:</strong></p>
 <table>
@@ -496,7 +499,7 @@ tsonic build src/App.ts --keep-temp --no-strip
 <tr>
 <td><code>&lt;entry&gt;</code></td>
 <td>Entry point file</td>
-<td>Yes</td>
+<td>No (defaults to <code>entryPoint</code> in config)</td>
 </tr>
 <tr>
 <td><code>-- args...</code></td>
@@ -572,6 +575,12 @@ tsonic run src/App.ts --verbose -- --debug
 <td>Additional directory to probe for referenced assemblies (repeatable)</td>
 <td>-</td>
 </tr>
+<tr>
+<td><code>--strict</code></td>
+<td>-</td>
+<td>Strict bindings generation (fail on constructor-constraint loss)</td>
+<td><code>false</code></td>
+</tr>
 </tbody>
 </table>
 <p><strong>Examples:</strong></p>
@@ -633,6 +642,43 @@ tsonic add package ./libs/MyLib.dll --deps ./libs/deps
 </tr>
 </tbody>
 </table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--verbose</code></td>
+<td><code>-V</code></td>
+<td>Verbose output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td><code>-q</code></td>
+<td>Suppress output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--deps &lt;dir&gt;</code></td>
+<td>-</td>
+<td>Additional directory to probe for referenced assemblies (repeatable)</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>--strict</code></td>
+<td>-</td>
+<td>Strict bindings generation (fail on constructor-constraint loss)</td>
+<td><code>false</code></td>
+</tr>
+</tbody>
+</table>
 <p><strong>Examples:</strong></p>
 <pre><code class="language-bash"># Add and auto-generate bindings
 tsonic add nuget Microsoft.Extensions.Logging 10.0.0
@@ -666,6 +712,43 @@ bindings are supplied externally and will not attempt to generate them:</p>
 <p>Update an existing NuGet package reference (and bindings) in the project.</p>
 <pre><code class="language-bash">tsonic update nuget &lt;package-id&gt; &lt;version&gt; [types-package]
 </code></pre>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--verbose</code></td>
+<td><code>-V</code></td>
+<td>Verbose output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td><code>-q</code></td>
+<td>Suppress output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--deps &lt;dir&gt;</code></td>
+<td>-</td>
+<td>Additional directory to probe for referenced assemblies (repeatable)</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>--strict</code></td>
+<td>-</td>
+<td>Strict bindings generation (fail on constructor-constraint loss)</td>
+<td><code>false</code></td>
+</tr>
+</tbody>
+</table>
 <p><strong>Examples:</strong></p>
 <pre><code class="language-bash"># Update pinned NuGet version (auto-generated bindings)
 tsonic update nuget Microsoft.Extensions.Logging 10.0.1
@@ -682,6 +765,43 @@ tsonic update nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
 <p>Remove a NuGet package reference (and refresh bindings) from the project.</p>
 <pre><code class="language-bash">tsonic remove nuget &lt;package-id&gt;
 </code></pre>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--verbose</code></td>
+<td><code>-V</code></td>
+<td>Verbose output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td><code>-q</code></td>
+<td>Suppress output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--deps &lt;dir&gt;</code></td>
+<td>-</td>
+<td>Additional directory to probe for referenced assemblies (repeatable)</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>--strict</code></td>
+<td>-</td>
+<td>Strict bindings generation (fail on constructor-constraint loss)</td>
+<td><code>false</code></td>
+</tr>
+</tbody>
+</table>
 <p><strong>Examples:</strong></p>
 <pre><code class="language-bash">tsonic remove nuget Microsoft.Extensions.Logging
 </code></pre>
@@ -694,6 +814,43 @@ tsonic update nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
 <p>Add a FrameworkReference (and bindings) to the project.</p>
 <pre><code class="language-bash">tsonic add framework &lt;framework-reference&gt; [types-package]
 </code></pre>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--verbose</code></td>
+<td><code>-V</code></td>
+<td>Verbose output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td><code>-q</code></td>
+<td>Suppress output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--deps &lt;dir&gt;</code></td>
+<td>-</td>
+<td>Additional directory to probe for referenced assemblies (repeatable)</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>--strict</code></td>
+<td>-</td>
+<td>Strict bindings generation (fail on constructor-constraint loss)</td>
+<td><code>false</code></td>
+</tr>
+</tbody>
+</table>
 <p><strong>Examples:</strong></p>
 <pre><code class="language-bash"># Add shared framework and use published bindings
 tsonic add framework Microsoft.AspNetCore.App @tsonic/aspnetcore
@@ -721,11 +878,50 @@ bindings are supplied externally and will not attempt to generate them:</p>
 <p>Restore .NET dependencies and (re)generate local bindings for a cloned repo.</p>
 <pre><code class="language-bash">tsonic restore
 </code></pre>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--verbose</code></td>
+<td><code>-V</code></td>
+<td>Verbose output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td><code>-q</code></td>
+<td>Suppress output</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--deps &lt;dir&gt;</code></td>
+<td>-</td>
+<td>Additional directory to probe for referenced assemblies (repeatable)</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>--strict</code></td>
+<td>-</td>
+<td>Strict bindings generation (fail on constructor-constraint loss)</td>
+<td><code>false</code></td>
+</tr>
+</tbody>
+</table>
 <p>By default, local bindings generation allows constructor-constraint loss (C# still enforces
 constraints at build time). Use <code>--strict</code> to make constructor-constraint loss a hard error.</p>
 <p>This command is also run automatically before <code>tsonic build</code> / <code>generate</code> / <code>run</code> / <code>pack</code> when the project has
 any .NET deps declared in <code>tsonic.json</code>.</p>
 <p>Restore only auto-generates bindings for dependency entries that do <strong>not</strong> specify a <code>types</code> package.</p>
+<p>When <code>tsonic restore</code> runs automatically before <code>tsonic build</code> / <code>generate</code> / <code>run</code> / <code>pack</code>, it uses the same
+<code>--deps</code> and <code>--strict</code> flags passed to the command.</p>
 <h3 id="pack">pack</h3>
 <p>Create a NuGet package from a library project.</p>
 <pre><code class="language-bash">tsonic pack [options]
@@ -817,6 +1013,11 @@ tsonic pack --config tsonic.library.json
 <td><code>-c</code></td>
 <td>Config file path</td>
 </tr>
+<tr>
+<td><code>--strict</code></td>
+<td>-</td>
+<td>Strict bindings generation (fail on constructor-constraint loss)</td>
+</tr>
 </tbody>
 </table>
 <h2 id="exit-codes">Exit Codes</h2>
@@ -876,12 +1077,8 @@ tsonic pack --config tsonic.library.json
 </thead>
 <tbody>
 <tr>
-<td><code>TSONIC_VERBOSE</code></td>
-<td>Enable verbose output</td>
-</tr>
-<tr>
 <td><code>DOTNET_ROOT</code></td>
-<td>.NET SDK location</td>
+<td>Used by <code>dotnet</code> to locate the .NET SDK</td>
 </tr>
 </tbody>
 </table>
