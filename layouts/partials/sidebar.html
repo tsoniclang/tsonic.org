@@ -1,6 +1,35 @@
-{{ if and .Params.mount (ne .Params.mount "Home") }}
+{{ $currentMountName := "" }}
+
+{{ with .Params.mount }}
+  {{ if ne . "Home" }}
+    {{ $currentMountName = . }}
+  {{ end }}
+{{ end }}
+
+{{ if eq $currentMountName "" }}
+  {{ $rel := .RelPermalink }}
+  {{ $bestName := "" }}
+  {{ $bestPrefixLen := 0 }}
+
   {{ range .Site.Mounts }}
-    {{ if eq .Name $.Params.mount }}
+    {{ if ne .Name "Home" }}
+      {{ $prefix := .UrlPrefix }}
+      {{ if and (ne $prefix "/") (strings.HasPrefix $rel $prefix) }}
+        {{ $prefixLen := len $prefix }}
+        {{ if gt $prefixLen $bestPrefixLen }}
+          {{ $bestName = .Name }}
+          {{ $bestPrefixLen = $prefixLen }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{ $currentMountName = $bestName }}
+{{ end }}
+
+{{ if ne $currentMountName "" }}
+  {{ range .Site.Mounts }}
+    {{ if eq .Name $currentMountName }}
       {{ partial "sidebar-mount.html" . }}
     {{ end }}
   {{ end }}
