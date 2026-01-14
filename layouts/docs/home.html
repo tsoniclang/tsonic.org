@@ -1,11 +1,9 @@
 {{ define "main" }}
 <article class="doc">
-  <script>
-    location.replace("/tsonic/");
-  </script>
-  <h1 class="site-title">{{ .Site.Title }}</h1>
-  <p class="lead">
-    Redirecting to <a href="/tsonic/">Tsonic docs</a>…
-  </p>
+  <div class="doc-top">
+    {{ with .Params.editURL }}<a class="edit" href="{{ . }}">Edit on GitHub</a>{{ end }}
+  </div>
+
+  <div class="content">{{ .Content }}</div>
 </article>
 {{ end }}
