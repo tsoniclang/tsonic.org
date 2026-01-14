@@ -340,6 +340,13 @@ const any = Enumerable.any(numbers, (n) =&gt; n &gt; 10);
 <h3 id="javascript-runtime-apis-tsonicjs">JavaScript Runtime APIs (<code>@tsonic/js</code>)</h3>
 <p>Tsonic ships as a .NET compiler, but you can opt into JavaScript-style APIs by importing <code>@tsonic/js</code>
 (bindings for <code>Tsonic.JSRuntime.dll</code>).</p>
+<p>Setup:</p>
+<pre><code class="language-bash"># New project
+tsonic project init --js
+
+# Existing project
+tsonic add js
+</code></pre>
 <pre><code class="language-typescript">import { console, JSON, Math, Date, Timers } from &quot;@tsonic/js&quot;;
 
 export function main(): void {

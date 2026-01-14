@@ -75,11 +75,11 @@
 <ul>
 <li><strong>Native binaries</strong> (no JS runtime).</li>
 <li><strong>.NET standard library</strong>: use the .NET runtime + BCL (files, networking, crypto, concurrency, etc.).</li>
-<li><strong>Node-style APIs when you want them</strong>: optional compatibility packages like <code>@tsonic/nodejs</code>.</li>
+<li><strong>Optional JS/Node APIs when you want them</strong>: <code>@tsonic/js</code> (JavaScript runtime APIs) and <code>@tsonic/nodejs</code> (Node-style APIs).</li>
 <li><strong>Still TypeScript</strong>: your code still typechecks with <code>tsc</code>. Tsonic also adds CLR-style numeric types like <code>int</code>, <code>uint</code>, <code>long</code>, etc. via <code>@tsonic/core/types.js</code>.</li>
 <li><strong>Better security</strong>: you build on a widely used runtime and standard library with regular updates.</li>
 </ul>
-<p>Tsonic targets the .NET BCL (not Node’s built-in modules). If you want Node-like APIs, install <code>@tsonic/nodejs</code>.</p>
+<p>Tsonic targets the .NET BCL (not Node’s built-in modules). If you want JavaScript-style APIs, opt into <code>@tsonic/js</code>. If you want Node-like APIs, opt into <code>@tsonic/nodejs</code>.</p>
 <h2 id="why-c--nativeaot">Why C# + NativeAOT?</h2>
 <p>Tsonic compiles TypeScript to C#, then uses the standard CLR NativeAOT pipeline (<code>dotnet publish</code>) to produce native binaries.</p>
 <p>TypeScript maps well to C#/.NET:</p>
@@ -115,7 +115,15 @@
 <h2 id="quick-start">Quick Start</h2>
 <h3 id="initialize-a-new-project">Initialize a New Project</h3>
 <pre><code class="language-bash">mkdir my-app &amp;&amp; cd my-app
+
+# Basic project
 tsonic project init
+
+# Or: include JavaScript runtime APIs (console, JSON, timers, etc.)
+tsonic project init --js
+
+# Or: include Node-style APIs (fs, path, crypto, http, etc.)
+tsonic project init --nodejs
 </code></pre>
 <p>This creates:</p>
 <ul>
@@ -190,6 +198,37 @@ if (parsed !== undefined) {
   Console.writeLine(parsed.name);
 }
 </code></pre>
+<h3 id="javascript-runtime-apis-tsonicjs">JavaScript runtime APIs (<code>@tsonic/js</code>)</h3>
+<p>First, enable JSRuntime APIs:</p>
+<pre><code class="language-bash"># New project
+tsonic project init --js
+
+# Existing project
+tsonic add js
+</code></pre>
+<p>Then write:</p>
+<pre><code class="language-ts">import { console, JSON } from &quot;@tsonic/js&quot;;
+
+export function main(): void {
+  const value = JSON.parse&lt;{ x: number }&gt;('{&quot;x&quot;: 1}');
+  console.log(JSON.stringify(value));
+}
+</code></pre>
+<h3 id="node-style-apis-tsonicnodejs">Node-style APIs (<code>@tsonic/nodejs</code>)</h3>
+<p>First, enable Node-style APIs:</p>
+<pre><code class="language-bash"># New project
+tsonic project init --nodejs
+
+# Existing project
+tsonic add nodejs
+</code></pre>
+<p>Then write:</p>
+<pre><code class="language-ts">import { console, path } from &quot;@tsonic/nodejs&quot;;
+
+export function main(): void {
+  console.log(path.join(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;));
+}
+</code></pre>
 <h3 id="minimal-aspnet-core-api">Minimal ASP.NET Core API</h3>
 <p>First, add the shared framework + bindings:</p>
 <pre><code class="language-bash">tsonic add framework Microsoft.AspNetCore.App @tsonic/aspnetcore
@@ -257,6 +296,14 @@ tsonic add nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
 <td>Build and run</td>
 </tr>
 <tr>
+<td><code>tsonic add js</code></td>
+<td>Add <code>@tsonic/js</code> + JSRuntime DLLs</td>
+</tr>
+<tr>
+<td><code>tsonic add nodejs</code></td>
+<td>Add <code>@tsonic/nodejs</code> + NodeJS DLLs</td>
+</tr>
+<tr>
 <td><code>tsonic add package &lt;dll&gt; [types]</code></td>
 <td>Add a local DLL + bindings</td>
 </tr>
@@ -319,7 +366,7 @@ tsonic add nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
 </table>
 <h2 id="configuration-tsonicjson">Configuration (tsonic.json)</h2>
 <pre><code class="language-json">{
-  &quot;$schema&quot;: &quot;https://tsonic.dev/schema/v1.json&quot;,
+  &quot;$schema&quot;: &quot;https://tsonic.org/schema/v1.json&quot;,
   &quot;rootNamespace&quot;: &quot;MyApp&quot;,
   &quot;entryPoint&quot;: &quot;src/App.ts&quot;
 }
@@ -374,6 +421,14 @@ tsonic add nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
 <tr>
 <td><code>@tsonic/dotnet</code></td>
 <td>.NET BCL type declarations</td>
+</tr>
+<tr>
+<td><code>@tsonic/js</code></td>
+<td>JavaScript runtime APIs (JS semantics on .NET)</td>
+</tr>
+<tr>
+<td><code>@tsonic/nodejs</code></td>
+<td>Node-style APIs implemented in .NET</td>
 </tr>
 </tbody>
 </table>
