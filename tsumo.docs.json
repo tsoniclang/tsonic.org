@@ -38,7 +38,7 @@
       "prefix": "/nodejs/",
       "repoUrl": "https://github.com/tsoniclang/nodejs-clr",
       "repoBranch": "main",
-      "repoPath": "",
+      "repoPath": "docs",
       "navPath": "README.md"
     }
   ]

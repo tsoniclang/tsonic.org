@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>nodejs | Tsonic</title>
+    <title>Getting Started | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -134,61 +134,46 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-      <span>nodejs</span>
+        <a href="/nodejs/">nodejs</a>
+        <span class="sep">/</span>
+      
+      <span>Getting Started</span>
     </nav>
-    <a class="edit" href="https://github.com/tsoniclang/nodejs-clr/blob/main/docs/README.md">Edit on GitHub</a>
+    <a class="edit" href="https://github.com/tsoniclang/nodejs-clr/blob/main/docs/getting-started.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="nodejs-compatibility-tsonicnodejs">Node.js Compatibility (<code>@tsonic/nodejs</code>)</h1>
-<p>Tsonic targets the .NET BCL by default. If you want <strong>Node-style APIs</strong> (like <code>fs</code>, <code>path</code>, <code>crypto</code>, <code>net</code>, <code>process</code>, etc.), use <code>@tsonic/nodejs</code>.</p>
-<p>This is <strong>not</strong> Node.js itself, and it is <strong>not a byte-for-byte clone</strong> of the Node standard library. It is a curated, Node-inspired API surface implemented on .NET for Tsonic projects.</p>
-<h2 id="table-of-contents">Table of Contents</h2>
-<h3 id="getting-started">Getting Started</h3>
-<ol>
-<li><a href="/nodejs/getting-started/">Getting Started</a> - enable <code>@tsonic/nodejs</code> in a Tsonic project</li>
-<li><a href="/nodejs/imports/">Importing Modules</a> - what to import from <code>@tsonic/nodejs/index.js</code> vs submodules</li>
-</ol>
-<h3 id="modules">Modules</h3>
-<ol start="3">
-<li><a href="/nodejs/modules/path/"><code>path</code></a></li>
-<li><a href="/nodejs/modules/fs/"><code>fs</code></a></li>
-<li><a href="/nodejs/modules/events/"><code>events</code></a></li>
-<li><a href="/nodejs/modules/crypto/"><code>crypto</code></a></li>
-<li><a href="/nodejs/modules/process/"><code>process</code></a></li>
-<li><a href="/nodejs/modules/http/"><code>http</code></a> (separate submodule)</li>
-</ol>
-<h2 id="overview">Overview</h2>
-<p>In Tsonic projects you import Node-style APIs from <code>@tsonic/nodejs/index.js</code>:</p>
+  <div class="content"><h1 id="getting-started">Getting Started</h1>
+<h2 id="enable-nodejs-apis-in-a-tsonic-project">Enable Node.js APIs in a Tsonic Project</h2>
+<h3 id="new-project">New project</h3>
+<pre><code class="language-bash">tsonic project init --nodejs
+</code></pre>
+<h3 id="existing-project">Existing project</h3>
+<pre><code class="language-bash">tsonic add nodejs
+</code></pre>
+<p>That will:</p>
+<ul>
+<li>Add the <code>@tsonic/nodejs</code> bindings package to your <code>package.json</code> (for <code>tsc</code> typechecking)</li>
+<li>Copy the <code>nodejs.dll</code> runtime library into your project (so the generated C# can reference it)</li>
+<li>Update your <code>tsonic.json</code> as needed</li>
+</ul>
+<h2 id="minimal-example">Minimal Example</h2>
 <pre><code class="language-ts">import { console, fs, path } from &quot;@tsonic/nodejs/index.js&quot;;
 
 export function main(): void {
-  console.log(path.join(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;));
-  const text = fs.readFileSync(&quot;./README.md&quot;, &quot;utf-8&quot;);
-  console.log(text);
+  const fullPath = path.join(&quot;src&quot;, &quot;App.ts&quot;);
+  console.log(fullPath);
+
+  if (fs.existsSync(fullPath)) {
+    console.log(fs.readFileSync(fullPath, &quot;utf-8&quot;));
+  }
 }
 </code></pre>
-<p>Some namespaces are emitted as separate ESM entry points (for example <code>nodejs.Http</code>), and you import those via a subpath:</p>
-<pre><code class="language-ts">import { http } from &quot;@tsonic/nodejs/nodejs.Http.js&quot;;
-</code></pre>
-<h2 id="relationship-to-tsonicjs">Relationship to <code>@tsonic/js</code></h2>
+<h2 id="notes">Notes</h2>
 <ul>
-<li><code>@tsonic/js</code> provides JavaScript runtime APIs (e.g. <code>JSON</code>, JS-style <code>console</code>, timers).</li>
-<li><code>@tsonic/nodejs</code> provides Node-style APIs (e.g. <code>fs</code>, <code>path</code>, <code>crypto</code>, <code>http</code>).</li>
+<li>Tsonic is ESM-first. Import submodules with <code>.js</code> when you use a subpath (example: <code>@tsonic/nodejs/nodejs.Http.js</code>).</li>
+<li>This library is Node-inspired, but many APIs intentionally follow .NET behavior where it improves ergonomics.</li>
 </ul>
-<p>You can enable either or both in a project.</p>
 </div>
-
-  
-    <ul class="page-list">
-      
-        <li><a href="/nodejs/modules/">Modules</a></li>
-      
-        <li><a href="/nodejs/getting-started/">Getting Started</a></li>
-      
-        <li><a href="/nodejs/imports/">Imports</a></li>
-      
-    </ul>
-  
 </article>
 </main>
     </div>
