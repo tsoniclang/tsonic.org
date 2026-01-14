@@ -250,7 +250,7 @@ a:hover {
 
 .sidebar-title {
   font-weight: 600;
-  margin: 4px 8px 10px;
+  margin: 4px 0 10px;
   color: var(--muted);
 }
 
