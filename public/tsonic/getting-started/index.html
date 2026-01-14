@@ -234,11 +234,22 @@ tsonic project init
 └── README.md            # Project readme
 </code></pre>
 <h3 id="project-init-options">Project Init Options</h3>
-<pre><code class="language-bash"># Skip installing type packages
+<pre><code class="language-bash"># Enable JavaScript runtime APIs (console, JSON, timers, etc.)
+tsonic project init --js
+
+# Enable Node.js compatibility APIs (fs, path, etc.)
+tsonic project init --nodejs
+
+# Skip installing type packages
 tsonic project init --skip-types
 
 # Specify type package version
 tsonic project init --types-version &lt;ver&gt;
+</code></pre>
+<h3 id="adding-jsnodejs-to-an-existing-project">Adding JS/NodeJS to an existing project</h3>
+<p>If you already have a Tsonic project and want JSRuntime or Node.js APIs later:</p>
+<pre><code class="language-bash">tsonic add js
+tsonic add nodejs
 </code></pre>
 <h3 id="manual-setup">Manual Setup</h3>
 <p>If you prefer manual setup:</p>

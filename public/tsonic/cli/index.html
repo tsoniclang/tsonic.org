@@ -196,6 +196,11 @@
 </thead>
 <tbody>
 <tr>
+<td><code>--js</code></td>
+<td>Enable JavaScript runtime APIs (installs @tsonic/js)</td>
+<td><code>false</code></td>
+</tr>
+<tr>
 <td><code>--nodejs</code></td>
 <td>Enable Node.js interop (installs @tsonic/nodejs)</td>
 <td><code>false</code></td>
@@ -221,6 +226,9 @@
 <pre><code class="language-bash"># Initialize a new project
 tsonic project init
 
+# Enable JavaScript runtime APIs (console, JSON, timers, etc.)
+tsonic project init --js
+
 # Enable Node.js interop (fs, path, etc.)
 tsonic project init --nodejs
 
@@ -240,6 +248,35 @@ tsonic project init --types-version &lt;ver&gt;
 <li><code>src/App.ts</code> - Entry point with sample code</li>
 <li><code>.gitignore</code> - Ignores build artifacts</li>
 <li><code>README.md</code> - Project readme</li>
+</ul>
+<h3 id="add-js">add js</h3>
+<p>Add JavaScript runtime APIs (<code>@tsonic/js</code>) to an existing project.</p>
+<pre><code class="language-bash">tsonic add js
+</code></pre>
+<p>What it does:</p>
+<ul>
+<li>Installs <code>@tsonic/js</code> via npm (if missing)</li>
+<li>Copies runtime DLLs into <code>./lib/</code> (idempotent):
+<ul>
+<li><code>Tsonic.Runtime.dll</code></li>
+<li><code>Tsonic.JSRuntime.dll</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="add-nodejs">add nodejs</h3>
+<p>Add Node.js compatibility APIs (<code>@tsonic/nodejs</code>) to an existing project.</p>
+<pre><code class="language-bash">tsonic add nodejs
+</code></pre>
+<p>What it does:</p>
+<ul>
+<li>Installs <code>@tsonic/nodejs</code> via npm (if missing)</li>
+<li>Copies runtime DLLs into <code>./lib/</code> (idempotent):
+<ul>
+<li><code>Tsonic.Runtime.dll</code></li>
+<li><code>Tsonic.JSRuntime.dll</code></li>
+<li><code>nodejs.dll</code></li>
+</ul>
+</li>
 </ul>
 <h3 id="generate">generate</h3>
 <p>Generate C# code from TypeScript without compiling.</p>
