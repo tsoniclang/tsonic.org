@@ -248,22 +248,13 @@ View Scope: &quot;view:System.Collections.Generic.List`1:IEnumerable`1#instance&
 </code></pre>
 <p>Type names are NOT transformed (always PascalCase).</p>
 <h2 id="reserved-word-handling">Reserved Word Handling</h2>
-<p>TypeScript reserved words get trailing underscore:</p>
-<pre><code class="language-csharp">public static class TypeScriptReservedWords
-{
-    public static (string Sanitized, bool WasSanitized) Sanitize(string name)
-    {
-        if (IsReserved(name))
-            return (name + &quot;_&quot;, true);
-        return (name, false);
-    }
-}
-
-// Examples:
-// &quot;default&quot; -&gt; &quot;default_&quot;
-// &quot;class&quot; -&gt; &quot;class_&quot;
-// &quot;function&quot; -&gt; &quot;function_&quot;
-</code></pre>
+<p>TypeScript reserved words are sanitized <strong>only</strong> when they appear in <strong>Identifier</strong> contexts (for example: parameters, locals, or other places where the token must parse as an identifier).</p>
+<p>Member names (methods/properties/enum members) are emitted in <strong>IdentifierName</strong> positions, so keywords are allowed and are emitted as-is (no <code>_</code> suffix).</p>
+<p>Examples:</p>
+<ul>
+<li>Parameter/local: <code>default</code> → <code>default_</code></li>
+<li>Member: <code>.default(...)</code> stays <code>.default(...)</code></li>
+</ul>
 <h2 id="rename-decisions">Rename Decisions</h2>
 <p>Every rename is recorded for bindings generation:</p>
 <pre><code class="language-csharp">public sealed record RenameDecision

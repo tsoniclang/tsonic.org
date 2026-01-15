@@ -324,7 +324,7 @@ public static (string Sanitized, bool WasSanitized) Sanitize(string name)
 <ul>
 <li><code>None</code> - No rename needed</li>
 <li><code>NumericSuffix</code> - Added numeric suffix (add2, add3)</li>
-<li><code>ReservedWord</code> - Added underscore (default_)</li>
+<li><code>ReservedWord</code> - Sanitized an Identifier with <code>_</code> (example: parameter <code>default</code> → <code>default_</code>; member names can be keywords and are emitted as-is)</li>
 <li><code>OverloadFamily</code> - Shares name with overload family</li>
 </ul>
 </div>
