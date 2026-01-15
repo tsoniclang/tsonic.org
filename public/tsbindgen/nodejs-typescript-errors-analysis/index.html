@@ -424,14 +424,14 @@ else
 <h3 id="what-happened-2">What Happened</h3>
 <p>The nodejs code uses <code>ValueTuple&lt;T1, T2&gt;</code> (2-element tuple):</p>
 <pre><code class="language-csharp">// C# source
-public static ValueTuple&lt;KeyObject, KeyObject&gt; generateKeyPairSync(string type_, object? options = null)
+public static ValueTuple&lt;KeyObject, KeyObject&gt; generateKeyPairSync(string type, object? options = null)
 </code></pre>
 <p>Which should emit as:</p>
-<pre><code class="language-typescript">static generateKeyPairSync(type_: string, options?: unknown): ValueTuple_2&lt;KeyObject, KeyObject&gt;;
+<pre><code class="language-typescript">static generateKeyPairSync(type: string, options?: unknown): ValueTuple_2&lt;KeyObject, KeyObject&gt;;
 </code></pre>
 <p>But it emits as:</p>
 <pre><code class="language-typescript">// Generated (WRONG)
-static generateKeyPairSync(type_: string, options?: unknown): ValueTuple&lt;KeyObject, KeyObject&gt;;
+static generateKeyPairSync(type: string, options?: unknown): ValueTuple&lt;KeyObject, KeyObject&gt;;
 </code></pre>
 <p>The problem: <code>ValueTuple</code> in the facade maps to <code>ValueTuple_1</code> (1-arg), not a conditional type that handles all arities:</p>
 <pre><code class="language-typescript">// Current facade exports (System.d.ts)

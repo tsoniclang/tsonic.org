@@ -325,7 +325,7 @@ export const DetailedPeerCertificate: {
 <pre><code class="language-ts">export interface EphemeralKeyInfo {
     name: string;
     size: int;
-    type_: string;
+    type: string;
 }
 
 export const EphemeralKeyInfo: {
@@ -410,7 +410,7 @@ export const SecureContextOptions: {
   createSecureContext(options?: SecureContextOptions): SecureContext;
   createServer(options: TlsOptions, secureConnectionListener?: Action&lt;TLSSocket&gt;): TLSServer;
   createServer(secureConnectionListener?: Action&lt;TLSSocket&gt;): TLSServer;
-  getCACertificates(type_?: string): string[];
+  getCACertificates(type?: string): string[];
   getCiphers(): string[];
   setDefaultCACertificates(certs: string[]): void;
 };

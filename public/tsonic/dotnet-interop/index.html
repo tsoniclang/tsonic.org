@@ -422,8 +422,6 @@ export function main(): void {
   Timers.setTimeout(() =&gt; console.log(&quot;tick&quot;), 250);
 }
 </code></pre>
-<p>Some APIs use a <code>_</code> suffix when a member name would collide with a TypeScript keyword.
-For example, <code>Map.get_()</code> / <code>Map.set_()</code> / <code>Map.delete_()</code>.</p>
 <h3 id="extension-methods-linq-style-xswhereselect">Extension Methods (LINQ-style <code>xs.where(...).select(...)</code>)</h3>
 <p>tsbindgen-generated packages expose <strong>type-only</strong> <code>ExtensionMethods</code> helpers that model C# <code>using</code> semantics.</p>
 <p>Bring a namespace’s extension methods into scope by wrapping the receiver type:</p>
