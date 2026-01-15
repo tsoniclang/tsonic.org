@@ -260,7 +260,7 @@
 <pre><code class="language-ts">import { console, Buffer } from &quot;@tsonic/nodejs/index.js&quot;;
 
 export function main(): void {
-  const buf = Buffer.from_(&quot;hello&quot;, &quot;utf8&quot;);
+  const buf = Buffer.from(&quot;hello&quot;, &quot;utf8&quot;);
   console.log(buf.length);
 }
 </code></pre>
@@ -359,13 +359,13 @@ export const Buffer: {
     byteLength(str: string, encoding?: string): int;
     compare(buf1: Buffer, buf2: Buffer): int;
     concat(list: Buffer[], totalLength?: Nullable&lt;System_Internal.Int32&gt;): Buffer;
-    from_(buffer: Buffer): Buffer;
-    from_(array: byte[]): Buffer;
-    from_(array: int[]): Buffer;
-    from_(str: string, encoding?: string): Buffer;
+    from(buffer: Buffer): Buffer;
+    from(array: byte[]): Buffer;
+    from(array: int[]): Buffer;
+    from(str: string, encoding?: string): Buffer;
     isBuffer(obj: unknown): boolean;
     isEncoding(encoding: string): boolean;
-    of_(...items: int[]): Buffer;
+    of(...items: int[]): Buffer;
 };
 </code></pre>
 <!-- API:END -->

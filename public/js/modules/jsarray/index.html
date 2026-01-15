@@ -291,7 +291,7 @@ export function main(): void {
     unshift(item: T): int;
     unshift(...items: T[]): int;
     values(): IEnumerable__System_Collections_Generic&lt;T&gt;;
-    with_(index: int, value: T): JSArray&lt;T&gt;;
+    with(index: int, value: T): JSArray&lt;T&gt;;
 }
 
 export const JSArray: {
@@ -300,10 +300,10 @@ export const JSArray: {
     new&lt;T&gt;(source: T[]): JSArray&lt;T&gt;;
     new&lt;T&gt;(source: List&lt;T&gt;): JSArray&lt;T&gt;;
     new&lt;T&gt;(source: IEnumerable__System_Collections_Generic&lt;T&gt;): JSArray&lt;T&gt;;
-    from_&lt;T, TSource, TResult&gt;(iterable: IEnumerable__System_Collections_Generic&lt;TSource&gt;, mapFunc: Func&lt;TSource, System_Internal.Int32, TResult&gt;): JSArray&lt;TResult&gt;;
-    from_&lt;T&gt;(iterable: IEnumerable__System_Collections_Generic&lt;T&gt;): JSArray&lt;T&gt;;
+    from&lt;T, TSource, TResult&gt;(iterable: IEnumerable__System_Collections_Generic&lt;TSource&gt;, mapFunc: Func&lt;TSource, System_Internal.Int32, TResult&gt;): JSArray&lt;TResult&gt;;
+    from&lt;T&gt;(iterable: IEnumerable__System_Collections_Generic&lt;T&gt;): JSArray&lt;T&gt;;
     isArray&lt;T&gt;(value: unknown): boolean;
-    of_&lt;T&gt;(...items: T[]): JSArray&lt;T&gt;;
+    of&lt;T&gt;(...items: T[]): JSArray&lt;T&gt;;
 };
 </code></pre>
 <!-- API:END -->

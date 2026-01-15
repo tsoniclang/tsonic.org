@@ -268,7 +268,7 @@ export function main(): void {
 <!-- API:START -->
 <h3 id="anyaaaarecord"><code>AnyAaaaRecord</code></h3>
 <pre><code class="language-ts">export interface AnyAaaaRecord extends RecordWithTtl {
-    readonly type_: string;
+    readonly type: string;
 }
 
 export const AnyAaaaRecord: {
@@ -277,7 +277,7 @@ export const AnyAaaaRecord: {
 </code></pre>
 <h3 id="anyarecord"><code>AnyARecord</code></h3>
 <pre><code class="language-ts">export interface AnyARecord extends RecordWithTtl {
-    readonly type_: string;
+    readonly type: string;
 }
 
 export const AnyARecord: {
@@ -286,7 +286,7 @@ export const AnyARecord: {
 </code></pre>
 <h3 id="anycaarecord"><code>AnyCaaRecord</code></h3>
 <pre><code class="language-ts">export interface AnyCaaRecord extends CaaRecord {
-    readonly type_: string;
+    readonly type: string;
 }
 
 export const AnyCaaRecord: {
@@ -295,7 +295,7 @@ export const AnyCaaRecord: {
 </code></pre>
 <h3 id="anycnamerecord"><code>AnyCnameRecord</code></h3>
 <pre><code class="language-ts">export interface AnyCnameRecord {
-    readonly type_: string;
+    readonly type: string;
     value: string;
 }
 
@@ -305,7 +305,7 @@ export const AnyCnameRecord: {
 </code></pre>
 <h3 id="anymxrecord"><code>AnyMxRecord</code></h3>
 <pre><code class="language-ts">export interface AnyMxRecord extends MxRecord {
-    readonly type_: string;
+    readonly type: string;
 }
 
 export const AnyMxRecord: {
@@ -314,7 +314,7 @@ export const AnyMxRecord: {
 </code></pre>
 <h3 id="anynaptrrecord"><code>AnyNaptrRecord</code></h3>
 <pre><code class="language-ts">export interface AnyNaptrRecord extends NaptrRecord {
-    readonly type_: string;
+    readonly type: string;
 }
 
 export const AnyNaptrRecord: {
@@ -323,7 +323,7 @@ export const AnyNaptrRecord: {
 </code></pre>
 <h3 id="anynsrecord"><code>AnyNsRecord</code></h3>
 <pre><code class="language-ts">export interface AnyNsRecord {
-    readonly type_: string;
+    readonly type: string;
     value: string;
 }
 
@@ -333,7 +333,7 @@ export const AnyNsRecord: {
 </code></pre>
 <h3 id="anyptrrecord"><code>AnyPtrRecord</code></h3>
 <pre><code class="language-ts">export interface AnyPtrRecord {
-    readonly type_: string;
+    readonly type: string;
     value: string;
 }
 
@@ -343,7 +343,7 @@ export const AnyPtrRecord: {
 </code></pre>
 <h3 id="anyrecord"><code>AnyRecord</code></h3>
 <pre><code class="language-ts">export interface AnyRecord {
-    readonly type_: string;
+    readonly type: string;
 }
 
 export const AnyRecord: {
@@ -351,7 +351,7 @@ export const AnyRecord: {
 </code></pre>
 <h3 id="anysoarecord"><code>AnySoaRecord</code></h3>
 <pre><code class="language-ts">export interface AnySoaRecord extends SoaRecord {
-    readonly type_: string;
+    readonly type: string;
 }
 
 export const AnySoaRecord: {
@@ -360,7 +360,7 @@ export const AnySoaRecord: {
 </code></pre>
 <h3 id="anysrvrecord"><code>AnySrvRecord</code></h3>
 <pre><code class="language-ts">export interface AnySrvRecord extends SrvRecord {
-    readonly type_: string;
+    readonly type: string;
 }
 
 export const AnySrvRecord: {
@@ -369,7 +369,7 @@ export const AnySrvRecord: {
 </code></pre>
 <h3 id="anytlsarecord"><code>AnyTlsaRecord</code></h3>
 <pre><code class="language-ts">export interface AnyTlsaRecord extends TlsaRecord {
-    readonly type_: string;
+    readonly type: string;
 }
 
 export const AnyTlsaRecord: {
@@ -379,7 +379,7 @@ export const AnyTlsaRecord: {
 <h3 id="anytxtrecord"><code>AnyTxtRecord</code></h3>
 <pre><code class="language-ts">export interface AnyTxtRecord {
     entries: string[];
-    readonly type_: string;
+    readonly type: string;
 }
 
 export const AnyTxtRecord: {

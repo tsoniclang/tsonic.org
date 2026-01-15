@@ -317,8 +317,8 @@ export const ClientRequest: {
   globalAgent_timeout: int;
   maxHeaderSize: int;
   createServer(requestListener?: Action&lt;IncomingMessage, ServerResponse&gt;): Server;
-  get_(options: RequestOptions, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
-  get_(url: string, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
+  get(options: RequestOptions, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
+  get(url: string, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
   request(options: RequestOptions, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
   request(url: string, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
   validateHeaderName(name: string): void;

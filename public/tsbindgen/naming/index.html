@@ -290,7 +290,9 @@ IEnumerable_1&lt;T&gt;
 <li><code>--naming js</code>: <code>where</code>, <code>select</code>, <code>toList</code>, ...</li>
 </ul>
 <h2 id="reserved-words">Reserved Words</h2>
-<p>TypeScript reserved words get a trailing underscore:</p>
+<p>Reserved words are sanitized only when they appear in <strong>Identifier</strong> contexts (for example: binding identifiers like parameters, and type names).</p>
+<p>Member names (methods/properties) are emitted in <strong>IdentifierName</strong> positions, so keywords are allowed and are emitted as-is.</p>
+<h3 id="binding-identifiers-paramsvars">Binding identifiers (params/vars)</h3>
 <table>
 <thead>
 <tr>
@@ -315,12 +317,13 @@ IEnumerable_1&lt;T&gt;
 <td><code>import</code></td>
 <td><code>import_</code></td>
 </tr>
-<tr>
-<td><code>export</code></td>
-<td><code>export_</code></td>
-</tr>
 </tbody>
 </table>
+<h3 id="member-names-methodsproperties">Member names (methods/properties)</h3>
+<ul>
+<li>No <code>_</code> suffix is added for keywords.</li>
+<li>Examples: <code>delete()</code>, <code>export()</code>, <code>with()</code>, <code>type</code>, <code>from</code>, <code>set(...)</code>, <code>get(...)</code></li>
+</ul>
 <h2 id="name-conflicts">Name Conflicts</h2>
 <p>When multiple members would have the same name, numeric suffixes are added:</p>
 <pre><code class="language-typescript">// Two methods both become &quot;add&quot; after camelCase
