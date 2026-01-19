@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -219,34 +219,27 @@
     └── Type names (List_1, Dictionary_2, ...)
 
 Type Scope: &quot;type:System.Collections.Generic.List`1#instance&quot;
-    └── Instance member names (add, remove, count, ...)
+    └── Instance member names (Add, Remove, Count, ...)
 
 Type Scope: &quot;type:System.Collections.Generic.List`1#static&quot;
-    └── Static member names (empty, ...)
+    └── Static member names (Empty, ...)
 
 View Scope: &quot;view:System.Collections.Generic.List`1:IEnumerable`1#instance&quot;
-    └── View member names (getEnumerator, ...)
+    └── View member names (GetEnumerator, ...)
 </code></pre>
 <h2 id="conflict-resolution">Conflict Resolution</h2>
 <p>When a name is already taken in a scope, numeric suffixes are added:</p>
 <pre><code class="language-csharp">// First reservation
-&quot;add&quot; -&gt; &quot;add&quot;
+&quot;Add&quot; -&gt; &quot;Add&quot;
 
 // Conflict - add suffix
-&quot;add&quot; -&gt; &quot;add2&quot;
+&quot;Add&quot; -&gt; &quot;Add2&quot;
 
 // Another conflict
-&quot;add&quot; -&gt; &quot;add3&quot;
+&quot;Add&quot; -&gt; &quot;Add3&quot;
 </code></pre>
-<h2 id="naming-style-transform">Naming Style Transform</h2>
-<p>The <code>--naming js</code> option applies camelCase transform:</p>
-<pre><code class="language-csharp">ctx.Renamer.AdoptMemberStyleTransform(name =&gt; ToCamelCase(name));
-
-// GetEnumerator -&gt; getEnumerator
-// WriteLine -&gt; writeLine
-// XMLReader -&gt; xmlReader
-</code></pre>
-<p>Type names are NOT transformed (always PascalCase).</p>
+<h2 id="naming-style">Naming Style</h2>
+<p>tsbindgen emits <strong>CLR-faithful names</strong>. The renamer’s style transforms are identity transforms (no casing changes), and there is no <code>--naming</code> option.</p>
 <h2 id="reserved-word-handling">Reserved Word Handling</h2>
 <p>TypeScript reserved words are sanitized <strong>only</strong> when they appear in <strong>Identifier</strong> contexts (for example: parameters, locals, or other places where the token must parse as an identifier).</p>
 <p>Member names (methods/properties/enum members) are emitted in <strong>IdentifierName</strong> positions, so keywords are allowed and are emitted as-is (no <code>_</code> suffix).</p>

@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -219,14 +219,9 @@
 <td>Multi-arity family index</td>
 </tr>
 <tr>
-<td>MetadataEmitter</td>
-<td><code>&lt;Namespace&gt;/internal/metadata.json</code></td>
-<td>CLR semantics</td>
-</tr>
-<tr>
 <td>BindingEmitter</td>
 <td><code>&lt;Namespace&gt;/bindings.json</code></td>
-<td>CLR↔TS name mappings</td>
+<td>CLR bindings manifest (names + CLR semantics)</td>
 </tr>
 <tr>
 <td>ModuleStubEmitter</td>
@@ -262,8 +257,8 @@ import type { IEnumerable_1 } from '../../System.Collections/internal/index.js';
 
 // Type declarations
 export interface List_1$instance&lt;T&gt; {
-    readonly count: int;
-    add(item: T): void;
+    readonly Count: int;
+    Add(item: T): void;
     // ...
 }
 

@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -290,20 +290,11 @@ public static (string Sanitized, bool WasSanitized) Sanitize(string name)
 }
 </code></pre>
 <h2 id="style-transforms">Style Transforms</h2>
-<h3 id="clr-style-default">CLR Style (default)</h3>
-<p>No transformation - PascalCase preserved:</p>
+<p>tsbindgen emits CLR-faithful names. Member style transforms are identity transforms (no casing changes).</p>
 <pre><code class="language-csharp">Renamer.AdoptMemberStyleTransform(name =&gt; name);
 
 // GetEnumerator -&gt; GetEnumerator
 // WriteLine -&gt; WriteLine
-</code></pre>
-<h3 id="javascript-style---naming-js">JavaScript Style (<code>--naming js</code>)</h3>
-<p>camelCase transformation:</p>
-<pre><code class="language-csharp">Renamer.AdoptMemberStyleTransform(name =&gt; ToCamelCase(name));
-
-// GetEnumerator -&gt; getEnumerator
-// WriteLine -&gt; writeLine
-// XMLReader -&gt; xmlReader
 </code></pre>
 <h2 id="rename-decisions">Rename Decisions</h2>
 <p>Every rename is recorded:</p>

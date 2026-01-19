@@ -57,6 +57,7 @@ awk '
   {
     gsub("docs/build-output.md", "/tsonic/build-output/");
     gsub("docs/architecture/pipeline.md", "/tsonic/architecture/pipeline/");
+    gsub("docs/configuration.md", "/tsonic/configuration/");
     gsub("docs/dotnet-interop.md", "/tsonic/dotnet-interop/");
     gsub("docs/README.md", "/tsonic/");
     gsub("docs/architecture/README.md", "/tsonic/architecture/");

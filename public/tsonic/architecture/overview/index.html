@@ -287,7 +287,7 @@ const { value } = result;
 <ul>
 <li>Argument parsing</li>
 <li>Configuration loading</li>
-<li>Command dispatch (project init, generate, build, run)</li>
+<li>Command dispatch (init, restore, generate, build, run)</li>
 <li>Error reporting</li>
 </ul>
 <p>Entry point for all user interactions.</p>
@@ -327,7 +327,8 @@ const { value } = result;
 <pre><code>1. CLI receives: tsonic build src/App.ts
 
 2. Config loaded:
-   - tsonic.json parsed
+   - tsonic.workspace.json parsed
+   - packages/&lt;project&gt;/tsonic.json parsed
    - CLI args merged
    - Resolved config created
 

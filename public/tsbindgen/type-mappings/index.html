@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -445,17 +445,26 @@ export type Func_2&lt;T, TResult&gt; = ((arg: T) =&gt; TResult) &amp; Func_2$ins
 </tbody>
 </table>
 <h3 id="refoutin-parameters">ref/out/in Parameters</h3>
-<p>Parameter modifiers (<code>ref</code>, <code>out</code>, <code>in</code>) are tracked in the metadata sidecar, not the TypeScript declarations:</p>
+<p>Parameter modifiers (<code>ref</code>, <code>out</code>, <code>in</code>) are tracked in the bindings manifest (<code>&lt;Namespace&gt;/bindings.json</code>), not the TypeScript declarations:</p>
 <pre><code class="language-typescript">// TypeScript declaration (no visible difference)
 function tryParse(value: string, result: int): bool;
 </code></pre>
-<pre><code class="language-json">// metadata.json tracks the modifier
+<pre><code class="language-json">// bindings.json tracks the modifier (simplified example)
 {
-  &quot;methods&quot;: {
-    &quot;tryParse&quot;: {
-      &quot;parameterModifiers&quot;: [null, &quot;out&quot;]
+  &quot;namespace&quot;: &quot;System&quot;,
+  &quot;types&quot;: [
+    {
+      &quot;clrName&quot;: &quot;System.Int32&quot;,
+      &quot;methods&quot;: [
+        {
+          &quot;clrName&quot;: &quot;TryParse&quot;,
+          &quot;parameterModifiers&quot;: [
+            { &quot;index&quot;: 1, &quot;modifier&quot;: &quot;out&quot; }
+          ]
+        }
+      ]
     }
-  }
+  ]
 }
 </code></pre>
 <p>This approach is used because:</p>
@@ -464,7 +473,7 @@ function tryParse(value: string, result: int): bool;
 <li>The Tsonic compiler needs this info for correct C# interop</li>
 <li>Runtime behavior differs for ref/out/in (ABI concern)</li>
 </ol>
-<p>See <a href="/tsbindgen/architecture/output-files/">Output Files</a> for metadata structure.</p>
+<p>See <a href="/tsbindgen/architecture/output-files/">Output Files</a> for manifest structure.</p>
 <h2 id="nullable-types">Nullable Types</h2>
 <h3 id="value-types-nullable">Value Types (Nullable<T>)</h3>
 <table>

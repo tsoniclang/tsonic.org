@@ -275,18 +275,18 @@ const numbers = new List&lt;number&gt;([1, 2, 3]);
 
 // Or create empty and add items
 const names = new List&lt;string&gt;();
-names.add(&quot;Alice&quot;);
-names.add(&quot;Bob&quot;);
+names.Add(&quot;Alice&quot;);
+names.Add(&quot;Bob&quot;);
 
 // List properties and methods
-Console.writeLine(names.count); // 2
-const hasAlice = names.contains(&quot;Alice&quot;); // true
+Console.WriteLine(names.Count); // 2
+const hasAlice = names.Contains(&quot;Alice&quot;); // true
 
 // Remove items
-names.remove(&quot;Alice&quot;);
+names.Remove(&quot;Alice&quot;);
 
 // Clear all
-names.clear();
+names.Clear();
 </code></pre>
 <h3 id="collection-initializer-syntax">Collection Initializer Syntax</h3>
 <p>Use <code>new List&lt;T&gt;([...])</code> to initialize with values:</p>
@@ -309,21 +309,21 @@ const empty = new List&lt;string&gt;();
 const numbers = [1, 2, 3, 4, 5];
 
 // Select = map
-const doubled = Enumerable.select(numbers, (n) =&gt; n * 2);
+const doubled = Enumerable.Select(numbers, (n) =&gt; n * 2);
 
 // Where = filter
-const evens = Enumerable.where(numbers, (n) =&gt; n % 2 === 0);
+const evens = Enumerable.Where(numbers, (n) =&gt; n % 2 === 0);
 
 // Aggregate = reduce
-const sum = Enumerable.aggregate(numbers, 0, (acc, n) =&gt; acc + n);
+const sum = Enumerable.Aggregate(numbers, 0, (acc, n) =&gt; acc + n);
 
 // First, Last
-const first = Enumerable.first(numbers);
-const last = Enumerable.last(numbers);
+const first = Enumerable.First(numbers);
+const last = Enumerable.Last(numbers);
 
 // Any, All
-const anyEven = Enumerable.any(numbers, (n) =&gt; n % 2 === 0);
-const allPositive = Enumerable.all(numbers, (n) =&gt; n &gt; 0);
+const anyEven = Enumerable.Any(numbers, (n) =&gt; n % 2 === 0);
+const allPositive = Enumerable.All(numbers, (n) =&gt; n &gt; 0);
 </code></pre>
 <h2 id="iterating-arrays">Iterating Arrays</h2>
 <pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
@@ -332,12 +332,12 @@ const items = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
 
 // For-of loop (preferred)
 for (const item of items) {
-  Console.writeLine(item);
+  Console.WriteLine(item);
 }
 
 // Index-based for loop
 for (let i = 0; i &lt; items.length; i++) {
-  Console.writeLine(items[i]);
+  Console.WriteLine(items[i]);
 }
 </code></pre>
 <h2 id="array-destructuring">Array Destructuring</h2>
@@ -370,7 +370,7 @@ const value = matrix[1][2]; // 6
 // Iterate
 for (const row of matrix) {
   for (const cell of row) {
-    Console.writeLine(cell.toString());
+    Console.WriteLine(cell.toString());
   }
 }
 </code></pre>
@@ -388,10 +388,10 @@ const users: User[] = [
 ];
 
 // Find user by id
-const found = Enumerable.firstOrDefault(users, (u) =&gt; u.id === 1);
+const found = Enumerable.FirstOrDefault(users, (u) =&gt; u.id === 1);
 
 // Map to names
-const names = Enumerable.select(users, (u) =&gt; u.name);
+const names = Enumerable.Select(users, (u) =&gt; u.name);
 </code></pre>
 <h2 id="spread-operator">Spread Operator</h2>
 <pre><code class="language-typescript">const arr1 = [1, 2, 3];
@@ -420,7 +420,7 @@ const item = items[index]; // &quot;b&quot;
 import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
 
 const numbers: int[] = [10, 20, 30];
-const first = Enumerable.elementAt(numbers, 0);
+const first = Enumerable.ElementAt(numbers, 0);
 </code></pre>
 <h3 id="long-arrays">Long Arrays</h3>
 <p>Large integers automatically infer to <code>long[]</code>:</p>

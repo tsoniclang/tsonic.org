@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -211,6 +211,21 @@ dotnet run --project src/tsbindgen/tsbindgen.csproj -- generate [options]
 npx tsbindgen resolve-closure -a ./MyLibrary.dll \
   --ref-dir $DOTNET_RUNTIME
 </code></pre>
+<p><code>resolve-closure</code> options:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--strict-versions &lt;bool&gt;</code></td>
+<td>Error on major version drift for the same assembly name. Default: <code>true</code>.</td>
+</tr>
+</tbody>
+</table>
 <h2 id="options">Options</h2>
 <h3 id="assembly-input">Assembly Input</h3>
 <table>
@@ -230,7 +245,7 @@ npx tsbindgen resolve-closure -a ./MyLibrary.dll \
 <tr>
 <td><code>--assembly-dir &lt;path&gt;</code></td>
 <td><code>-d</code></td>
-<td>Directory containing .NET runtime assemblies.</td>
+<td>Directory containing assemblies to process.</td>
 </tr>
 <tr>
 <td><code>--ref-dir &lt;path&gt;</code></td>
@@ -285,48 +300,15 @@ npx tsbindgen generate -a ./Lib1.dll -a ./Lib2.dll -d $DOTNET_RUNTIME
 <tr>
 <td><code>--namespaces &lt;list&gt;</code></td>
 <td><code>-n</code></td>
-<td>Reserved (currently ignored).</td>
+<td>Comma-separated list of namespaces to include.</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out
+<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out -n System,System.Linq
 </code></pre>
 <h3 id="naming">Naming</h3>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Values</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--naming</code></td>
-<td><code>js</code>, <code>clr</code></td>
-<td><code>clr</code></td>
-<td>Member naming convention.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Values:</strong></p>
-<ul>
-<li><p><code>clr</code>: PascalCase (C# convention)</p>
-<pre><code class="language-typescript">list.GetEnumerator();
-Console.WriteLine(&quot;hello&quot;);
-</code></pre>
-</li>
-<li><p><code>js</code>: camelCase (JavaScript convention)</p>
-<pre><code class="language-typescript">list.getEnumerator();
-Console.writeLine(&quot;hello&quot;);
-</code></pre>
-</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out --naming js
-</code></pre>
+<p>tsbindgen emits <strong>CLR-faithful names</strong>. There are no casing transforms and no <code>--naming</code> flag.</p>
 <h3 id="library-mode">Library Mode</h3>
 <table>
 <thead>
@@ -351,7 +333,7 @@ npx tsbindgen generate -a ./MyLib.dll -d $DOTNET_RUNTIME -o ./out \
 # Multiple library references
 npx tsbindgen generate -a ./MyLib.dll -d $DOTNET_RUNTIME -o ./out \
   --lib node_modules/@tsonic/dotnet \
-  --lib node_modules/@tsonic/core
+  --lib node_modules/@tsonic/microsoft-extensions
 </code></pre>
 <h3 id="namespace-mapping">Namespace Mapping</h3>
 <table>
@@ -432,6 +414,11 @@ npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out \
 <td>-</td>
 <td>Enable strict mode validation.</td>
 </tr>
+<tr>
+<td><code>--allow-constructor-constraint-loss</code></td>
+<td>-</td>
+<td>Allow generic <code>new()</code> constraint loss (downgrade to warning).</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Log categories:</strong></p>
@@ -458,7 +445,6 @@ npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out --strict
 npx tsbindgen generate \
   -d ~/.dotnet/shared/Microsoft.NETCore.App/10.0.0 \
   -o ./output \
-  --naming js \
   -v
 </code></pre>
 <h2 id="environment-variables">Environment Variables</h2>

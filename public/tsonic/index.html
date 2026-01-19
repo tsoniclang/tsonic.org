@@ -238,7 +238,7 @@
 <ol>
 <li><a href="/tsonic/getting-started/">Getting Started</a> - Installation and first project</li>
 <li><a href="/tsonic/cli/">CLI Reference</a> - Commands and options</li>
-<li><a href="/tsonic/configuration/">Configuration</a> - tsonic.json reference</li>
+<li><a href="/tsonic/configuration/">Configuration</a> - Workspace + project config</li>
 </ol>
 <h3 id="language">Language</h3>
 <ol start="4">
@@ -306,13 +306,13 @@ tsonic --version
 <h2 id="your-first-program">Your First Program</h2>
 <pre><code class="language-bash"># Create project
 mkdir hello &amp;&amp; cd hello
-tsonic project init
+tsonic init
 
 # Build
 npm run build
 
 # Run
-./out/app
+./packages/hello/out/hello
 </code></pre>
 <p>Output:</p>
 <pre><code>Hello from Tsonic!

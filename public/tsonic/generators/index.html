@@ -247,7 +247,7 @@ function* counter(): Generator&lt;number&gt; {
 }
 
 for (const n of counter()) {
-  Console.writeLine(n); // 1, 2, 3
+  Console.WriteLine(n); // 1, 2, 3
 }
 </code></pre>
 <h2 id="generator-type-signature">Generator Type Signature</h2>
@@ -321,7 +321,7 @@ function* fibonacci(): Generator&lt;number&gt; {
 }
 
 for (const n of fibonacci()) {
-  Console.writeLine(n); // 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89
+  Console.WriteLine(n); // 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89
 }
 </code></pre>
 <h3 id="manual-iteration-with-next">Manual Iteration with <code>next()</code></h3>
@@ -335,10 +335,10 @@ function* counter(): Generator&lt;number&gt; {
 }
 
 const gen = counter();
-Console.writeLine(gen.next().value); // 1
-Console.writeLine(gen.next().value); // 2
-Console.writeLine(gen.next().value); // 3
-Console.writeLine(gen.next().done); // true
+Console.WriteLine(gen.next().value); // 1
+Console.WriteLine(gen.next().value); // 2
+Console.WriteLine(gen.next().value); // 3
+Console.WriteLine(gen.next().done); // true
 </code></pre>
 <h3 id="iteratorresult">IteratorResult</h3>
 <p>Each <code>next()</code> call returns an <code>IteratorResult&lt;T&gt;</code>:</p>
@@ -368,12 +368,12 @@ export function main(): void {
   const gen = accumulator(0);
 
   // First next() starts the generator - value is ignored
-  Console.writeLine(gen.next().value); // 0
+  Console.WriteLine(gen.next().value); // 0
 
   // Subsequent next(value) passes value to generator
-  Console.writeLine(gen.next(5).value); // 5
-  Console.writeLine(gen.next(10).value); // 15
-  Console.writeLine(gen.next(3).value); // 18
+  Console.WriteLine(gen.next(5).value); // 5
+  Console.WriteLine(gen.next(10).value); // 15
+  Console.WriteLine(gen.next(3).value); // 18
 }
 </code></pre>
 <h3 id="first-next-semantics">First <code>next()</code> Semantics</h3>
@@ -411,13 +411,13 @@ function* dataProcessor(): Generator&lt;string, number, number&gt; {
 export function main(): void {
   const processor = dataProcessor();
 
-  Console.writeLine(processor.next().value); // &quot;Received 0 values, sum = 0&quot;
-  Console.writeLine(processor.next(10).value); // &quot;Received 1 values, sum = 10&quot;
-  Console.writeLine(processor.next(20).value); // &quot;Received 2 values, sum = 30&quot;
-  Console.writeLine(processor.next(5).value); // &quot;Received 3 values, sum = 35&quot;
+  Console.WriteLine(processor.next().value); // &quot;Received 0 values, sum = 0&quot;
+  Console.WriteLine(processor.next(10).value); // &quot;Received 1 values, sum = 10&quot;
+  Console.WriteLine(processor.next(20).value); // &quot;Received 2 values, sum = 30&quot;
+  Console.WriteLine(processor.next(5).value); // &quot;Received 3 values, sum = 35&quot;
 
   const final = processor.next(-1);
-  Console.writeLine(`Done: ${final.done}`); // &quot;Done: true&quot;
+  Console.WriteLine(`Done: ${final.done}`); // &quot;Done: true&quot;
 }
 </code></pre>
 <h2 id="generator-control-methods">Generator Control Methods</h2>
@@ -439,10 +439,10 @@ function* counter(): Generator&lt;number, string&gt; {
 }
 
 const gen = counter();
-Console.writeLine(gen.next().value); // 0
-Console.writeLine(gen.next().value); // 1
+Console.WriteLine(gen.next().value); // 0
+Console.WriteLine(gen.next().value); // 1
 gen.return(&quot;done&quot;); // Terminates generator
-Console.writeLine(gen.next().done); // true
+Console.WriteLine(gen.next().done); // true
 </code></pre>
 <p><strong>Note:</strong> The value passed to <code>return()</code> becomes the generator's return value but does NOT appear in the <code>IteratorResult.value</code>. Access it via the <code>returnValue</code> property (Tsonic extension).</p>
 <h3 id="throwerror---limitation"><code>throw(error)</code> - Limitation</h3>
@@ -479,11 +479,11 @@ gen.throw(Error()); // In JS: { value: -1, done: false }
 <pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 
 const gen = countdown(3);
-Console.writeLine(gen.next().value); // 3
-Console.writeLine(gen.next(1).value); // 2
-Console.writeLine(gen.next(1).value); // 1
+Console.WriteLine(gen.next().value); // 3
+Console.WriteLine(gen.next(1).value); // 2
+Console.WriteLine(gen.next(1).value); // 1
 const final = gen.next(1);
-Console.writeLine(final.done); // true
+Console.WriteLine(final.done); // true
 // final.value in JS would be &quot;Liftoff!&quot;
 </code></pre>
 <p><strong>Tsonic Extension:</strong> Use the <code>returnValue</code> property to access the return value:</p>
@@ -503,7 +503,7 @@ async function* fetchPages(): AsyncGenerator&lt;string&gt; {
 
 export async function main(): Promise&lt;void&gt; {
   for await (const page of fetchPages()) {
-    Console.writeLine(page);
+    Console.WriteLine(page);
   }
 }
 </code></pre>
@@ -525,13 +525,13 @@ export async function main(): Promise&lt;void&gt; {
   const gen = asyncAccumulator(10);
 
   const r1 = await gen.next();
-  Console.writeLine(`Initial: ${r1.value}`); // 10
+  Console.WriteLine(`Initial: ${r1.value}`); // 10
 
   const r2 = await gen.next(5);
-  Console.writeLine(`After +5: ${r2.value}`); // 15
+  Console.WriteLine(`After +5: ${r2.value}`); // 15
 
   const r3 = await gen.next(20);
-  Console.writeLine(`After +20: ${r3.value}`); // 35
+  Console.WriteLine(`After +20: ${r3.value}`); // 35
 }
 </code></pre>
 <h3 id="for-await-loops">For-Await Loops</h3>
@@ -547,7 +547,7 @@ async function* asyncRange(start: number, end: number): AsyncGenerator&lt;number
 
 export async function main(): Promise&lt;void&gt; {
   for await (const n of asyncRange(1, 5)) {
-    Console.writeLine(n); // 1, 2, 3, 4, 5 (with delays)
+    Console.WriteLine(n); // 1, 2, 3, 4, 5 (with delays)
   }
 }
 </code></pre>
@@ -567,7 +567,7 @@ function* outer(): Generator&lt;number&gt; {
 }
 
 for (const n of outer()) {
-  Console.writeLine(n); // 0, 1, 2, 3
+  Console.WriteLine(n); // 0, 1, 2, 3
 }
 </code></pre>
 <h3 id="async-yield-delegation">Async Yield Delegation</h3>
@@ -641,7 +641,7 @@ function* naturals(): Generator&lt;number&gt; {
 // Take first 5
 const gen = naturals();
 for (let i = 0; i &lt; 5; i++) {
-  Console.writeLine(gen.next().value);
+  Console.WriteLine(gen.next().value);
 }
 </code></pre>
 <h3 id="state-machine">State Machine</h3>

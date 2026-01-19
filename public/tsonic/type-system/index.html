@@ -310,7 +310,7 @@ const letter: char = &quot;A&quot;; // System.Char
 import { Console, Char } from &quot;@tsonic/dotnet/System.js&quot;;
 
 function takesChar(c: char): void {
-  Console.writeLine(c);
+  Console.WriteLine(c);
 }
 
 takesChar(&quot;Z&quot;); // OK
@@ -349,14 +349,14 @@ const strings: Array&lt;string&gt; = [&quot;a&quot;, &quot;b&quot;];
 <pre><code class="language-typescript">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 
 const list = new List&lt;number&gt;();
-list.add(1);
-list.add(2);
-list.add(3);
+list.Add(1);
+list.Add(2);
+list.Add(3);
 // Generated: var list = new List&lt;double&gt;(); list.Add(...);
 
 // Or create empty and add items
 const names = new List&lt;string&gt;();
-names.add(&quot;Alice&quot;);
+names.Add(&quot;Alice&quot;);
 </code></pre>
 <h2 id="tuples">Tuples</h2>
 <p>Fixed-length arrays with specific element types:</p>
@@ -399,19 +399,19 @@ public double? optional { get; set; }
 <pre><code class="language-typescript">import { Dictionary, HashSet } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 
 const userMap = new Dictionary&lt;string, User&gt;();
-userMap.add(&quot;alice&quot;, alice);
-userMap.containsKey(&quot;bob&quot;); // boolean
+userMap.Add(&quot;alice&quot;, alice);
+userMap.ContainsKey(&quot;bob&quot;); // boolean
 userMap.remove(&quot;alice&quot;);
 userMap.clear();
-const dictSize = userMap.count;
+const dictSize = userMap.Count;
 
 const ids = new HashSet&lt;number&gt;();
-ids.add(1);
-ids.add(2);
-const hasOne = ids.contains(1); // true
+ids.Add(1);
+ids.Add(2);
+const hasOne = ids.Contains(1); // true
 ids.remove(1);
 ids.clear();
-const setSize = ids.count;
+const setSize = ids.Count;
 
 void dictSize;
 void setSize;
@@ -647,7 +647,7 @@ function tryGetDog(animal: Animal): Dog | null {
 function process(animal: Animal): void {
   const dog = trycast&lt;Dog&gt;(animal);
   if (dog !== null) {
-    Console.writeLine(dog.breed);
+    Console.WriteLine(dog.breed);
   }
 }
 </code></pre>
@@ -705,7 +705,7 @@ function createPoint(): { x: number; y: number } {
 }
 
 function processData(data: { id: number; name: string }): void {
-  Console.writeLine(data.name);
+  Console.WriteLine(data.name);
 }
 </code></pre>
 <p>Generates synthesized classes:</p>
@@ -727,13 +727,15 @@ public static void ProcessData(ProcessData_data data)
 <h3 id="when-to-use-named-interfaces">When to Use Named Interfaces</h3>
 <p>For reusable types, prefer explicit interfaces:</p>
 <pre><code class="language-typescript">// ✅ Preferred for reusable types
+import { Math } from &quot;@tsonic/dotnet/System.js&quot;;
+
 interface Point {
   x: number;
   y: number;
 }
 
 function distance(a: Point, b: Point): number {
-  return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
+  return Math.Sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
 }
 </code></pre>
 <p>Use anonymous object types for:</p>

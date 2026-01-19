@@ -260,7 +260,7 @@ import { User, UserService } from &quot;./models/User.js&quot;;
 export function main(): void {
   const service = new UserService();
   const user = service.getUser(1);
-  Console.writeLine(user.name);
+  Console.WriteLine(user.name);
 }
 </code></pre>
 <h2 id="relative-paths">Relative Paths</h2>
@@ -295,8 +295,8 @@ import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 import { PI, add, Point } from &quot;./utils.js&quot;;
 
 const point: Point = { x: 10, y: 20 };
-Console.writeLine(add(1, 2));
-Console.writeLine(PI);
+Console.WriteLine(add(1, 2));
+Console.WriteLine(PI);
 </code></pre>
 <h2 id="namespace-import">Namespace Import</h2>
 <p>Import all exports under a namespace:</p>
@@ -310,8 +310,8 @@ export function add(a: number, b: number): number {
 import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 import * as utils from &quot;./utils.js&quot;;
 
-Console.writeLine(utils.PI);
-Console.writeLine(utils.add(1, 2));
+Console.WriteLine(utils.PI);
+Console.WriteLine(utils.add(1, 2));
 </code></pre>
 <h2 id="re-exports-barrel-files">Re-exports (Barrel Files)</h2>
 <p>Create index files to re-export from multiple modules:</p>
@@ -361,25 +361,25 @@ import { File, Directory } from &quot;@tsonic/dotnet/System.IO.js&quot;;
 import { List, Dictionary } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 </code></pre>
 <pre><code class="language-typescript">export function main(): void {
-  Console.writeLine(&quot;Hello from .NET!&quot;);
+  Console.WriteLine(&quot;Hello from .NET!&quot;);
 
-  const exists = File.exists(&quot;config.json&quot;);
-  const files = Directory.getFiles(&quot;.&quot;);
+  const exists = File.Exists(&quot;config.json&quot;);
+  const files = Directory.GetFiles(&quot;.&quot;);
 }
 </code></pre>
 <h2 id="directory-structure-and-namespaces">Directory Structure and Namespaces</h2>
 <p>File paths map to C# namespaces:</p>
 <pre><code>src/
 ├── App.ts           → MyApp.App
-├── models/
+├── Models/
 │   ├── User.ts      → MyApp.Models.User
 │   └── Product.ts   → MyApp.Models.Product
-└── services/
-    └── api.ts       → MyApp.Services.Api
+└── Services/
+    └── Api.ts       → MyApp.Services.Api
 </code></pre>
 <p>When importing across directories:</p>
-<pre><code class="language-typescript">// src/services/api.ts
-  import { User } from &quot;../models/User.js&quot;;
+<pre><code class="language-typescript">// src/Services/Api.ts
+  import { User } from &quot;../Models/User.js&quot;;
 // Resolves to namespace MyApp.Models
 
 export function getUser(): User {
@@ -426,7 +426,7 @@ export function main(): void {
 
   const user = service.find(1);
   if (user) {
-    Console.writeLine(user.name);
+    Console.WriteLine(user.name);
   }
 }
 </code></pre>

@@ -207,16 +207,16 @@
   <div class="content"><h1 id="getting-started">Getting Started</h1>
 <h2 id="enable-js-runtime-apis-in-a-tsonic-project">Enable JS Runtime APIs in a Tsonic Project</h2>
 <h3 id="new-project">New project</h3>
-<pre><code class="language-bash">tsonic project init --js
+<pre><code class="language-bash">tsonic init --js
 </code></pre>
 <h3 id="existing-project">Existing project</h3>
 <pre><code class="language-bash">tsonic add js
 </code></pre>
 <p>That will:</p>
 <ul>
-<li>Add the <code>@tsonic/js</code> bindings package to your <code>package.json</code> (for <code>tsc</code> typechecking)</li>
-<li>Copy the <code>Tsonic.JSRuntime.dll</code> runtime library into your project (so the generated C# can reference it)</li>
-<li>Update your <code>tsonic.json</code> as needed</li>
+<li>Install the <code>@tsonic/js</code> bindings package in your workspace (<code>package.json</code>) for <code>tsc</code> typechecking</li>
+<li>Copy <code>libs/Tsonic.JSRuntime.dll</code> into your workspace</li>
+<li>Add <code>libs/Tsonic.JSRuntime.dll</code> to <code>tsonic.workspace.json</code> under <code>dotnet.libraries</code></li>
 </ul>
 <h2 id="minimal-example">Minimal Example</h2>
 <pre><code class="language-ts">import { console, JSON } from &quot;@tsonic/js/index.js&quot;;

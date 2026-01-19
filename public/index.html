@@ -173,7 +173,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -266,38 +266,40 @@
 <h3 id="initialize-a-new-project">Initialize a New Project</h3>
 <pre><code class="language-bash">mkdir my-app &amp;&amp; cd my-app
 
-# Basic project
-tsonic project init
+# Basic workspace + default project
+tsonic init
 
 # Or: include JavaScript runtime APIs (console, JSON, timers, etc.)
-tsonic project init --js
+tsonic init --js
 
 # Or: include Node-style APIs (fs, path, crypto, http, etc.)
-tsonic project init --nodejs
+tsonic init --nodejs
 </code></pre>
 <p>This creates:</p>
 <ul>
-<li><code>src/App.ts</code> - Entry point</li>
-<li><code>tsonic.json</code> - Configuration</li>
-<li><code>package.json</code> - With build scripts</li>
+<li><code>tsonic.workspace.json</code> - Workspace config (dependencies live here)</li>
+<li><code>libs/</code> - Workspace-scoped DLLs</li>
+<li><code>packages/my-app/tsonic.json</code> - Project config</li>
+<li><code>packages/my-app/src/App.ts</code> - Entry point</li>
+<li><code>package.json</code> - NPM workspaces + scripts</li>
 </ul>
 <h3 id="build-and-run">Build and Run</h3>
 <pre><code class="language-bash">npm run build    # Build native executable
-./out/app        # Run it
+./packages/my-app/out/my-app  # Run it
 
 # Or build and run in one step
 npm run dev
 </code></pre>
 <h3 id="example-program">Example Program</h3>
-<pre><code class="language-typescript">// src/App.ts
+<pre><code class="language-typescript">// packages/my-app/src/App.ts
 import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 
 export function main(): void {
   const message = &quot;Hello from Tsonic!&quot;;
-  Console.writeLine(message);
+  Console.WriteLine(message);
 
   const numbers = [1, 2, 3, 4, 5];
-  Console.writeLine(`Numbers: ${numbers.length}`);
+  Console.WriteLine(`Numbers: ${numbers.length}`);
 }
 </code></pre>
 <h3 id="using-net-apis-bcl">Using .NET APIs (BCL)</h3>
@@ -307,30 +309,30 @@ import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 
 export function main(): void {
   // File I/O
-  const content = File.readAllText(&quot;./README.md&quot;);
-  Console.writeLine(content);
+  const content = File.ReadAllText(&quot;./README.md&quot;);
+  Console.WriteLine(content);
 
   // .NET collections
   const list = new List&lt;number&gt;();
-  list.add(1);
-  list.add(2);
-  list.add(3);
-  Console.writeLine(`Count: ${list.count}`);
+  list.Add(1);
+  list.Add(2);
+  list.Add(3);
+  Console.WriteLine(`Count: ${list.Count}`);
 }
 </code></pre>
 <h2 id="examples">Examples</h2>
-<h3 id="linq-extension-methods-where-select">LINQ extension methods (<code>where</code>, <code>select</code>)</h3>
+<h3 id="linq-extension-methods-where-select">LINQ extension methods (<code>Where</code>, <code>Select</code>)</h3>
 <pre><code class="language-ts">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 import type { ExtensionMethods as Linq } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
 
 type LinqList&lt;T&gt; = Linq&lt;List&lt;T&gt;&gt;;
 
 const xs = new List&lt;number&gt;() as unknown as LinqList&lt;number&gt;;
-xs.add(1);
-xs.add(2);
-xs.add(3);
+xs.Add(1);
+xs.Add(2);
+xs.Add(3);
 
-const doubled = xs.where((x) =&gt; x % 2 === 0).select((x) =&gt; x * 2).toList();
+const doubled = xs.Where((x) =&gt; x % 2 === 0).Select((x) =&gt; x * 2).ToList();
 void doubled;
 </code></pre>
 <h3 id="json-with-the-net-bcl-systemtextjson">JSON with the .NET BCL (<code>System.Text.Json</code>)</h3>
@@ -340,24 +342,24 @@ import { JsonSerializer } from &quot;@tsonic/dotnet/System.Text.Json.js&quot;;
 type User = { id: number; name: string };
 
 const user: User = { id: 1, name: &quot;Alice&quot; };
-const json = JsonSerializer.serialize(user);
-Console.writeLine(json);
+const json = JsonSerializer.Serialize(user);
+Console.WriteLine(json);
 
-const parsed = JsonSerializer.deserialize&lt;User&gt;(json);
+const parsed = JsonSerializer.Deserialize&lt;User&gt;(json);
 if (parsed !== undefined) {
-  Console.writeLine(parsed.name);
+  Console.WriteLine(parsed.name);
 }
 </code></pre>
 <h3 id="javascript-runtime-apis-tsonicjs">JavaScript runtime APIs (<code>@tsonic/js</code>)</h3>
 <p>First, enable JSRuntime APIs:</p>
 <pre><code class="language-bash"># New project
-tsonic project init --js
+tsonic init --js
 
 # Existing project
 tsonic add js
 </code></pre>
 <p>Then write:</p>
-<pre><code class="language-ts">import { console, JSON } from &quot;@tsonic/js&quot;;
+<pre><code class="language-ts">import { console, JSON } from &quot;@tsonic/js/index.js&quot;;
 
 export function main(): void {
   const value = JSON.parse&lt;{ x: number }&gt;('{&quot;x&quot;: 1}');
@@ -367,13 +369,13 @@ export function main(): void {
 <h3 id="node-style-apis-tsonicnodejs">Node-style APIs (<code>@tsonic/nodejs</code>)</h3>
 <p>First, enable Node-style APIs:</p>
 <pre><code class="language-bash"># New project
-tsonic project init --nodejs
+tsonic init --nodejs
 
 # Existing project
 tsonic add nodejs
 </code></pre>
 <p>Then write:</p>
-<pre><code class="language-ts">import { console, path } from &quot;@tsonic/nodejs&quot;;
+<pre><code class="language-ts">import { console, path } from &quot;@tsonic/nodejs/index.js&quot;;
 
 export function main(): void {
   console.log(path.join(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;));
@@ -387,11 +389,11 @@ export function main(): void {
 <pre><code class="language-ts">import { WebApplication } from &quot;@tsonic/aspnetcore/Microsoft.AspNetCore.Builder.js&quot;;
 
 export function main(): void {
-  const builder = WebApplication.createBuilder([]);
-  const app = builder.build();
+  const builder = WebApplication.CreateBuilder([]);
+  const app = builder.Build();
 
-  app.mapGet(&quot;/&quot;, () =&gt; &quot;Hello from Tsonic + ASP.NET Core!&quot;);
-  app.run();
+  app.MapGet(&quot;/&quot;, () =&gt; &quot;Hello from Tsonic + ASP.NET Core!&quot;);
+  app.Run();
 }
 </code></pre>
 <h2 id="tsbindgen-clr-bindings-generator">tsbindgen (CLR Bindings Generator)</h2>
@@ -401,7 +403,7 @@ export function main(): void {
 <ul>
 <li>ESM namespace facades (<code>*.js</code>) + TypeScript types (<code>*.d.ts</code>)</li>
 <li><code>bindings.json</code> (namespace → CLR mapping)</li>
-<li><code>internal/metadata.json</code> (CLR metadata for resolution)</li>
+<li><code>internal/index.d.ts</code> (full type declarations)</li>
 </ul>
 </li>
 <li>Tsonic uses these artifacts to resolve imports like:
@@ -430,8 +432,8 @@ tsonic add nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
 </thead>
 <tbody>
 <tr>
-<td><code>tsonic project init</code></td>
-<td>Initialize new project</td>
+<td><code>tsonic init</code></td>
+<td>Initialize workspace + default project</td>
 </tr>
 <tr>
 <td><code>tsonic generate [entry]</code></td>
@@ -486,7 +488,7 @@ tsonic add nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
 <tbody>
 <tr>
 <td><code>-c, --config &lt;file&gt;</code></td>
-<td>Config file (default: tsonic.json)</td>
+<td>Workspace config path (default: auto-detect <code>tsonic.workspace.json</code>)</td>
 </tr>
 <tr>
 <td><code>-o, --out &lt;name&gt;</code></td>
@@ -514,35 +516,27 @@ tsonic add nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
 </tr>
 </tbody>
 </table>
-<h2 id="configuration-tsonicjson">Configuration (tsonic.json)</h2>
-<pre><code class="language-json">{
-  &quot;$schema&quot;: &quot;https://tsonic.org/schema/v1.json&quot;,
-  &quot;rootNamespace&quot;: &quot;MyApp&quot;,
-  &quot;entryPoint&quot;: &quot;src/App.ts&quot;
-}
-</code></pre>
-<h2 id="project-structure">Project Structure</h2>
-<pre><code>my-app/
-├── src/
-│   └── App.ts           # Entry point (exports main())
-├── tsonic.json          # Configuration
-├── package.json         # NPM package
-├── generated/           # Generated C# (gitignored)
-└── out/                 # Output executable (gitignored)
-</code></pre>
-<h2 id="naming-modes">Naming Modes</h2>
-<p>Tsonic supports two binding/name styles:</p>
+<h2 id="configuration">Configuration</h2>
+<p>Tsonic uses <strong>two</strong> config files:</p>
 <ul>
-<li>Default: JavaScript-style member names (<code>Console.writeLine</code>)</li>
-<li><code>--pure</code>: CLR-style member names (<code>Console.WriteLine</code>)</li>
+<li><code>tsonic.workspace.json</code> (workspace root) — shared settings and <strong>all external dependencies</strong></li>
+<li><code>packages/&lt;project&gt;/tsonic.json</code> — per-project compilation settings</li>
 </ul>
-<pre><code class="language-bash">tsonic project init --pure
+<p>See <code>/tsonic/configuration/</code> for the full reference.</p>
+<h2 id="workspace-structure">Workspace Structure</h2>
+<pre><code>my-app/
+├── tsonic.workspace.json
+├── libs/
+├── packages/
+│   └── my-app/
+│       ├── tsonic.json
+│       └── src/App.ts
+└── package.json         # npm workspaces + scripts
 </code></pre>
 <h2 id="npm-workspaces-multi-assembly-repos">Npm Workspaces (Multi-Assembly Repos)</h2>
-<p>Tsonic projects are plain npm packages, so you can use <strong>npm workspaces</strong> to build multi-assembly repos (e.g. <code>@acme/domain</code> + <code>@acme/api</code>).</p>
+<p>Tsonic workspaces are plain npm workspaces, so you can build multi-assembly repos (e.g. <code>@acme/domain</code> + <code>@acme/api</code>).</p>
 <ul>
-<li>Each workspace package has its own <code>tsonic.json</code> and produces its own output (<code>dist/</code> for libraries, <code>out/</code> for executables).</li>
-<li>Build workspace dependencies first (via <code>npm run -w &lt;pkg&gt; ...</code>) before building dependents.</li>
+<li>Each workspace package has its own <code>packages/&lt;name&gt;/tsonic.json</code> and produces its own output (<code>dist/</code> for libraries, <code>out/</code> for executables).</li>
 <li>For library packages, you can generate <strong>tsbindgen</strong> CLR bindings under <code>dist/</code> and expose them via npm <code>exports</code>; Tsonic resolves imports using Node resolution (including <code>exports</code>) and locates the nearest <code>bindings.json</code>.</li>
 </ul>
 <p>See <code>/tsonic/dotnet-interop/</code> for the recommended <code>dist/</code> + <code>exports</code> layout.</p>

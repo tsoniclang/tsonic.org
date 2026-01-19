@@ -294,7 +294,7 @@ writing them under <code>dist/</code> and exporting them via npm <code>exports</
     System.Linq.d.ts
     System.Linq/
       bindings.json
-      internal/metadata.json
+      internal/index.d.ts
 </code></pre>
 <p><code>packages/domain/.gitignore</code>:</p>
 <pre><code class="language-txt">dist/
@@ -322,37 +322,37 @@ the nearest <code>bindings.json</code> for CLR metadata discovery.</p>
 <h3 id="console">Console</h3>
 <pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 
-Console.writeLine(&quot;Hello!&quot;);
-Console.write(&quot;No newline&quot;);
-const input = Console.readLine();
-Console.error.writeLine(&quot;Error message&quot;);
+Console.WriteLine(&quot;Hello!&quot;);
+Console.Write(&quot;No newline&quot;);
+const input = Console.ReadLine();
+Console.Error.WriteLine(&quot;Error message&quot;);
 </code></pre>
 <h3 id="file-io">File I/O</h3>
 <pre><code class="language-typescript">import { File, Path, Directory } from &quot;@tsonic/dotnet/System.IO.js&quot;;
 
 // Read files
-const text = File.readAllText(&quot;./data.txt&quot;);
-const lines = File.readAllLines(&quot;./data.txt&quot;);
-const bytes = File.readAllBytes(&quot;./image.png&quot;);
+const text = File.ReadAllText(&quot;./data.txt&quot;);
+const lines = File.ReadAllLines(&quot;./data.txt&quot;);
+const bytes = File.ReadAllBytes(&quot;./image.png&quot;);
 
 // Write files
-File.writeAllText(&quot;./output.txt&quot;, &quot;content&quot;);
-File.writeAllLines(&quot;./output.txt&quot;, [&quot;line1&quot;, &quot;line2&quot;]);
-File.writeAllBytes(&quot;./output.bin&quot;, bytes);
+File.WriteAllText(&quot;./output.txt&quot;, &quot;content&quot;);
+File.WriteAllLines(&quot;./output.txt&quot;, [&quot;line1&quot;, &quot;line2&quot;]);
+File.WriteAllBytes(&quot;./output.bin&quot;, bytes);
 
 // Check existence
-if (File.exists(&quot;./data.txt&quot;)) {
+if (File.Exists(&quot;./data.txt&quot;)) {
   // ...
 }
 
 // Paths
-const full = Path.combine(&quot;.&quot;, &quot;data&quot;, &quot;file.txt&quot;);
-const dir = Path.getDirectoryName(full);
-const ext = Path.getExtension(full);
+const full = Path.Combine(&quot;.&quot;, &quot;data&quot;, &quot;file.txt&quot;);
+const dir = Path.GetDirectoryName(full);
+const ext = Path.GetExtension(full);
 
 // Directories
-Directory.createDirectory(&quot;./output&quot;);
-const files = Directory.getFiles(&quot;./data&quot;);
+Directory.CreateDirectory(&quot;./output&quot;);
+const files = Directory.GetFiles(&quot;./data&quot;);
 </code></pre>
 <h3 id="collections">Collections</h3>
 <pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
@@ -364,25 +364,25 @@ import {
 
 // List&lt;T&gt;
 const list = new List&lt;number&gt;();
-list.add(1);
-list.add(2);
-list.addRange([3, 4, 5]);
-Console.writeLine(list.count);
+list.Add(1);
+list.Add(2);
+list.AddRange([3, 4, 5]);
+Console.WriteLine(list.Count);
 const first = list[0];
 
 // Dictionary&lt;K,V&gt;
 const dict = new Dictionary&lt;string, number&gt;();
-dict.add(&quot;one&quot;, 1);
+dict.Add(&quot;one&quot;, 1);
 dict[&quot;two&quot;] = 2;
-if (dict.containsKey(&quot;one&quot;)) {
-  Console.writeLine(dict[&quot;one&quot;]);
+if (dict.ContainsKey(&quot;one&quot;)) {
+  Console.WriteLine(dict[&quot;one&quot;]);
 }
 
 // HashSet&lt;T&gt;
 const set = new HashSet&lt;string&gt;();
-set.add(&quot;a&quot;);
-set.add(&quot;b&quot;);
-Console.writeLine(set.contains(&quot;a&quot;));
+set.Add(&quot;a&quot;);
+set.Add(&quot;b&quot;);
+Console.WriteLine(set.Contains(&quot;a&quot;));
 </code></pre>
 <h3 id="linq">LINQ</h3>
 <pre><code class="language-typescript">import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
@@ -390,23 +390,23 @@ Console.writeLine(set.contains(&quot;a&quot;));
 const numbers = [1, 2, 3, 4, 5];
 
 // Query operations
-const doubled = Enumerable.select(numbers, (n) =&gt; n * 2);
-const filtered = Enumerable.where(numbers, (n) =&gt; n &gt; 2);
-const sum = Enumerable.sum(numbers);
-const first = Enumerable.first(numbers);
-const any = Enumerable.any(numbers, (n) =&gt; n &gt; 10);
+const doubled = Enumerable.Select(numbers, (n) =&gt; n * 2);
+const filtered = Enumerable.Where(numbers, (n) =&gt; n &gt; 2);
+const sum = Enumerable.Sum(numbers);
+const first = Enumerable.First(numbers);
+const any = Enumerable.Any(numbers, (n) =&gt; n &gt; 10);
 </code></pre>
 <h3 id="javascript-runtime-apis-tsonicjs">JavaScript Runtime APIs (<code>@tsonic/js</code>)</h3>
 <p>Tsonic ships as a .NET compiler, but you can opt into JavaScript-style APIs by importing <code>@tsonic/js</code>
 (bindings for <code>Tsonic.JSRuntime.dll</code>).</p>
 <p>Setup:</p>
 <pre><code class="language-bash"># New project
-tsonic project init --js
+tsonic init --js
 
 # Existing project
 tsonic add js
 </code></pre>
-<pre><code class="language-typescript">import { console, JSON, Math, Date, Timers } from &quot;@tsonic/js&quot;;
+<pre><code class="language-typescript">import { console, JSON, Math, Date, Timers } from &quot;@tsonic/js/index.js&quot;;
 
 export function main(): void {
   console.log(&quot;Hello from JSRuntime!&quot;);
@@ -422,7 +422,7 @@ export function main(): void {
   Timers.setTimeout(() =&gt; console.log(&quot;tick&quot;), 250);
 }
 </code></pre>
-<h3 id="extension-methods-linq-style-xswhereselect">Extension Methods (LINQ-style <code>xs.where(...).select(...)</code>)</h3>
+<h3 id="extension-methods-linq-style-xswhereselect">Extension Methods (LINQ-style <code>xs.Where(...).Select(...)</code>)</h3>
 <p>tsbindgen-generated packages expose <strong>type-only</strong> <code>ExtensionMethods</code> helpers that model C# <code>using</code> semantics.</p>
 <p>Bring a namespace’s extension methods into scope by wrapping the receiver type:</p>
 <pre><code class="language-typescript">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
@@ -431,11 +431,11 @@ import type { ExtensionMethods as Linq } from &quot;@tsonic/dotnet/System.Linq.j
 type LinqList&lt;T&gt; = Linq&lt;List&lt;T&gt;&gt;;
 
 const numbers = new List&lt;number&gt;() as unknown as LinqList&lt;number&gt;;
-numbers.add(1);
-numbers.add(2);
-numbers.add(3);
+numbers.Add(1);
+numbers.Add(2);
+numbers.Add(3);
 
-const doubled = numbers.where((x) =&gt; x % 2 === 0).select((x) =&gt; x * 2).toList();
+const doubled = numbers.Where((x) =&gt; x % 2 === 0).Select((x) =&gt; x * 2).ToList();
 </code></pre>
 <p>The same pattern works for <code>IEnumerable&lt;T&gt;</code> and <code>IQueryable&lt;T&gt;</code> (for example when using EF Core):</p>
 <pre><code class="language-typescript">import type { ExtensionMethods as Linq, IQueryable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
@@ -443,7 +443,7 @@ const doubled = numbers.where((x) =&gt; x % 2 === 0).select((x) =&gt; x * 2).toL
 type LinqQuery&lt;T&gt; = Linq&lt;IQueryable&lt;T&gt;&gt;;
 declare const query: LinqQuery&lt;number&gt;;
 
-query.where((x) =&gt; x &gt; 0).select((x) =&gt; x * 2);
+query.Where((x) =&gt; x &gt; 0).Select((x) =&gt; x * 2);
 </code></pre>
 <p>Compose multiple extension namespaces by nesting:</p>
 <pre><code class="language-typescript">import type { ExtensionMethods as Linq } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
@@ -455,15 +455,15 @@ type Ext&lt;T&gt; = Linq&lt;Xml&lt;T&gt;&gt;;
 <h3 id="datetime">DateTime</h3>
 <pre><code class="language-typescript">import { Console, DateTime, TimeSpan } from &quot;@tsonic/dotnet/System.js&quot;;
 
-const now = DateTime.now;
-const utc = DateTime.utcNow;
+const now = DateTime.Now;
+const utc = DateTime.UtcNow;
 const date = new DateTime(2024, 1, 15);
 
-Console.writeLine(now.year);
-Console.writeLine(now.toString(&quot;yyyy-MM-dd&quot;));
+Console.WriteLine(now.Year);
+Console.WriteLine(now.ToString(&quot;yyyy-MM-dd&quot;));
 
-const duration = TimeSpan.fromHours(2);
-const later = now.add(duration);
+const duration = TimeSpan.FromHours(2);
+const later = now.Add(duration);
 </code></pre>
 <h3 id="json-serialization">JSON Serialization</h3>
 <pre><code class="language-typescript">import { JsonSerializer } from &quot;@tsonic/dotnet/System.Text.Json.js&quot;;
@@ -476,67 +476,42 @@ interface User {
 
 // Serialize object to JSON
 const user: User = { id: 1, name: &quot;Alice&quot; };
-const json = JsonSerializer.serialize(user);
+const json = JsonSerializer.Serialize(user);
 
 // Deserialize JSON to object
-const parsed = JsonSerializer.deserialize&lt;User&gt;(json);
+const parsed = JsonSerializer.Deserialize&lt;User&gt;(json);
 
 // Works with collections too
 const users = new List&lt;User&gt;();
-users.add({ id: 1, name: &quot;Alice&quot; });
-users.add({ id: 2, name: &quot;Bob&quot; });
-const usersJson = JsonSerializer.serialize(users);
+users.Add({ id: 1, name: &quot;Alice&quot; });
+users.Add({ id: 2, name: &quot;Bob&quot; });
+const usersJson = JsonSerializer.Serialize(users);
 </code></pre>
 <p><strong>NativeAOT Support</strong>: Tsonic automatically generates the required <code>JsonSerializerContext</code>
 for NativeAOT compatibility. No additional configuration needed.</p>
 <h3 id="string-operations">String Operations</h3>
 <pre><code class="language-typescript">import { String } from &quot;@tsonic/dotnet/System.js&quot;;
 
-const result = String.isNullOrEmpty(input);
-const joined = String.join(&quot;, &quot;, [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]);
-const formatted = String.format(&quot;Hello, {0}!&quot;, name);
+const result = String.IsNullOrEmpty(input);
+const joined = String.Join(&quot;, &quot;, [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]);
+const formatted = String.Format(&quot;Hello, {0}!&quot;, name);
 </code></pre>
-<h2 id="nuget-packages">NuGet Packages</h2>
-<h3 id="adding-dependencies">Adding Dependencies</h3>
-<p>In <code>tsonic.json</code>:</p>
-<pre><code class="language-json">{
-  &quot;dotnet&quot;: {
-    &quot;packageReferences&quot;: [
-      { &quot;id&quot;: &quot;Newtonsoft.Json&quot;, &quot;version&quot;: &quot;13.0.3&quot; },
-      { &quot;id&quot;: &quot;System.Net.Http.Json&quot;, &quot;version&quot;: &quot;8.0.0&quot; }
-    ]
-  }
-}
+<h2 id="adding-dependencies-workspace">Adding Dependencies (Workspace)</h2>
+<p>Dependencies are workspace-scoped and configured in <code>tsonic.workspace.json</code> (see <a href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>).</p>
+<p>Use the CLI:</p>
+<pre><code class="language-bash">tsonic add nuget Newtonsoft.Json 13.0.3
+tsonic add package ./path/to/MyLib.dll
+tsonic add framework Microsoft.AspNetCore.App
+tsonic restore
 </code></pre>
-<h3 id="using-nuget-types">Using NuGet Types</h3>
-<p>After adding to config, install (or generate) a matching TypeScript bindings package and import from that package's namespaces:</p>
-<pre><code class="language-typescript">// Example: a tsbindgen-generated bindings package for Newtonsoft.Json
-// (the package name is up to you)
-import { JsonConvert } from &quot;@my-org/newtonsoft-json/Newtonsoft.Json.js&quot;;
+<p>If you omit the optional <code>types</code> argument, Tsonic auto-generates bindings and mirrors them into <code>node_modules/&lt;name&gt;-types/</code>.</p>
+<p>Example (auto-generated bindings for <code>Newtonsoft.Json</code>):</p>
+<pre><code class="language-typescript">import { JsonConvert } from &quot;newtonsoft-json-types/Newtonsoft.Json.js&quot;;
 
-const json = JsonConvert.serializeObject({ name: &quot;Alice&quot; });
-const obj = JsonConvert.deserializeObject(json);
+const json = JsonConvert.SerializeObject({ name: &quot;Alice&quot; });
+const obj = JsonConvert.DeserializeObject(json);
 </code></pre>
-<h2 id="external-libraries">External Libraries</h2>
-<h3 id="library-bindings">Library Bindings</h3>
-<p>For custom .NET libraries, use the <code>libraries</code> config:</p>
-<pre><code class="language-json">{
-  &quot;dotnet&quot;: {
-    &quot;libraries&quot;: [&quot;./libs/my-library&quot;]
-  }
-}
-</code></pre>
-<p>Or via CLI:</p>
-<pre><code class="language-bash">tsonic build src/App.ts --lib ./libs/my-library
-</code></pre>
-<h3 id="creating-bindings">Creating Bindings</h3>
-<p>Library bindings are TypeScript declaration files that describe .NET types:</p>
-<pre><code class="language-typescript">// libs/my-library/index.d.ts
-export declare class MyService {
-  constructor();
-  doSomething(value: string): number;
-}
-</code></pre>
+<p>If you already have a published bindings package, pass it as <code>types</code> to <code>tsonic add ...</code> and import from that package instead.</p>
 <h2 id="type-mapping">Type Mapping</h2>
 <h3 id="primitive-types">Primitive Types</h3>
 <table>
@@ -636,8 +611,8 @@ export declare class MyService {
 <pre><code class="language-typescript">import { File } from &quot;@tsonic/dotnet/System.IO.js&quot;;
 
 export async function main(): Promise&lt;void&gt; {
-  const content = await File.readAllTextAsync(&quot;./data.txt&quot;);
-  await File.writeAllTextAsync(&quot;./output.txt&quot;, content);
+  const content = await File.ReadAllTextAsync(&quot;./data.txt&quot;);
+  await File.WriteAllTextAsync(&quot;./output.txt&quot;, content);
 }
 </code></pre>
 <h2 id="error-handling">Error Handling</h2>
@@ -646,9 +621,9 @@ export async function main(): Promise&lt;void&gt; {
 import { File } from &quot;@tsonic/dotnet/System.IO.js&quot;;
 
 try {
-  const content = File.readAllText(&quot;./missing.txt&quot;);
+  const content = File.ReadAllText(&quot;./missing.txt&quot;);
 } catch (error) {
-  Console.writeLine(&quot;File not found&quot;);
+  Console.WriteLine(&quot;File not found&quot;);
 }
 </code></pre>
 <h2 id="c-attributes">C# Attributes</h2>
@@ -705,18 +680,18 @@ public class LegacyService
 <h2 id="parameter-modifiers">Parameter Modifiers</h2>
 <p>.NET methods with <code>out</code>, <code>ref</code>, or <code>in</code> parameters work automatically when using tsbindgen-generated bindings:</p>
 <pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-import { int } from &quot;@tsonic/core/types.js&quot;;
+import { int, out } from &quot;@tsonic/core/types.js&quot;;
 
-// Dictionary.tryGetValue has an 'out' parameter
+// Dictionary.TryGetValue has an 'out' parameter
 import { Dictionary } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 
 const dict = new Dictionary&lt;string, int&gt;();
-dict.add(&quot;key&quot;, 42);
+dict.Add(&quot;key&quot;, 42);
 
 // The 'out' parameter is handled automatically
 let value: int = 0;
-if (dict.tryGetValue(&quot;key&quot;, value)) {
-  Console.writeLine(value); // 42
+if (dict.TryGetValue(&quot;key&quot;, value as out&lt;int&gt;)) {
+  Console.WriteLine(value); // 42
 }
 </code></pre>
 <p>Generated C#:</p>
@@ -747,7 +722,7 @@ if (dict.TryGetValue(&quot;key&quot;, out value))
 <td>Pass by reference, may be mutated</td>
 </tr>
 <tr>
-<td><code>in</code></td>
+<td><code>inref</code></td>
 <td><code>in</code></td>
 <td>Pass by reference, read-only</td>
 </tr>
@@ -775,7 +750,7 @@ function processMultiple(a: int | null, b: int | null): int {
 }
 </code></pre>
 <p>Generated C#:</p>
-<pre><code class="language-csharp">public static int ProcessValue(int? value)
+<pre><code class="language-csharp">public static int processValue(int? value)
 {
     if (value != null)
     {
@@ -784,7 +759,7 @@ function processMultiple(a: int | null, b: int | null): int {
     return 0;
 }
 
-public static int ProcessMultiple(int? a, int? b)
+public static int processMultiple(int? a, int? b)
 {
     if (a != null &amp;&amp; b != null)
     {

@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -191,7 +191,7 @@
 <h3 id="type-generation">Type Generation</h3>
 <ol start="3">
 <li><a href="/tsbindgen/type-mappings/">Type Mappings</a> - How CLR types map to TypeScript</li>
-<li><a href="/tsbindgen/naming/">Naming Conventions</a> - CLR vs JavaScript naming</li>
+<li><a href="/tsbindgen/naming/">Naming &amp; Identifiers</a> - CLR-faithful names and TS-safe identifiers</li>
 <li><a href="/tsbindgen/library-mode/">Library Mode</a> - Generating for custom assemblies</li>
 </ol>
 <h3 id="validation">Validation</h3>
@@ -214,15 +214,15 @@
 <li><strong>Complete BCL Coverage</strong>: All 130 namespaces, 4,296 types, 50,675+ members</li>
 <li><strong>Type Safety</strong>: Branded primitives, generic constraints preserved</li>
 <li><strong>IDE Support</strong>: Full IntelliSense for .NET types in TypeScript</li>
-<li><strong>Dual Naming</strong>: CLR PascalCase or JavaScript camelCase</li>
+<li><strong>CLR-faithful names</strong>: No casing transforms; names match the CLR surface</li>
 </ul>
 <h3 id="output-example">Output Example</h3>
 <pre><code class="language-typescript">// System.Collections.Generic
 export interface List_1&lt;T&gt; {
-    readonly count: int;
-    add(item: T): void;
-    remove(item: T): boolean;
-    clear(): void;
+    readonly Count: int;
+    Add(item: T): void;
+    Remove(item: T): boolean;
+    Clear(): void;
 }
 
 export declare const List_1: {

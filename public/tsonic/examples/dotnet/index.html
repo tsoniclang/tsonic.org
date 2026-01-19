@@ -245,30 +245,30 @@
 
 	export function main(): void {
 	  // Read file
-	  const content = File.readAllText(&quot;input.txt&quot;);
-	  Console.writeLine(content);
+	  const content = File.ReadAllText(&quot;input.txt&quot;);
+	  Console.WriteLine(content);
 
 	  // Write file
-	  File.writeAllText(&quot;output.txt&quot;, &quot;Hello, World!&quot;);
+	  File.WriteAllText(&quot;output.txt&quot;, &quot;Hello, World!&quot;);
 
 	  // Check existence
-	  if (File.exists(&quot;config.json&quot;)) {
-	    const config = File.readAllText(&quot;config.json&quot;);
+	  if (File.Exists(&quot;config.json&quot;)) {
+	    const config = File.ReadAllText(&quot;config.json&quot;);
 	  }
 
 	  // List files
-	  const files = Directory.getFiles(&quot;.&quot;);
+	  const files = Directory.GetFiles(&quot;.&quot;);
 	  for (const file of files) {
-	    Console.writeLine(file);
+	    Console.WriteLine(file);
 	  }
 
 	  // Create directory
-	  Directory.createDirectory(&quot;data&quot;);
+	  Directory.CreateDirectory(&quot;data&quot;);
 
 	  // Path manipulation
-	  const fullPath = Path.combine(&quot;data&quot;, &quot;file.txt&quot;);
-	  const extension = Path.getExtension(&quot;file.txt&quot;);
-	  const filename = Path.getFileName(&quot;/path/to/file.txt&quot;);
+	  const fullPath = Path.Combine(&quot;data&quot;, &quot;file.txt&quot;);
+	  const extension = Path.GetExtension(&quot;file.txt&quot;);
+	  const filename = Path.GetFileName(&quot;/path/to/file.txt&quot;);
 	}
 </code></pre>
 <h2 id="collections">Collections</h2>
@@ -282,36 +282,36 @@
 	export function main(): void {
 	  // List&lt;T&gt;
 	  const numbers = new List&lt;number&gt;();
-	  numbers.add(1);
-	  numbers.add(2);
-	  numbers.add(3);
+	  numbers.Add(1);
+	  numbers.Add(2);
+	  numbers.Add(3);
 
-	  Console.writeLine(numbers.count);
-	  Console.writeLine(numbers.contains(2));
+	  Console.WriteLine(numbers.Count);
+	  Console.WriteLine(numbers.Contains(2));
 
-	  numbers.remove(2);
-	  numbers.clear();
+	  numbers.Remove(2);
+	  numbers.Clear();
 
 	  // Dictionary&lt;K,V&gt;
 	  const ages = new Dictionary&lt;string, number&gt;();
-	  ages.add(&quot;Alice&quot;, 30);
-	  ages.add(&quot;Bob&quot;, 25);
+	  ages.Add(&quot;Alice&quot;, 30);
+	  ages.Add(&quot;Bob&quot;, 25);
 
 	  const aliceAge = ages[&quot;Alice&quot;];
-	  const hasAlice = ages.containsKey(&quot;Alice&quot;);
+	  const hasAlice = ages.ContainsKey(&quot;Alice&quot;);
 
 	  // HashSet&lt;T&gt;
 	  const unique = new HashSet&lt;string&gt;();
-	  unique.add(&quot;a&quot;);
-	  unique.add(&quot;b&quot;);
-	  unique.add(&quot;a&quot;); // Duplicate, ignored
+	  unique.Add(&quot;a&quot;);
+	  unique.Add(&quot;b&quot;);
+	  unique.Add(&quot;a&quot;); // Duplicate, ignored
 
-	  Console.writeLine(unique.count); // 2
+	  Console.WriteLine(unique.Count); // 2
 
 	  // Dictionary with number keys
 	  const byId = new Dictionary&lt;number, string&gt;();
-	  byId.add(1, &quot;Alice&quot;);
-	  byId.add(2, &quot;Bob&quot;);
+	  byId.Add(1, &quot;Alice&quot;);
+	  byId.Add(2, &quot;Bob&quot;);
 	  const name = byId[1]; // &quot;Alice&quot;
 	}
 </code></pre>
@@ -324,11 +324,11 @@
 
 	  // Destructure
 	  const [x, y] = point;
-	  Console.writeLine(`Point: ${x}, ${y}`);
+	  Console.WriteLine(`Point: ${x}, ${y}`);
 
 	  // Return multiple values
 	  const result = getMinMax([5, 2, 8, 1, 9]);
-	  Console.writeLine(`Min: ${result[0]}, Max: ${result[1]}`);
+	  Console.WriteLine(`Min: ${result[0]}, Max: ${result[1]}`);
 	}
 
 function getMinMax(numbers: number[]): [number, number] {
@@ -358,25 +358,25 @@ interface User {
   ];
 
   // Types are contextually inferred from the array element type
-  // Filter (Where)
-	  const adults = Enumerable.where(users, (u) =&gt; u.age &gt;= 30);
+	  // Filter (Where)
+	  const adults = Enumerable.Where(users, (u) =&gt; u.age &gt;= 30);
 
   // Transform (Select)
-	  const names = Enumerable.select(users, (u) =&gt; u.name);
+	  const names = Enumerable.Select(users, (u) =&gt; u.name);
 
   // First matching
-	  const alice = Enumerable.firstOrDefault(users, (u) =&gt; u.name === &quot;Alice&quot;);
+	  const alice = Enumerable.FirstOrDefault(users, (u) =&gt; u.name === &quot;Alice&quot;);
 
   // Sorting
-	  const byAge = Enumerable.orderBy(users, (u) =&gt; u.age);
+	  const byAge = Enumerable.OrderBy(users, (u) =&gt; u.age);
 
   // Aggregation
-	  const totalAge = Enumerable.sum(users, (u) =&gt; u.age);
-	  const averageAge = Enumerable.average(users, (u) =&gt; u.age);
+	  const totalAge = Enumerable.Sum(users, (u) =&gt; u.age);
+	  const averageAge = Enumerable.Average(users, (u) =&gt; u.age);
 
   // Any/All
-	  const anyAdult = Enumerable.any(users, (u) =&gt; u.age &gt;= 18);
-	  const allAdults = Enumerable.all(users, (u) =&gt; u.age &gt;= 18);
+	  const anyAdult = Enumerable.Any(users, (u) =&gt; u.age &gt;= 18);
+	  const allAdults = Enumerable.All(users, (u) =&gt; u.age &gt;= 18);
 	}
 </code></pre>
 <p>Lambda parameter types are contextually inferred from the collection element type.</p>
@@ -387,16 +387,16 @@ interface User {
 	export function main(): void {
 	  // Efficient string building
 	  const sb = new StringBuilder();
-	  sb.append(&quot;Hello&quot;);
-	  sb.append(&quot;, &quot;);
-	  sb.append(&quot;World&quot;);
-	  sb.appendLine(&quot;!&quot;);
+	  sb.Append(&quot;Hello&quot;);
+	  sb.Append(&quot;, &quot;);
+	  sb.Append(&quot;World&quot;);
+	  sb.AppendLine(&quot;!&quot;);
 
-	  const result = sb.toString();
-	  Console.writeLine(result);
+	  const result = sb.ToString();
+	  Console.WriteLine(result);
 
 	  // String formatting
-	  const formatted = String.format(&quot;Name: {0}, Age: {1}&quot;, &quot;Alice&quot;, 30);
+	  const formatted = String.Format(&quot;Name: {0}, Age: {1}&quot;, &quot;Alice&quot;, 30);
 	}
 </code></pre>
 <h2 id="date-and-time">Date and Time</h2>
@@ -404,27 +404,27 @@ interface User {
 
 	export function main(): void {
 	  // Current time
-	  const now = DateTime.now;
-	  const utcNow = DateTime.utcNow;
+	  const now = DateTime.Now;
+	  const utcNow = DateTime.UtcNow;
 
   // Create specific date
   const date = new DateTime(2024, 12, 25);
 
 	  // Date arithmetic
-	  const tomorrow = now.addDays(1);
-	  const nextWeek = now.addDays(7);
-	  const nextMonth = now.addMonths(1);
+	  const tomorrow = now.AddDays(1);
+	  const nextWeek = now.AddDays(7);
+	  const nextMonth = now.AddMonths(1);
 
   // TimeSpan
   const duration = new TimeSpan(1, 30, 0); // 1 hour 30 minutes
-  const later = now.Add(duration);
+	  const later = now.Add(duration);
 
 	  // Formatting
-	  const formatted = now.toString(&quot;yyyy-MM-dd HH:mm:ss&quot;);
-	  Console.writeLine(formatted);
+	  const formatted = now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+	  Console.WriteLine(formatted);
 
 	  // Parsing
-	  const parsed = DateTime.parse(&quot;2024-12-25&quot;);
+	  const parsed = DateTime.Parse(&quot;2024-12-25&quot;);
 	}
 </code></pre>
 <h2 id="console-io">Console I/O</h2>
@@ -432,21 +432,21 @@ interface User {
 
 	export function main(): void {
 	  // Output
-	  Console.writeLine(&quot;Hello, World!&quot;);
-	  Console.write(&quot;No newline&quot;);
+	  Console.WriteLine(&quot;Hello, World!&quot;);
+	  Console.Write(&quot;No newline&quot;);
 
 	  // Formatted output
-	  Console.writeLine(&quot;Name: {0}, Age: {1}&quot;, &quot;Alice&quot;, 30);
+	  Console.WriteLine(&quot;Name: {0}, Age: {1}&quot;, &quot;Alice&quot;, 30);
 
 	  // Colors
-	  Console.foregroundColor = ConsoleColor.green;
-	  Console.writeLine(&quot;Green text&quot;);
-	  Console.resetColor();
+	  Console.ForegroundColor = ConsoleColor.Green;
+	  Console.WriteLine(&quot;Green text&quot;);
+	  Console.ResetColor();
 
 	  // Read input
-	  Console.write(&quot;Enter name: &quot;);
-	  const name = Console.readLine();
-	  Console.writeLine(`Hello, ${name}!`);
+	  Console.Write(&quot;Enter name: &quot;);
+	  const name = Console.ReadLine();
+	  Console.WriteLine(`Hello, ${name}!`);
 	}
 </code></pre>
 <h2 id="math-operations">Math Operations</h2>
@@ -454,27 +454,27 @@ interface User {
 
 	export function main(): void {
 	  // Basic operations
-	  const abs = Math.abs(-5); // 5
-	  const max = Math.max(10, 20); // 20
-	  const min = Math.min(10, 20); // 10
+	  const abs = Math.Abs(-5); // 5
+	  const max = Math.Max(10, 20); // 20
+	  const min = Math.Min(10, 20); // 10
 
 	  // Rounding
-	  const floor = Math.floor(4.7); // 4
-	  const ceil = Math.ceiling(4.2); // 5
-	  const round = Math.round(4.5); // 4 (banker's rounding)
+	  const floor = Math.Floor(4.7); // 4
+	  const ceil = Math.Ceiling(4.2); // 5
+	  const round = Math.Round(4.5); // 4 (banker's rounding)
 
 	  // Power and roots
-	  const pow = Math.pow(2, 10); // 1024
-	  const sqrt = Math.sqrt(16); // 4
+	  const pow = Math.Pow(2, 10); // 1024
+	  const sqrt = Math.Sqrt(16); // 4
 
 	  // Trigonometry
-	  const sin = Math.sin(Math.pi / 2);
-	  const cos = Math.cos(0);
+	  const sin = Math.Sin(Math.PI / 2);
+	  const cos = Math.Cos(0);
 
 	  // Random
 	  const random = new Random();
-	  const value = random.next(1, 100); // 1-99
-	  const doubleValue = random.nextDouble(); // 0.0-1.0
+	  const value = random.Next(1, 100); // 1-99
+	  const doubleValue = random.NextDouble(); // 0.0-1.0
 	}
 </code></pre>
 <h2 id="environment">Environment</h2>
@@ -482,25 +482,25 @@ interface User {
 
 	export function main(): void {
 	  // Environment variables
-	  const path = Environment.getEnvironmentVariable(&quot;PATH&quot;);
-	  Environment.setEnvironmentVariable(&quot;MY_VAR&quot;, &quot;value&quot;);
+	  const path = Environment.GetEnvironmentVariable(&quot;PATH&quot;);
+	  Environment.SetEnvironmentVariable(&quot;MY_VAR&quot;, &quot;value&quot;);
 
 	  // System info
-	  const machineName = Environment.machineName;
-	  const userName = Environment.userName;
-	  const osVersion = Environment.osVersion;
+	  const machineName = Environment.MachineName;
+	  const userName = Environment.UserName;
+	  const osVersion = Environment.OSVersion;
 
 	  // Current directory
-	  const cwd = Environment.currentDirectory;
+	  const cwd = Environment.CurrentDirectory;
 
 	  // Command line args
-	  const args = Environment.getCommandLineArgs();
+	  const args = Environment.GetCommandLineArgs();
 	  for (const arg of args) {
-	    Console.writeLine(arg);
+	    Console.WriteLine(arg);
 	  }
 
 	  // Exit code
-	  Environment.exit(0);
+	  Environment.Exit(0);
 	}
 </code></pre>
 <h2 id="http-client">HTTP Client</h2>
@@ -511,8 +511,8 @@ interface User {
 	  const client = new HttpClient();
 
 	  // GET request
-	  const response = await client.getStringAsync(&quot;https://api.example.com/data&quot;);
-	  Console.writeLine(response);
+	  const response = await client.GetStringAsync(&quot;https://api.example.com/data&quot;);
+	  Console.WriteLine(response);
 	}
 </code></pre>
 <h2 id="json-serialization">JSON Serialization</h2>
@@ -527,12 +527,12 @@ interface User {
 	export function main(): void {
 	  // Serialize
 	  const user: User = { id: 1, name: &quot;Alice&quot; };
-	  const json = JsonSerializer.serialize(user);
-	  Console.writeLine(json); // {&quot;id&quot;:1,&quot;name&quot;:&quot;Alice&quot;}
+	  const json = JsonSerializer.Serialize(user);
+	  Console.WriteLine(json); // {&quot;id&quot;:1,&quot;name&quot;:&quot;Alice&quot;}
 
 	  // Deserialize
-	  const parsed = JsonSerializer.deserialize&lt;User&gt;('{&quot;id&quot;:2,&quot;name&quot;:&quot;Bob&quot;}');
-	  Console.writeLine(parsed?.name); // Bob
+	  const parsed = JsonSerializer.Deserialize&lt;User&gt;('{&quot;id&quot;:2,&quot;name&quot;:&quot;Bob&quot;}');
+	  Console.WriteLine(parsed?.name); // Bob
 	}
 </code></pre>
 <h3 id="nativeaot-compatibility">NativeAOT Compatibility</h3>

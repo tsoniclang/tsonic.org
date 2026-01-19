@@ -235,527 +235,115 @@
   </div>
 
   <div class="content"><h1 id="configuration-reference">Configuration Reference</h1>
-<p>Complete reference for <code>tsonic.json</code> configuration.</p>
-<h2 id="overview">Overview</h2>
-<p>Tsonic uses <code>tsonic.json</code> for project configuration. This file is required and defines how your project is compiled.</p>
-<h2 id="minimal-configuration">Minimal Configuration</h2>
+<p>Tsonic uses <strong>two</strong> config files:</p>
+<ul>
+<li><code>tsonic.workspace.json</code> (workspace root) — shared settings and <strong>all external dependencies</strong></li>
+<li><code>packages/&lt;project&gt;/tsonic.json</code> — per-project compilation settings</li>
+</ul>
+<h2 id="workspace-config-tsonicworkspacejson">Workspace Config: <code>tsonic.workspace.json</code></h2>
+<p>Minimal example:</p>
 <pre><code class="language-json">{
-  &quot;rootNamespace&quot;: &quot;MyApp&quot;,
-  &quot;entryPoint&quot;: &quot;src/App.ts&quot;
+  &quot;$schema&quot;: &quot;https://tsonic.org/schema/workspace/v1.json&quot;,
+  &quot;dotnetVersion&quot;: &quot;net10.0&quot;,
+  &quot;dotnet&quot;: {
+    &quot;typeRoots&quot;: [&quot;node_modules/@tsonic/globals&quot;],
+    &quot;libraries&quot;: [],
+    &quot;frameworkReferences&quot;: [],
+    &quot;packageReferences&quot;: []
+  }
 }
 </code></pre>
-<h2 id="full-configuration">Full Configuration</h2>
+<h3 id="fields">Fields</h3>
+<ul>
+<li><code>dotnetVersion</code> (required): target framework moniker for the workspace (e.g. <code>&quot;net10.0&quot;</code>).</li>
+<li><code>rid</code> (optional): default RID for native builds (e.g. <code>&quot;linux-x64&quot;</code>).</li>
+<li><code>optimize</code> (optional): <code>&quot;speed&quot;</code> or <code>&quot;size&quot;</code>.</li>
+<li><code>buildOptions.stripSymbols</code> / <code>buildOptions.invariantGlobalization</code> (optional): defaults for builds.</li>
+</ul>
+<h3 id="dotnet-workspace-scoped-deps"><code>dotnet.*</code> (workspace-scoped deps)</h3>
+<ul>
+<li><code>dotnet.typeRoots</code>: ambient TypeScript <code>typeRoots</code> used for compilation.
+<ul>
+<li>Default when omitted: <code>[&quot;node_modules/@tsonic/globals&quot;]</code></li>
+</ul>
+</li>
+<li><code>dotnet.libraries</code>: workspace DLL references (recommended location: <code>libs/*.dll</code>).
+<ul>
+<li>Each entry can be either a string path, or an object with an explicit bindings package:
+<ul>
+<li><code>&quot;libs/MyLib.dll&quot;</code></li>
+<li><code>{ &quot;path&quot;: &quot;libs/MyLib.dll&quot;, &quot;types&quot;: &quot;@acme/mylib-types&quot; }</code> (bindings supplied externally; no auto-generation)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>dotnet.frameworkReferences</code>: additional shared frameworks (e.g. <code>Microsoft.AspNetCore.App</code>).</li>
+<li><code>dotnet.packageReferences</code>: NuGet packages (pinned exact versions).</li>
+</ul>
+<p>Most users should manage these via the CLI:</p>
+<pre><code class="language-bash">tsonic add package ./some.dll
+tsonic add nuget Microsoft.Extensions.Logging 10.0.0
+tsonic add framework Microsoft.AspNetCore.App
+tsonic restore
+</code></pre>
+<h2 id="project-config-packagesprojecttsonicjson">Project Config: <code>packages/&lt;project&gt;/tsonic.json</code></h2>
+<p>Minimal executable project:</p>
 <pre><code class="language-json">{
   &quot;$schema&quot;: &quot;https://tsonic.org/schema/v1.json&quot;,
   &quot;rootNamespace&quot;: &quot;MyApp&quot;,
   &quot;entryPoint&quot;: &quot;src/App.ts&quot;,
   &quot;sourceRoot&quot;: &quot;src&quot;,
   &quot;outputDirectory&quot;: &quot;generated&quot;,
-  &quot;outputName&quot;: &quot;app&quot;,
-  &quot;rid&quot;: &quot;linux-x64&quot;,
-  &quot;dotnetVersion&quot;: &quot;net10.0&quot;,
-  &quot;optimize&quot;: &quot;speed&quot;,
-  &quot;output&quot;: {
-    &quot;type&quot;: &quot;executable&quot;,
-    &quot;nativeAot&quot;: true,
-    &quot;singleFile&quot;: true,
-    &quot;trimmed&quot;: true,
-    &quot;stripSymbols&quot;: true,
-    &quot;optimization&quot;: &quot;speed&quot;,
-    &quot;invariantGlobalization&quot;: true,
-    &quot;selfContained&quot;: true
-  },
-  &quot;buildOptions&quot;: {
-    &quot;stripSymbols&quot;: true,
-    &quot;invariantGlobalization&quot;: true
-  },
-  &quot;dotnet&quot;: {
-    &quot;typeRoots&quot;: [&quot;node_modules/@tsonic/globals&quot;],
-    &quot;packageReferences&quot;: [{ &quot;id&quot;: &quot;Newtonsoft.Json&quot;, &quot;version&quot;: &quot;13.0.3&quot; }],
-    &quot;frameworkReferences&quot;: [&quot;Microsoft.AspNetCore.App&quot;],
-    &quot;libraries&quot;: [&quot;lib/MyLib.dll&quot;]
-  }
+  &quot;outputName&quot;: &quot;my-app&quot;,
+  &quot;output&quot;: { &quot;type&quot;: &quot;executable&quot; }
 }
 </code></pre>
-<h2 id="properties">Properties</h2>
-<h3 id="core-properties">Core Properties</h3>
-<h4 id="rootnamespace">rootNamespace</h4>
-<p><strong>Required.</strong> The root C# namespace for generated code.</p>
-<pre><code class="language-json">{
-  &quot;rootNamespace&quot;: &quot;MyApp&quot;
-}
-</code></pre>
-<p>Generated file <code>src/utils/Math.ts</code> becomes:</p>
-<pre><code class="language-csharp">namespace MyApp.Utils { ... }
-</code></pre>
-<h4 id="namingpolicy">namingPolicy</h4>
-<p>Optional overrides for how Tsonic derives generated names.</p>
-<p>Naming policies:</p>
+<h3 id="fields-1">Fields</h3>
 <ul>
-<li><code>&quot;clr&quot;</code> (default): CLR/C# conventions (PascalCase)</li>
-<li><code>&quot;none&quot;</code>: preserve original casing and separators, only removing hyphens (<code>-</code>)</li>
+<li><code>rootNamespace</code> (required): root C# namespace for generated code.</li>
+<li><code>entryPoint</code> (optional for libraries): TypeScript entry file.</li>
+<li><code>sourceRoot</code> (optional): root directory containing source files.</li>
+<li><code>outputDirectory</code> (optional): generated C# output directory (default: <code>&quot;generated&quot;</code>).</li>
+<li><code>outputName</code> (optional): assembly/binary name (default: <code>&quot;app&quot;</code>).</li>
+<li><code>optimize</code> (optional): <code>&quot;speed&quot;</code> or <code>&quot;size&quot;</code> (overrides workspace default).</li>
+<li><code>buildOptions.*</code> (optional): per-project build defaults.</li>
 </ul>
-<p>Buckets:</p>
+<h3 id="output-per-project"><code>output</code> (per-project)</h3>
+<p><code>output.type</code>:</p>
 <ul>
-<li><code>namingPolicy.all</code>: apply to all buckets (overrides all other settings)</li>
-<li><code>namingPolicy.namespaces</code>: directory-derived namespace segments</li>
-<li><code>namingPolicy.classes</code>: file-derived module container class name</li>
-<li><code>namingPolicy.methods</code>: method names</li>
-<li><code>namingPolicy.properties</code>: property names</li>
-<li><code>namingPolicy.fields</code>: field names</li>
-<li><code>namingPolicy.enumMembers</code>: enum member names</li>
-</ul>
-<h5 id="namingpolicyall">namingPolicy.all</h5>
-<p>Disable all CLR renaming:</p>
-<pre><code class="language-json">{
-  &quot;namingPolicy&quot;: {
-    &quot;all&quot;: &quot;none&quot;
-  }
-}
-</code></pre>
-<h5 id="namingpolicyclasses">namingPolicy.classes</h5>
-<p>Controls how Tsonic derives the generated C# class name from the source filename.</p>
+<li><code>&quot;executable&quot;</code> (default when <code>entryPoint</code> is provided)
 <ul>
-<li>Default: <code>&quot;clr&quot;</code> (<code>todo-list.ts</code> → <code>TodoList</code>, <code>todolist.ts</code> → <code>Todolist</code>)</li>
-<li><code>&quot;none&quot;</code>: strip hyphens only (<code>todo-list.ts</code> → <code>todolist</code>)</li>
+<li>Uses NativeAOT by default.</li>
 </ul>
-<pre><code class="language-json">{
-  &quot;namingPolicy&quot;: {
-    &quot;classes&quot;: &quot;none&quot;
-  }
-}
-</code></pre>
-<h5 id="namingpolicynamespaces">namingPolicy.namespaces</h5>
-<p>Controls how Tsonic derives C# namespace segments from directory names.</p>
+</li>
+<li><code>&quot;library&quot;</code> (default when <code>entryPoint</code> is omitted)
 <ul>
-<li>Default: <code>&quot;clr&quot;</code> (<code>src/models/auth/User.ts</code> → <code>MyApp.Models.Auth</code>)</li>
-<li><code>&quot;none&quot;</code>: preserve directory casing and underscores, only removing hyphens (<code>src/models/auth/User.ts</code> → <code>MyApp.models.auth</code>)</li>
+<li>Copies artifacts to <code>dist/</code> and emits <code>dist/tsonic/bindings/</code>.</li>
 </ul>
+</li>
+<li><code>&quot;console-app&quot;</code> (non-NativeAOT executable)</li>
+</ul>
+<h3 id="referenceslibraries-workspace-internal"><code>references.libraries</code> (workspace-internal)</h3>
+<p>Use <code>references.libraries</code> to reference DLL outputs of other projects in the same workspace.
+Paths are resolved relative to the project root.</p>
+<p>Example (CLI project referencing a sibling library output):</p>
 <pre><code class="language-json">{
-  &quot;namingPolicy&quot;: {
-    &quot;namespaces&quot;: &quot;none&quot;
+  &quot;references&quot;: {
+    &quot;libraries&quot;: [&quot;../engine/dist/net10.0/MyLib.dll&quot;]
   }
 }
 </code></pre>
-<h4 id="entrypoint">entryPoint</h4>
-<p>The main TypeScript file that exports a <code>main()</code> function.</p>
-<pre><code class="language-json">{
-  &quot;entryPoint&quot;: &quot;src/App.ts&quot;
-}
-</code></pre>
-<p><strong>Required for executables.</strong> Today, <code>entryPoint</code> is also required for library builds.</p>
-<p>For libraries, set <code>entryPoint</code> to a library root file (for example <code>src/index.ts</code>)
-that imports/exports your public API.</p>
-<h4 id="sourceroot">sourceRoot</h4>
-<p>The root directory containing source files.</p>
-<pre><code class="language-json">{
-  &quot;sourceRoot&quot;: &quot;src&quot;
-}
-</code></pre>
-<p><strong>Default:</strong> Inferred from <code>entryPoint</code> or <code>&quot;src&quot;</code>.</p>
-<h4 id="outputdirectory">outputDirectory</h4>
-<p>Directory for generated C# code.</p>
-<pre><code class="language-json">{
-  &quot;outputDirectory&quot;: &quot;generated&quot;
-}
-</code></pre>
-<p><strong>Default:</strong> <code>&quot;generated&quot;</code></p>
-<h4 id="outputname">outputName</h4>
-<p>Name of the output executable or library.</p>
-<pre><code class="language-json">{
-  &quot;outputName&quot;: &quot;my-app&quot;
-}
-</code></pre>
-<p><strong>Default:</strong> <code>&quot;app&quot;</code></p>
-<h3 id="runtime-configuration">Runtime Configuration</h3>
-<h4 id="rid">rid</h4>
-<p>Runtime identifier for cross-compilation.</p>
-<pre><code class="language-json">{
-  &quot;rid&quot;: &quot;linux-x64&quot;
-}
-</code></pre>
-<p><strong>Default:</strong> Auto-detected for current platform.</p>
-<p><strong>Common RIDs:</strong></p>
-<table>
-<thead>
-<tr>
-<th>RID</th>
-<th>Platform</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>linux-x64</code></td>
-<td>Linux x64</td>
-</tr>
-<tr>
-<td><code>linux-arm64</code></td>
-<td>Linux ARM64</td>
-</tr>
-<tr>
-<td><code>osx-x64</code></td>
-<td>macOS Intel</td>
-</tr>
-<tr>
-<td><code>osx-arm64</code></td>
-<td>macOS Apple Silicon</td>
-</tr>
-<tr>
-<td><code>win-x64</code></td>
-<td>Windows x64</td>
-</tr>
-<tr>
-<td><code>win-arm64</code></td>
-<td>Windows ARM64</td>
-</tr>
-</tbody>
-</table>
-<h4 id="dotnetversion">dotnetVersion</h4>
-<p>Target .NET version.</p>
-<pre><code class="language-json">{
-  &quot;dotnetVersion&quot;: &quot;net10.0&quot;
-}
-</code></pre>
-<p><strong>Default:</strong> <code>&quot;net10.0&quot;</code></p>
-<h3 id="build-options">Build Options</h3>
-<h4 id="optimize">optimize</h4>
-<p>Optimization preference.</p>
-<pre><code class="language-json">{
-  &quot;optimize&quot;: &quot;speed&quot;
-}
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Value</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>speed</code></td>
-<td>Optimize for execution speed</td>
-</tr>
-<tr>
-<td><code>size</code></td>
-<td>Optimize for smaller binary</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Default:</strong> <code>&quot;speed&quot;</code></p>
-<h4 id="buildoptions">buildOptions</h4>
-<p>Build-time options for compilation.</p>
-<pre><code class="language-json">{
-  &quot;buildOptions&quot;: {
-    &quot;stripSymbols&quot;: true,
-    &quot;invariantGlobalization&quot;: true
-  }
-}
-</code></pre>
-<h3 id="output-configuration">Output Configuration</h3>
-<h4 id="outputtype">output.type</h4>
-<p>Output type: <code>&quot;executable&quot;</code>, <code>&quot;library&quot;</code>, or <code>&quot;console-app&quot;</code>.</p>
-<pre><code class="language-json">{
-  &quot;output&quot;: {
-    &quot;type&quot;: &quot;executable&quot;
-  }
-}
-</code></pre>
-<p><strong>Default:</strong> Auto-detected (<code>&quot;executable&quot;</code> if <code>entryPoint</code> provided).</p>
-<h4 id="executable-options">Executable Options</h4>
-<pre><code class="language-json">{
-  &quot;output&quot;: {
-    &quot;type&quot;: &quot;executable&quot;,
-    &quot;nativeAot&quot;: true,
-    &quot;singleFile&quot;: true,
-    &quot;trimmed&quot;: true,
-    &quot;stripSymbols&quot;: true,
-    &quot;optimization&quot;: &quot;speed&quot;,
-    &quot;invariantGlobalization&quot;: true,
-    &quot;selfContained&quot;: true
-  }
-}
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>nativeAot</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Enable NativeAOT compilation</td>
-</tr>
-<tr>
-<td><code>singleFile</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Single-file output</td>
-</tr>
-<tr>
-<td><code>trimmed</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Trim unused code</td>
-</tr>
-<tr>
-<td><code>stripSymbols</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Remove debug symbols</td>
-</tr>
-<tr>
-<td><code>optimization</code></td>
-<td>string</td>
-<td><code>&quot;speed&quot;</code></td>
-<td><code>&quot;speed&quot;</code> or <code>&quot;size&quot;</code></td>
-</tr>
-<tr>
-<td><code>invariantGlobalization</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Use invariant culture</td>
-</tr>
-<tr>
-<td><code>selfContained</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Include runtime</td>
-</tr>
-</tbody>
-</table>
-<h4 id="library-options">Library Options</h4>
-<pre><code class="language-json">{
-  &quot;output&quot;: {
-    &quot;type&quot;: &quot;library&quot;,
-    &quot;targetFrameworks&quot;: [&quot;net10.0&quot;, &quot;net8.0&quot;],
-    &quot;generateDocumentation&quot;: true,
-    &quot;includeSymbols&quot;: true,
-    &quot;packable&quot;: true,
-    &quot;package&quot;: {
-      &quot;id&quot;: &quot;MyLibrary&quot;,
-      &quot;version&quot;: &quot;1.0.0&quot;,
-      &quot;authors&quot;: [&quot;Your Name&quot;],
-      &quot;description&quot;: &quot;My awesome library&quot;
-    }
-  }
-}
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>targetFrameworks</code></td>
-<td>string[]</td>
-<td><code>[&quot;net10.0&quot;]</code></td>
-<td>Target frameworks</td>
-</tr>
-<tr>
-<td><code>generateDocumentation</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Generate XML docs</td>
-</tr>
-<tr>
-<td><code>includeSymbols</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Include debug symbols</td>
-</tr>
-<tr>
-<td><code>packable</code></td>
-<td>boolean</td>
-<td><code>false</code></td>
-<td>Enable NuGet packing</td>
-</tr>
-<tr>
-<td><code>package</code></td>
-<td>object</td>
-<td>-</td>
-<td>NuGet package metadata</td>
-</tr>
-</tbody>
-</table>
-<h4 id="console-app-options">Console App Options</h4>
-<p>Non-NativeAOT executable (regular <code>dotnet publish</code>).</p>
-<pre><code class="language-json">{
-  &quot;output&quot;: {
-    &quot;type&quot;: &quot;console-app&quot;,
-    &quot;targetFramework&quot;: &quot;net10.0&quot;,
-    &quot;singleFile&quot;: true,
-    &quot;selfContained&quot;: true
-  }
-}
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>targetFramework</code></td>
-<td>string</td>
-<td><code>net10.0</code></td>
-<td>Target framework</td>
-</tr>
-<tr>
-<td><code>singleFile</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Single-file publish output</td>
-</tr>
-<tr>
-<td><code>selfContained</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Include runtime in output</td>
-</tr>
-</tbody>
-</table>
-<h3 id="net-configuration">.NET Configuration</h3>
-<h4 id="dotnettyperoots">dotnet.typeRoots</h4>
-<p>Paths to type declaration directories.</p>
-<pre><code class="language-json">{
-  &quot;dotnet&quot;: {
-    &quot;typeRoots&quot;: [&quot;node_modules/@tsonic/globals&quot;]
-  }
-}
-</code></pre>
-<p><strong>Default:</strong> <code>[&quot;node_modules/@tsonic/globals&quot;]</code></p>
-<h4 id="dotnetpackagereferences">dotnet.packageReferences</h4>
-<p>Additional NuGet package dependencies (emitted as <code>PackageReference</code> in the generated <code>.csproj</code>).</p>
-<pre><code class="language-json">{
-  &quot;dotnet&quot;: {
-    &quot;packageReferences&quot;: [
-      { &quot;id&quot;: &quot;Newtonsoft.Json&quot;, &quot;version&quot;: &quot;13.0.3&quot; },
-      { &quot;id&quot;: &quot;Microsoft.EntityFrameworkCore&quot;, &quot;version&quot;: &quot;10.0.1&quot;, &quot;types&quot;: &quot;@tsonic/efcore&quot; },
-      { &quot;id&quot;: &quot;System.Text.Json&quot;, &quot;version&quot;: &quot;8.0.0&quot; }
-    ]
-  }
-}
-</code></pre>
-<p>If you provide <code>types</code>, Tsonic will use that npm package for bindings and will not
-auto-generate bindings for that entry during <code>tsonic restore</code>.</p>
-<h4 id="dotnetframeworkreferences">dotnet.frameworkReferences</h4>
-<p>Additional shared frameworks (emitted as <code>FrameworkReference</code> in the generated <code>.csproj</code>).</p>
-<pre><code class="language-json">{
-  &quot;dotnet&quot;: {
-    &quot;frameworkReferences&quot;: [
-      &quot;Microsoft.AspNetCore.App&quot;
-    ]
-  }
-}
-</code></pre>
-<p>If you provide <code>types</code>, Tsonic will use that npm package for bindings and will not
-auto-generate bindings for that entry during <code>tsonic restore</code>.</p>
-<p>Example with a published bindings package:</p>
-<pre><code class="language-json">{
-  &quot;dotnet&quot;: {
-    &quot;frameworkReferences&quot;: [
-      { &quot;id&quot;: &quot;Microsoft.AspNetCore.App&quot;, &quot;types&quot;: &quot;@tsonic/aspnetcore&quot; }
-    ]
-  }
-}
-</code></pre>
-<h4 id="dotnetlibraries">dotnet.libraries</h4>
-<p>Extra library inputs for the compiler.</p>
+<h2 id="naming-rules-no-naming-transforms">Naming Rules (No Naming Transforms)</h2>
+<p>Tsonic does not apply casing transforms. Names are preserved as written in TypeScript.</p>
+<p>The only deterministic normalization is for <strong>path-derived</strong> names:</p>
 <ul>
-<li>Entries ending with <code>.dll</code> are treated as <strong>assembly references</strong> (added to the generated <code>.csproj</code>).</li>
-<li>Other entries are treated as <strong>additional TypeScript type roots</strong> (passed to the TypeScript compiler).</li>
+<li>Directory segments and file basenames have hyphens (<code>-</code>) removed when generating namespaces / module container class names.
+<ul>
+<li><code>src/todo-list.ts</code> → class <code>todolist</code></li>
+<li><code>src/my-feature/x.ts</code> → namespace segment <code>myfeature</code></li>
 </ul>
-<pre><code class="language-json">{
-  &quot;dotnet&quot;: {
-    &quot;libraries&quot;: [&quot;lib/MyLib.dll&quot;, &quot;./types&quot;, &quot;../shared/common&quot;]
-  }
-}
-</code></pre>
-<h2 id="configuration-examples">Configuration Examples</h2>
-<h3 id="minimal-executable">Minimal Executable</h3>
-<pre><code class="language-json">{
-  &quot;rootNamespace&quot;: &quot;MyApp&quot;,
-  &quot;entryPoint&quot;: &quot;src/App.ts&quot;
-}
-</code></pre>
-<h3 id="with-net-libraries">With .NET Libraries</h3>
-<pre><code class="language-json">{
-  &quot;rootNamespace&quot;: &quot;FileProcessor&quot;,
-  &quot;entryPoint&quot;: &quot;src/App.ts&quot;,
-  &quot;dotnet&quot;: {
-    &quot;libraries&quot;: [&quot;./libs/custom-lib&quot;]
-  }
-}
-</code></pre>
-<h3 id="optimized-for-size">Optimized for Size</h3>
-<pre><code class="language-json">{
-  &quot;rootNamespace&quot;: &quot;SmallApp&quot;,
-  &quot;entryPoint&quot;: &quot;src/App.ts&quot;,
-  &quot;optimize&quot;: &quot;size&quot;,
-  &quot;output&quot;: {
-    &quot;type&quot;: &quot;executable&quot;,
-    &quot;nativeAot&quot;: true,
-    &quot;trimmed&quot;: true,
-    &quot;optimization&quot;: &quot;size&quot;
-  }
-}
-</code></pre>
-<h3 id="class-library">Class Library</h3>
-<pre><code class="language-json">{
-  &quot;rootNamespace&quot;: &quot;MyLibrary&quot;,
-  &quot;entryPoint&quot;: &quot;src/index.ts&quot;,
-  &quot;sourceRoot&quot;: &quot;src&quot;,
-  &quot;output&quot;: {
-    &quot;type&quot;: &quot;library&quot;,
-    &quot;targetFrameworks&quot;: [&quot;net10.0&quot;, &quot;net8.0&quot;],
-    &quot;packable&quot;: true,
-    &quot;package&quot;: {
-      &quot;id&quot;: &quot;MyLibrary&quot;,
-      &quot;version&quot;: &quot;1.0.0&quot;,
-      &quot;authors&quot;: [&quot;Your Name&quot;],
-      &quot;description&quot;: &quot;A useful library&quot;,
-      &quot;license&quot;: &quot;MIT&quot;
-    }
-  }
-}
-</code></pre>
-<h3 id="with-nuget-dependencies">With NuGet Dependencies</h3>
-<pre><code class="language-json">{
-  &quot;rootNamespace&quot;: &quot;WebClient&quot;,
-  &quot;entryPoint&quot;: &quot;src/App.ts&quot;,
-  &quot;dotnet&quot;: {
-    &quot;packageReferences&quot;: [
-      { &quot;id&quot;: &quot;System.Net.Http.Json&quot;, &quot;version&quot;: &quot;8.0.0&quot; },
-      { &quot;id&quot;: &quot;Newtonsoft.Json&quot;, &quot;version&quot;: &quot;13.0.3&quot; }
-    ]
-  }
-}
-</code></pre>
-<h2 id="cli-override">CLI Override</h2>
-<p>Most configuration can be overridden via CLI:</p>
-<pre><code class="language-bash">tsonic build src/App.ts \
-  --namespace MyApp \
-  --out my-app \
-  --rid linux-x64 \
-  --optimize size
-</code></pre>
-<p>CLI options take precedence over <code>tsonic.json</code>.</p>
+</li>
+</ul>
 </div>
 </article>
 </main>

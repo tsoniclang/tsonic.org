@@ -277,96 +277,79 @@ xcrun --show-sdk-path
 npx tsonic --version
 </code></pre>
 <h2 id="creating-a-project">Creating a Project</h2>
-<h3 id="using-project-init">Using project init</h3>
+<h3 id="using-tsonic-init">Using <code>tsonic init</code></h3>
 <p>The easiest way to start:</p>
 <pre><code class="language-bash">mkdir my-app
 cd my-app
-tsonic project init
+tsonic init
 </code></pre>
 <p>This creates:</p>
 <pre><code>my-app/
-├── src/
-│   └── App.ts           # Entry point
-├── tsonic.json          # Configuration
-├── package.json         # NPM package with scripts
-├── .gitignore           # Ignores generated/ and out/
-└── README.md            # Project readme
+├── tsonic.workspace.json     # Workspace config (dependencies live here)
+├── libs/                     # Workspace-scoped DLLs
+├── packages/
+│   └── my-app/
+│       ├── tsonic.json       # Project config
+│       ├── package.json      # Project package.json (minimal)
+│       └── src/App.ts        # Entry point
+├── package.json              # Workspace package.json (npm workspaces + scripts)
+└── .gitignore                # Ignores generated/, out/, node_modules/, .tsonic/
 </code></pre>
-<h3 id="project-init-options">Project Init Options</h3>
-<pre><code class="language-bash"># Enable JavaScript runtime APIs (console, JSON, timers, etc.)
-tsonic project init --js
+<h3 id="init-options">Init Options</h3>
+<pre><code class="language-bash"># Enable JavaScript runtime APIs (@tsonic/js)
+tsonic init --js
 
-# Enable Node.js compatibility APIs (fs, path, etc.)
-tsonic project init --nodejs
+# Enable Node.js compatibility APIs (@tsonic/nodejs)
+tsonic init --nodejs
 
 # Skip installing type packages
-tsonic project init --skip-types
+tsonic init --skip-types
 
 # Specify type package version
-tsonic project init --types-version &lt;ver&gt;
+tsonic init --types-version &lt;ver&gt;
 </code></pre>
-<h3 id="adding-jsnodejs-to-an-existing-project">Adding JS/NodeJS to an existing project</h3>
-<p>If you already have a Tsonic project and want JSRuntime or Node.js APIs later:</p>
+<h3 id="adding-jsnodejs-to-an-existing-workspace">Adding JS/NodeJS to an existing workspace</h3>
+<p>If you already have a Tsonic workspace and want JSRuntime or Node.js APIs later:</p>
 <pre><code class="language-bash">tsonic add js
 tsonic add nodejs
-</code></pre>
-<h3 id="manual-setup">Manual Setup</h3>
-<p>If you prefer manual setup:</p>
-<ol>
-<li>Create <code>tsonic.json</code>:</li>
-</ol>
-<pre><code class="language-json">{
-  &quot;rootNamespace&quot;: &quot;MyApp&quot;,
-  &quot;entryPoint&quot;: &quot;src/App.ts&quot;,
-  &quot;sourceRoot&quot;: &quot;src&quot;
-}
-</code></pre>
-<ol start="2">
-<li>Create <code>src/App.ts</code>:</li>
-</ol>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-export function main(): void {
-  Console.writeLine(&quot;Hello!&quot;);
-}
-</code></pre>
-<ol start="3">
-<li>Install type packages:</li>
-</ol>
-<pre><code class="language-bash">npm install --save-dev tsonic @tsonic/core @tsonic/globals
 </code></pre>
 <h2 id="building-and-running">Building and Running</h2>
 <h3 id="build-command">Build Command</h3>
 <p>Generate C# and compile to native:</p>
-<pre><code class="language-bash">tsonic build src/App.ts
+<pre><code class="language-bash">tsonic build
 </code></pre>
-<p>Output goes to <code>out/app</code> (or <code>out/app.exe</code> on Windows).</p>
+<p>Output goes to <code>packages/&lt;project&gt;/out/&lt;app&gt;</code> (or <code>.exe</code> on Windows).</p>
+<p>If your workspace has multiple projects, select one explicitly:</p>
+<pre><code class="language-bash">tsonic build --project my-app
+</code></pre>
 <h3 id="run-command">Run Command</h3>
 <p>Build and execute in one step:</p>
-<pre><code class="language-bash">tsonic run src/App.ts
+<pre><code class="language-bash">tsonic run
 </code></pre>
 <h3 id="npm-scripts">NPM Scripts</h3>
 <p>The generated <code>package.json</code> includes convenience scripts:</p>
-<pre><code class="language-bash">npm run build    # tsonic build src/App.ts
-npm run dev      # tsonic run src/App.ts
+<pre><code class="language-bash">npm run build    # tsonic build
+npm run dev      # tsonic run
 </code></pre>
 <h2 id="understanding-the-output">Understanding the Output</h2>
 <p>After building:</p>
 <pre><code>my-app/
-├── generated/           # Generated C# code
-│   ├── src/
-│   │   └── App.cs       # Your code as C#
-│   ├── Program.cs       # Entry point wrapper
-│   └── tsonic.csproj    # .NET project file
-└── out/
-    └── app              # Native executable
+└── packages/
+    └── my-app/
+        ├── generated/           # Generated C# code
+        │   ├── src/
+        │   │   └── App.cs       # Your code as C#
+        │   ├── Program.cs       # Entry point wrapper
+        │   └── tsonic.csproj    # .NET project file
+        └── out/
+            └── my-app           # Native executable
 </code></pre>
 <h3 id="generated-c-example">Generated C# (Example)</h3>
 <p>Your TypeScript:</p>
 <pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 
 export function main(): void {
-  Console.writeLine(&quot;Hello!&quot;);
+  Console.WriteLine(&quot;Hello!&quot;);
 }
 </code></pre>
 <p>Becomes:</p>
@@ -374,7 +357,7 @@ export function main(): void {
 {
     public static class App
     {
-        public static void Main()
+        public static void main()
         {
             global::System.Console.WriteLine(&quot;Hello!&quot;);
         }
@@ -384,7 +367,7 @@ export function main(): void {
 <h2 id="next-steps">Next Steps</h2>
 <ul>
 <li><a href="/tsonic/cli/">CLI Reference</a> - All commands and options</li>
-<li><a href="/tsonic/configuration/">Configuration</a> - tsonic.json in detail</li>
+<li><a href="/tsonic/configuration/">Configuration</a> - Workspace + project config</li>
 <li><a href="/tsonic/language/">Language Guide</a> - TypeScript features supported</li>
 <li><a href="/tsonic/dotnet-interop/">.NET Interop</a> - Using .NET libraries</li>
 </ul>

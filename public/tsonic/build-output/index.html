@@ -250,19 +250,23 @@
 </ol>
 <h2 id="directory-structure">Directory Structure</h2>
 <p>After building:</p>
-<pre><code>project/
-├── src/
-│   └── App.ts           # Your source
-├── generated/           # Generated C# code
-│   ├── src/
-│   │   └── App.cs       # C# from your TypeScript
-│   ├── Program.cs       # Entry point wrapper
-│   ├── tsonic.csproj    # .NET project file
-│   ├── bin/             # .NET build output
-│   └── obj/             # .NET intermediate files
-├── out/
-│   └── app              # Final executable
-└── tsonic.json
+<pre><code>workspace/
+├── tsonic.workspace.json
+├── libs/
+└── packages/
+    └── my-app/
+        ├── tsonic.json
+        ├── src/
+        │   └── App.ts           # Your source
+        ├── generated/           # Generated C# code
+        │   ├── src/
+        │   │   └── App.cs       # C# from your TypeScript
+        │   ├── Program.cs       # Entry point wrapper
+        │   ├── tsonic.csproj    # .NET project file
+        │   ├── bin/             # .NET build output
+        │   └── obj/             # .NET intermediate files
+        └── out/
+            └── my-app           # Final executable
 </code></pre>
 <h2 id="generated-files">Generated Files</h2>
 <h3 id="c-source-files">C# Source Files</h3>
@@ -327,8 +331,8 @@ public static class Program
 <h2 id="output-types">Output Types</h2>
 <h3 id="executable-default">Executable (Default)</h3>
 <p>Single native binary:</p>
-<pre><code>out/app        (Linux/macOS)
-out/app.exe    (Windows)
+<pre><code>packages/&lt;project&gt;/out/&lt;name&gt;      (Linux/macOS)
+packages/&lt;project&gt;/out/&lt;name&gt;.exe  (Windows)
 </code></pre>
 <p>Configuration:</p>
 <pre><code class="language-json">{
@@ -346,6 +350,9 @@ out/app.exe    (Windows)
 │   └── MyLib.pdb     # Symbols
 └── net8.0/
     └── ...           # Multi-target
+</code></pre>
+<p>Library builds also emit shippable CLR bindings under:</p>
+<pre><code>dist/tsonic/bindings/
 </code></pre>
 <p>Configuration:</p>
 <pre><code class="language-json">{
@@ -453,11 +460,11 @@ out/app.exe    (Windows)
 </ul>
 <h2 id="keeping-build-artifacts">Keeping Build Artifacts</h2>
 <p>For debugging, keep generated files:</p>
-<pre><code class="language-bash">tsonic build src/App.ts --keep-temp
+<pre><code class="language-bash">tsonic build --keep-temp
 </code></pre>
 <p>Or inspect manually:</p>
-<pre><code class="language-bash">tsonic generate src/App.ts  # Generate C# only
-cd generated
+<pre><code class="language-bash">tsonic generate             # Generate C# only
+cd packages/&lt;project&gt;/generated
 dotnet build            # Build manually
 </code></pre>
 <h2 id="cross-compilation">Cross-Compilation</h2>
@@ -474,10 +481,12 @@ tsonic build src/App.ts --rid win-x64
 <p>Cross-compilation requires .NET SDK with target runtime.</p>
 <h2 id="gitignore">Gitignore</h2>
 <p>Recommended <code>.gitignore</code>:</p>
-<pre><code class="language-gitignore"># Tsonic build output
-generated/
-out/
-dist/
+<pre><code class="language-gitignore"># .NET build artifacts (per-project)
+packages/*/generated/bin/
+packages/*/generated/obj/
+
+# Output executables
+packages/*/out/
 
 # .NET artifacts
 bin/
@@ -485,6 +494,9 @@ obj/
 
 # Dependencies
 node_modules/
+
+# Internal tooling artifacts (restore scratch, caches)
+.tsonic/
 </code></pre>
 <h2 id="troubleshooting-builds">Troubleshooting Builds</h2>
 <h3 id="check-generated-c">Check Generated C#</h3>

@@ -387,8 +387,8 @@ const quotient = c / d; // 3
 import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 
 const list = new List&lt;string&gt;();
-list.add(&quot;one&quot;);
-list.add(&quot;two&quot;);
+list.Add(&quot;one&quot;);
+list.Add(&quot;two&quot;);
 
 // List indexers require an int index
 const idx: int = 0;
@@ -404,7 +404,7 @@ const numbers = new List&lt;int&gt;();
 // ... populate list
 
 // Sum() returns int when input is int
-const total = Enumerable.sum(numbers);
+const total = Enumerable.Sum(numbers);
 </code></pre>
 <h3 id="recommended-array-indexing">Recommended: Array Indexing</h3>
 <p>Use integers for array access to avoid floating-point issues:</p>
@@ -658,8 +658,8 @@ const item = items[idx]; // OK
 import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 
 const nums = new List&lt;int&gt;();
-nums.add(1);
-nums.add(2);
+nums.Add(1);
+nums.Add(2);
 // Now LINQ operations work correctly
 </code></pre>
 <h2 id="see-also">See Also</h2>

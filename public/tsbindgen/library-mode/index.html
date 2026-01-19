@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -189,7 +189,7 @@
 <p>When building a TypeScript package with .NET bindings:</p>
 <ul>
 <li>BCL types come from <code>@tsonic/dotnet</code> (published package)</li>
-<li>Runtime types come from <code>@tsonic/core</code> (Tsonic runtime primitives)</li>
+<li>Runtime primitives come from <code>@tsonic/core</code> (installed as a dependency; <code>@tsonic/dotnet</code> imports these types)</li>
 <li>Your types are generated fresh with references to these packages</li>
 </ul>
 <h2 id="workflow">Workflow</h2>
@@ -223,12 +223,12 @@ npm install @tsonic/dotnet
   -d $DOTNET_RUNTIME \
   -o ./my-lib-types \
   --lib ./node_modules/@tsonic/dotnet \
-  --lib ./node_modules/@tsonic/core
+  --lib ./node_modules/@tsonic/microsoft-extensions
 </code></pre>
 <p>When a type is referenced, tsbindgen checks each library in order and imports from the first one that provides it. This allows layered package structures:</p>
 <ul>
-<li><code>@tsonic/core</code> - Tsonic runtime types (primitives, Array, etc.)</li>
-<li><code>@tsonic/dotnet</code> - .NET BCL types (references <code>@tsonic/core</code> for primitives)</li>
+<li><code>@tsonic/dotnet</code> - .NET BCL types</li>
+<li><code>@tsonic/microsoft-extensions</code> - Additional shared framework assemblies (e.g., DI/Logging/Config)</li>
 <li>Your package - Your types (references both)</li>
 </ul>
 <h2 id="output-structure">Output Structure</h2>
@@ -253,7 +253,6 @@ npm install @tsonic/dotnet
     +-- bindings.json
     +-- internal/
         +-- index.d.ts
-        +-- metadata.json
 </code></pre>
 <p>BCL references become imports:</p>
 <pre><code class="language-typescript">// In MyNamespace/internal/index.d.ts
@@ -261,8 +260,8 @@ import type { List_1 } from '@tsonic/dotnet/System.Collections.Generic.js';
 import type { Exception } from '@tsonic/dotnet/System.js';
 
 export interface MyClass$instance {
-    getItems(): List_1&lt;string&gt;;
-    getError(): Exception;
+    GetItems(): List_1&lt;string&gt;;
+    GetError(): Exception;
 }
 </code></pre>
 <h2 id="example-custom-library">Example: Custom Library</h2>
@@ -290,8 +289,8 @@ import type { List_1 } from '@tsonic/dotnet/System.Collections.Generic.js';
 import type { Exception } from '@tsonic/dotnet/System.js';
 
 export interface DataProcessor$instance {
-    process(items: string[]): List_1&lt;string&gt;;
-    handleError(ex: Exception): void;
+    Process(items: string[]): List_1&lt;string&gt;;
+    HandleError(ex: Exception): void;
 }
 
 export declare const DataProcessor: {
@@ -319,7 +318,7 @@ export type DataProcessor = DataProcessor$instance;
 <tr>
 <td><code>LIB002</code></td>
 <td>Member signature mismatch</td>
-<td>Regenerate with same options</td>
+<td>Regenerate with the same inputs</td>
 </tr>
 <tr>
 <td><code>LIB003</code></td>
@@ -330,9 +329,9 @@ export type DataProcessor = DataProcessor$instance;
 </table>
 <h2 id="best-practices">Best Practices</h2>
 <ol>
-<li><strong>Use same --naming</strong> - Match the naming mode of your BCL package</li>
 <li><strong>Keep BCL updated</strong> - Regenerate when .NET version changes</li>
-<li><strong>Pin versions</strong> - Use specific @tsonic/dotnet version in package.json</li>
+<li><strong>Pin versions</strong> - Use a specific <code>@tsonic/dotnet</code> version in <code>package.json</code></li>
+<li><strong>Regenerate together</strong> - Generate your library and its referenced libs with the same dotnet/toolchain inputs</li>
 </ol>
 </div>
 </article>
