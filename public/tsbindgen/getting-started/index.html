@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -245,14 +245,12 @@ dotnet run --project src/tsbindgen/tsbindgen.csproj -- \
 |   +-- bindings.json
 |   +-- internal/
 |       +-- index.d.ts          # Full declarations
-|       +-- metadata.json       # CLR semantics
 +-- System.Collections.Generic.d.ts
 +-- System.Collections.Generic.js
 +-- System.Collections.Generic/
 |   +-- bindings.json
 |   +-- internal/
 |       +-- index.d.ts
-|       +-- metadata.json
 +-- ... (130 namespaces)
 </code></pre>
 <h3 id="facade-namespacedts">Facade (<code>&lt;Namespace&gt;.d.ts</code>)</h3>
@@ -270,8 +268,8 @@ export type IEnumerable&lt;T&gt; = Internal.IEnumerable_1&lt;T&gt;;
 <p>Full type declarations:</p>
 <pre><code class="language-typescript">// output/System.Collections.Generic/internal/index.d.ts
 export interface List_1$instance&lt;T&gt; {
-    readonly count: int;
-    add(item: T): void;
+    readonly Count: int;
+    Add(item: T): void;
     // ...
 }
 
@@ -303,7 +301,7 @@ Total errors: 0
 <ul>
 <li><a href="/tsbindgen/cli/">CLI Reference</a> - All commands and options</li>
 <li><a href="/tsbindgen/type-mappings/">Type Mappings</a> - How types are mapped</li>
-<li><a href="/tsbindgen/naming/">Naming Conventions</a> - CLR vs JavaScript naming</li>
+<li><a href="/tsbindgen/naming/">Naming &amp; Identifiers</a> - CLR-faithful names and TS-safe identifiers</li>
 <li><a href="/tsbindgen/library-mode/">Library Mode</a> - Generate for custom assemblies</li>
 </ul>
 </div>

@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -274,11 +274,10 @@ node test/validate/validate.js 2&gt;&amp;1 | tee error-report.txt
 <h3 id="lib002---signature-mismatch">LIB002 - Signature Mismatch</h3>
 <pre><code>Error LIB002: Member signature mismatch for 'List.Add'
 </code></pre>
-<p><strong>Cause:</strong> Library was generated with different options (e.g., different <code>--naming</code>).</p>
-<p><strong>Solution:</strong> Regenerate library with matching options:</p>
-<pre><code class="language-bash"># Both must use same naming
-npx tsbindgen generate -d $DOTNET_RUNTIME -o ./bcl --naming js
-npx tsbindgen generate -a ./MyLib.dll -d $DOTNET_RUNTIME -o ./out --lib ./bcl --naming js
+<p><strong>Cause:</strong> Library was generated against a different set of reference libraries / tool version than the <code>--lib</code> package.</p>
+<p><strong>Solution:</strong> Regenerate both with the same inputs:</p>
+<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./bcl
+npx tsbindgen generate -a ./MyLib.dll -d $DOTNET_RUNTIME -o ./out --lib ./bcl
 </code></pre>
 <h2 id="performance-issues">Performance Issues</h2>
 <h3 id="slow-generation">Slow Generation</h3>
@@ -318,9 +317,6 @@ node test/validate/validate.js --skip-tsc
 <h3 id="inspect-generated-files">Inspect Generated Files</h3>
 <pre><code class="language-bash"># View TypeScript output
 cat output/System.d.ts
-
-# View metadata
-cat output/System/internal/metadata.json | jq .
 
 # View bindings
 cat output/System/bindings.json | jq .

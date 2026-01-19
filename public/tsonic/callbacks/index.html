@@ -272,7 +272,7 @@
 import { int } from &quot;@tsonic/core/types.js&quot;;
 
 function forEach(items: List&lt;int&gt;, callback: (item: int) =&gt; void): void {
-  const len = items.count;
+  const len = items.Count;
   for (let i: int = 0; i &lt; len; i++) {
     callback(items[i]);
   }
@@ -280,17 +280,17 @@ function forEach(items: List&lt;int&gt;, callback: (item: int) =&gt; void): void
 
 export function main(): void {
   const numbers = new List&lt;int&gt;();
-  numbers.add(1);
-  numbers.add(2);
-  numbers.add(3);
+  numbers.Add(1);
+  numbers.Add(2);
+  numbers.Add(3);
 
   forEach(numbers, (n: int) =&gt; {
-    Console.writeLine(`Item: ${n}`);
+    Console.WriteLine(`Item: ${n}`);
   });
 }
 </code></pre>
 <p>Generated C#:</p>
-<pre><code class="language-csharp">public static void ForEach(List&lt;int&gt; items, Action&lt;int&gt; callback)
+<pre><code class="language-csharp">public static void forEach(List&lt;int&gt; items, Action&lt;int&gt; callback)
 {
     var len = items.Count;
     for (var i = 0; i &lt; len; i++)
@@ -306,7 +306,7 @@ function forEachWithIndex(
   items: List&lt;int&gt;,
   callback: (item: int, index: int) =&gt; void
 ): void {
-  const len = items.count;
+  const len = items.Count;
   for (let i: int = 0; i &lt; len; i++) {
     callback(items[i], i);
   }
@@ -314,11 +314,11 @@ function forEachWithIndex(
 
 // Usage
 forEachWithIndex(numbers, (item: int, index: int) =&gt; {
-  Console.writeLine(`[${index}] = ${item}`);
+  Console.WriteLine(`[${index}] = ${item}`);
 });
 </code></pre>
 <p>Generated C#:</p>
-<pre><code class="language-csharp">public static void ForEachWithIndex(List&lt;int&gt; items, Action&lt;int, int&gt; callback)
+<pre><code class="language-csharp">public static void forEachWithIndex(List&lt;int&gt; items, Action&lt;int, int&gt; callback)
 </code></pre>
 <h2 id="func-callbacks">Func Callbacks</h2>
 <p>Use <code>Func&lt;T, TResult&gt;</code> for callbacks that return a value.</p>
@@ -327,9 +327,9 @@ forEachWithIndex(numbers, (item: int, index: int) =&gt; {
 
 function map(items: List&lt;int&gt;, transform: (item: int) =&gt; int): List&lt;int&gt; {
   const result = new List&lt;int&gt;();
-  const len = items.count;
+  const len = items.Count;
   for (let i: int = 0; i &lt; len; i++) {
-    result.add(transform(items[i]));
+    result.Add(transform(items[i]));
   }
   return result;
 }
@@ -338,7 +338,7 @@ function map(items: List&lt;int&gt;, transform: (item: int) =&gt; int): List&lt;
 const doubled = map(numbers, (n: int) =&gt; n * 2);
 </code></pre>
 <p>Generated C#:</p>
-<pre><code class="language-csharp">public static List&lt;int&gt; Map(List&lt;int&gt; items, Func&lt;int, int&gt; transform)
+<pre><code class="language-csharp">public static List&lt;int&gt; map(List&lt;int&gt; items, Func&lt;int, int&gt; transform)
 </code></pre>
 <h3 id="predicate-functions">Predicate Functions</h3>
 <pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
@@ -348,11 +348,11 @@ function filter(
   predicate: (item: int) =&gt; boolean
 ): List&lt;int&gt; {
   const result = new List&lt;int&gt;();
-  const len = items.count;
+  const len = items.Count;
   for (let i: int = 0; i &lt; len; i++) {
     const item = items[i];
     if (predicate(item)) {
-      result.add(item);
+      result.Add(item);
     }
   }
   return result;
@@ -362,7 +362,7 @@ function filter(
 const evens = filter(numbers, (n: int) =&gt; n % 2 === 0);
 </code></pre>
 <p>Generated C#:</p>
-<pre><code class="language-csharp">public static List&lt;int&gt; Filter(List&lt;int&gt; items, Func&lt;int, bool&gt; predicate)
+<pre><code class="language-csharp">public static List&lt;int&gt; filter(List&lt;int&gt; items, Func&lt;int, bool&gt; predicate)
 </code></pre>
 <h3 id="reducer-functions">Reducer Functions</h3>
 <pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
@@ -373,7 +373,7 @@ function reduce(
   initial: int
 ): int {
   let result = initial;
-  const len = items.count;
+  const len = items.Count;
   for (let i: int = 0; i &lt; len; i++) {
     result = reducer(result, items[i]);
   }
@@ -384,7 +384,7 @@ function reduce(
 const sum = reduce(numbers, (acc: int, n: int) =&gt; acc + n, 0);
 </code></pre>
 <p>Generated C#:</p>
-<pre><code class="language-csharp">public static int Reduce(List&lt;int&gt; items, Func&lt;int, int, int&gt; reducer, int initial)
+<pre><code class="language-csharp">public static int reduce(List&lt;int&gt; items, Func&lt;int, int, int&gt; reducer, int initial)
 </code></pre>
 <h2 id="type-mappings">Type Mappings</h2>
 <h3 id="action-variants">Action Variants</h3>
@@ -448,13 +448,13 @@ const sum = reduce(numbers, (acc: int, n: int) =&gt; acc + n, 0);
 import { int } from &quot;@tsonic/core/types.js&quot;;
 
 const numbers = new List&lt;int&gt;();
-numbers.add(1);
-numbers.add(2);
-numbers.add(3);
+numbers.Add(1);
+numbers.Add(2);
+numbers.Add(3);
 
-// Inline Action
-numbers.forEach((n: int) =&gt; {
-  Console.writeLine(`${n}`);
+// Inline Action (List&lt;T&gt;.ForEach)
+numbers.ForEach((n: int) =&gt; {
+  Console.WriteLine(`${n}`);
 });
 
 // Inline Func with return
@@ -471,8 +471,8 @@ function createMultiplier(factor: int): (n: int) =&gt; int {
 const double = createMultiplier(2);
 const triple = createMultiplier(3);
 
-Console.writeLine(`${double(5)}`); // 10
-Console.writeLine(`${triple(5)}`); // 15
+Console.WriteLine(`${double(5)}`); // 10
+Console.WriteLine(`${triple(5)}`); // 15
 </code></pre>
 <h3 id="function-composition">Function Composition</h3>
 <pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
@@ -485,7 +485,7 @@ const addOne = (x: int) =&gt; x + 1;
 const double = (x: int) =&gt; x * 2;
 
 const addThenDouble = compose(double, addOne);
-Console.writeLine(`${addThenDouble(5)}`); // 12
+Console.WriteLine(`${addThenDouble(5)}`); // 12
 </code></pre>
 <h2 id="async-callbacks">Async Callbacks</h2>
 <p>For async callbacks, use <code>Promise</code> return types:</p>
@@ -493,7 +493,7 @@ Console.writeLine(`${addThenDouble(5)}`); // 12
 
 async function processAsync(callback: () =&gt; Promise&lt;string&gt;): Promise&lt;void&gt; {
   const result = await callback();
-  Console.writeLine(result);
+  Console.WriteLine(result);
 }
 
 await processAsync(async () =&gt; {
@@ -501,7 +501,7 @@ await processAsync(async () =&gt; {
 });
 </code></pre>
 <p>Generated C#:</p>
-<pre><code class="language-csharp">public static async Task ProcessAsync(Func&lt;Task&lt;string&gt;&gt; callback)
+<pre><code class="language-csharp">public static async Task processAsync(Func&lt;Task&lt;string&gt;&gt; callback)
 {
     var result = await callback();
     Console.WriteLine(result);
@@ -516,7 +516,7 @@ function addClickHandler(handler: EventHandler): void {
 }
 
 addClickHandler((sender: object, args: EventArgs) =&gt; {
-  Console.writeLine(&quot;Clicked!&quot;);
+  Console.WriteLine(&quot;Clicked!&quot;);
 });
 </code></pre>
 <h3 id="comparison-functions">Comparison Functions</h3>
@@ -546,20 +546,20 @@ const user = createItem(() =&gt; ({
 	import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
 
 const numbers = new List&lt;int&gt;();
-numbers.add(1);
-numbers.add(2);
-numbers.add(3);
-numbers.add(4);
-numbers.add(5);
+numbers.Add(1);
+numbers.Add(2);
+numbers.Add(3);
+numbers.Add(4);
+numbers.Add(5);
 
 // LINQ Where with predicate
-const evens = Enumerable.where(numbers, (n: int) =&gt; n % 2 === 0);
+const evens = Enumerable.Where(numbers, (n: int) =&gt; n % 2 === 0);
 
 // LINQ Select with transform
-const doubled = Enumerable.select(numbers, (n: int) =&gt; n * 2);
+const doubled = Enumerable.Select(numbers, (n: int) =&gt; n * 2);
 
 // LINQ Aggregate with reducer
-const sum = Enumerable.aggregate(
+const sum = Enumerable.Aggregate(
   numbers,
   0,
   (acc: int, n: int) =&gt; acc + n

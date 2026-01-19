@@ -263,13 +263,14 @@ sudo apt-get install dotnet-sdk-10.0
 </code></pre>
 <h2 id="build-errors">Build Errors</h2>
 <h3 id="config-file-not-found">&quot;Config file not found&quot;</h3>
-<pre><code>Error: Config file not found: tsonic.json
+<pre><code>Error: No tsonic.workspace.json found
 </code></pre>
 <p><strong>Solutions</strong>:</p>
 <ol>
-<li>Run from project root (where <code>tsonic.json</code> is)</li>
-<li>Create config: <code>tsonic project init</code></li>
-<li>Specify path: <code>tsonic build --config path/to/tsonic.json</code></li>
+<li>Run from inside a workspace (any directory under the workspace root)</li>
+<li>Initialize a new workspace: <code>tsonic init</code></li>
+<li>Specify the workspace config path explicitly: <code>tsonic build --config path/to/tsonic.workspace.json</code></li>
+<li>If the workspace has multiple projects, add <code>--project &lt;name&gt;</code></li>
 </ol>
 <h3 id="entry-point-is-required">&quot;Entry point is required&quot;</h3>
 <pre><code>Error: Entry point is required for executable builds
@@ -394,12 +395,12 @@ declare function getData(): Promise&lt;string&gt;;
 export async function main(): Promise&lt;void&gt; {
   // ❌ Wrong
   getData().then((data) =&gt; {
-    Console.writeLine(data);
+    Console.WriteLine(data);
   });
 
   // ✅ Correct
   const data = await getData();
-  Console.writeLine(data);
+  Console.WriteLine(data);
 }
 </code></pre>
 <h3 id="nullable-generics">Nullable Generics</h3>

@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -206,8 +206,7 @@
   System.Collections.Generic/
     internal/
       index.d.ts            # Full declarations
-      metadata.json         # CLR semantics
-    bindings.json           # CLR↔TS name mappings
+    bindings.json           # CLR bindings manifest (names + CLR semantics)
   System.Collections.Generic.d.ts  # Facade (public API)
   System.Collections.Generic.js   # Runtime stub (throws)
 </code></pre>
@@ -222,15 +221,15 @@ import type { IEnumerable_1 } from &quot;../../System.Collections.Generic/intern
 
 // Instance interface (properties and methods)
 export interface List_1$instance&lt;T&gt; {
-    readonly count: int;
-    readonly capacity: int;
-    add(item: T): void;
-    clear(): void;
-    contains(item: T): boolean;
-    indexOf(item: T): int;
-    insert(index: int, item: T): void;
-    remove(item: T): boolean;
-    removeAt(index: int): void;
+    readonly Count: int;
+    readonly Capacity: int;
+    Add(item: T): void;
+    Clear(): void;
+    Contains(item: T): boolean;
+    IndexOf(item: T): int;
+    Insert(index: int, item: T): void;
+    Remove(item: T): boolean;
+    RemoveAt(index: int): void;
 }
 
 // Constructor/static declaration
@@ -332,13 +331,13 @@ import { List } from '@tsonic/dotnet/System.Collections.Generic.js';
 </code></pre>
 <h2 id="dual-scope-naming">Dual-Scope Naming</h2>
 <h3 id="the-problem">The Problem</h3>
-<p>A class member and an interface member might have the same name after transformation:</p>
+<p>A class member and an interface member can have the same name in the emitted TypeScript surface:</p>
 <pre><code class="language-csharp">class MyClass : ICollection {
     public void Clear() { }              // Class member
     void ICollection.Clear() { }         // Explicit interface impl
 }
 </code></pre>
-<p>Both become <code>clear</code> in JavaScript naming mode. Without separate scopes, these would collide.</p>
+<p>Both are named <code>Clear</code>. Without separate scopes, these would collide.</p>
 <h3 id="scope-types">Scope Types</h3>
 <p>The renaming system uses four scope types:</p>
 <table>
@@ -388,15 +387,15 @@ public class List&lt;T&gt; : IList&lt;T&gt;, ICollection, IEnumerable {
 </code></pre>
 <p><strong>Scope assignments:</strong></p>
 <pre><code>Scope: type:System.Collections.Generic.List`1#instance
-  - clear           (own method)
-  - add             (own method)
-  - getEnumerator   (returns IEnumerator&lt;T&gt;)
+  - Clear           (own method)
+  - Add             (own method)
+  - GetEnumerator   (returns IEnumerator&lt;T&gt;)
 
 Scope: view:..List`1:System.Collections.ICollection#instance
-  - copyTo          (explicit ICollection.CopyTo)
+  - CopyTo          (explicit ICollection.CopyTo)
 
 Scope: view:..List`1:System.Collections.IEnumerable#instance
-  - getEnumerator   (explicit - different return type)
+  - GetEnumerator   (explicit - different return type)
 </code></pre>
 <h3 id="typescript-output">TypeScript Output</h3>
 <pre><code class="language-typescript">// Class surface - own members
@@ -563,7 +562,7 @@ const enumerator = arr.As_IEnumerable().getEnumerator();
     ClassSurface,   // On $instance interface
     StaticSurface,  // On static const declaration
     ViewOnly,       // Only in __$views interface
-    Omitted         // Not emitted (tracked in metadata)
+    Omitted         // Not emitted (tracked in bindings.json)
 }
 </code></pre>
 <h3 id="emitscope-to-output-mapping">EmitScope to Output Mapping</h3>
@@ -579,12 +578,12 @@ const enumerator = arr.As_IEnumerable().getEnumerator();
 <tr>
 <td>ClassSurface</td>
 <td><code>$instance</code> interface</td>
-<td><code>list.add(item)</code></td>
+<td><code>list.Add(item)</code></td>
 </tr>
 <tr>
 <td>StaticSurface</td>
 <td><code>const</code> declaration</td>
-<td><code>List_1.empty</code></td>
+<td><code>List_1.Empty</code></td>
 </tr>
 <tr>
 <td>ViewOnly</td>
@@ -593,7 +592,7 @@ const enumerator = arr.As_IEnumerable().getEnumerator();
 </tr>
 <tr>
 <td>Omitted</td>
-<td>Only in metadata.json</td>
+<td>Only in bindings.json (<code>emitScope: &quot;Omitted&quot;</code>)</td>
 <td>Indexers, generic statics</td>
 </tr>
 </tbody>
@@ -618,9 +617,9 @@ const enumerator = arr.As_IEnumerable().getEnumerator();
 <p><strong>TypeScript output:</strong></p>
 <pre><code class="language-typescript">// ClassSurface -&gt; $instance interface
 export interface List_1$instance&lt;T&gt; {
-    add(item: T): void;     // EmitScope.ClassSurface
-    clear(): void;          // EmitScope.ClassSurface
-    readonly count: int;    // EmitScope.ClassSurface
+    Add(item: T): void;     // EmitScope.ClassSurface
+    Clear(): void;          // EmitScope.ClassSurface
+    readonly Count: int;    // EmitScope.ClassSurface
 }
 
 // StaticSurface -&gt; const declaration
@@ -662,7 +661,7 @@ export interface __List_1$views&lt;T&gt; {
 </tr>
 <tr>
 <td>ClassSurfaceDeduplicator</td>
-<td>Duplicate losers -&gt; Omitted</td>
+<td>Duplicate losers -&gt; ViewOnly</td>
 </tr>
 <tr>
 <td>OverloadUnifier</td>
@@ -707,20 +706,16 @@ export interface __List_1$views&lt;T&gt; {
 </tr>
 </tbody>
 </table>
-<p><strong>Omitted members are tracked in metadata.json:</strong></p>
+<p>Omitted members remain present in <code>bindings.json</code> with <code>emitScope: &quot;Omitted&quot;</code> so compilers/tooling can treat omissions as explicit, deterministic decisions.</p>
 <pre><code class="language-json">{
-  &quot;types&quot;: {
-    &quot;List_1&quot;: {
-      &quot;intentionalOmissions&quot;: {
-        &quot;indexers&quot;: [
-          {&quot;signature&quot;: &quot;Item[int]&quot;, &quot;reason&quot;: &quot;indexer_conflict&quot;}
-        ],
-        &quot;genericStatics&quot;: [
-          {&quot;member&quot;: &quot;Empty&quot;, &quot;reason&quot;: &quot;generic_static_not_supported&quot;}
-        ]
-      }
+  &quot;types&quot;: [
+    {
+      &quot;clrName&quot;: &quot;System.Collections.Generic.List`1&quot;,
+      &quot;properties&quot;: [
+        { &quot;clrName&quot;: &quot;Empty&quot;, &quot;emitScope&quot;: &quot;Omitted&quot; }
+      ]
     }
-  }
+  ]
 }
 </code></pre>
 <h3 id="emitscope-validation">EmitScope Validation</h3>
@@ -735,10 +730,9 @@ export interface __List_1$views&lt;T&gt; {
 <p>A unique identifier for a type or member that survives all transformations. StableId is the CLR identity - it never changes regardless of naming mode or shape transformations.</p>
 <h3 id="why-stableid-is-needed">Why StableId Is Needed</h3>
 <p>During pipeline execution, symbols get renamed and transformed:</p>
-<pre><code>CLR name:           System.Collections.Generic.List`1.Add
-After CLR naming:   List_1.Add
-After JS naming:    List_1.add
-Emitted as:         List_1$instance.add
+<pre><code>CLR name:     System.Collections.Generic.List`1.Add
+TS name:      List_1.Add
+Emitted as:   List_1$instance.Add
 
 StableId stays constant: &quot;System.Private.CoreLib:System.Collections.Generic.List`1::Add(T):void&quot;
 </code></pre>
@@ -878,17 +872,16 @@ StableId stays constant: &quot;System.Private.CoreLib:System.Collections.Generic
 id1 == id2  // true if name+signature match, ignores token
 </code></pre>
 <h3 id="stableid-in-bindings">StableId in Bindings</h3>
-<p>The bindings.json file maps TypeScript names back to StableId:</p>
+<p>The <code>bindings.json</code> manifest carries StableIds for deterministic compiler/runtime correlation:</p>
 <pre><code class="language-json">{
   &quot;types&quot;: [{
     &quot;stableId&quot;: &quot;System.Private.CoreLib:System.Collections.Generic.List`1&quot;,
     &quot;clrName&quot;: &quot;System.Collections.Generic.List`1&quot;,
-    &quot;tsEmitName&quot;: &quot;List_1&quot;,
     &quot;methods&quot;: [{
       &quot;stableId&quot;: &quot;...List`1::Add(T):void&quot;,
       &quot;clrName&quot;: &quot;Add&quot;,
-      &quot;tsEmitName&quot;: &quot;add&quot;,
-      &quot;metadataToken&quot;: 100663296
+      &quot;metadataToken&quot;: 100663296,
+      &quot;emitScope&quot;: &quot;ClassSurface&quot;
     }]
   }]
 }
@@ -900,10 +893,10 @@ id1 == id2  // true if name+signature match, ignores token
 
 // 1. Instance interface - instance properties and methods
 export interface List_1$instance&lt;T&gt; {
-    readonly count: int;
-    add(item: T): void;
-    remove(item: T): boolean;
-    clear(): void;
+    readonly Count: int;
+    Add(item: T): void;
+    Remove(item: T): boolean;
+    Clear(): void;
 }
 
 // 2. Static/constructor const - constructors and static members

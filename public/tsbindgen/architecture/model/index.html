@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -438,7 +438,7 @@ export interface __List_1$views&lt;T&gt; {
     RefKind Kind               // Ref, Out, In
 ) : TypeReference;
 </code></pre>
-<p>Tracked in <code>metadata.json</code> via <code>parameterModifiers</code> (ref/out/in). The emitted <code>.d.ts</code> uses the element type directly.</p>
+<p>Tracked in <code>bindings.json</code> via <code>parameterModifiers</code> (ref/out/in). The emitted <code>.d.ts</code> uses the element type directly.</p>
 <h3 id="nullabletypereference">NullableTypeReference</h3>
 <p>Reference to a nullable type:</p>
 <pre><code class="language-csharp">public sealed record NullableTypeReference(

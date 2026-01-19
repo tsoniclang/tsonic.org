@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -197,17 +197,15 @@
   System.d.ts             # Facade (re-exports)
   System.js               # Runtime stub (throws if executed)
   System/
-    bindings.json         # Name mappings
+    bindings.json         # CLR bindings manifest (names + CLR semantics)
     internal/
       index.d.ts          # Full declarations
-      metadata.json       # CLR semantics
   System.Collections.Generic.d.ts
   System.Collections.Generic.js
   System.Collections.Generic/
     bindings.json
     internal/
       index.d.ts
-      metadata.json
 </code></pre>
 <h2 id="file-purposes">File Purposes</h2>
 <h3 id="internalindexdts">internal/index.d.ts</h3>
@@ -215,8 +213,8 @@
 <pre><code class="language-typescript">import type { IEnumerable_1 } from &quot;../../System.Collections.Generic/internal/index.js&quot;;
 
 export interface List_1$instance&lt;T&gt; {
-    readonly count: int;
-    add(item: T): void;
+    readonly Count: int;
+    Add(item: T): void;
 }
 
 export declare const List_1: {
@@ -237,22 +235,24 @@ export { List_1 as List } from './System.Collections.Generic/internal/index.js';
 // Type aliases for interfaces
 export type IEnumerable&lt;T&gt; = Internal.IEnumerable_1&lt;T&gt;;
 </code></pre>
-<h3 id="metadatajson">metadata.json</h3>
-<p>CLR semantics not expressible in TypeScript. Used by Tsonic compiler.</p>
+<h3 id="bindingsjson">bindings.json</h3>
+<p>CLR semantics not expressible in TypeScript. Used by the Tsonic compiler for correct C# interop and runtime binding.</p>
 <pre><code class="language-json">{
-  &quot;namespace&quot;: &quot;System.Collections.Generic&quot;,
+  &quot;namespace&quot;: &quot;System&quot;,
   &quot;contributingAssemblies&quot;: [&quot;System.Private.CoreLib&quot;],
   &quot;types&quot;: [
     {
-      &quot;stableId&quot;: &quot;System.Private.CoreLib:System.Collections.Generic.List\u00601&quot;,
-      &quot;clrName&quot;: &quot;System.Collections.Generic.List\u00601&quot;,
-      &quot;tsEmitName&quot;: &quot;List_1&quot;,
-      &quot;kind&quot;: &quot;Class&quot;,
+      &quot;stableId&quot;: &quot;System.Private.CoreLib:System.Int32&quot;,
+      &quot;clrName&quot;: &quot;System.Int32&quot;,
+      &quot;assemblyName&quot;: &quot;System.Private.CoreLib&quot;,
+      &quot;kind&quot;: &quot;Struct&quot;,
+      &quot;accessibility&quot;: &quot;Public&quot;,
+      &quot;isStatic&quot;: false,
       &quot;methods&quot;: [
         {
-          &quot;clrName&quot;: &quot;TryGetValue&quot;,
-          &quot;tsEmitName&quot;: &quot;tryGetValue&quot;,
-          &quot;parameterModifiers&quot;: [null, &quot;out&quot;]
+          &quot;clrName&quot;: &quot;TryParse&quot;,
+          &quot;isStatic&quot;: true,
+          &quot;parameterModifiers&quot;: [{ &quot;index&quot;: 1, &quot;modifier&quot;: &quot;out&quot; }]
         }
       ]
     }
@@ -261,18 +261,16 @@ export type IEnumerable&lt;T&gt; = Internal.IEnumerable_1&lt;T&gt;;
 </code></pre>
 <p><strong>Key fields:</strong></p>
 <ul>
+<li><code>kind</code> / <code>accessibility</code> / <code>isAbstract</code> / <code>isStatic</code> - Type semantics</li>
 <li><code>emitScope</code> - Where the member is emitted (<code>ClassSurface</code>, <code>ViewOnly</code>, etc.)</li>
-<li><code>isVirtual</code>, <code>isOverride</code>, <code>isAbstract</code> - Dispatch semantics</li>
-<li><code>isStatic</code> - Static vs instance</li>
-<li><code>hasGetter</code>, <code>hasSetter</code> - Property accessors</li>
-<li><code>parameterModifiers</code> - Array of ref/out/in modifiers per parameter (null = none)</li>
+<li><code>isVirtual</code> / <code>isOverride</code> / <code>isAbstract</code> - Dispatch semantics</li>
+<li><code>parameterModifiers</code> - Vector of ref/out/in modifiers for byref parameters</li>
 </ul>
 <h3 id="parameter-modifiers">Parameter Modifiers</h3>
-<p>The <code>parameterModifiers</code> array tracks C# <code>ref</code>, <code>out</code>, and <code>in</code> parameter modifiers:</p>
+<p>The <code>parameterModifiers</code> vector tracks C# <code>ref</code>, <code>out</code>, and <code>in</code> parameter modifiers:</p>
 <pre><code class="language-json">{
   &quot;clrName&quot;: &quot;TryParse&quot;,
-  &quot;tsEmitName&quot;: &quot;tryParse&quot;,
-  &quot;parameterModifiers&quot;: [null, &quot;out&quot;]
+  &quot;parameterModifiers&quot;: [{ &quot;index&quot;: 1, &quot;modifier&quot;: &quot;out&quot; }]
 }
 </code></pre>
 <ul>
@@ -282,29 +280,6 @@ export type IEnumerable&lt;T&gt; = Internal.IEnumerable_1&lt;T&gt;;
 <li><code>&quot;in&quot;</code> - By-reference, read-only</li>
 </ul>
 <p>This metadata is required by the Tsonic compiler for correct C# interop since TypeScript has no concept of by-reference parameters.</p>
-<h3 id="bindingsjson">bindings.json</h3>
-<p>CLR-to-TypeScript name mappings. Used for runtime binding.</p>
-<pre><code class="language-json">{
-  &quot;namespace&quot;: &quot;System.Linq&quot;,
-  &quot;types&quot;: [{
-    &quot;stableId&quot;: &quot;System.Linq:System.Linq.Enumerable&quot;,
-    &quot;clrName&quot;: &quot;System.Linq.Enumerable&quot;,
-    &quot;tsEmitName&quot;: &quot;Enumerable&quot;,
-    &quot;methods&quot;: [{
-      &quot;clrName&quot;: &quot;Where&quot;,
-      &quot;tsEmitName&quot;: &quot;Where&quot;,
-      &quot;isExtensionMethod&quot;: true,
-      &quot;metadataToken&quot;: 100663496
-    }]
-  }]
-}
-</code></pre>
-<p><strong>Key fields:</strong></p>
-<ul>
-<li><code>stableId</code> - Unique identifier (assembly:fullName)</li>
-<li><code>metadataToken</code> - CLR reflection token</li>
-<li><code>isExtensionMethod</code> - C# extension method flag</li>
-</ul>
 <h3 id="familiesjson">families.json</h3>
 <p>Canonical index of multi-arity families for cross-package imports.</p>
 <pre><code class="language-json">{
@@ -364,7 +339,7 @@ export type IQueryable&lt;T&gt; = Internal.IQueryable_1&lt;T&gt;;
 </tr>
 <tr>
 <td>Nested type: <code>Outer+Inner</code></td>
-<td>Dollar: <code>Outer$Inner</code></td>
+<td>Underscore: <code>Outer_Inner</code></td>
 </tr>
 <tr>
 <td>Namespace</td>

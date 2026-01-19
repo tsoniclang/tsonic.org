@@ -318,14 +318,16 @@
 </table>
 <p>Example:</p>
 <pre><code class="language-typescript">// TypeScript
+import { Random } from &quot;@tsonic/dotnet/System.js&quot;;
+
 function getValue(): string | number {
-  return Math.random() &gt; 0.5 ? &quot;hello&quot; : 42;
+  return Random.Shared.NextDouble() &gt; 0.5 ? &quot;hello&quot; : 42;
 }
 </code></pre>
 <pre><code class="language-csharp">// Generated C#
 public static Union&lt;string, double&gt; getValue()
 {
-    return Math.random() &gt; 0.5 ? &quot;hello&quot; : 42.0;
+    return global::System.Random.Shared.NextDouble() &gt; 0.5 ? &quot;hello&quot; : 42.0;
 }
 </code></pre>
 <h3 id="structural-typing">Structural Typing</h3>
@@ -481,10 +483,10 @@ int[] arr = [1, 2, 3];
 <p>For dynamic collections, use List<T> explicitly:</p>
 <pre><code class="language-typescript">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 const list = new List&lt;number&gt;();
-list.add(1);
-list.add(2);
-list.add(3);
-list.add(4);
+list.Add(1);
+list.Add(2);
+list.Add(3);
+list.Add(4);
 </code></pre>
 <h2 id="nativeaot-compatibility">NativeAOT Compatibility</h2>
 <p>Tsonic.Runtime is fully NativeAOT compatible:</p>

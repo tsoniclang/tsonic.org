@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -183,176 +183,39 @@
     <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/naming.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="naming-conventions">Naming Conventions</h1>
-<p>tsbindgen supports two naming conventions for members.</p>
-<h2 id="clr-mode-default">CLR Mode (Default)</h2>
-<p>Members retain their C#/CLR PascalCase names.</p>
-<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out
-# or explicitly:
-npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out --naming clr
-</code></pre>
-<p><strong>Output:</strong></p>
-<pre><code class="language-typescript">list.GetEnumerator();
+  <div class="content"><h1 id="naming--identifiers">Naming &amp; Identifiers</h1>
+<p>tsbindgen emits <strong>CLR-faithful names</strong>. There are no casing transforms (no camelCase/PascalCase modes).</p>
+<h2 id="member-names-methods--properties--fields">Member names (methods / properties / fields)</h2>
+<ul>
+<li>Members keep their <strong>CLR name</strong> exactly.</li>
+<li>This is required for “airplane-grade” correctness: casing transforms can mask real collisions and can silently redirect calls.</li>
+</ul>
+<pre><code class="language-ts">list.GetEnumerator();
 Console.WriteLine(&quot;hello&quot;);
 String.IsNullOrEmpty(s);
 Array.Sort(array);
 </code></pre>
-<h2 id="javascript-mode">JavaScript Mode</h2>
-<p>Members are converted to camelCase.</p>
-<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out --naming js
-</code></pre>
-<p><strong>Output:</strong></p>
-<pre><code class="language-typescript">list.getEnumerator();
-Console.writeLine(&quot;hello&quot;);
-String.isNullOrEmpty(s);
-Array.sort(array);
-</code></pre>
-<h2 id="conversion-rules">Conversion Rules</h2>
-<h3 id="basic-conversion">Basic Conversion</h3>
-<p>First letter becomes lowercase:</p>
-<table>
-<thead>
-<tr>
-<th>CLR</th>
-<th>JavaScript</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>GetEnumerator</code></td>
-<td><code>getEnumerator</code></td>
-</tr>
-<tr>
-<td><code>WriteLine</code></td>
-<td><code>writeLine</code></td>
-</tr>
-<tr>
-<td><code>ToString</code></td>
-<td><code>toString</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="acronyms">Acronyms</h3>
-<p>Acronyms are lowercased as a unit:</p>
-<table>
-<thead>
-<tr>
-<th>CLR</th>
-<th>JavaScript</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>XMLReader</code></td>
-<td><code>xmlReader</code></td>
-</tr>
-<tr>
-<td><code>HTTPClient</code></td>
-<td><code>httpClient</code></td>
-</tr>
-<tr>
-<td><code>IOStream</code></td>
-<td><code>ioStream</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="single-letters">Single Letters</h3>
-<p>Single-letter prefixes are lowercased:</p>
-<table>
-<thead>
-<tr>
-<th>CLR</th>
-<th>JavaScript</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>IDisposable</code></td>
-<td><code>iDisposable</code></td>
-</tr>
-<tr>
-<td><code>TKey</code></td>
-<td><code>tKey</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="type-names">Type Names</h2>
-<p>Type names are <strong>never</strong> transformed - always PascalCase:</p>
-<pre><code class="language-typescript">// Both modes:
-List_1&lt;T&gt;
-Dictionary_2&lt;TKey, TValue&gt;
-IEnumerable_1&lt;T&gt;
-</code></pre>
-<h2 id="extension-methods">Extension Methods</h2>
-<p>Extension method names follow the same naming mode:</p>
+<p>If you want JavaScript-style names, define them in the library itself (e.g. <code>console.log</code> in <code>@tsonic/js</code>, <code>fs.readFile</code> in <code>@tsonic/nodejs</code>). tsbindgen will emit those names as-is because they are the CLR names.</p>
+<h2 id="type-names">Type names</h2>
+<p>Type names are derived deterministically from CLR names to be valid TS identifiers:</p>
 <ul>
-<li><code>--naming clr</code>: <code>Where</code>, <code>Select</code>, <code>ToList</code>, ...</li>
-<li><code>--naming js</code>: <code>where</code>, <code>select</code>, <code>toList</code>, ...</li>
+<li>Generic arity: <code>List`1</code> → <code>List_1</code></li>
+<li>Nested types: <code>Outer+Inner</code> → <code>Outer_Inner</code></li>
 </ul>
-<h2 id="reserved-words">Reserved Words</h2>
-<p>Reserved words are sanitized only when they appear in <strong>Identifier</strong> contexts (for example: binding identifiers like parameters, and type names).</p>
-<p>Member names (methods/properties) are emitted in <strong>IdentifierName</strong> positions, so keywords are allowed and are emitted as-is.</p>
-<h3 id="binding-identifiers-paramsvars">Binding identifiers (params/vars)</h3>
-<table>
-<thead>
-<tr>
-<th>Original</th>
-<th>TypeScript</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>default</code></td>
-<td><code>default_</code></td>
-</tr>
-<tr>
-<td><code>class</code></td>
-<td><code>class_</code></td>
-</tr>
-<tr>
-<td><code>function</code></td>
-<td><code>function_</code></td>
-</tr>
-<tr>
-<td><code>import</code></td>
-<td><code>import_</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="member-names-methodsproperties">Member names (methods/properties)</h3>
-<ul>
-<li>No <code>_</code> suffix is added for keywords.</li>
-<li>Examples: <code>delete()</code>, <code>export()</code>, <code>with()</code>, <code>type</code>, <code>from</code>, <code>set(...)</code>, <code>get(...)</code></li>
-</ul>
-<h2 id="name-conflicts">Name Conflicts</h2>
-<p>When multiple members would have the same name, numeric suffixes are added:</p>
-<pre><code class="language-typescript">// Two methods both become &quot;add&quot; after camelCase
-add(item: T): void;
-add2(index: int, item: T): void;
+<p>Examples:</p>
+<pre><code class="language-ts">export type List_1&lt;T&gt; = List_1$instance&lt;T&gt; &amp; __List_1$views&lt;T&gt;;
+export type Dictionary_2&lt;TKey, TValue&gt; = Dictionary_2$instance&lt;TKey, TValue&gt; &amp; __Dictionary_2$views&lt;TKey, TValue&gt;;
 </code></pre>
-<h2 id="explicit-interface-members">Explicit Interface Members</h2>
-<p>Explicit interface implementations get interface-suffixed names:</p>
-<pre><code class="language-csharp">// C#
-void ICollection.Clear() { }
-void Clear() { }
-</code></pre>
-<pre><code class="language-typescript">// TypeScript
-clear(): void;           // Own method
-clear_ICollection(): void; // Explicit implementation
-</code></pre>
-<h2 id="choosing-a-mode">Choosing a Mode</h2>
-<p><strong>Use CLR mode when:</strong></p>
+<h2 id="reserved-words">Reserved words</h2>
+<p>Type names and binding identifiers (vars/params) are sanitized in contexts where TS forbids them.</p>
 <ul>
-<li>Interop with existing C# code</li>
-<li>Documentation references use C# names</li>
-<li>Team is familiar with C# conventions</li>
+<li>Type names: <code>type string = ...</code> is illegal, so <code>string</code> would become <code>string_</code> if it ever appeared as a type alias name.</li>
+<li>Parameter names: <code>switch</code> becomes <code>switch_</code>.</li>
 </ul>
-<p><strong>Use JavaScript mode when:</strong></p>
-<ul>
-<li>TypeScript-first development</li>
-<li>Following JavaScript naming conventions</li>
-<li>IDE autocomplete matches expectations</li>
-</ul>
+<p>Member names (methods/properties) are emitted in <code>IdentifierName</code> positions, so keywords are allowed and are emitted as-is.</p>
+<h2 id="collisions">Collisions</h2>
+<p>If the CLR surface contains a collision that TypeScript cannot represent directly (e.g., same name used for incompatible member kinds), tsbindgen resolves it deterministically using numeric suffixes (<code>Foo</code>, <code>Foo2</code>, ...).</p>
+<p>These suffixes are a last resort and are validated so they do not leak onto “normal” surfaces unless unavoidable.</p>
 </div>
 </article>
 </main>

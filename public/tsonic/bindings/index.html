@@ -235,41 +235,64 @@
   </div>
 
   <div class="content"><h1 id="clr-bindings--workspaces">CLR Bindings &amp; Workspaces</h1>
-<p>This guide explains <strong>where bindings live</strong> and how to structure <strong>multi-project repos (npm workspaces)</strong> that use:</p>
+<p>This guide explains <strong>where CLR bindings live</strong> and how to structure <strong>multi-project repos (npm workspaces)</strong> that use:</p>
 <ul>
-<li><strong>Vendored C# source</strong> you build into a local DLL</li>
-<li><strong>Local DLLs</strong> you copy into a project</li>
+<li><strong>Local DLLs</strong> (including vendored C# projects you build into a DLL)</li>
 <li><strong>NuGet packages</strong> restored by the .NET SDK</li>
 </ul>
 <p>Tsonic is “airplane-grade” about determinism:</p>
 <ul>
-<li>Bindings generation is <strong>repeatable</strong> (<code>tsonic restore</code>)</li>
-<li>Generated artifacts are <strong>not committed</strong></li>
+<li>Dependency + bindings generation is <strong>repeatable</strong> (<code>tsonic restore</code>)</li>
+<li>Generated caches are <strong>not committed</strong></li>
 <li>Import resolution is <strong>standard Node/TypeScript module resolution</strong></li>
 </ul>
 <h2 id="what-are-bindings">What Are “Bindings”?</h2>
-<p>Bindings are the TypeScript + metadata files produced by <strong>tsbindgen</strong> that let Tsonic map:</p>
+<p>Bindings are the TypeScript stubs + CLR manifest files produced by <strong>tsbindgen</strong> that let Tsonic map:</p>
 <ul>
 <li><code>import { Console } from &quot;@tsonic/dotnet/System.js&quot;</code> → CLR type <code>System.Console</code></li>
 </ul>
 <p>Bindings packages contain (at minimum):</p>
 <ul>
 <li><code>*.d.ts</code> / <code>*.js</code> namespace facades</li>
-<li>per-namespace <code>bindings.json</code> files</li>
-<li><code>internal/metadata.json</code> (CLR metadata)</li>
+<li>per-namespace <code>bindings.json</code> files (the CLR manifest used by the compiler)</li>
 </ul>
-<h2 id="where-tsonic-puts-bindings-two-modes">Where Tsonic Puts Bindings (Two Modes)</h2>
-<h3 id="mode-a--local-auto-generated-bindings-per-project">Mode A — Local Auto-Generated Bindings (Per Project)</h3>
-<p>When you do <strong>not</strong> provide a types package, Tsonic generates bindings into the project’s internal cache:</p>
-<pre><code>&lt;projectRoot&gt;/.tsonic/bindings/
+<blockquote>
+<p>tsbindgen uses a <strong>unified</strong> <code>bindings.json</code> format (no <code>.metadata.json</code> sidecars).</p>
+</blockquote>
+<h2 id="workspace-model-required">Workspace Model (Required)</h2>
+<p>Tsonic always operates in a workspace:</p>
+<ul>
+<li>Workspace root contains <code>tsonic.workspace.json</code></li>
+<li>Workspace-level external deps live under <code>libs/</code> and <code>dotnet.*</code> in <code>tsonic.workspace.json</code></li>
+<li>Projects live under <code>packages/&lt;name&gt;/</code> and contain <code>tsonic.json</code></li>
+</ul>
+<p>Example layout:</p>
+<pre><code class="language-txt">my-workspace/
+  tsonic.workspace.json
+  package.json
+  libs/
+  packages/
+    app/
+      tsonic.json
+      src/...
+    domain/
+      tsonic.json
+      src/...
+</code></pre>
+<h2 id="where-bindings-live-two-modes">Where Bindings Live (Two Modes)</h2>
+<h3 id="mode-a--local-auto-generated-bindings-workspace-cache">Mode A — Local Auto-Generated Bindings (Workspace Cache)</h3>
+<p>When you do <strong>not</strong> provide a types package, Tsonic generates bindings into the workspace cache:</p>
+<pre><code class="language-txt">&lt;workspaceRoot&gt;/.tsonic/bindings/
   nuget/&lt;pkg&gt;-types/...
   dll/&lt;asm&gt;-types/...
   framework/&lt;runtime&gt;-types/...
 </code></pre>
-<p>Then Tsonic <strong>mirrors</strong> the generated package into:</p>
-<pre><code>&lt;projectRoot&gt;/node_modules/&lt;pkg&gt;-types/...
+<p>Then Tsonic <strong>mirrors</strong> each generated package into:</p>
+<pre><code class="language-txt">&lt;workspaceRoot&gt;/node_modules/&lt;pkg&gt;-types/...
 </code></pre>
-<p>Mirroring is a directory copy, and Tsonic will only overwrite an existing <code>node_modules/&lt;name&gt;</code> if it was previously generated (it checks <code>package.json</code> for <code>tsonic.generated: true</code>).</p>
+<p>Mirroring is a directory copy, and Tsonic will only overwrite an existing
+<code>node_modules/&lt;name&gt;</code> if it was previously generated (it checks <code>package.json</code>
+for <code>tsonic.generated: true</code>).</p>
 <p>Why mirror into <code>node_modules</code>?</p>
 <ul>
 <li><code>tsc</code> and Node already resolve modules from <code>node_modules</code></li>
@@ -277,97 +300,19 @@
 <li><code>.tsonic/</code> remains the authoritative cache (gitignored, regen-able)</li>
 </ul>
 <h3 id="mode-b--shippable-bindings-packages-workspace-or-published">Mode B — Shippable Bindings Packages (Workspace or Published)</h3>
-<p>If you want <strong>stable imports</strong> across multiple workspace packages (or you want to publish bindings), create a dedicated bindings package and put generated output under <code>dist/</code>:</p>
-<pre><code>packages/acme-markdig/
-  vendor/net10.0/Markdig.dll
+<p>If you want <strong>stable imports</strong> across multiple workspaces (or you want to publish bindings),
+write generated output under <code>dist/</code> and export it via npm <code>exports</code>:</p>
+<pre><code class="language-txt">packages/acme-markdig/
   dist/tsonic/bindings/
     Markdig.js
     Markdig.d.ts
     Markdig/
       bindings.json
-      internal/metadata.json
+      internal/index.d.ts
 </code></pre>
-<p>Then export those files via <code>package.json</code> <code>exports</code> so consumers can import namespaces normally:</p>
-<pre><code class="language-ts">import { Markdown } from &quot;@acme/markdig/Markdig.js&quot;;
-</code></pre>
-<p>Tsonic resolves imports using Node resolution (including <code>exports</code>) and then locates the nearest <code>bindings.json</code>.</p>
-<h2 id="commands-and-what-they-produce">Commands and What They Produce</h2>
-<h3 id="tsonic-add-nuget-packageid-version-typespackage"><code>tsonic add nuget &lt;PackageId&gt; &lt;Version&gt; [typesPackage]</code></h3>
-<ul>
-<li>Always writes a pinned <code>dotnet.packageReferences</code> entry in <code>tsonic.json</code>.</li>
-<li>If <code>typesPackage</code> is provided:
-<ul>
-<li>installs it (devDependency)</li>
-<li>does <strong>not</strong> auto-generate bindings</li>
-</ul>
-</li>
-<li>If <code>typesPackage</code> is omitted:
-<ul>
-<li><code>tsonic restore</code> generates bindings into:
-<ul>
-<li><code>.tsonic/bindings/nuget/&lt;pkg&gt;-types/</code></li>
-<li>mirrors to <code>node_modules/&lt;pkg&gt;-types/</code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>NuGet restore scratch space lives at:</p>
-<pre><code>.tsonic/nuget/
-  tsonic.nuget.restore.csproj
-  obj/project.assets.json
-</code></pre>
-<p>The actual NuGet package DLLs are read from the standard .NET NuGet cache (not copied into your repo).</p>
-<h3 id="tsonic-add-package-pathtomylibdll-typespackage"><code>tsonic add package ./path/to/MyLib.dll [typesPackage]</code></h3>
-<ul>
-<li>Resolves the full DLL dependency closure (deterministic).</li>
-<li>Copies resolved DLLs into <code>lib/*.dll</code> and adds them to <code>dotnet.libraries</code>.</li>
-<li>If <code>typesPackage</code> is omitted:
-<ul>
-<li>generates bindings per assembly into:
-<ul>
-<li><code>.tsonic/bindings/dll/&lt;asm&gt;-types/</code></li>
-<li>mirrors to <code>node_modules/&lt;asm&gt;-types/</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>If <code>typesPackage</code> is provided:
-<ul>
-<li>installs it and skips auto-generation.</li>
-</ul>
-</li>
-</ul>
-<h2 id="recommended-workspace-layout-concrete-example">Recommended Workspace Layout (Concrete Example)</h2>
-<p>Here’s an “everything” monorepo layout that cleanly supports all three dependency sources.</p>
-<h3 id="root">Root</h3>
-<pre><code>acme-monorepo/
-  package.json
-  packages/
-    app/                 # Tsonic executable
-    domain/              # Tsonic library
-    vendor-markdig/      # vendored C# DLL + bindings package
-</code></pre>
-<p>Root <code>package.json</code> (npm only; build deps first):</p>
+<p><code>package.json</code>:</p>
 <pre><code class="language-json">{
-  &quot;private&quot;: true,
-  &quot;type&quot;: &quot;module&quot;,
-  &quot;workspaces&quot;: [&quot;packages/*&quot;],
-  &quot;scripts&quot;: {
-    &quot;build&quot;: &quot;npm run -w @acme/vendor-markdig bindings &amp;&amp; npm run -w @acme/domain build &amp;&amp; npm run -w @acme/domain bindings &amp;&amp; npm run -w @acme/app build&quot;,
-    &quot;restore&quot;: &quot;npm run -ws --if-present restore&quot;
-  }
-}
-</code></pre>
-<h3 id="vendored-c-source--dll--shared-bindings-package">Vendored C# Source → DLL + Shared Bindings Package</h3>
-<p><code>packages/vendor-markdig/</code> contains:</p>
-<ul>
-<li>a DLL you built locally (from vendored source)</li>
-<li>a bindings package exported from <code>dist/tsonic/bindings/</code></li>
-</ul>
-<p><code>packages/vendor-markdig/package.json</code>:</p>
-<pre><code class="language-json">{
-  &quot;name&quot;: &quot;@acme/vendor-markdig&quot;,
+  &quot;name&quot;: &quot;@acme/markdig&quot;,
   &quot;private&quot;: true,
   &quot;type&quot;: &quot;module&quot;,
   &quot;exports&quot;: {
@@ -376,58 +321,115 @@
       &quot;types&quot;: &quot;./dist/tsonic/bindings/*.d.ts&quot;,
       &quot;default&quot;: &quot;./dist/tsonic/bindings/*.js&quot;
     }
-  },
-  &quot;scripts&quot;: {
-    &quot;bindings&quot;: &quot;node ./scripts/generate-bindings.mjs&quot;
-  },
-  &quot;devDependencies&quot;: {
-    &quot;@tsonic/tsbindgen&quot;: &quot;^0.7.0&quot;
   }
 }
 </code></pre>
-<p>Consumer projects then “install the DLL” into their own <code>lib/</code> via:</p>
-<pre><code class="language-bash">cd packages/app
-tsonic add package ../vendor-markdig/vendor/net10.0/Markdig.dll @acme/vendor-markdig
+<p>Then consumers import namespaces normally:</p>
+<pre><code class="language-ts">import { Markdown } from &quot;@acme/markdig/Markdig.js&quot;;
 </code></pre>
-<p>This produces:</p>
+<p>Tsonic resolves imports using Node resolution (including <code>exports</code>) and then locates the
+nearest <code>bindings.json</code> for CLR metadata discovery.</p>
+<h2 id="commands-and-what-they-produce">Commands and What They Produce</h2>
+<h3 id="tsonic-add-nuget-packageid-version-typespackage"><code>tsonic add nuget &lt;PackageId&gt; &lt;Version&gt; [typesPackage]</code></h3>
 <ul>
-<li><code>packages/app/lib/Markdig.dll</code></li>
-<li><code>packages/app/tsonic.json</code> includes <code>dotnet.libraries: [&quot;lib/Markdig.dll&quot;]</code></li>
-<li>imports work via the workspace package:
+<li>Adds/updates <code>dotnet.packageReferences</code> in <code>tsonic.workspace.json</code>.</li>
+<li>If <code>typesPackage</code> is provided:
 <ul>
-<li><code>import { Markdown } from &quot;@acme/vendor-markdig/Markdig.js&quot;</code></li>
+<li>installs it (devDependency)</li>
+<li>does <strong>not</strong> auto-generate bindings</li>
+</ul>
+</li>
+<li>If <code>typesPackage</code> is omitted:
+<ul>
+<li>Tsonic generates per-package bindings under:
+<ul>
+<li><code>.tsonic/bindings/nuget/&lt;pkg&gt;-types/</code></li>
+</ul>
+</li>
+<li>mirrors to:
+<ul>
+<li><code>node_modules/&lt;pkg&gt;-types/</code></li>
 </ul>
 </li>
 </ul>
-<h3 id="local-dlls-downloaded--copied">Local DLLs (Downloaded / Copied)</h3>
-<p>If a DLL is only used by one workspace package, keep it per-project:</p>
-<pre><code class="language-bash">cd packages/app
-tsonic add package ./thirdparty/MyLib.dll
-</code></pre>
-<p>Tsonic copies DLLs into <code>packages/app/lib/</code> and auto-generates bindings into <code>packages/app/.tsonic/bindings/dll/...</code> (mirrored into <code>packages/app/node_modules/...</code>).</p>
-<p>If multiple workspace packages need the same local DLL, prefer a shared bindings package like <code>vendor-markdig</code> to avoid duplication.</p>
-<h3 id="nuget-packages">NuGet Packages</h3>
-<p>Per-project:</p>
-<pre><code class="language-bash">cd packages/app
-tsonic add nuget PhotoSauce.MagicScaler 0.14.2
-tsonic restore
-</code></pre>
-<p>If you want a stable reusable types package across multiple workspaces, pass a <code>typesPackage</code>:</p>
-<pre><code class="language-bash">tsonic add nuget PhotoSauce.MagicScaler 0.14.2 @acme/magicscaler
-</code></pre>
-<p>…where <code>@acme/magicscaler</code> is a workspace (or published) bindings package exporting <code>dist/tsonic/bindings/</code>.</p>
-<h2 id="what-should-be-committed">What Should Be Committed?</h2>
-<p>Per workspace package:</p>
-<ul>
-<li>Commit: <code>src/</code>, <code>tsonic.json</code>, <code>package.json</code>, and typically <code>lib/</code> (runtime DLL + any local DLLs you rely on).</li>
-<li>Gitignore: <code>node_modules/</code>, <code>.tsonic/</code>, <code>generated/</code>, <code>out/</code>, and for bindings packages also <code>dist/</code>.</li>
+</li>
 </ul>
-<h2 id="summary-rules-copypaste">Summary Rules (Copy/Paste)</h2>
+<p>NuGet restore scratch space lives at:</p>
+<pre><code class="language-txt">.tsonic/nuget/
+  tsonic.nuget.restore.csproj
+  obj/project.assets.json
+</code></pre>
+<p>The actual NuGet package DLLs are read from the standard .NET NuGet cache (not copied into your repo).</p>
+<h3 id="tsonic-add-package-pathtomylibdll-typespackage"><code>tsonic add package ./path/to/MyLib.dll [typesPackage]</code></h3>
 <ul>
-<li><strong>Never commit</strong> <code>.tsonic/</code> or <code>node_modules/</code>.</li>
-<li>Use <code>.tsonic/bindings/**</code> for <strong>auto-generated per-project</strong> bindings.</li>
-<li>Use <code>dist/tsonic/bindings/**</code> + <code>exports</code> for <strong>shippable bindings packages</strong> (workspaces/published).</li>
-<li>Treat “vendored C# source” the same as “local DLL” at the Tsonic boundary: build a DLL, then <code>tsonic add package &lt;dll&gt;</code>.</li>
+<li>Resolves the full DLL dependency closure (deterministic).</li>
+<li>Copies resolved DLLs into <code>libs/*.dll</code> and adds them to <code>dotnet.libraries</code>.</li>
+<li>If <code>typesPackage</code> is omitted:
+<ul>
+<li>generates bindings per assembly into:
+<ul>
+<li><code>.tsonic/bindings/dll/&lt;asm&gt;-types/</code></li>
+</ul>
+</li>
+<li>mirrors to:
+<ul>
+<li><code>node_modules/&lt;asm&gt;-types/</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>If <code>typesPackage</code> is provided:
+<ul>
+<li><p>installs it and skips auto-generation</p>
+</li>
+<li><p>records the mapping in <code>dotnet.libraries</code> so restore/build know bindings are supplied externally:</p>
+<pre><code class="language-json">{
+  &quot;dotnet&quot;: {
+    &quot;libraries&quot;: [
+      { &quot;path&quot;: &quot;libs/MyLib.dll&quot;, &quot;types&quot;: &quot;@acme/mylib-types&quot; }
+    ]
+  }
+}
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="tsonic-restore"><code>tsonic restore</code></h3>
+<p>Restore is the “clone a repo and get to green” command:</p>
+<ul>
+<li>Restores NuGet deps defined in <code>tsonic.workspace.json</code></li>
+<li>(Re)generates local bindings for:
+<ul>
+<li>NuGet packages without <code>types</code></li>
+<li>local DLLs under <code>libs/</code> without a <code>types</code> mapping</li>
+<li>FrameworkReferences without <code>types</code></li>
+</ul>
+</li>
+</ul>
+<p><code>tsonic build</code> / <code>tsonic generate</code> / <code>tsonic run</code> automatically run <code>tsonic restore</code>
+when the workspace declares any <code>dotnet.*</code> deps.</p>
+<h2 id="tsonic-library-projects">Tsonic Library Projects</h2>
+<p>For <code>output.type = &quot;library&quot;</code> projects, <code>tsonic build</code> copies .NET artifacts under <code>dist/</code>
+and also emits shippable CLR bindings under <code>dist/tsonic/bindings/</code> (no extra scripts needed):</p>
+<pre><code class="language-txt">packages/domain/
+  dist/
+    net10.0/
+      Domain.dll
+    tsonic/
+      bindings/
+        Domain.js
+        Domain.d.ts
+        Domain/
+          bindings.json
+          internal/index.d.ts
+</code></pre>
+<h2 id="what-should-be-committed">What Should Be Committed?</h2>
+<ul>
+<li>Commit: <code>tsonic.workspace.json</code>, workspace <code>package.json</code>, all <code>packages/*/src</code>, and <code>packages/*/tsonic.json</code>.</li>
+<li>Commit: <code>libs/</code> <strong>if you depend on local DLLs</strong> (so other devs get identical inputs).</li>
+<li>Gitignore: <code>node_modules/</code>, <code>.tsonic/</code>, <code>packages/*/generated/</code>, <code>packages/*/out/</code>, <code>packages/*/dist/</code> (unless you are publishing a bindings package).</li>
+<li>For published bindings packages: include <code>dist/tsonic/bindings/</code> in the published artifact (either committed or generated in your publish pipeline).</li>
 </ul>
 </div>
 </article>

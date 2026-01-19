@@ -129,7 +129,7 @@
             </li>
           
             <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming Conventions</a>
+              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
             </li>
           
             <li>
@@ -198,7 +198,7 @@ node test/validate/validate.js --strict 2&gt;&amp;1 | tee .tests/validation-$(da
 <li>Cleans <code>.tests/validate/</code></li>
 <li>Creates <code>tsconfig.json</code> in <code>.tests/validate/</code></li>
 <li>Runs <code>tsbindgen generate</code> against the local .NET runtime</li>
-<li>Verifies each namespace has <code>internal/index.d.ts</code> and <code>internal/metadata.json</code></li>
+<li>Verifies each namespace has <code>internal/index.d.ts</code> and <code>bindings.json</code></li>
 <li>Installs <code>@tsonic/core</code> into <code>.tests/validate/</code> (requires npm network access)</li>
 <li>Runs <code>npx tsc</code> and writes output to <code>.tests/tsc-validation.txt</code></li>
 </ol>
@@ -224,7 +224,7 @@ node test/validate/validate.js --strict 2&gt;&amp;1 | tee .tests/validation-$(da
 <td>Required</td>
 </tr>
 <tr>
-<td>All metadata files present</td>
+<td>All bindings manifests present</td>
 <td>Required</td>
 </tr>
 </tbody>
@@ -249,7 +249,7 @@ node test/validate/validate.js --strict 2&gt;&amp;1 | tee .tests/validation-$(da
 </tr>
 <tr>
 <td><code>test-naming-js.sh</code></td>
-<td>JavaScript naming convention</td>
+<td>Naming invariants (no casing transforms)</td>
 </tr>
 <tr>
 <td><code>test-strict-mode.sh</code></td>
@@ -274,10 +274,6 @@ node test/validate/validate.js --strict 2&gt;&amp;1 | tee .tests/validation-$(da
 <tr>
 <td><code>test-primitive-constraints.sh</code></td>
 <td>Primitive constraint invariants</td>
-</tr>
-<tr>
-<td><code>test-camelcase-regression.sh</code></td>
-<td>CamelCase conversion</td>
 </tr>
 <tr>
 <td><code>test-multiarity-import.sh</code></td>

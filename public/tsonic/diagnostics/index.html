@@ -763,159 +763,17 @@ const x = (yield 1) + 2; // Not supported
 yield 1;
 const x = yield; // Bidirectional yield
 </code></pre>
-<h2 id="tsn9xxx-metadata-loading">TSN9xxx: Metadata Loading</h2>
-<h3 id="tsn9001-tsn9018-metadata-errors">TSN9001-TSN9018: Metadata Errors</h3>
-<p>Errors loading <code>.metadata.json</code> files:</p>
-<table>
-<thead>
-<tr>
-<th>Code</th>
-<th>Error</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TSN9001</td>
-<td>Metadata file not found</td>
-</tr>
-<tr>
-<td>TSN9002</td>
-<td>Failed to read metadata file</td>
-</tr>
-<tr>
-<td>TSN9003</td>
-<td>Invalid JSON in metadata file</td>
-</tr>
-<tr>
-<td>TSN9004</td>
-<td>Metadata file must be an object</td>
-</tr>
-<tr>
-<td>TSN9005</td>
-<td>Missing or invalid 'namespace' field</td>
-</tr>
-<tr>
-<td>TSN9006</td>
-<td>Missing or invalid 'contributingAssemblies' field</td>
-</tr>
-<tr>
-<td>TSN9007</td>
-<td>All 'contributingAssemblies' must be strings</td>
-</tr>
-<tr>
-<td>TSN9008</td>
-<td>Missing or invalid 'types' field</td>
-</tr>
-<tr>
-<td>TSN9009</td>
-<td>Invalid type: must be an object</td>
-</tr>
-<tr>
-<td>TSN9010</td>
-<td>Invalid type: missing or invalid field</td>
-</tr>
-<tr>
-<td>TSN9011</td>
-<td>Invalid type: 'kind' must be one of ...</td>
-</tr>
-<tr>
-<td>TSN9012</td>
-<td>Invalid type: 'accessibility' must be one of ...</td>
-</tr>
-<tr>
-<td>TSN9013</td>
-<td>Invalid type: field must be a boolean</td>
-</tr>
-<tr>
-<td>TSN9014</td>
-<td>Invalid type: 'arity' must be a non-negative number</td>
-</tr>
-<tr>
-<td>TSN9015</td>
-<td>Invalid type: field must be an array</td>
-</tr>
-<tr>
-<td>TSN9016</td>
-<td>Metadata directory not found</td>
-</tr>
-<tr>
-<td>TSN9017</td>
-<td>Not a directory</td>
-</tr>
-<tr>
-<td>TSN9018</td>
-<td>No .metadata.json files found</td>
-</tr>
-</tbody>
-</table>
-<h3 id="tsn9101-tsn9114-bindings-errors">TSN9101-TSN9114: Bindings Errors</h3>
-<p>Errors loading <code>.bindings.json</code> files:</p>
-<table>
-<thead>
-<tr>
-<th>Code</th>
-<th>Error</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TSN9101</td>
-<td>Bindings file not found</td>
-</tr>
-<tr>
-<td>TSN9102</td>
-<td>Failed to read bindings file</td>
-</tr>
-<tr>
-<td>TSN9103</td>
-<td>Invalid JSON in bindings file</td>
-</tr>
-<tr>
-<td>TSN9104</td>
-<td>Bindings file must be an object</td>
-</tr>
-<tr>
-<td>TSN9105</td>
-<td>Missing or invalid 'namespace' field</td>
-</tr>
-<tr>
-<td>TSN9106</td>
-<td>Missing or invalid 'types' field</td>
-</tr>
-<tr>
-<td>TSN9107</td>
-<td>Invalid type binding: must be an object</td>
-</tr>
-<tr>
-<td>TSN9108</td>
-<td>Invalid type binding: missing or invalid field</td>
-</tr>
-<tr>
-<td>TSN9109</td>
-<td>Invalid type binding: 'metadataToken' must be a number</td>
-</tr>
-<tr>
-<td>TSN9110</td>
-<td>Invalid type binding: V1 field must be an array if present</td>
-</tr>
-<tr>
-<td>TSN9111</td>
-<td>Invalid type binding: V2 field must be an array if present</td>
-</tr>
-<tr>
-<td>TSN9112</td>
-<td>Bindings directory not found</td>
-</tr>
-<tr>
-<td>TSN9113</td>
-<td>Not a directory</td>
-</tr>
-<tr>
-<td>TSN9114</td>
-<td>No .bindings.json files found</td>
-</tr>
-</tbody>
-</table>
+<h2 id="tsn9xxx-type-universe-resolution">TSN9xxx: Type Universe Resolution</h2>
+<p>Tsonic resolves nominal types (including stdlib types like <code>System.String</code>) through loaded CLR bindings (<code>&lt;Namespace&gt;/bindings.json</code> in tsbindgen packages).</p>
+<h3 id="tsn9001-missing-stdlib-type-fatal">TSN9001: Missing Stdlib Type (fatal)</h3>
+<p>Emitted when a required stdlib type cannot be found in the loaded bindings. This is <strong>fatal</strong> because the compiler cannot safely proceed.</p>
+<p>Fixes:</p>
+<ul>
+<li>Ensure <code>@tsonic/dotnet</code> + <code>@tsonic/globals</code> are installed</li>
+<li>Run <code>tsonic restore</code> to refresh bindings and NuGet closure</li>
+</ul>
+<h3 id="tsn9002-unknown-type-error">TSN9002: Unknown Type (error)</h3>
+<p>Emitted when a nominal type name cannot be resolved from bindings. This is recoverable: Tsonic substitutes <code>unknown</code> so it can continue analysis and report additional issues.</p>
 <h2 id="getting-help">Getting Help</h2>
 <p>If you encounter an error:</p>
 <ol>

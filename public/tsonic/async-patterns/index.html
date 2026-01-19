@@ -254,13 +254,13 @@
 import { Task } from &quot;@tsonic/dotnet/System.Threading.Tasks.js&quot;;
 
 async function delay(ms: number): Promise&lt;void&gt; {
-  await Task.delay(ms);
+  await Task.Delay(ms);
 }
 
 export async function main(): Promise&lt;void&gt; {
-  Console.writeLine(&quot;Starting...&quot;);
+  Console.WriteLine(&quot;Starting...&quot;);
   await delay(1000);
-  Console.writeLine(&quot;Done!&quot;);
+  Console.WriteLine(&quot;Done!&quot;);
 }
 </code></pre>
 <h3 id="returning-values">Returning Values</h3>
@@ -273,13 +273,13 @@ type User = {
 };
 
 async function fetchUser(id: number): Promise&lt;User&gt; {
-  await Task.delay(10);
+  await Task.Delay(10);
   return { id, name: &quot;Alice&quot; };
 }
 
 export async function main(): Promise&lt;void&gt; {
   const user = await fetchUser(123);
-  Console.writeLine(user.name);
+  Console.WriteLine(user.name);
 }
 </code></pre>
 <h3 id="error-handling">Error Handling</h3>
@@ -294,9 +294,9 @@ async function riskyOperation(): Promise&lt;string&gt; {
 export async function main(): Promise&lt;void&gt; {
   try {
     const result = await riskyOperation();
-    Console.writeLine(result);
+    Console.WriteLine(result);
   } catch (e) {
-    Console.writeLine(&quot;Error occurred&quot;);
+    Console.WriteLine(&quot;Error occurred&quot;);
   }
 }
 </code></pre>
@@ -308,14 +308,14 @@ import { Task } from &quot;@tsonic/dotnet/System.Threading.Tasks.js&quot;;
 
 async function* asyncNumbers(): AsyncGenerator&lt;number&gt; {
   for (let i = 0; i &lt; 5; i++) {
-    await Task.delay(100);
+    await Task.Delay(100);
     yield i;
   }
 }
 
 export async function main(): Promise&lt;void&gt; {
   for await (const n of asyncNumbers()) {
-    Console.writeLine(`Got: ${n}`);
+    Console.WriteLine(`Got: ${n}`);
   }
 }
 </code></pre>
@@ -334,7 +334,7 @@ declare function getItemsAsync(): AsyncIterable&lt;string&gt;;
 export async function main(): Promise&lt;void&gt; {
   const items = getItemsAsync();
   for await (const item of items) {
-    Console.writeLine(item);
+    Console.WriteLine(item);
   }
 }
 </code></pre>
@@ -345,7 +345,7 @@ import { Task } from &quot;@tsonic/dotnet/System.Threading.Tasks.js&quot;;
 type Page = { index: number };
 
 async function fetchPage(index: number): Promise&lt;Page&gt; {
-  await Task.delay(10);
+  await Task.Delay(10);
   return { index };
 }
 
@@ -360,7 +360,7 @@ export async function main(): Promise&lt;void&gt; {
   for await (const page of fetchPages()) {
     pages.push(page);
   }
-  Console.writeLine(`Fetched ${pages.length} pages`);
+  Console.WriteLine(`Fetched ${pages.length} pages`);
 }
 </code></pre>
 <h2 id="async-generators">Async Generators</h2>
@@ -370,7 +370,7 @@ import { Task } from &quot;@tsonic/dotnet/System.Threading.Tasks.js&quot;;
 
 async function* countdown(n: number): AsyncGenerator&lt;number&gt; {
   while (n &gt; 0) {
-    await Task.delay(1000);
+    await Task.Delay(1000);
     yield n;
     n--;
   }
@@ -378,9 +378,9 @@ async function* countdown(n: number): AsyncGenerator&lt;number&gt; {
 
 export async function main(): Promise&lt;void&gt; {
   for await (const n of countdown(5)) {
-    Console.writeLine(`${n}...`);
+    Console.WriteLine(`${n}...`);
   }
-  Console.writeLine(&quot;Liftoff!&quot;);
+  Console.WriteLine(&quot;Liftoff!&quot;);
 }
 </code></pre>
 <h3 id="bidirectional-async-generator">Bidirectional Async Generator</h3>
@@ -401,13 +401,13 @@ export async function main(): Promise&lt;void&gt; {
   const gen = asyncAccumulator(10);
 
   const r1 = await gen.next();
-  Console.writeLine(`Initial: ${r1.value}`); // 10
+  Console.WriteLine(`Initial: ${r1.value}`); // 10
 
   const r2 = await gen.next(5);
-  Console.writeLine(`After +5: ${r2.value}`); // 15
+  Console.WriteLine(`After +5: ${r2.value}`); // 15
 
   const r3 = await gen.next(20);
-  Console.writeLine(`After +20: ${r3.value}`); // 35
+  Console.WriteLine(`After +20: ${r3.value}`); // 35
 }
 </code></pre>
 <h3 id="async-yield-delegation">Async Yield Delegation</h3>
@@ -426,7 +426,7 @@ async function* outer(): AsyncGenerator&lt;string&gt; {
 
 export async function main(): Promise&lt;void&gt; {
   for await (const s of outer()) {
-    Console.writeLine(s); // start, a, b, end
+    Console.WriteLine(s); // start, a, b, end
   }
 }
 </code></pre>
@@ -472,7 +472,7 @@ async function withTimeout&lt;T&gt;(
   ms: number
 ): Promise&lt;T&gt; {
   const cts = new CancellationTokenSource();
-  cts.cancelAfter(ms);
+  cts.CancelAfter(ms);
   // Use cancellation token with operation
   return await operation();
 }
@@ -526,10 +526,13 @@ async function consumer(): Promise&lt;number&gt; {
   await someAsyncWork();
 }
 </code></pre>
-<p>Generates:</p>
-<pre><code class="language-csharp">public static async Task Main()
+<p>Generates a <code>Program.Main</code> wrapper that awaits your entry function:</p>
+<pre><code class="language-csharp">public static class Program
 {
-    await someAsyncWork();
+    public static async Task Main(string[] args)
+    {
+        await global::MyApp.App.main();
+    }
 }
 </code></pre>
 <h3 id="sync-to-async-boundary">Sync to Async Boundary</h3>
@@ -541,7 +544,7 @@ declare function syncWrapper(): string;
 
 export function main(): void {
   const result = syncWrapper();
-  Console.writeLine(result);
+  Console.WriteLine(result);
 }
 
 // This pattern is handled by the async main support
@@ -600,7 +603,7 @@ export async function main(): Promise&lt;void&gt; {
   try {
     await application();
   } catch (e) {
-    Console.writeLine(&quot;Fatal error&quot;);
+    Console.WriteLine(&quot;Fatal error&quot;);
     // Log and exit
   }
 }

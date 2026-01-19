@@ -296,16 +296,20 @@ namespace MyApp.Utils
 }
 </code></pre>
 <h3 id="namespace-generation">Namespace Generation</h3>
-<pre><code class="language-typescript">// src/utils/math.ts with rootNamespace &quot;MyApp&quot;
+<pre><code class="language-typescript">// src/Utils/Math.ts with rootNamespace &quot;MyApp&quot;
 // -&gt; namespace: MyApp.Utils
 //
-// See `getNamespaceFromPath()` in `@tsonic/frontend` (supports namingPolicy).
+// See `getNamespaceFromPath()` in `@tsonic/frontend`:
+// - removes '-' from path fragments
+// - preserves case (no casing transforms)
 </code></pre>
 <h3 id="class-name-generation">Class Name Generation</h3>
-<pre><code class="language-typescript">// math.ts -&gt; class Math
-// todo-list.ts -&gt; class TodoList (default)
+<pre><code class="language-typescript">// Math.ts -&gt; class Math
+// todo-list.ts -&gt; class todolist
 //
-// See `getClassNameFromPath()` in `@tsonic/frontend` (supports namingPolicy).
+// See `getClassNameFromPath()` in `@tsonic/frontend`:
+// - removes '-' from the file basename
+// - preserves case (no casing transforms)
 </code></pre>
 <h2 id="type-emission">Type Emission</h2>
 <h3 id="primitive-types">Primitive Types</h3>
