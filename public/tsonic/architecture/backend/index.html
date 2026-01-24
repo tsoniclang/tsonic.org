@@ -432,6 +432,19 @@
 <pre><code class="language-typescript">type LibraryConfig = {
   type: &quot;library&quot;;
   targetFrameworks: string[];
+  /**
+   * When true, also supports NativeAOT publish for this library.
+   *
+   * NOTE: NativeAOT for libraries produces a native library (shared/static),
+   * not a managed CLR .dll assembly.
+   */
+  nativeAot: boolean;
+  /**
+   * Native library kind when `nativeAot` is enabled.
+   * - &quot;shared&quot;: .so / .dylib / .dll
+   * - &quot;static&quot;: .a / .lib
+   */
+  nativeLib?: &quot;shared&quot; | &quot;static&quot;;
   generateDocumentation: boolean;
   includeSymbols: boolean;
   packable: boolean;
