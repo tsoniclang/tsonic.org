@@ -313,16 +313,54 @@ tsonic restore
 <ul>
 <li><code>&quot;executable&quot;</code> (default when <code>entryPoint</code> is provided)
 <ul>
-<li>Uses NativeAOT by default.</li>
+<li>Uses NativeAOT by default (<code>output.nativeAot: true</code>).</li>
 </ul>
 </li>
 <li><code>&quot;library&quot;</code> (default when <code>entryPoint</code> is omitted)
 <ul>
 <li>Copies artifacts to <code>dist/</code> and emits <code>dist/tsonic/bindings/</code>.</li>
+<li>Can also publish as a NativeAOT <strong>native library</strong> when <code>output.nativeAot: true</code>.</li>
 </ul>
 </li>
 <li><code>&quot;console-app&quot;</code> (non-NativeAOT executable)</li>
 </ul>
+<p>Common <code>output.*</code> fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Applies To</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nativeAot</code></td>
+<td>executable</td>
+<td><code>true</code></td>
+<td>NativeAOT publish</td>
+</tr>
+<tr>
+<td><code>nativeAot</code></td>
+<td>library</td>
+<td><code>false</code></td>
+<td>When <code>true</code>, runs <code>dotnet publish -r &lt;rid&gt;</code> and copies output to <code>dist/&lt;tfm&gt;/&lt;rid&gt;/publish/</code></td>
+</tr>
+<tr>
+<td><code>nativeLib</code></td>
+<td>library</td>
+<td><code>shared</code></td>
+<td>Only when <code>nativeAot: true</code> (<code>shared</code> or <code>static</code>)</td>
+</tr>
+<tr>
+<td><code>targetFrameworks</code></td>
+<td>library</td>
+<td><code>[dotnetVersion]</code></td>
+<td>Multi-target supported</td>
+</tr>
+</tbody>
+</table>
 <h3 id="referenceslibraries-workspace-internal"><code>references.libraries</code> (workspace-internal)</h3>
 <p>Use <code>references.libraries</code> to reference DLL outputs of other projects in the same workspace.
 Paths are resolved relative to the project root.</p>

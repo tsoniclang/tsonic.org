@@ -342,7 +342,8 @@ packages/&lt;project&gt;/out/&lt;name&gt;.exe  (Windows)
 }
 </code></pre>
 <h3 id="library">Library</h3>
-<p>.NET class library:</p>
+<h4 id="managed-net-library">Managed (.NET) library</h4>
+<p>Standard managed library build:</p>
 <pre><code>dist/
 ├── net10.0/
 │   ├── MyLib.dll
@@ -354,17 +355,46 @@ packages/&lt;project&gt;/out/&lt;name&gt;.exe  (Windows)
 <p>Library builds also emit shippable CLR bindings under:</p>
 <pre><code>dist/tsonic/bindings/
 </code></pre>
+<h4 id="nativeaot-native-library">NativeAOT (native library)</h4>
+<p>When <code>output.nativeAot: true</code> for a library, Tsonic runs <code>dotnet publish -r &lt;rid&gt;</code> and
+copies the full publish output into <code>dist/</code>:</p>
+<pre><code>dist/
+└── net10.0/
+    ├── MyLib.dll                  # Managed DLL (copied for reflection/bindings)
+    └── linux-x64/
+        └── publish/
+            ├── libMyLib.so        # Native shared library (Linux)
+            ├── MyLib.pdb          # Optional symbols (if emitted)
+            └── ...                # Runtime/native deps as produced by dotnet publish
+</code></pre>
+<p>Notes:</p>
+<ul>
+<li>The native output is RID-specific, so it is placed under <code>dist/&lt;tfm&gt;/&lt;rid&gt;/publish/</code>.</li>
+<li>Use <code>output.nativeLib</code> to pick <code>&quot;shared&quot;</code> (default) vs <code>&quot;static&quot;</code>.</li>
+</ul>
 <p>Configuration:</p>
 <pre><code class="language-json">{
   &quot;entryPoint&quot;: &quot;src/index.ts&quot;,
   &quot;output&quot;: {
     &quot;type&quot;: &quot;library&quot;,
-    &quot;targetFrameworks&quot;: [&quot;net10.0&quot;, &quot;net8.0&quot;]
+    &quot;targetFrameworks&quot;: [&quot;net10.0&quot;, &quot;net8.0&quot;],
+    &quot;nativeAot&quot;: false
+  }
+}
+</code></pre>
+<p>NativeAOT library example:</p>
+<pre><code class="language-json">{
+  &quot;output&quot;: {
+    &quot;type&quot;: &quot;library&quot;,
+    &quot;targetFrameworks&quot;: [&quot;net10.0&quot;],
+    &quot;nativeAot&quot;: true,
+    &quot;nativeLib&quot;: &quot;shared&quot;
   }
 }
 </code></pre>
 <h2 id="build-options">Build Options</h2>
 <h3 id="nativeaot-settings">NativeAOT Settings</h3>
+<p>These defaults apply to <code>output.type: &quot;executable&quot;</code> unless specified in <code>tsonic.json</code>.</p>
 <table>
 <thead>
 <tr>
@@ -377,17 +407,17 @@ packages/&lt;project&gt;/out/&lt;name&gt;.exe  (Windows)
 <tr>
 <td><code>nativeAot</code></td>
 <td><code>true</code></td>
-<td>Enable AOT compilation</td>
+<td>Enable NativeAOT publish for executables</td>
 </tr>
 <tr>
 <td><code>singleFile</code></td>
 <td><code>true</code></td>
-<td>Single executable</td>
+<td>Single executable (NativeAOT executables only)</td>
 </tr>
 <tr>
 <td><code>trimmed</code></td>
 <td><code>true</code></td>
-<td>Remove unused code</td>
+<td>Remove unused code (NativeAOT executables)</td>
 </tr>
 <tr>
 <td><code>stripSymbols</code></td>
@@ -398,6 +428,28 @@ packages/&lt;project&gt;/out/&lt;name&gt;.exe  (Windows)
 <td><code>selfContained</code></td>
 <td><code>true</code></td>
 <td>Include runtime</td>
+</tr>
+</tbody>
+</table>
+<p>For <code>output.type: &quot;library&quot;</code>, only these keys apply:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nativeAot</code></td>
+<td><code>false</code></td>
+<td>Enable NativeAOT publish for libraries</td>
+</tr>
+<tr>
+<td><code>nativeLib</code></td>
+<td><code>shared</code></td>
+<td>Native library kind (<code>shared</code> or <code>static</code>)</td>
 </tr>
 </tbody>
 </table>
