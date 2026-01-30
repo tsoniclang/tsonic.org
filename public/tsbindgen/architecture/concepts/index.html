@@ -1009,6 +1009,31 @@ export type StringBuilder = StringBuilder$instance &amp; __StringBuilder$views;
 </tr>
 </tbody>
 </table>
+<h3 id="abstractprotected-constructors-extendable-bases">Abstract/Protected Constructors (Extendable Bases)</h3>
+<p>TypeScript requires the base expression in <code>class Derived extends Base {}</code> to be <strong>constructable</strong>
+(have a <code>new(...)</code> signature). This is a TypeScript rule, not a runtime rule.</p>
+<p>.NET has several base classes that are designed to be subclassed, but are <strong>not directly constructible</strong>
+from user code (e.g. abstract classes, or classes with only <code>protected</code>/<code>protected internal</code> constructors).
+If tsbindgen emitted these as a plain <code>export const Base: { ...statics... }</code> with no constructor typing,
+vanilla <code>tsc</code> would reject <code>extends Base</code>.</p>
+<p>To make inheritance typecheck while still preventing <code>new Base()</code> in TypeScript, tsbindgen attaches an
+<strong>abstract constructor type</strong> to the value export via intersection:</p>
+<pre><code class="language-ts">// Example: System.Attribute (abstract base, no public constructors)
+export const Attribute:
+  (abstract new() =&gt; Attribute) &amp;
+  {
+    // ...static members...
+  };
+</code></pre>
+<p>Notes:</p>
+<ul>
+<li>We <strong>cannot</strong> write <code>abstract new(...)</code> inside the <code>{ ... }</code> object type literal — TypeScript rejects
+<code>abstract</code> as a type member. The intersection form is the valid representation.</li>
+<li>This enables <code>class MyAttr extends Attribute {}</code> to typecheck, but <code>new Attribute()</code> remains invalid
+at the TS type level.</li>
+<li>We intentionally do <strong>not</strong> add constructor typing for CLR “magic” base types where <code>extends</code> should
+fail (e.g. <code>System.Delegate</code>, <code>System.MulticastDelegate</code>, <code>System.Enum</code>).</li>
+</ul>
 <h3 id="universal-instance-naming">Universal $instance Naming</h3>
 <p>All classes/structs use the <code>$instance</code> suffix—even those without views:</p>
 <pre><code class="language-csharp">// From SymbolRenamer.cs
