@@ -280,6 +280,41 @@ import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
 <li><code>@tsonic/js</code> — JavaScript runtime APIs (JS semantics implemented in C#).</li>
 </ul>
 <p>These are regular CLR bindings: you install them and import them like any other package.</p>
+<h2 id="overriding-net-virtual-methods-including-overload-families">Overriding .NET Virtual Methods (including overload families)</h2>
+<p>.NET libraries frequently expose <strong>protected virtual</strong> members that you’re expected to override
+(e.g. <code>DbContext.OnModelCreating</code>, <code>Stream.Dispose(bool)</code>, etc.). Some of these are <strong>overload
+families</strong> (same CLR name, multiple signatures).</p>
+<p>In Tsonic you author these using standard TypeScript overload syntax:</p>
+<ol>
+<li>Write one overload signature per CLR signature you want to support/override</li>
+<li>Provide exactly one implementation body</li>
+<li>Use <code>isType&lt;T&gt;(pN)</code> (from <code>@tsonic/core/lang.js</code>) to let the compiler specialize the single body
+into one CLR method per signature</li>
+</ol>
+<p><code>isType&lt;T&gt;(...)</code> is <strong>compile-time only</strong> — the compiler must erase it before emitting C#.</p>
+<p>Example (single-parameter overload family):</p>
+<pre><code class="language-ts">import { isType } from &quot;@tsonic/core/lang.js&quot;;
+
+class Overloads {
+  Foo(x: string): string;
+  Foo(x: boolean): string;
+  Foo(p0: unknown): unknown {
+    if (isType&lt;string&gt;(p0)) return `s:${p0}`;
+    if (isType&lt;boolean&gt;(p0)) return p0 ? &quot;t&quot; : &quot;f&quot;;
+    throw new Error(&quot;unreachable&quot;);
+  }
+}
+</code></pre>
+<p>Notes:</p>
+<ul>
+<li>Use <code>unknown</code> for the implementation signature’s parameters/return type.</li>
+<li><code>isType&lt;T&gt;(...)</code> must be called with a simple parameter identifier (<code>p0</code>, <code>p1</code>, …).</li>
+<li>If <code>isType&lt;T&gt;(...)</code> reaches emission, Tsonic hard-errors with <code>TSN7441</code>.</li>
+<li>For CLR overrides, <strong>avoid TypeScript visibility modifiers</strong> (<code>public</code>/<code>protected</code>/<code>private</code>) on the
+implementation. Bindings don’t encode CLR visibility in the <code>$instance</code> surface, so writing
+<code>protected override ...</code> can fail vanilla <code>tsc</code> even though the override is valid in CLR.
+Prefer <code>override Method(...) { ... }</code> and let Tsonic emit the correct CLR accessibility from bindings.</li>
+</ul>
 <h2 id="authoring-clr-bindings-packages-tsbindgen">Authoring CLR Bindings Packages (tsbindgen)</h2>
 <p>Tsonic detects CLR namespace imports by discovering <code>bindings.json</code> files (tsbindgen format).
 This works for any package — not just <code>@tsonic/*</code>.</p>
