@@ -242,6 +242,8 @@
   nameof,
   defaultof,
   trycast,
+  asinterface,
+  istype,
 } from &quot;@tsonic/core/lang.js&quot;;
 </code></pre>
 <h2 id="stackalloc">stackalloc</h2>
@@ -255,7 +257,7 @@ export function main(): void {
   buffer[0] = 42;
 
   Console.WriteLine(`First: ${buffer[0]}`);
-  Console.WriteLine(`Length: ${buffer.length}`);
+  Console.WriteLine(`Length: ${buffer.Length}`);
 }
 </code></pre>
 <p>This emits C# like:</p>
@@ -305,6 +307,38 @@ export function main(animal: Animal): void {
   if (dog !== null) {
     Console.WriteLine(dog.breed);
   }
+}
+</code></pre>
+<h2 id="asinterface">asinterface</h2>
+<p><code>asinterface&lt;T&gt;(x)</code> is a <strong>compile-time-only</strong> interface view.</p>
+<p>It exists to treat a value as a CLR interface/nominal type in TypeScript without emitting
+runtime casts in C#.</p>
+<pre><code class="language-typescript">import { asinterface } from &quot;@tsonic/core/lang.js&quot;;
+import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+import type { IEnumerable } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+import type { ExtensionMethods as Linq } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
+
+type Seq&lt;T&gt; = Linq&lt;IEnumerable&lt;T&gt;&gt;;
+
+const xs = new List&lt;number&gt;([1, 2, 3]);
+const seq = asinterface&lt;Seq&lt;number&gt;&gt;(xs);
+
+// Note: asinterface is particularly important for EF Core query precompilation,
+// where runtime casts can break query analyzers.
+seq.Count();
+</code></pre>
+<h2 id="istype-overload-specialization">istype (overload specialization)</h2>
+<p><code>istype&lt;T&gt;(x)</code> is a <strong>compile-time-only</strong> marker used to specialize a single overload implementation
+into one CLR method per signature.</p>
+<p>Tsonic must erase <code>istype&lt;T&gt;(...)</code> before emitting C#. If it reaches emission, compilation fails with <code>TSN7441</code>.</p>
+<pre><code class="language-typescript">import { istype } from &quot;@tsonic/core/lang.js&quot;;
+
+Foo(x: string): string;
+Foo(x: boolean): string;
+Foo(p0: unknown): unknown {
+  if (istype&lt;string&gt;(p0)) return `s:${p0}`;
+  if (istype&lt;boolean&gt;(p0)) return p0 ? &quot;t&quot; : &quot;f&quot;;
+  throw new Error(&quot;unreachable&quot;);
 }
 </code></pre>
 <h2 id="thisarg-extension-method-receiver">thisarg (extension method receiver)</h2>

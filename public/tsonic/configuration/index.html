@@ -279,6 +279,21 @@
 </li>
 <li><code>dotnet.frameworkReferences</code>: additional shared frameworks (e.g. <code>Microsoft.AspNetCore.App</code>).</li>
 <li><code>dotnet.packageReferences</code>: NuGet packages (pinned exact versions).</li>
+<li><code>dotnet.msbuildProperties</code> (optional): explicit MSBuild properties injected into the generated <code>tsonic.csproj</code>.
+<ul>
+<li>Use this when you need to enable a compiler/runtime feature that would normally be set in a <code>.csproj</code>.</li>
+<li>Example (EF Core <code>dotnet ef dbcontext optimize --nativeaot</code> interceptors):
+<pre><code class="language-json">{
+  &quot;dotnet&quot;: {
+    &quot;msbuildProperties&quot;: {
+      &quot;InterceptorsNamespaces&quot;: &quot;$(InterceptorsNamespaces);Microsoft.EntityFrameworkCore.GeneratedInterceptors&quot;
+    }
+  }
+}
+</code></pre>
+</li>
+</ul>
+</li>
 </ul>
 <p>Most users should manage these via the CLI:</p>
 <pre><code class="language-bash">tsonic add package ./some.dll

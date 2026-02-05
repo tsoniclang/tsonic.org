@@ -272,6 +272,29 @@
 <h2 id="generics--nullability">Generics + Nullability</h2>
 <p>C# cannot represent every TypeScript generic/nullability combination. A common example is <code>T | null</code> with an unconstrained <code>T</code>.</p>
 <p>When you hit these diagnostics, add appropriate constraints (<code>T extends object</code>) or use boxing (<code>object | null</code>) depending on the intent.</p>
+<h2 id="ef-core--nativeaot-experimental">EF Core + NativeAOT (Experimental)</h2>
+<p>EF Core’s NativeAOT support relies on <strong>query precompilation</strong>, which performs static analysis of your source code and generates C# <strong>interceptors</strong>. This is an EF Core feature (not Tsonic-specific) and is still experimental.</p>
+<ul>
+<li><strong>Dynamic queries are not supported</strong> by EF query precompilation. Avoid composing a query across multiple statements (e.g. <code>let q = ...; if (...) q = q.Where(...);</code>).</li>
+<li>Interceptors are <strong>invalidated by any source change</strong>. Treat precompilation as part of a publish/CI pipeline, not an inner-loop workflow.</li>
+<li>Some runtime operations are not supported under NativeAOT (e.g. <code>EnsureCreated()</code>); prefer <strong>migrations</strong> / migration bundles.</li>
+</ul>
+<p>If you are publishing a Tsonic + EF Core app with NativeAOT, you generally need to run EF’s optimizer against the generated C# project (or use EF’s MSBuild integration):</p>
+<pre><code class="language-bash"># 1) Generate C# (and the .csproj)
+tsonic build
+
+# 2) Run EF optimization in the generated project directory
+dotnet ef dbcontext optimize --precompile-queries --nativeaot \
+  --project tsonic.csproj \
+  --output-dir ef-compiled-model \
+  --context AppDbContext
+</code></pre>
+<p>When using <code>--nativeaot</code>, EF generates C# interceptor source under the namespace <code>Microsoft.EntityFrameworkCore.GeneratedInterceptors</code>. The C# compiler requires an explicit MSBuild opt-in:</p>
+<ul>
+<li>Add <code>dotnet.msbuildProperties.InterceptorsNamespaces</code> in <code>tsonic.workspace.json</code>, or</li>
+<li>Provide your own <code>.csproj</code> at the project root and include <code>&lt;InterceptorsNamespaces&gt;...</code>.</li>
+</ul>
+<p>See EF Core docs for the current limitations and recommended rewrites.</p>
 </div>
 </article>
 </main>

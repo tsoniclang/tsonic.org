@@ -288,19 +288,19 @@ families</strong> (same CLR name, multiple signatures).</p>
 <ol>
 <li>Write one overload signature per CLR signature you want to support/override</li>
 <li>Provide exactly one implementation body</li>
-<li>Use <code>isType&lt;T&gt;(pN)</code> (from <code>@tsonic/core/lang.js</code>) to let the compiler specialize the single body
+<li>Use <code>istype&lt;T&gt;(pN)</code> (from <code>@tsonic/core/lang.js</code>) to let the compiler specialize the single body
 into one CLR method per signature</li>
 </ol>
-<p><code>isType&lt;T&gt;(...)</code> is <strong>compile-time only</strong> — the compiler must erase it before emitting C#.</p>
+<p><code>istype&lt;T&gt;(...)</code> is <strong>compile-time only</strong> — the compiler must erase it before emitting C#.</p>
 <p>Example (single-parameter overload family):</p>
-<pre><code class="language-ts">import { isType } from &quot;@tsonic/core/lang.js&quot;;
+<pre><code class="language-ts">import { istype } from &quot;@tsonic/core/lang.js&quot;;
 
 class Overloads {
   Foo(x: string): string;
   Foo(x: boolean): string;
   Foo(p0: unknown): unknown {
-    if (isType&lt;string&gt;(p0)) return `s:${p0}`;
-    if (isType&lt;boolean&gt;(p0)) return p0 ? &quot;t&quot; : &quot;f&quot;;
+    if (istype&lt;string&gt;(p0)) return `s:${p0}`;
+    if (istype&lt;boolean&gt;(p0)) return p0 ? &quot;t&quot; : &quot;f&quot;;
     throw new Error(&quot;unreachable&quot;);
   }
 }
@@ -308,8 +308,8 @@ class Overloads {
 <p>Notes:</p>
 <ul>
 <li>Use <code>unknown</code> for the implementation signature’s parameters/return type.</li>
-<li><code>isType&lt;T&gt;(...)</code> must be called with a simple parameter identifier (<code>p0</code>, <code>p1</code>, …).</li>
-<li>If <code>isType&lt;T&gt;(...)</code> reaches emission, Tsonic hard-errors with <code>TSN7441</code>.</li>
+<li><code>istype&lt;T&gt;(...)</code> must be called with a simple parameter identifier (<code>p0</code>, <code>p1</code>, …).</li>
+<li>If <code>istype&lt;T&gt;(...)</code> reaches emission, Tsonic hard-errors with <code>TSN7441</code>.</li>
 <li>For CLR overrides, <strong>avoid TypeScript visibility modifiers</strong> (<code>public</code>/<code>protected</code>/<code>private</code>) on the
 implementation. Bindings don’t encode CLR visibility in the <code>$instance</code> surface, so writing
 <code>protected override ...</code> can fail vanilla <code>tsc</code> even though the override is valid in CLR.
