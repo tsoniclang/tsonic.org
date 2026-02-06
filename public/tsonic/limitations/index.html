@@ -281,13 +281,17 @@
 </ul>
 <p>If you are publishing a Tsonic + EF Core app with NativeAOT, you generally need to run EF’s optimizer against the generated C# project (or use EF’s MSBuild integration):</p>
 <pre><code class="language-bash"># 1) Generate C# (and the .csproj)
-tsonic build
+tsonic generate
 
 # 2) Run EF optimization in the generated project directory
 dotnet ef dbcontext optimize --precompile-queries --nativeaot \
   --project tsonic.csproj \
   --output-dir ef-compiled-model \
   --context AppDbContext
+
+# 3) Publish without re-running `tsonic generate`
+# (EF writes additional C# sources into the generated directory.)
+tsonic build --no-generate
 </code></pre>
 <p>When using <code>--nativeaot</code>, EF generates C# interceptor source under the namespace <code>Microsoft.EntityFrameworkCore.GeneratedInterceptors</code>. The C# compiler requires an explicit MSBuild opt-in:</p>
 <ul>

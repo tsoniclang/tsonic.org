@@ -350,6 +350,22 @@ Use <code>--strict</code> to treat constructor-constraint loss as fatal.</p>
 </ul>
 <h3 id="tsonic-run-entry----args"><code>tsonic run [entry] -- [args...]</code></h3>
 <p>Build and run an executable.</p>
+<h3 id="tsonic-test"><code>tsonic test</code></h3>
+<p>Generate a <strong>non-NativeAOT</strong> test assembly and run <code>dotnet test</code>.</p>
+<p>This gives you a normal .NET unit test workflow (xUnit/NUnit/MSTest) while keeping
+your production build in NativeAOT.</p>
+<p>Requirements:</p>
+<ul>
+<li><code>packages/&lt;project&gt;/tsonic.json</code> must define <code>tests.entryPoint</code></li>
+<li><code>tsonic.workspace.json</code> should declare test frameworks under <code>testDotnet.*</code>
+<ul>
+<li>For csproj-only test tooling packages (e.g. <code>Microsoft.NET.Test.Sdk</code>, <code>xunit.runner.visualstudio</code>), set <code>&quot;types&quot;: false</code> since you typically won’t import them from TypeScript.</li>
+</ul>
+</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-bash">tsonic test --project my-app
+</code></pre>
 <h3 id="tsonic-pack"><code>tsonic pack</code></h3>
 <p>Create a NuGet package from a library project.</p>
 <h2 id="global-options">Global Options</h2>
