@@ -603,14 +603,6 @@ const s = &quot;hello&quot;;
 takesChar(s[0]);    // OK (context expects char)
 </code></pre>
 <p><strong>Fix:</strong> Use a single-character literal in a <code>char</code> position, or obtain a <code>char</code> from an API returning <code>char</code> (for example <code>System.Char.parse(&quot;Q&quot;)</code>).</p>
-<h3 id="tsn7420-refoutin-are-parameter-modifiers">TSN7420: ref/out/In Are Parameter Modifiers</h3>
-<p><code>ref</code>, <code>out</code>, and <code>In</code> are parameter passing modifiers, not types.</p>
-<pre><code class="language-typescript">// Error
-function foo(x: ref&lt;number&gt;) {} // Wrong - ref is not a type
-
-// Correct: Use type annotation on the .NET side
-// These are handled via metadata, not TypeScript syntax
-</code></pre>
 <h3 id="tsn7421-anonymous-object-type-not-lowered">TSN7421: Anonymous Object Type Not Lowered</h3>
 <p>Internal compiler error indicating an anonymous object type was not properly lowered to a synthesized class. This is a compiler bug - please report it.</p>
 <h3 id="tsn7422-object-rest-requires-finite-object-shape">TSN7422: Object Rest Requires Finite Object Shape</h3>

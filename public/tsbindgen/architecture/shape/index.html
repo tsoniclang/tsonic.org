@@ -500,12 +500,14 @@ class Derived : Base { public override string Value { get; } }
 <p><strong>Output:</strong> Emitted into <code>__internal/extensions/index.d.ts</code> as helper types:</p>
 <pre><code class="language-typescript">// __internal/extensions/index.d.ts (excerpt)
 export interface __Ext_System_Linq_IEnumerable_1&lt;T&gt; {
-    where(predicate: System.Func_2&lt;T, boolean&gt;): ExtensionMethods_System_Linq&lt;System_Collections_Generic.IEnumerable_1&lt;T&gt;&gt;;
+    where(predicate: System.Func_2&lt;T, boolean&gt;): Rewrap&lt;this, System_Collections_Generic.IEnumerable_1&lt;T&gt;&gt;;
 }
 
 export type ExtensionMethods_System_Linq&lt;TShape&gt; =
     TShape &amp; (TShape extends System_Collections_Generic.IEnumerable_1&lt;infer T0&gt; ? __Ext_System_Linq_IEnumerable_1&lt;T0&gt; : {});
 </code></pre>
+<p>Bucket method return types use <code>Rewrap&lt;this, ReturnShape&gt;</code> so extension scopes stay “sticky”
+across fluent chains (similar to C# <code>using</code> semantics).</p>
 <h3 id="safetoextendanalyzer">SafeToExtendAnalyzer</h3>
 <p>Determines which interfaces can safely appear in <code>extends</code> clauses.</p>
 <p><strong>Problem:</strong> Some interface combinations cause TS2430 &quot;Interface cannot simultaneously extend types&quot;.</p>
