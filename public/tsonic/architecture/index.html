@@ -386,11 +386,19 @@ backend (standalone)
 <pre><code class="language-bash"># Build all packages
 ./scripts/build/all.sh
 
-# Run tests
+# Run unit/golden tests (all workspaces)
 npm test
 
-# Run E2E tests
+# Run a focused subset (Mocha)
+npm run test:emitter -- --grep &lt;pattern&gt;
+npm run test:frontend -- --grep &lt;pattern&gt;
+npm run test:cli -- --grep &lt;pattern&gt;
+
+# Run full E2E suite (final gate)
 ./test/scripts/run-all.sh
+
+# Run a subset of fixtures (iteration only; skips unit/golden)
+./test/scripts/run-e2e.sh --filter &lt;pattern&gt;
 
 # Format code
 ./scripts/build/format.sh

@@ -1358,14 +1358,16 @@ var filtered = list.Where(x =&gt; x &gt; 0).Select(x =&gt; x * 2);
 </ol>
 <pre><code class="language-typescript">// __internal/extensions/index.d.ts (excerpt)
 
+import type { Rewrap } from &quot;@tsonic/core/lang.js&quot;;
+
 // Bucket for IEnumerable&lt;T&gt; extension methods in System.Linq
 export interface __Ext_System_Linq_IEnumerable_1&lt;T&gt; {
   where(
     predicate: System.Func_2&lt;T, boolean&gt;
-  ): ExtensionMethods_System_Linq&lt;System_Collections_Generic.IEnumerable_1&lt;T&gt;&gt;;
+  ): Rewrap&lt;this, System_Collections_Generic.IEnumerable_1&lt;T&gt;&gt;;
   select&lt;TResult&gt;(
     selector: System.Func_2&lt;T, TResult&gt;
-  ): ExtensionMethods_System_Linq&lt;System_Collections_Generic.IEnumerable_1&lt;TResult&gt;&gt;;
+  ): Rewrap&lt;this, System_Collections_Generic.IEnumerable_1&lt;TResult&gt;&gt;;
   // ...
 }
 
@@ -1389,6 +1391,29 @@ type LinqSeq&lt;T&gt; = Linq&lt;IEnumerable&lt;T&gt;&gt;;
 declare const xs: LinqSeq&lt;number&gt;;
 xs.where((x) =&gt; x &gt; 0).select((x) =&gt; x * 2);
 </code></pre>
+<h3 id="sticky-extension-scopes-rewrap">Sticky Extension Scopes (Rewrap)</h3>
+<p>In C#, extension methods remain “in scope” across fluent chains as long as the relevant
+namespaces are imported via <code>using</code>. The receiver type does not need to be re-wrapped at
+each hop:</p>
+<pre><code class="language-csharp">using System.Linq;
+using Microsoft.EntityFrameworkCore;
+
+var ids = await db.Events
+  .Where(e =&gt; e.IsActive)
+  .Select(e =&gt; e.Id)
+  .ToListAsync();
+</code></pre>
+<p>In TypeScript, the naive <code>ExtensionMethods&lt;TShape&gt;</code> model can lose scopes when you compose
+multiple extension namespaces (for example LINQ + EF Core): a method in one scope returns
+<code>TNewShape</code>, but the other scope’s methods are no longer present on the returned type.</p>
+<p>To make extension scopes <strong>sticky</strong> across fluent chains, tsbindgen emits bucket methods with:</p>
+<ul>
+<li><code>Rewrap&lt;this, ReturnShape&gt;</code> instead of just <code>ReturnShape</code></li>
+</ul>
+<p><code>Rewrap</code> is a type-level helper in <code>@tsonic/core/lang.js</code> that preserves the “extension scopes”
+carried by the receiver type and re-applies them to the return shape.</p>
+<p>Result: users can wrap the root once and then write idiomatic fluent code without re-wrapping
+after each call.</p>
 <h3 id="implementation-2">Implementation</h3>
 <p><strong>Step 1: ExtensionMethodAnalyzer</strong> groups methods by target type:</p>
 <pre><code class="language-csharp">// From ExtensionMethodAnalyzer.cs
@@ -1738,6 +1763,28 @@ Bucket 2 (singleton SCC):
 </tr>
 </tbody>
 </table>
+<h3 id="implementing-clr-interfaces-nominal-brands--interfacet">Implementing CLR Interfaces (Nominal Brands + <code>Interface&lt;T&gt;</code>)</h3>
+<p>tsbindgen must preserve <strong>CLR identity</strong> for interfaces and classes. A plain TypeScript
+structural interface is not CLR-faithful: unrelated shapes can accidentally satisfy it,
+and “duck typing” can cause ambiguous member/extension-method binding.</p>
+<p>To prevent this, generated CLR interface types carry internal nominal brand members
+(for example <code>__tsonic_iface_*</code>). These members are not intended to be implemented
+by end users.</p>
+<p>When you want to author a TypeScript class that implements a CLR interface, wrap the
+interface with <code>Interface&lt;T&gt;</code> from <code>@tsonic/core/lang.js</code> in the <code>implements</code> clause:</p>
+<pre><code class="language-ts">import type { Interface } from &quot;@tsonic/core/lang.js&quot;;
+import type { IDesignTimeDbContextFactory } from &quot;@tsonic/efcore/Microsoft.EntityFrameworkCore.Design.js&quot;;
+
+export class MyFactory
+  implements Interface&lt;IDesignTimeDbContextFactory&lt;MyDbContext&gt;&gt;
+{
+  CreateDbContext(_args: string[]): MyDbContext {
+    return new MyDbContext();
+  }
+}
+</code></pre>
+<p><code>Interface&lt;T&gt;</code> strips internal <code>__tsonic_iface_*</code> members at the TypeScript layer only.
+It does <strong>not</strong> change the CLR interface that gets emitted in C#.</p>
 <h3 id="how-it-works">How It Works</h3>
 <p>When a primitive type appears as a generic type argument, tsbindgen emits the CLR type name instead of the TypeScript primitive alias:</p>
 <pre><code class="language-typescript">// Value positions use TS aliases for ergonomics

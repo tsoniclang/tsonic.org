@@ -459,19 +459,23 @@ export function main(): void {
 </code></pre>
 <h3 id="extension-methods-linq-style-xswhereselect">Extension Methods (LINQ-style <code>xs.Where(...).Select(...)</code>)</h3>
 <p>tsbindgen-generated packages expose <strong>type-only</strong> <code>ExtensionMethods</code> helpers that model C# <code>using</code> semantics.</p>
-<p>Bring a namespace’s extension methods into scope by wrapping the receiver type:</p>
-<pre><code class="language-typescript">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+<p>Bring a namespace’s extension methods into scope by wrapping the receiver type.</p>
+<p>Use <code>asinterface&lt;T&gt;(x)</code> to apply the wrapper <strong>without emitting runtime casts</strong> in C#:</p>
+<pre><code class="language-typescript">import { asinterface } from &quot;@tsonic/core/lang.js&quot;;
+import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 import type { ExtensionMethods as Linq } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
 
 type LinqList&lt;T&gt; = Linq&lt;List&lt;T&gt;&gt;;
 
-const numbers = new List&lt;number&gt;() as unknown as LinqList&lt;number&gt;;
+const numbers = asinterface&lt;LinqList&lt;number&gt;&gt;(new List&lt;number&gt;());
 numbers.Add(1);
 numbers.Add(2);
 numbers.Add(3);
 
 const doubled = numbers.Where((x) =&gt; x % 2 === 0).Select((x) =&gt; x * 2).ToList();
 </code></pre>
+<p>Extension method scopes are <strong>sticky</strong> across fluent chains: you should only need to apply
+<code>ExtensionMethods&lt;...&gt;</code> once at the root.</p>
 <p>The same pattern works for <code>IEnumerable&lt;T&gt;</code> and <code>IQueryable&lt;T&gt;</code> (for example when using EF Core):</p>
 <pre><code class="language-typescript">import type { ExtensionMethods as Linq, IQueryable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
 
@@ -715,7 +719,8 @@ public class LegacyService
 <h2 id="parameter-modifiers">Parameter Modifiers</h2>
 <p>.NET methods with <code>out</code>, <code>ref</code>, or <code>in</code> parameters work automatically when using tsbindgen-generated bindings:</p>
 <pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-import { int, out } from &quot;@tsonic/core/types.js&quot;;
+import type { int } from &quot;@tsonic/core/types.js&quot;;
+import { defaultof, out } from &quot;@tsonic/core/lang.js&quot;;
 
 // Dictionary.TryGetValue has an 'out' parameter
 import { Dictionary } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
@@ -724,8 +729,8 @@ const dict = new Dictionary&lt;string, int&gt;();
 dict.Add(&quot;key&quot;, 42);
 
 // The 'out' parameter is handled automatically
-let value: int = 0;
-if (dict.TryGetValue(&quot;key&quot;, value as out&lt;int&gt;)) {
+let value = defaultof&lt;int&gt;();
+if (dict.TryGetValue(&quot;key&quot;, out(value))) {
   Console.WriteLine(value); // 42
 }
 </code></pre>
@@ -763,6 +768,12 @@ if (dict.TryGetValue(&quot;key&quot;, out value))
 </tr>
 </tbody>
 </table>
+<p>Alternate call-site form (also supported):</p>
+<pre><code class="language-typescript">import type { int, out } from &quot;@tsonic/core/types.js&quot;;
+
+let value: int = 0;
+dict.TryGetValue(&quot;key&quot;, value as out&lt;int&gt;);
+</code></pre>
 <h2 id="nullable-value-type-narrowing">Nullable Value Type Narrowing</h2>
 <p>Tsonic automatically narrows nullable value types in conditional blocks:</p>
 <pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
