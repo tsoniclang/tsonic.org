@@ -280,6 +280,25 @@ import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
 <li><code>@tsonic/js</code> — JavaScript runtime APIs (JS semantics implemented in C#).</li>
 </ul>
 <p>These are regular CLR bindings: you install them and import them like any other package.</p>
+<h2 id="flattened-named-imports-module-containers">Flattened Named Imports (Module Containers)</h2>
+<p>Tsonic emits a <strong>module container</strong> (a C# static type) for files that only export functions/constants.</p>
+<p>Example (library source):</p>
+<pre><code class="language-ts">// packages/engine/src/build-site.ts
+export function buildSite(req: Request): Response {
+  // ...
+}
+</code></pre>
+<p>You can always import the container type and call its static member:</p>
+<pre><code class="language-ts">import { BuildSite } from &quot;@acme/engine/Tsumo.Engine.js&quot;;
+BuildSite.buildSite(req);
+</code></pre>
+<p>For better JS ergonomics, <strong>tsbindgen</strong> can also “flatten” those exports so you can do:</p>
+<pre><code class="language-ts">import { buildSite } from &quot;@acme/engine/Tsumo.Engine.js&quot;;
+buildSite(req);
+</code></pre>
+<p>This is airplane-grade because the bindings include a deterministic mapping in <code>bindings.json</code>
+(<code>exports: { &lt;name&gt;: { declaringClrType, memberName, ... } }</code>), so Tsonic never guesses.</p>
+<p>For external assemblies, you can opt into flattening explicitly in tsbindgen (e.g. <code>--flatten-class &lt;ClrType&gt;</code>).</p>
 <h2 id="overriding-net-virtual-methods-including-overload-families">Overriding .NET Virtual Methods (including overload families)</h2>
 <p>.NET libraries frequently expose <strong>protected virtual</strong> members that you’re expected to override
 (e.g. <code>DbContext.OnModelCreating</code>, <code>Stream.Dispose(bool)</code>, etc.). Some of these are <strong>overload

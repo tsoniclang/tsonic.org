@@ -259,6 +259,44 @@
 <blockquote>
 <p>tsbindgen uses a <strong>unified</strong> <code>bindings.json</code> format (no <code>.metadata.json</code> sidecars).</p>
 </blockquote>
+<h3 id="flattened-named-exports-optional">Flattened Named Exports (Optional)</h3>
+<p>CLR namespaces can only contain <strong>types</strong>, not free functions/values. However, Tsonic emits
+module “static containers” (C# static types) for files that only export functions/constants,
+and it’s often nicer to import those exports directly:</p>
+<pre><code class="language-ts">import { buildSite } from &quot;@acme/engine/Tsumo.Engine.js&quot;;
+buildSite(req);
+</code></pre>
+<p>To make this airplane-grade, <strong>tsbindgen</strong> can emit an <code>exports</code> map inside each namespace
+<code>bindings.json</code>, describing how a named value export maps to its declaring CLR type + member.</p>
+<p>Example (<code>Tsumo.Engine/bindings.json</code> excerpt):</p>
+<pre><code class="language-json">{
+  &quot;namespace&quot;: &quot;Tsumo.Engine&quot;,
+  &quot;types&quot;: [],
+  &quot;exports&quot;: {
+    &quot;buildSite&quot;: {
+      &quot;kind&quot;: &quot;method&quot;,
+      &quot;clrName&quot;: &quot;buildSite&quot;,
+      &quot;declaringClrType&quot;: &quot;Tsumo.Engine.BuildSite&quot;,
+      &quot;declaringAssemblyName&quot;: &quot;Tsumo.Engine&quot;
+    }
+  }
+}
+</code></pre>
+<p>With this, Tsonic can compile <code>buildSite(req)</code> to:</p>
+<pre><code class="language-csharp">global::Tsumo.Engine.BuildSite.buildSite(req)
+</code></pre>
+<p>Notes:</p>
+<ul>
+<li><p>This is <strong>additive</strong>: the container type remains importable:</p>
+<pre><code class="language-ts">import { BuildSite } from &quot;@acme/engine/Tsumo.Engine.js&quot;;
+BuildSite.buildSite(req);
+</code></pre>
+</li>
+<li><p>For <strong>Tsonic-built</strong> libraries, tsbindgen detects module containers automatically.</p>
+</li>
+<li><p>For <strong>external</strong> assemblies, you can opt in explicitly with tsbindgen (e.g. <code>--flatten-class &lt;ClrType&gt;</code>).</p>
+</li>
+</ul>
 <h2 id="workspace-model-required">Workspace Model (Required)</h2>
 <p>Tsonic always operates in a workspace:</p>
 <ul>
