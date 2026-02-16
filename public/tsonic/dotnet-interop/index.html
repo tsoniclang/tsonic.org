@@ -455,10 +455,11 @@ const any = Enumerable.Any(numbers, (n) =&gt; n &gt; 10);
 (bindings for <code>Tsonic.JSRuntime.dll</code>).</p>
 <p>Setup:</p>
 <pre><code class="language-bash"># New project
-tsonic init --js
+tsonic init
+tsonic add npm @tsonic/js
 
 # Existing project
-tsonic add js
+tsonic add npm @tsonic/js
 </code></pre>
 <pre><code class="language-typescript">import { console, JSON, Math, Date, Timers } from &quot;@tsonic/js/index.js&quot;;
 
@@ -686,7 +687,7 @@ try {
 </code></pre>
 <h2 id="c-attributes">C# Attributes</h2>
 <p>Apply .NET attributes to classes using the marker-call API:</p>
-<pre><code class="language-typescript">import { attributes as A } from &quot;@tsonic/core/attributes.js&quot;;
+<pre><code class="language-typescript">import { attributes as A } from &quot;@tsonic/core/lang.js&quot;;
 
 // Declare attribute types (from @tsonic/dotnet or custom)
 declare class SerializableAttribute {}

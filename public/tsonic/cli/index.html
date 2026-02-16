@@ -254,8 +254,6 @@ tsonic init
 </code></pre>
 <p>Options:</p>
 <ul>
-<li><code>--js</code> — install <code>@tsonic/js</code> and add <code>libs/Tsonic.JSRuntime.dll</code></li>
-<li><code>--nodejs</code> — install <code>@tsonic/nodejs</code> and add <code>libs/nodejs.dll</code> (also includes JSRuntime)</li>
 <li><code>--skip-types</code> — skip installing type packages</li>
 <li><code>--types-version &lt;ver&gt;</code> — pin the installed type package versions</li>
 </ul>
@@ -263,29 +261,25 @@ tsonic init
 <ul>
 <li><code>tsonic.workspace.json</code>, <code>libs/</code>, <code>packages/&lt;name&gt;/tsonic.json</code>, workspace <code>package.json</code>, <code>.gitignore</code></li>
 </ul>
-<h3 id="tsonic-add-js"><code>tsonic add js</code></h3>
-<p>Add JSRuntime interop to an existing workspace:</p>
+<h3 id="tsonic-add-npm-packagespec"><code>tsonic add npm &lt;packageSpec&gt;</code></h3>
+<p>Install an npm bindings package and apply its <code>.NET</code> dependency manifest to the workspace.</p>
+<p>Airplane-grade rule: the npm package must include a <code>tsonic.bindings.json</code> at its root. That file is the
+only way Tsonic discovers the <code>.NET</code> dependencies for an npm bindings package.</p>
+<p>Examples:</p>
+<pre><code class="language-bash">tsonic add npm @tsonic/js
+tsonic add npm @tsonic/nodejs
+tsonic add npm @tsonic/express
+</code></pre>
+<p>Behavior:</p>
 <ul>
-<li>Installs <code>@tsonic/js</code> (if missing)</li>
-<li>Copies runtime DLLs into <code>libs/</code> (idempotent):
-<ul>
-<li><code>Tsonic.JSRuntime.dll</code></li>
+<li><code>npm install --save-dev &lt;packageSpec&gt;</code></li>
+<li>Reads <code>&lt;pkg&gt;/tsonic.bindings.json</code></li>
+<li>Merges <code>dotnet.frameworkReferences</code>, <code>dotnet.packageReferences</code>, <code>dotnet.msbuildProperties</code> (and <code>testDotnet.*</code>)
+into <code>tsonic.workspace.json</code></li>
+<li>Installs any additional <code>types</code> packages referenced by the manifest</li>
 </ul>
-</li>
-<li>Adds <code>libs/Tsonic.JSRuntime.dll</code> to <code>tsonic.workspace.json</code> <code>dotnet.libraries</code></li>
-</ul>
-<h3 id="tsonic-add-nodejs"><code>tsonic add nodejs</code></h3>
-<p>Add Node.js compatibility APIs to an existing workspace:</p>
-<ul>
-<li>Installs <code>@tsonic/nodejs</code> (if missing)</li>
-<li>Copies runtime DLLs into <code>libs/</code> (idempotent):
-<ul>
-<li><code>Tsonic.JSRuntime.dll</code></li>
-<li><code>nodejs.dll</code></li>
-</ul>
-</li>
-<li>Adds <code>libs/Tsonic.JSRuntime.dll</code> and <code>libs/nodejs.dll</code> to <code>tsonic.workspace.json</code> <code>dotnet.libraries</code></li>
-</ul>
+<p>After adding a bindings package, run <code>tsonic restore</code> to materialize NuGet dependencies and generate any missing
+bindings packages.</p>
 <h3 id="tsonic-add-package-dll-types"><code>tsonic add package &lt;dll&gt; [types]</code></h3>
 <p>Add a local DLL (and optional bindings) to the workspace.</p>
 <pre><code class="language-bash">tsonic add package ./path/to/MyLib.dll
