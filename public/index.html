@@ -234,12 +234,6 @@
 
 # Basic workspace + default project
 tsonic init
-
-# Or: include JavaScript runtime APIs (console, JSON, timers, etc.)
-tsonic init --js
-
-# Or: include Node-style APIs (fs, path, crypto, http, etc.)
-tsonic init --nodejs
 </code></pre>
 <p>This creates:</p>
 <ul>
@@ -319,10 +313,11 @@ if (parsed !== undefined) {
 <h3 id="javascript-runtime-apis-tsonicjs">JavaScript runtime APIs (<code>@tsonic/js</code>)</h3>
 <p>First, enable JSRuntime APIs:</p>
 <pre><code class="language-bash"># New project
-tsonic init --js
+tsonic init
+tsonic add npm @tsonic/js
 
 # Existing project
-tsonic add js
+tsonic add npm @tsonic/js
 </code></pre>
 <p>Then write:</p>
 <pre><code class="language-ts">import { console, JSON } from &quot;@tsonic/js/index.js&quot;;
@@ -335,10 +330,11 @@ export function main(): void {
 <h3 id="node-style-apis-tsonicnodejs">Node-style APIs (<code>@tsonic/nodejs</code>)</h3>
 <p>First, enable Node-style APIs:</p>
 <pre><code class="language-bash"># New project
-tsonic init --nodejs
+tsonic init
+tsonic add npm @tsonic/nodejs
 
 # Existing project
-tsonic add nodejs
+tsonic add npm @tsonic/nodejs
 </code></pre>
 <p>Then write:</p>
 <pre><code class="language-ts">import { console, path } from &quot;@tsonic/nodejs/index.js&quot;;
@@ -414,12 +410,8 @@ tsonic add nuget Microsoft.EntityFrameworkCore 10.0.1 @tsonic/efcore
 <td>Build and run</td>
 </tr>
 <tr>
-<td><code>tsonic add js</code></td>
-<td>Add <code>@tsonic/js</code> + JSRuntime DLLs</td>
-</tr>
-<tr>
-<td><code>tsonic add nodejs</code></td>
-<td>Add <code>@tsonic/nodejs</code> + NodeJS DLLs</td>
+<td><code>tsonic add npm &lt;pkg&gt;</code></td>
+<td>Install an npm bindings package (tsonic.bindings.json)</td>
 </tr>
 <tr>
 <td><code>tsonic add package &lt;dll&gt; [types]</code></td>

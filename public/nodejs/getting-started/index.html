@@ -251,22 +251,23 @@
   <div class="content"><h1 id="getting-started">Getting Started</h1>
 <h2 id="enable-nodejs-apis-in-a-tsonic-project">Enable Node.js APIs in a Tsonic Project</h2>
 <h3 id="new-project">New project</h3>
-<pre><code class="language-bash">tsonic init --nodejs
+<pre><code class="language-bash">tsonic init
+tsonic add npm @tsonic/nodejs
 </code></pre>
 <h3 id="existing-project">Existing project</h3>
-<pre><code class="language-bash">tsonic add nodejs
+<pre><code class="language-bash">tsonic add npm @tsonic/nodejs
 </code></pre>
 <p>That will:</p>
 <ul>
 <li>Install the <code>@tsonic/nodejs</code> bindings package in your workspace (<code>package.json</code>) for <code>tsc</code> typechecking</li>
-<li>Copy the runtime DLLs into <code>libs/</code>:
+<li>Apply the package’s <code>.NET</code> dependency manifest (<code>tsonic.bindings.json</code>) to <code>tsonic.workspace.json</code>
 <ul>
-<li><code>libs/Tsonic.JSRuntime.dll</code> (NodeJS depends on JSRuntime)</li>
-<li><code>libs/nodejs.dll</code></li>
+<li>Adds the required <code>dotnet.frameworkReferences</code> / <code>dotnet.packageReferences</code></li>
+<li>Installs any additional <code>types</code> packages referenced by the manifest</li>
 </ul>
 </li>
-<li>Add those DLLs to <code>tsonic.workspace.json</code> under <code>dotnet.libraries</code></li>
 </ul>
+<p>Then run <code>tsonic restore</code> (or just <code>tsonic build</code>, which will restore via <code>dotnet</code>) to materialize the .NET dependencies.</p>
 <h2 id="minimal-example">Minimal Example</h2>
 <pre><code class="language-ts">import { console, fs, path } from &quot;@tsonic/nodejs/index.js&quot;;
 

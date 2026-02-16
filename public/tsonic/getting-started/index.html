@@ -296,22 +296,16 @@ tsonic init
 └── .gitignore                # Ignores generated/, out/, node_modules/, .tsonic/
 </code></pre>
 <h3 id="init-options">Init Options</h3>
-<pre><code class="language-bash"># Enable JavaScript runtime APIs (@tsonic/js)
-tsonic init --js
-
-# Enable Node.js compatibility APIs (@tsonic/nodejs)
-tsonic init --nodejs
-
-# Skip installing type packages
+<pre><code class="language-bash"># Skip installing type packages
 tsonic init --skip-types
 
 # Specify type package version
 tsonic init --types-version &lt;ver&gt;
 </code></pre>
-<h3 id="adding-jsnodejs-to-an-existing-workspace">Adding JS/NodeJS to an existing workspace</h3>
-<p>If you already have a Tsonic workspace and want JSRuntime or Node.js APIs later:</p>
-<pre><code class="language-bash">tsonic add js
-tsonic add nodejs
+<h3 id="adding-js--nodejs-apis">Adding JS / Node.js APIs</h3>
+<p>Install optional libraries via npm bindings packages:</p>
+<pre><code class="language-bash">tsonic add npm @tsonic/js
+tsonic add npm @tsonic/nodejs
 </code></pre>
 <h2 id="building-and-running">Building and Running</h2>
 <h3 id="build-command">Build Command</h3>

@@ -207,17 +207,24 @@
   <div class="content"><h1 id="getting-started">Getting Started</h1>
 <h2 id="enable-js-runtime-apis-in-a-tsonic-project">Enable JS Runtime APIs in a Tsonic Project</h2>
 <h3 id="new-project">New project</h3>
-<pre><code class="language-bash">tsonic init --js
+<pre><code class="language-bash">npx --yes tsonic@latest init
+npx --yes tsonic@latest add npm @tsonic/js
 </code></pre>
 <h3 id="existing-project">Existing project</h3>
-<pre><code class="language-bash">tsonic add js
+<pre><code class="language-bash">npx --yes tsonic@latest add npm @tsonic/js
 </code></pre>
+<p>If you have <code>tsonic</code> installed globally, you can drop the <code>npx --yes tsonic@latest</code> prefix.</p>
 <p>That will:</p>
 <ul>
 <li>Install the <code>@tsonic/js</code> bindings package in your workspace (<code>package.json</code>) for <code>tsc</code> typechecking</li>
-<li>Copy <code>libs/Tsonic.JSRuntime.dll</code> into your workspace</li>
-<li>Add <code>libs/Tsonic.JSRuntime.dll</code> to <code>tsonic.workspace.json</code> under <code>dotnet.libraries</code></li>
+<li>Apply the package’s <code>.NET</code> dependency manifest (<code>tsonic.bindings.json</code>) to <code>tsonic.workspace.json</code>
+<ul>
+<li>Adds the required <code>dotnet.frameworkReferences</code> / <code>dotnet.packageReferences</code></li>
+<li>Installs any additional <code>types</code> packages referenced by the manifest</li>
 </ul>
+</li>
+</ul>
+<p>Then run <code>tsonic restore</code> (or just <code>tsonic build</code>, which will restore via <code>dotnet</code>) to materialize the .NET dependencies.</p>
 <h2 id="minimal-example">Minimal Example</h2>
 <pre><code class="language-ts">import { console, JSON } from &quot;@tsonic/js/index.js&quot;;
 
