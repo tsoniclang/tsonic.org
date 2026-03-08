@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -237,222 +140,36 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/packages.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="package-structure">Package Structure</h1>
-<p>The Tsonic monorepo is organized into distinct packages.</p>
-<h2 id="overview">Overview</h2>
-<pre><code>packages/
-├── frontend/     # TypeScript -&gt; IR
-├── emitter/      # IR -&gt; C#
-├── backend/      # C# -&gt; Binary
-└── cli/          # Command-line interface
-</code></pre>
-<h2 id="package-dependencies">Package Dependencies</h2>
-<pre><code>cli
- ├── frontend
- ├── emitter
- └── backend
-
-frontend (standalone)
-
-emitter
- └── frontend (for IR types)
-
-backend (standalone)
-</code></pre>
-<h2 id="tsonicfrontend">@tsonic/frontend</h2>
-<p>TypeScript parsing and IR building.</p>
-<h3 id="responsibilities">Responsibilities</h3>
+  <div class="content"><h1 id="package-architecture">Package Architecture</h1>
+<p>Tsonic uses several package families.</p>
+<h2 id="compiler-packages">Compiler Packages</h2>
 <ul>
-<li>Create TypeScript programs</li>
-<li>Resolve module imports</li>
-<li>Validate source code</li>
-<li>Build IR from AST</li>
-<li>Analyze dependencies</li>
+<li><code>@tsonic/frontend</code></li>
+<li><code>@tsonic/emitter</code></li>
+<li><code>@tsonic/backend</code></li>
+<li><code>@tsonic/cli</code></li>
+<li><code>tsonic</code></li>
 </ul>
-<h3 id="key-exports">Key Exports</h3>
-<pre><code class="language-typescript">export { createProgram, buildModuleDependencyGraph } from &quot;./program.js&quot;;
-export { validateProgram } from &quot;./validator.js&quot;;
-export { buildIr, buildIrModule } from &quot;./ir/builder.js&quot;;
-export type {
-  IrModule,
-  IrStatement,
-  IrExpression,
-  IrType,
-} from &quot;./ir/types.js&quot;;
-export type { Diagnostic, DiagnosticsCollector } from &quot;./types/diagnostic.js&quot;;
-</code></pre>
-<h3 id="directory-structure">Directory Structure</h3>
-<pre><code>frontend/src/
-├── program/          # TS program creation
-├── resolver/         # Import resolution
-├── validation/       # Code validation
-├── ir/               # IR types and building
-│   ├── types/        # IR type definitions
-│   ├── builder/      # IR construction
-│   ├── converters/   # TS AST -&gt; IR
-│   └── type-converter/  # TS types -&gt; IR types
-├── symbol-table/     # Symbol tracking
-└── metadata/         # External type metadata
-</code></pre>
-<h2 id="tsonicemitter">@tsonic/emitter</h2>
-<p>C# code generation from IR.</p>
-<h3 id="responsibilities-1">Responsibilities</h3>
+<h2 id="core-authoring-packages">Core Authoring Packages</h2>
 <ul>
-<li>Emit C# types from IR types</li>
-<li>Emit C# expressions from IR expressions</li>
-<li>Emit C# statements from IR statements</li>
-<li>Generate module/namespace structure</li>
-<li>Handle generic specialization</li>
+<li><code>@tsonic/core</code></li>
+<li><code>@tsonic/dotnet</code></li>
 </ul>
-<h3 id="key-exports-1">Key Exports</h3>
-<pre><code class="language-typescript">export { emitCSharpFile, emitCSharpFiles } from &quot;./emitter.js&quot;;
-export { emitModule } from &quot;./core/module-emitter.js&quot;;
-export { emitType } from &quot;./type-emitter.js&quot;;
-export { emitExpression } from &quot;./expression-emitter.js&quot;;
-export { emitStatement } from &quot;./statement-emitter.js&quot;;
-</code></pre>
-<h3 id="directory-structure-1">Directory Structure</h3>
-<pre><code>emitter/src/
-├── core/             # Module emission
-│   └── module-emitter/
-├── types/            # Type emission
-├── expressions/      # Expression emission
-├── statements/       # Statement emission
-│   ├── control/      # Control flow
-│   ├── declarations/ # Classes, interfaces
-│   └── classes/      # Class members
-├── specialization/   # Generic handling
-├── emitter-types/    # Emitter context
-└── golden-tests/     # Test framework
-</code></pre>
-<h2 id="tsonicbackend">@tsonic/backend</h2>
-<p>.NET build orchestration.</p>
-<h3 id="responsibilities-2">Responsibilities</h3>
+<h2 id="surface--runtime-packages">Surface / Runtime Packages</h2>
 <ul>
-<li>Generate .csproj files</li>
-<li>Generate Program.cs entry point</li>
-<li>Run dotnet commands</li>
-<li>Handle NativeAOT configuration</li>
+<li><code>@tsonic/globals</code> — CLR ambient surface</li>
+<li><code>@tsonic/js</code> — JS ambient surface</li>
+<li><code>@tsonic/nodejs</code> — Node module package</li>
 </ul>
-<h3 id="key-exports-2">Key Exports</h3>
-<pre><code class="language-typescript">export { buildNativeAot } from &quot;./build-orchestrator.js&quot;;
-export { generateCsproj } from &quot;./project-generator.js&quot;;
-export { generateProgramCs } from &quot;./program-generator.js&quot;;
-export { checkDotnetInstalled, detectRid } from &quot;./dotnet.js&quot;;
-export type { BuildConfig, BuildResult, EntryInfo } from &quot;./types.js&quot;;
-</code></pre>
-<h3 id="directory-structure-2">Directory Structure</h3>
-<pre><code>backend/src/
-├── build-orchestrator.ts  # Main build logic
-├── project-generator.ts   # .csproj generation
-├── program-generator.ts   # Program.cs generation
-├── dotnet.ts              # dotnet CLI wrapper
-└── types.ts               # Type definitions
-</code></pre>
-<h2 id="tsoniccli">@tsonic/cli</h2>
-<p>Command-line interface.</p>
-<blockquote>
-<p><strong>Note:</strong> End users typically install the published <code>tsonic</code> package, which bundles the CLI binary. <code>@tsonic/cli</code> is the internal workspace package that produces it.</p>
-</blockquote>
-<h3 id="responsibilities-3">Responsibilities</h3>
+<h2 id="source-packages">Source Packages</h2>
+<p>Tsonic-authored npm packages with <code>tsonic/package-manifest.json</code>.</p>
+<p>These are consumed as source, not just declarations.</p>
+<h2 id="important-separation">Important Separation</h2>
 <ul>
-<li>Parse CLI arguments</li>
-<li>Load configuration</li>
-<li>Dispatch to commands</li>
-<li>Report errors and progress</li>
+<li>surface package = ambient world</li>
+<li>normal package = importable modules / bindings</li>
 </ul>
-<h3 id="key-exports-3">Key Exports</h3>
-<pre><code class="language-typescript">export { runCli, parseArgs, showHelp } from &quot;./cli.js&quot;;
-export { loadConfig, resolveConfig } from &quot;./config.js&quot;;
-export type { TsonicConfig, CliOptions, ResolvedConfig } from &quot;./types.js&quot;;
-</code></pre>
-<h3 id="directory-structure-3">Directory Structure</h3>
-<pre><code>cli/src/
-├── index.ts          # Entry point
-├── cli/              # Argument parsing
-│   ├── parser.ts     # CLI parser
-│   ├── dispatcher.ts # Command routing
-│   └── help.ts       # Help text
-├── commands/         # Command implementations
-│   ├── init.ts       # init (workspace + default project)
-│   ├── generate.ts   # generate command
-│   ├── build.ts      # build command
-│   ├── run.ts        # run command
-│   ├── add-package.ts # add package command
-│   └── pack.ts       # pack command
-├── config.ts         # Config loading
-└── types.ts          # Type definitions
-</code></pre>
-<h2 id="inter-package-communication">Inter-Package Communication</h2>
-<h3 id="cli-to-frontend">CLI to Frontend</h3>
-<pre><code class="language-typescript">import {
-  buildModuleDependencyGraph,
-  type CompilerOptions,
-} from &quot;@tsonic/frontend&quot;;
-
-const result = buildModuleDependencyGraph(entryPoint, {
-  projectRoot,
-  sourceRoot,
-  rootNamespace,
-  typeRoots,
-});
-</code></pre>
-<h3 id="cli-to-emitter">CLI to Emitter</h3>
-<pre><code class="language-typescript">import { emitCSharpFiles } from &quot;@tsonic/emitter&quot;;
-
-const result = emitCSharpFiles(modules, {
-  rootNamespace,
-  entryPointPath,
-  runtime,
-});
-</code></pre>
-<h3 id="cli-to-backend">CLI to Backend</h3>
-<pre><code class="language-typescript">import { generateCsproj, generateProgramCs } from &quot;@tsonic/backend&quot;;
-
-const csproj = generateCsproj(buildConfig);
-const programCs = generateProgramCs(entryInfo);
-</code></pre>
-<h2 id="build-system">Build System</h2>
-<h3 id="building-packages">Building Packages</h3>
-<pre><code class="language-bash"># Build all
-./scripts/build/all.sh
-
-# Build individual
-cd packages/frontend &amp;&amp; npm run build
-cd packages/emitter &amp;&amp; npm run build
-cd packages/backend &amp;&amp; npm run build
-cd packages/cli &amp;&amp; npm run build
-</code></pre>
-<h3 id="package-build-order">Package Build Order</h3>
-<p>Due to dependencies, build in this order:</p>
-<ol>
-<li>frontend (no dependencies)</li>
-<li>backend (no dependencies)</li>
-<li>emitter (depends on frontend)</li>
-<li>cli (depends on all)</li>
-</ol>
-<h3 id="typescript-project-references">TypeScript Project References</h3>
-<p>Each package uses TypeScript project references:</p>
-<pre><code class="language-json">// packages/emitter/tsconfig.json
-{
-  &quot;references&quot;: [{ &quot;path&quot;: &quot;../frontend&quot; }]
-}
-</code></pre>
-<h2 id="testing">Testing</h2>
-<p>Each package has its own tests:</p>
-<pre><code class="language-bash"># All tests
-npm test
-
-# Specific package
-cd packages/frontend &amp;&amp; npm test
-cd packages/emitter &amp;&amp; npm test
-</code></pre>
-<h3 id="test-patterns">Test Patterns</h3>
-<ul>
-<li>Unit tests: <code>*.test.ts</code> alongside source</li>
-<li>Golden tests: <code>testcases/</code> directories</li>
-<li>E2E tests: <code>test/fixtures/</code> (project root)</li>
-</ul>
+<p>That is why <code>@tsonic/js</code> is a surface, but <code>@tsonic/nodejs</code> is a normal package.</p>
 </div>
 </article>
 </main>

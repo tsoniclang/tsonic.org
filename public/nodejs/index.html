@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -246,7 +246,7 @@
   </div>
 
   <div class="content"><h1 id="nodejs-compatibility-tsonicnodejs">Node.js Compatibility (<code>@tsonic/nodejs</code>)</h1>
-<p>Tsonic targets the .NET BCL by default. If you want <strong>Node-style APIs</strong> (like <code>fs</code>, <code>path</code>, <code>crypto</code>, <code>net</code>, <code>process</code>, etc.), use <code>@tsonic/nodejs</code>.</p>
+<p>Tsonic targets the .NET BCL by default. If you want <strong>Node-style APIs</strong> (<code>fs</code>, <code>path</code>, <code>crypto</code>, <code>net</code>, <code>process</code>, ...), use <code>@tsonic/nodejs</code> and set <code>--surface nodejs</code>.</p>
 <p>This is <strong>not</strong> Node.js itself, and it is <strong>not a byte-for-byte clone</strong> of the Node standard library. It is a curated, Node-inspired API surface implemented on .NET for Tsonic projects.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <h3 id="getting-started">Getting Started</h3>
@@ -281,15 +281,18 @@
 <li><a href="/nodejs/modules/http/">http</a> (separate submodule)</li>
 </ol>
 <h2 id="overview">Overview</h2>
-<p>In Tsonic projects you import Node-style APIs from <code>@tsonic/nodejs/index.js</code>:</p>
-<pre><code class="language-ts">import { console, fs, path } from &quot;@tsonic/nodejs/index.js&quot;;
+<p>In Node surface projects you can write natural Node imports:</p>
+<pre><code class="language-ts">import { readFileSync } from &quot;node:fs&quot;;
+import { join } from &quot;node:path&quot;;
 
 export function main(): void {
-  console.log(path.join(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;));
-  const text = fs.readFileSync(&quot;./README.md&quot;, &quot;utf-8&quot;);
+  const path = join(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;);
+  console.log(path);
+  const text = readFileSync(&quot;./README.md&quot;, &quot;utf-8&quot;);
   console.log(text);
 }
 </code></pre>
+<p>Direct imports from <code>@tsonic/nodejs/index.js</code> remain supported.</p>
 <p>Some namespaces are emitted as separate ESM entry points (for example <code>nodejs.Http</code>), and you import those via a subpath:</p>
 <pre><code class="language-ts">import { http } from &quot;@tsonic/nodejs/nodejs.Http.js&quot;;
 </code></pre>

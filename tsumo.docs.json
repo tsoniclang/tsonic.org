@@ -42,7 +42,7 @@
       "navPath": "README.md"
     },
     {
-      "name": "js compat",
+      "name": "js",
       "source": ".tmp/mounts/js",
       "prefix": "/js/",
       "repoUrl": "https://github.com/tsoniclang/js-runtime",

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -235,339 +138,90 @@
   </div>
 
   <div class="content"><h1 id="build-output">Build Output</h1>
-<p>Understanding what Tsonic generates during compilation.</p>
-<h2 id="build-pipeline">Build Pipeline</h2>
-<pre><code>TypeScript → IR → C# → .NET → Native Binary
-    │         │     │      │        │
-  Parse    Build  Emit  Publish   Copy
+<p>Tsonic emits C# under a generated project and then builds it with the .NET toolchain.</p>
+<h2 id="pipeline">Pipeline</h2>
+<pre><code class="language-text">TypeScript
+  -&gt; frontend IR
+  -&gt; CSharpAst
+  -&gt; printed C#
+  -&gt; generated project
+  -&gt; dotnet build/publish
 </code></pre>
-<ol>
-<li><strong>Parse</strong>: TypeScript Compiler API reads source files</li>
-<li><strong>Build IR</strong>: Create intermediate representation</li>
-<li><strong>Emit C#</strong>: Generate C# code from IR</li>
-<li><strong>Publish</strong>: Run <code>dotnet publish</code> (NativeAOT by default for executables)</li>
-<li><strong>Copy</strong>: Copy binary to <code>out/</code> directory</li>
-</ol>
-<h2 id="directory-structure">Directory Structure</h2>
-<p>After building:</p>
-<pre><code>workspace/
-├── tsonic.workspace.json
-├── libs/
-└── packages/
-    └── my-app/
-        ├── tsonic.json
-        ├── src/
-        │   └── App.ts           # Your source
-        ├── generated/           # Generated C# code
-        │   ├── src/
-        │   │   └── App.cs       # C# from your TypeScript
-        │   ├── Program.cs       # Entry point wrapper
-        │   ├── tsonic.csproj    # .NET project file
-        │   ├── bin/             # .NET build output
-        │   └── obj/             # .NET intermediate files
-        └── out/
-            └── my-app           # Final executable
+<h2 id="default-layout">Default Layout</h2>
+<pre><code class="language-text">packages/&lt;project&gt;/
+  generated/
+    src/
+    Program.cs
+    tsonic.csproj
+    bin/
+    obj/
+  out/
 </code></pre>
 <h2 id="generated-files">Generated Files</h2>
-<h3 id="c-source-files">C# Source Files</h3>
-<p>Each <code>.ts</code> file becomes a <code>.cs</code> file:</p>
-<pre><code>src/App.ts          → generated/src/App.cs
-src/utils/Math.ts   → generated/src/utils/Math.cs
-src/models/User.ts  → generated/src/models/User.cs
-</code></pre>
-<h3 id="__tsonic_jsongcs-conditional">__tsonic_json.g.cs (Conditional)</h3>
-<p>Generated only when your code uses <code>JsonSerializer</code>. Contains NativeAOT-compatible
-JSON serialization context:</p>
-<pre><code class="language-csharp">// __tsonic_json.g.cs
-[JsonSerializable(typeof(User))]
-[JsonSerializable(typeof(List&lt;User&gt;))]
-internal partial class __TsonicJsonContext : JsonSerializerContext { }
-
-internal static class TsonicJson
-{
-    internal static readonly JsonSerializerOptions Options = new()
-    {
-        TypeInfoResolver = __TsonicJsonContext.Default
-    };
-}
-</code></pre>
-<p>This file is automatically generated based on types used with <code>JsonSerializer.Serialize()</code>
-and <code>JsonSerializer.Deserialize&lt;T&gt;()</code> calls in your code.</p>
-<h3 id="programcs">Program.cs</h3>
-<p>Entry point wrapper that calls your <code>main()</code>:</p>
-<pre><code class="language-csharp">// Program.cs
-public static class Program
-{
-    public static void Main(string[] args)
-    {
-        global::MyApp.App.main();
-    }
-}
-</code></pre>
-<p>For async main:</p>
-<pre><code class="language-csharp">public static class Program
-{
-    public static async Task Main(string[] args)
-    {
-        await global::MyApp.App.main();
-    }
-}
-</code></pre>
-<h3 id="tsoniccsproj">tsonic.csproj</h3>
-<p>.NET project file with NativeAOT configuration:</p>
-<pre><code class="language-xml">&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
-  &lt;PropertyGroup&gt;
-    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
-    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
-    &lt;RootNamespace&gt;MyApp&lt;/RootNamespace&gt;
-    &lt;AssemblyName&gt;app&lt;/AssemblyName&gt;
-    &lt;PublishAot&gt;true&lt;/PublishAot&gt;
-    &lt;PublishSingleFile&gt;true&lt;/PublishSingleFile&gt;
-    &lt;PublishTrimmed&gt;true&lt;/PublishTrimmed&gt;
-    &lt;StripSymbols&gt;true&lt;/StripSymbols&gt;
-  &lt;/PropertyGroup&gt;
-&lt;/Project&gt;
-</code></pre>
-<h2 id="output-types">Output Types</h2>
-<h3 id="executable-default">Executable (Default)</h3>
-<p>Single native binary:</p>
-<pre><code>packages/&lt;project&gt;/out/&lt;name&gt;      (Linux/macOS)
-packages/&lt;project&gt;/out/&lt;name&gt;.exe  (Windows)
-</code></pre>
-<p>Configuration:</p>
-<pre><code class="language-json">{
-  &quot;output&quot;: {
-    &quot;type&quot;: &quot;executable&quot;
-  }
-}
-</code></pre>
-<h3 id="library">Library</h3>
-<h4 id="managed-net-library">Managed (.NET) library</h4>
-<p>Standard managed library build:</p>
-<pre><code>dist/
-├── net10.0/
-│   ├── MyLib.dll
-│   ├── MyLib.xml     # Documentation
-│   └── MyLib.pdb     # Symbols
-└── net8.0/
-    └── ...           # Multi-target
-</code></pre>
-<p>Library builds also emit shippable CLR bindings under:</p>
-<pre><code>dist/tsonic/bindings/
-</code></pre>
-<h4 id="nativeaot-native-library">NativeAOT (native library)</h4>
-<p>When <code>output.nativeAot: true</code> for a library, Tsonic runs <code>dotnet publish -r &lt;rid&gt;</code> and
-copies the full publish output into <code>dist/</code>:</p>
-<pre><code>dist/
-└── net10.0/
-    ├── MyLib.dll                  # Managed DLL (copied for reflection/bindings)
-    └── linux-x64/
-        └── publish/
-            ├── libMyLib.so        # Native shared library (Linux)
-            ├── MyLib.pdb          # Optional symbols (if emitted)
-            └── ...                # Runtime/native deps as produced by dotnet publish
-</code></pre>
-<p>Notes:</p>
+<h3 id="generatedsrccs"><code>generated/src/*.cs</code></h3>
+<p>Per-module emitted C#.</p>
+<h3 id="generatedprogramcs"><code>generated/Program.cs</code></h3>
+<p>Entry wrapper for executable builds.</p>
+<h3 id="generatedtsoniccsproj"><code>generated/tsonic.csproj</code></h3>
+<p>Resolved project file containing:</p>
 <ul>
-<li>The native output is RID-specific, so it is placed under <code>dist/&lt;tfm&gt;/&lt;rid&gt;/publish/</code>.</li>
-<li>Use <code>output.nativeLib</code> to pick <code>&quot;shared&quot;</code> (default) vs <code>&quot;static&quot;</code>.</li>
+<li>target framework</li>
+<li>runtime identifier</li>
+<li>framework references</li>
+<li>package references</li>
+<li>local library references</li>
+<li>NativeAOT/runtime settings</li>
 </ul>
-<p>Configuration:</p>
-<pre><code class="language-json">{
-  &quot;entryPoint&quot;: &quot;src/index.ts&quot;,
-  &quot;output&quot;: {
-    &quot;type&quot;: &quot;library&quot;,
-    &quot;targetFrameworks&quot;: [&quot;net10.0&quot;, &quot;net8.0&quot;],
-    &quot;nativeAot&quot;: false
-  }
-}
-</code></pre>
-<p>NativeAOT library example:</p>
+<h3 id="generatedsrc__tsonic_jsongcs"><code>generated/src/__tsonic_json.g.cs</code></h3>
+<p>Generated only when JSON AOT support is needed.</p>
+<h2 id="output-types">Output Types</h2>
+<h3 id="executable">Executable</h3>
+<p>Default app build.</p>
+<h3 id="managed-library">Managed library</h3>
+<p>Use <code>output.type = &quot;library&quot;</code> with NativeAOT disabled.</p>
+<h3 id="nativeaot-library">NativeAOT library</h3>
+<p>Use <code>output.type = &quot;library&quot;</code> with:</p>
 <pre><code class="language-json">{
   &quot;output&quot;: {
     &quot;type&quot;: &quot;library&quot;,
-    &quot;targetFrameworks&quot;: [&quot;net10.0&quot;],
     &quot;nativeAot&quot;: true,
     &quot;nativeLib&quot;: &quot;shared&quot;
   }
 }
 </code></pre>
-<h2 id="build-options">Build Options</h2>
-<h3 id="nativeaot-settings">NativeAOT Settings</h3>
-<p>These defaults apply to <code>output.type: &quot;executable&quot;</code> unless specified in <code>tsonic.json</code>.</p>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>nativeAot</code></td>
-<td><code>true</code></td>
-<td>Enable NativeAOT publish for executables</td>
-</tr>
-<tr>
-<td><code>singleFile</code></td>
-<td><code>true</code></td>
-<td>Single executable (NativeAOT executables only)</td>
-</tr>
-<tr>
-<td><code>trimmed</code></td>
-<td><code>true</code></td>
-<td>Remove unused code (NativeAOT executables)</td>
-</tr>
-<tr>
-<td><code>stripSymbols</code></td>
-<td><code>true</code></td>
-<td>Remove debug info</td>
-</tr>
-<tr>
-<td><code>selfContained</code></td>
-<td><code>true</code></td>
-<td>Include runtime</td>
-</tr>
-</tbody>
-</table>
-<p>For <code>output.type: &quot;library&quot;</code>, only these keys apply:</p>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>nativeAot</code></td>
-<td><code>false</code></td>
-<td>Enable NativeAOT publish for libraries</td>
-</tr>
-<tr>
-<td><code>nativeLib</code></td>
-<td><code>shared</code></td>
-<td>Native library kind (<code>shared</code> or <code>static</code>)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="optimization">Optimization</h3>
-<pre><code class="language-json">{
-  &quot;optimize&quot;: &quot;speed&quot; // or &quot;size&quot;
-}
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>Binary Size</th>
-<th>Performance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>speed</code></td>
-<td>Larger</td>
-<td>Faster</td>
-</tr>
-<tr>
-<td><code>size</code></td>
-<td>Smaller</td>
-<td>Slightly slower</td>
-</tr>
-</tbody>
-</table>
-<h2 id="binary-size">Binary Size</h2>
-<p>Typical sizes for &quot;Hello World&quot;:</p>
-<table>
-<thead>
-<tr>
-<th>Platform</th>
-<th>Size</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Linux x64</td>
-<td>~3 MB</td>
-</tr>
-<tr>
-<td>macOS ARM64</td>
-<td>~3 MB</td>
-</tr>
-<tr>
-<td>Windows x64</td>
-<td>~3.5 MB</td>
-</tr>
-</tbody>
-</table>
-<p>Size increases with:</p>
+<p><code>nativeLib</code> can be:</p>
 <ul>
-<li>More code</li>
-<li>More .NET dependencies</li>
-<li>Disabled trimming</li>
-<li>Debug symbols</li>
+<li><code>shared</code></li>
+<li><code>static</code></li>
 </ul>
-<h2 id="keeping-build-artifacts">Keeping Build Artifacts</h2>
-<p>For debugging, keep generated files:</p>
-<pre><code class="language-bash">tsonic build --keep-temp
-</code></pre>
-<p>Or inspect manually:</p>
-<pre><code class="language-bash">tsonic generate             # Generate C# only
-cd packages/&lt;project&gt;/generated
-dotnet build            # Build manually
-</code></pre>
-<h2 id="cross-compilation">Cross-Compilation</h2>
-<p>Build for different platforms:</p>
-<pre><code class="language-bash"># Linux x64
-tsonic build src/App.ts --rid linux-x64
-
-# macOS ARM64
-tsonic build src/App.ts --rid osx-arm64
-
-# Windows x64
-tsonic build src/App.ts --rid win-x64
-</code></pre>
-<p>Cross-compilation requires .NET SDK with target runtime.</p>
-<h2 id="gitignore">Gitignore</h2>
-<p>Recommended <code>.gitignore</code>:</p>
-<pre><code class="language-gitignore"># .NET build artifacts (per-project)
-packages/*/generated/bin/
-packages/*/generated/obj/
-
-# Output executables
-packages/*/out/
-
-# .NET artifacts
-bin/
-obj/
-
-# Dependencies
-node_modules/
-
-# Internal tooling artifacts (restore scratch, caches)
-.tsonic/
-</code></pre>
-<h2 id="troubleshooting-builds">Troubleshooting Builds</h2>
-<h3 id="check-generated-c">Check Generated C#</h3>
-<pre><code class="language-bash">tsonic generate src/App.ts
-cat generated/src/App.cs
-</code></pre>
-<h3 id="build-manually">Build Manually</h3>
-<pre><code class="language-bash">cd generated
-dotnet build
-dotnet run
-</code></pre>
-<h3 id="verbose-output">Verbose Output</h3>
-<pre><code class="language-bash">tsonic build src/App.ts --verbose
-</code></pre>
-<p>Shows:</p>
+<h2 id="useful-build-flags">Useful Build Flags</h2>
 <ul>
-<li>Files being processed</li>
-<li>Generated file paths</li>
-<li>dotnet command output</li>
+<li><code>--no-generate</code> — reuse existing generated project</li>
+<li><code>--no-aot</code> — build managed output</li>
+<li><code>--rid &lt;rid&gt;</code></li>
+<li><code>--optimize size|speed</code></li>
+<li><code>--no-strip</code></li>
+<li><code>--keep-temp</code></li>
+</ul>
+<h2 id="when---no-generate-exists">When <code>--no-generate</code> Exists</h2>
+<p>This is for workflows where external tooling writes additional generated C# into the generated directory and you need to build/run without wiping it first.</p>
+<p>Examples:</p>
+<ul>
+<li>EF Core compiled models</li>
+<li>interceptor-generated sources</li>
+</ul>
+<h2 id="cross-compilation">Cross-Compilation</h2>
+<p>Examples:</p>
+<pre><code class="language-bash">tsonic build --rid linux-x64
+tsonic build --rid osx-arm64
+tsonic build --rid win-x64
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<ul>
+<li>inspect <code>generated/src/*.cs</code></li>
+<li>inspect <code>generated/tsonic.csproj</code></li>
+<li>rerun with <code>--verbose</code></li>
+<li>if package references changed, run <code>tsonic restore</code></li>
 </ul>
 </div>
 </article>

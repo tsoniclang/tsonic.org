@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -235,734 +138,218 @@
   </div>
 
   <div class="content"><h1 id="language-guide">Language Guide</h1>
-<p>Tsonic supports a subset of TypeScript designed for compilation to native code.</p>
-<h2 id="supported-features">Supported Features</h2>
-<h3 id="variables-and-constants">Variables and Constants</h3>
-<pre><code class="language-typescript">const name = &quot;Alice&quot;;
-const age: number = 30;
-let count = 0;
+<p>Tsonic supports a strict, deterministic subset of TypeScript aimed at CLR and NativeAOT emission.</p>
+<p>The practical rule is:</p>
+<ul>
+<li>if Tsonic can recover one stable runtime shape, it compiles</li>
+<li>if multiple runtime interpretations remain, it fails during compilation</li>
+</ul>
+<h2 id="surfaces-and-authoring-style">Surfaces and Authoring Style</h2>
+<p>The active workspace <code>surface</code> controls the ambient world.</p>
+<ul>
+<li><code>clr</code> (default): CLR-first ambient APIs</li>
+<li><code>@tsonic/js</code>: JS-style globals and receiver methods</li>
+</ul>
+<p>Examples:</p>
+<pre><code class="language-ts">// clr
+import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+Console.WriteLine(&quot;hello&quot;);
 </code></pre>
-<h3 id="functions">Functions</h3>
-<pre><code class="language-typescript">// Function declarations
-export function greet(name: string): string {
+<pre><code class="language-ts">// @tsonic/js
+const s = &quot;  hello  &quot;.trim();
+const xs = [1, 2, 3].map((x) =&gt; x + 1);
+console.log(s, xs.length);
+</code></pre>
+<p>Node modules are package-based, not ambient:</p>
+<pre><code class="language-ts">import * as fs from &quot;node:fs&quot;;
+import * as path from &quot;node:path&quot;;
+</code></pre>
+<h2 id="modules">Modules</h2>
+<p>Supported:</p>
+<ul>
+<li>local relative imports with explicit extensions</li>
+<li>package imports backed by CLR bindings</li>
+<li>installed Tsonic source packages with <code>tsonic/package-manifest.json</code></li>
+<li>deterministic closed-world <code>import()</code></li>
+<li><code>import type</code></li>
+</ul>
+<p>Supported <code>import()</code> forms:</p>
+<pre><code class="language-ts">const mod = await import(&quot;./module.js&quot;);
+await import(&quot;./side-effect.js&quot;);
+</code></pre>
+<p>Still rejected:</p>
+<ul>
+<li>non-literal <code>import(specifier)</code></li>
+<li>open-world package dynamic imports</li>
+<li>dynamic imports whose runtime namespace shape is not representable deterministically</li>
+</ul>
+<p>Supported <code>import.meta</code>:</p>
+<pre><code class="language-ts">const meta = import.meta;
+const url = import.meta.url;
+const file = import.meta.filename;
+const dir = import.meta.dirname;
+</code></pre>
+<p>Still rejected:</p>
+<pre><code class="language-ts">const env = import.meta.env;
+</code></pre>
+<h2 id="functions">Functions</h2>
+<p>Supported:</p>
+<ul>
+<li>function declarations</li>
+<li>arrow functions</li>
+<li>async functions</li>
+<li>higher-order functions</li>
+<li>contextual lambda inference</li>
+<li>generic functions in deterministic contexts</li>
+</ul>
+<p>Examples:</p>
+<pre><code class="language-ts">export function greet(name: string): string {
   return `Hello, ${name}!`;
 }
 
-// Arrow functions
 const double = (n: number): number =&gt; n * 2;
 
-// Async functions
-export async function fetchData(): Promise&lt;string&gt; {
-  return await someAsyncOperation();
+export async function load(): Promise&lt;number&gt; {
+  return 42;
 }
 </code></pre>
-<h3 id="classes">Classes</h3>
-<pre><code class="language-typescript">export class Person {
-  private name: string;
-  private age: number;
+<p>Generic function values work when the callable shape is fixed by usage:</p>
+<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
 
-  constructor(name: string, age: number) {
-    this.name = name;
-    this.age = age;
-  }
-
-  public greet(): string {
-    return `Hello, I'm ${this.name}`;
-  }
-
-  public static create(name: string): Person {
-    return new Person(name, 0);
-  }
+const f: (x: number) =&gt; number = id;
+const value = f(1);
+</code></pre>
+<p>Also supported:</p>
+<pre><code class="language-ts">const box: { run: (x: number) =&gt; number } = { run: id };
+const handlers: Array&lt;(x: number) =&gt; number&gt; = [id];
+</code></pre>
+<p>Still rejected:</p>
+<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
+const copy = id; // no monomorphic callable shape
+</code></pre>
+<h2 id="promise--async-support">Promise / Async Support</h2>
+<p>Supported:</p>
+<ul>
+<li><code>async</code> / <code>await</code></li>
+<li>Promise constructor</li>
+<li><code>Promise.resolve</code>, <code>Promise.reject</code>, <code>Promise.all</code></li>
+<li><code>then</code>, <code>catch</code>, <code>finally</code> chains</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-ts">async function load(): Promise&lt;number&gt; {
+  return 1;
 }
-</code></pre>
-<h3 id="interfaces">Interfaces</h3>
-<pre><code class="language-typescript">export interface User {
-  id: number;
-  name: string;
-  email?: string;
-}
-
-export interface Repository&lt;T&gt; {
-  get(id: number): T | null;
-  save(item: T): void;
-}
-</code></pre>
-<h3 id="type-aliases">Type Aliases</h3>
-<pre><code class="language-typescript">export type UserId = number;
-export type Result&lt;T&gt; = { ok: true; value: T } | { ok: false; error: string };
-export type Callback = (value: number) =&gt; void;
-</code></pre>
-<h3 id="enums">Enums</h3>
-<pre><code class="language-typescript">export enum Status {
-  Pending,
-  Active,
-  Completed,
-}
-
-export enum Color {
-  Red = &quot;red&quot;,
-  Green = &quot;green&quot;,
-  Blue = &quot;blue&quot;,
-}
-</code></pre>
-<h3 id="generics">Generics</h3>
-<pre><code class="language-typescript">export function identity&lt;T&gt;(value: T): T {
-  return value;
-}
-
-export class Container&lt;T&gt; {
-  private value: T;
-
-  constructor(value: T) {
-    this.value = value;
-  }
-
-  get(): T {
-    return this.value;
-  }
-}
-</code></pre>
-<h3 id="control-flow">Control Flow</h3>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-// If/else
-if (condition) {
-  doSomething();
-} else if (otherCondition) {
-  doOther();
-} else {
-  doDefault();
-}
-
-// Switch
-switch (value) {
-  case 1:
-    handleOne();
-    break;
-  case 2:
-    handleTwo();
-    break;
-  default:
-    handleDefault();
-}
-
-// Loops
-for (let i = 0; i &lt; 10; i++) {
-  Console.WriteLine(i);
-}
-
-for (const item of items) {
-  process(item);
-}
-
-while (condition) {
-  doWork();
-}
-</code></pre>
-<h3 id="error-handling">Error Handling</h3>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-try {
-  riskyOperation();
-} catch (error) {
-  Console.WriteLine(&quot;Error&quot;);
-} finally {
-  cleanup();
-}
-
-throw new Error(&quot;Something went wrong&quot;);
-</code></pre>
-<h3 id="arrays">Arrays</h3>
-<pre><code class="language-typescript">import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
-
-const numbers: number[] = [1, 2, 3];
-const mixed: Array&lt;number | string&gt; = [1, &quot;two&quot;, 3];
-
-// Arrays emit as native C# arrays (T[])
-// Use LINQ for functional-style operations
-const doubled = Enumerable.Select(numbers, (n: number): number =&gt; n * 2);
-const filtered = Enumerable.Where(numbers, (n: number): boolean =&gt; n &gt; 1);
-</code></pre>
-<h3 id="tuples">Tuples</h3>
-<p>Fixed-length arrays with specific element types:</p>
-<pre><code class="language-typescript">const point: [number, number] = [10, 20];
-const record: [string, number, boolean] = [&quot;name&quot;, 42, true];
-
-// Access elements
-const x = point[0]; // 10
-const y = point[1]; // 20
-</code></pre>
-<p>Generates <code>ValueTuple&lt;T1, T2, ...&gt;</code> in C#.</p>
-<h3 id="dictionary-and-hashset">Dictionary and HashSet</h3>
-<p>Tsonic does not include JavaScript <code>Map</code>/<code>Set</code> in the default globals (see <code>@tsonic/dotnet</code> + <code>System.Collections.Generic</code> instead).</p>
-<pre><code class="language-typescript">import { Dictionary, HashSet } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
-
-// Dictionary&lt;TKey, TValue&gt; - key-value pairs
-const userMap = new Dictionary&lt;string, User&gt;();
-userMap.Add(&quot;alice&quot;, alice);
-const hasAlice = userMap.ContainsKey(&quot;alice&quot;);
-
-// HashSet&lt;T&gt; - unique values
-const ids = new HashSet&lt;number&gt;();
-ids.Add(1);
-ids.Add(2);
-const hasOne = ids.Contains(1); // true
-</code></pre>
-<h3 id="objects">Objects</h3>
-<pre><code class="language-typescript">interface Config {
-  host: string;
-  port: number;
-}
-
-const config: Config = {
-  host: &quot;localhost&quot;,
-  port: 8080,
-};
-
-// Spread operator
-const updated: Config = { ...config, port: 9000 };
-</code></pre>
-<h4 id="anonymous-object-literals">Anonymous Object Literals</h4>
-<p>Simple object literals auto-synthesize types without explicit annotation:</p>
-<pre><code class="language-typescript">// Auto-synthesized - no error
-const point = { x: 1, y: 2 };
-const handler = { id: 1, process: (x: number) =&gt; x * 2 };
-
-// Method shorthand requires explicit type
-interface Handler {
-  process(): void;
-}
-const h: Handler = { process() {} }; // OK with type annotation
-</code></pre>
-<h3 id="template-literals">Template Literals</h3>
-<pre><code class="language-typescript">const name = &quot;World&quot;;
-const greeting = `Hello, ${name}!`;
-const multiline = `
-  Line 1
-  Line 2
-`;
-</code></pre>
-<h3 id="destructuring">Destructuring</h3>
-<p>Tsonic supports full JavaScript destructuring patterns with array and object destructuring.</p>
-<h4 id="array-destructuring">Array Destructuring</h4>
-<pre><code class="language-typescript">// Basic array destructuring
-const [first, second] = [1, 2];
-
-// Rest patterns
-const [head, ...tail] = [1, 2, 3, 4, 5];
-// head = 1, tail = [2, 3, 4, 5]
-
-// Holes (skip elements)
-const [a, , c] = [1, 2, 3];
-// a = 1, c = 3 (second element skipped)
-
-// Default values
-const [x = 10, y = 20] = [5];
-// x = 5, y = 20 (default used for missing element)
-</code></pre>
-<h4 id="object-destructuring">Object Destructuring</h4>
-<pre><code class="language-typescript">// Basic object destructuring
-const { name, age } = person;
-
-// Property renaming
-const { firstName: name, lastName: surname } = user;
-
-// Rest properties
-const { id, ...rest } = { id: 1, name: &quot;Alice&quot;, age: 30 };
-// id = 1, rest = { name: &quot;Alice&quot;, age: 30 }
-
-// Default values
-const { host = &quot;localhost&quot;, port = 8080 } = config;
-</code></pre>
-<h4 id="nested-patterns">Nested Patterns</h4>
-<pre><code class="language-typescript">// Nested object destructuring
-const {
-  address: { city, zip },
-} = user;
-
-// Nested array destructuring
-const [[a, b], [c, d]] = [
-  [1, 2],
-  [3, 4],
-];
-
-// Mixed nesting
-const {
-  items: [first, second],
-} = order;
-</code></pre>
-<h4 id="for-of-destructuring">For-of Destructuring</h4>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-// Destructure in for-of loops
-const entries = [
-  [&quot;a&quot;, 1],
-  [&quot;b&quot;, 2],
-];
-for (const [key, value] of entries) {
-  Console.WriteLine(`${key}: ${value}`);
-}
-
-// Object destructuring in for-of
-const users = [{ name: &quot;Alice&quot; }, { name: &quot;Bob&quot; }];
-for (const { name } of users) {
-  Console.WriteLine(name);
-}
-</code></pre>
-<h4 id="parameter-destructuring">Parameter Destructuring</h4>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-// Function parameter destructuring
-function greet({ name, age }: Person): void {
-  Console.WriteLine(`Hello ${name}, you are ${age}`);
-}
-
-// Array parameter destructuring
-function swap([a, b]: [number, number]): [number, number] {
-  return [b, a];
-}
-
-// With defaults
-function connect({ host = &quot;localhost&quot;, port = 80 }: Config): void {
-  // ...
-}
-</code></pre>
-<h4 id="assignment-destructuring">Assignment Destructuring</h4>
-<pre><code class="language-typescript">let a: number, b: number;
-
-// Assign via destructuring (parentheses required)
-[a, b] = [1, 2];
-({ x: a, y: b } = point);
-</code></pre>
-<h3 id="optional-chaining-and-nullish-coalescing">Optional Chaining and Nullish Coalescing</h3>
-<pre><code class="language-typescript">const name = user?.profile?.name;
-const displayName = name ?? &quot;Anonymous&quot;;
-</code></pre>
-<h2 id="module-system">Module System</h2>
-<p>Tsonic uses ESM (ECMAScript Modules). Local imports must include a file extension (<code>.js</code> is recommended; <code>.ts</code> is also accepted).</p>
-<h3 id="local-imports">Local Imports</h3>
-<pre><code class="language-typescript">// ✅ Correct - with extension
-import { User } from &quot;./models/User.js&quot;;
-import { formatDate } from &quot;../utils/date.js&quot;;
-
-// ❌ Wrong - missing extension
-import { User } from &quot;./models/User&quot;; // ERROR
-</code></pre>
-<h3 id="named-exportsimports">Named Exports/Imports</h3>
-<pre><code class="language-typescript">// utils.ts
-export const PI = 3.14159;
-export function add(a: number, b: number): number {
-  return a + b;
-}
-
-// App.ts
-import { PI, add } from &quot;./utils.js&quot;;
-</code></pre>
-<h3 id="re-exports">Re-exports</h3>
-<pre><code class="language-typescript">// models/index.ts (barrel file)
-export { User } from &quot;./User.js&quot;;
-export { Product } from &quot;./Product.js&quot;;
-export type { Order } from &quot;./Order.js&quot;;
-
-// App.ts
-import { User, Product } from &quot;./models/index.js&quot;;
-</code></pre>
-<h3 id="namespace-imports">Namespace Imports</h3>
-<pre><code class="language-typescript">import * as utils from &quot;./utils.js&quot;;
-import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-Console.WriteLine(utils.PI);
-utils.add(1, 2);
-</code></pre>
-<h3 id="net-imports">.NET Imports</h3>
-<p>.NET imports are ESM too; use <code>.js</code> module specifiers:</p>
-<pre><code class="language-typescript">// ✅ Correct
-import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-import { File } from &quot;@tsonic/dotnet/System.IO.js&quot;;
-
-// ❌ Wrong
-import { Console } from &quot;@tsonic/dotnet/System&quot;;
-import { Console } from &quot;@tsonic/dotnet/System.ts&quot;;
-</code></pre>
-<h2 id="entry-point">Entry Point</h2>
-<p>Every executable needs a <code>main()</code> function exported from the entry point.</p>
-<h3 id="basic-entry-point">Basic Entry Point</h3>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-export function main(): void {
-  Console.WriteLine(&quot;Hello!&quot;);
-}
-</code></pre>
-<h3 id="async-entry-point">Async Entry Point</h3>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 
 export async function main(): Promise&lt;void&gt; {
-  const data = await fetchData();
-  Console.WriteLine(data);
-}
-</code></pre>
-<h3 id="command-line-arguments">Command-Line Arguments</h3>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+  const result = await load()
+    .then((x) =&gt; x + 1)
+    .catch(() =&gt; 0)
+    .finally(() =&gt; console.log(&quot;done&quot;));
 
-export function main(args: string[]): void {
-  for (const arg of args) {
-    Console.WriteLine(arg);
-  }
+  console.log(result);
 }
 </code></pre>
-<p>Run with:</p>
-<pre><code class="language-bash">./myapp arg1 arg2 arg3
-</code></pre>
-<h3 id="exit-codes">Exit Codes</h3>
-<p>Return an exit code to indicate success or failure:</p>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
+<h2 id="classes-interfaces-type-aliases">Classes, Interfaces, Type Aliases</h2>
+<p>Supported:</p>
+<ul>
+<li>classes</li>
+<li>interfaces</li>
+<li>structural type aliases</li>
+<li>generic classes and interfaces</li>
+<li>inheritance</li>
+<li>interface implementation</li>
+<li>mapped/conditional/utility-type lowering where the compiler can normalize them deterministically</li>
+</ul>
+<h2 id="objects">Objects</h2>
+<p>Supported:</p>
+<ul>
+<li>ordinary object literals</li>
+<li>simple spreads over finite object shapes</li>
+<li>computed constant keys</li>
+<li>getters/setters</li>
+<li>shorthand methods</li>
+<li>shorthand methods with <code>this</code></li>
+<li>supported <code>arguments.length</code> and <code>arguments[index]</code> usage inside object-literal methods</li>
+</ul>
+<p>Examples:</p>
+<pre><code class="language-ts">const key = &quot;value&quot;;
 
-export function main(): int {
-  if (errorCondition) {
-    return 1; // Error
-  }
-  return 0; // Success
-}
+const point = {
+  [key]: 21,
+  get doubled(): number {
+    return this.value * 2;
+  },
+  scale(factor: number): number {
+    return this.value * factor;
+  },
+};
 </code></pre>
-<h3 id="library-output">Library Output</h3>
-<p>For libraries, set <code>output.type</code> to <code>&quot;library&quot;</code> in <code>tsonic.json</code> (or a separate config), then run <code>tsonic build</code>.</p>
-<pre><code class="language-json">{
-  &quot;rootNamespace&quot;: &quot;MyLib&quot;,
-  &quot;output&quot;: { &quot;type&quot;: &quot;library&quot; }
-}
+<p>Still rejected:</p>
+<ul>
+<li>open-ended/dynamic object bag cases that need JS runtime object semantics Tsonic cannot prove</li>
+<li>object-literal <code>super</code></li>
+<li>unsupported <code>arguments</code> usage patterns that need full JS function-object behavior</li>
+</ul>
+<h2 id="arrays-tuples-collections">Arrays, Tuples, Collections</h2>
+<p>Supported:</p>
+<ul>
+<li>native arrays</li>
+<li>tuple lowering</li>
+<li>array spread/destructuring</li>
+<li>JS-surface array methods (<code>map</code>, <code>filter</code>, <code>reduce</code>, <code>find</code>, <code>Array.from</code>, ...)</li>
+<li>symbol-key dictionaries</li>
+</ul>
+<p>Examples:</p>
+<pre><code class="language-ts">const xs = [1, 2, 3];
+const ys = xs.filter((x) =&gt; x &gt; 1).map((x) =&gt; x * 2);
+
+const entry: [string, number] = [&quot;a&quot;, 1];
 </code></pre>
 <h2 id="generators">Generators</h2>
-<p>Generator functions compile to C# iterators:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function* counter(): Generator&lt;number&gt; {
-  let i = 0;
-  while (i &lt; 5) {
-    yield i++;
-  }
-}
-
-export function main(): void {
-  for (const n of counter()) {
-    Console.WriteLine(n);
-  }
-}
-</code></pre>
-<blockquote>
-<p><strong>See also:</strong> <a href="/tsonic/generators/">Generators Guide</a> for comprehensive coverage including bidirectional generators, async generators, and return values.</p>
-</blockquote>
-<h3 id="bidirectional-generators">Bidirectional Generators</h3>
-<p>Generators can receive values via <code>next(value)</code>:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function* accumulator(start: number): Generator&lt;number, void, number&gt; {
-  let total = start;
-  while (true) {
-    const value = yield total;
-    total += value ?? 0;
-  }
-}
-
-export function main(): void {
-  const gen = accumulator(10);
-  Console.WriteLine(gen.next().value); // 10
-  Console.WriteLine(gen.next(5).value); // 15
-  Console.WriteLine(gen.next(3).value); // 18
-}
-</code></pre>
-<h3 id="async-generators">Async Generators</h3>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-async function* fetchItems(): AsyncGenerator&lt;string&gt; {
-  for (let i = 0; i &lt; 5; i++) {
-    await delay(100);
-    yield `Item ${i}`;
-  }
-}
-
-export async function main(): Promise&lt;void&gt; {
-  for await (const item of fetchItems()) {
-    Console.WriteLine(item);
-  }
-}
-</code></pre>
-<h3 id="generator-wrapper-methods">Generator Wrapper Methods</h3>
-<p>Bidirectional generators provide standard JavaScript generator methods:</p>
+<p>Supported:</p>
 <ul>
-<li><code>next(value?)</code> - Advances the generator and optionally passes a value</li>
-<li><code>return(value)</code> - Terminates the generator and sets the return value</li>
-<li><code>throw(error)</code> - Terminates the generator and throws an exception</li>
+<li>generators</li>
+<li>async generators</li>
+<li>bidirectional generator protocols</li>
+<li>broad yield lowering in supported expressions/statements</li>
 </ul>
-<p><strong>Limitation:</strong> Unlike JavaScript, the <code>.throw()</code> method does NOT inject the exception at the suspended yield point. C# iterators don't support resumption with exceptions. The exception is thrown externally after disposing the enumerator. Code like this will NOT behave the same as JavaScript:</p>
-<pre><code class="language-typescript">// This JavaScript pattern does NOT work the same in Tsonic:
-function* withTryCatch(): Generator&lt;number&gt; {
-  try {
-    yield 1;
-    yield 2; // JS: gen.throw() resumes here with exception
-  } catch (e) {
-    yield -1; // JS: caught exception, yields -1
-  }
-}
+<p>See <code>generators.md</code>.</p>
+<h2 id="numeric-types">Numeric Types</h2>
+<p>Important rule:</p>
+<ul>
+<li>plain TypeScript <code>number</code> means Tsonic <code>double</code></li>
+<li>integer CLR types come from <code>@tsonic/core/types.js</code></li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-ts">import type { int } from &quot;@tsonic/core/types.js&quot;;
 
-const gen = withTryCatch();
-gen.next(); // { value: 1, done: false }
-gen.throw(Error()); // JS: { value: -1, done: false }
-// Tsonic: throws immediately
+const a: number = 1; // double-space
+const b: int = 1 as int;
 </code></pre>
-<h2 id="type-narrowing">Type Narrowing</h2>
-<p>Tsonic supports type narrowing through type guards and predicates.</p>
-<h3 id="type-predicates">Type Predicates</h3>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function isString(value: unknown): value is string {
-  return typeof value === &quot;string&quot;;
-}
-
-function process(value: string | number): void {
-  if (isString(value)) {
-    Console.WriteLine(value.toUpperCase()); // value is string here
-  } else {
-    Console.WriteLine(value * 2); // value is number here
-  }
-}
-</code></pre>
-<h3 id="typeof-guards">typeof Guards</h3>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function handle(value: string | number | boolean): void {
-  if (typeof value === &quot;string&quot;) {
-    Console.WriteLine(value.length);
-  } else if (typeof value === &quot;number&quot;) {
-    Console.WriteLine(value.toFixed(2));
-  } else {
-    Console.WriteLine(value ? &quot;yes&quot; : &quot;no&quot;);
-  }
-}
-</code></pre>
-<h3 id="negated-guards">Negated Guards</h3>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function process(value: string | null): void {
-  if (value === null) {
-    return;
-  }
-  // value is string here (null eliminated)
-  Console.WriteLine(value.toUpperCase());
-}
-
-function handleOptional(value?: string): void {
-  if (!value) {
-    return;
-  }
-  // value is string here
-  Console.WriteLine(value.length);
-}
-</code></pre>
-<h3 id="compound-guards">Compound Guards</h3>
-<pre><code class="language-typescript">interface Cat {
-  meow(): void;
-}
-interface Dog {
-  bark(): void;
-}
-
-function isCat(pet: Cat | Dog): pet is Cat {
-  return &quot;meow&quot; in pet;
-}
-
-function isDog(pet: Cat | Dog): pet is Dog {
-  return &quot;bark&quot; in pet;
-}
-
-function handle(pet: Cat | Dog): void {
-  if (isCat(pet) &amp;&amp; pet.meow) {
-    pet.meow();
-  }
-}
-</code></pre>
-<h2 id="unsupported-features">Unsupported Features</h2>
-<p>The following TypeScript/JavaScript features are not supported:</p>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Reason</th>
-<th>Alternative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>with</code> statement</td>
-<td>Deprecated, unpredictable</td>
-<td>Use explicit property access</td>
-</tr>
-<tr>
-<td>Dynamic <code>import()</code></td>
-<td>Requires runtime loading</td>
-<td>Use static imports</td>
-</tr>
-<tr>
-<td><code>import.meta</code></td>
-<td>Runtime feature</td>
-<td>Not available</td>
-</tr>
-<tr>
-<td><code>eval()</code></td>
-<td>Cannot compile dynamically</td>
-<td>Not available</td>
-</tr>
-<tr>
-<td><code>Promise.then/catch</code></td>
-<td>Callback chains</td>
-<td>Use <code>async/await</code></td>
-</tr>
-<tr>
-<td>Decorators</td>
-<td>Experimental</td>
-<td>Not supported yet</td>
-</tr>
-<tr>
-<td><code>any</code> type</td>
-<td>Breaks type safety</td>
-<td>Use <code>unknown</code> or specific types</td>
-</tr>
-</tbody>
-</table>
-<h3 id="promise-chaining">Promise Chaining</h3>
-<pre><code class="language-typescript">declare const promise: Promise&lt;number&gt;;
-declare function doSomething(result: number): void;
-
-export async function main(): Promise&lt;void&gt; {
-  // ❌ Not supported
-  // promise.then((result) =&gt; doSomething(result));
-
-  // ✅ Use async/await
-  const result = await promise;
-  doSomething(result);
-}
-</code></pre>
-<h2 id="type-annotations">Type Annotations</h2>
-<p>Explicit type annotations are recommended and sometimes required:</p>
-<pre><code class="language-typescript">// Function parameters must be typed
-import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function greetOk(name: string): void {
-  // ✅
-  Console.WriteLine(name);
-}
-
-function greetBad(name) {
-  // ❌ Error: parameter needs type
-  Console.WriteLine(name);
-}
-
-// Return types are inferred but can be explicit
-function add(a: number, b: number): number {
-  return a + b;
-}
-</code></pre>
-<h2 id="namespace-and-class-mapping">Namespace and Class Mapping</h2>
-<p>Tsonic maps your directory structure directly to C# namespaces.</p>
-<h3 id="the-mapping-rule">The Mapping Rule</h3>
-<p><strong>Directory path = C# namespace (hyphens removed; case preserved)</strong></p>
-<pre><code>src/Models/User.ts         -&gt;  namespace MyApp.Models { class User {} }
-src/Api/V1/Handlers.ts     -&gt;  namespace MyApp.Api.V1 { class Handlers {} }
-src/todo-list.ts           -&gt;  class todolist
-</code></pre>
-<h3 id="root-namespace">Root Namespace</h3>
-<p>Set via CLI or config:</p>
-<pre><code class="language-bash">tsonic build src/App.ts --namespace MyApp
-</code></pre>
-<p>Or in <code>packages/&lt;project&gt;/tsonic.json</code>:</p>
-<pre><code class="language-json">{
-  &quot;rootNamespace&quot;: &quot;MyApp&quot;
-}
-</code></pre>
-<h3 id="file-to-class-mapping">File to Class Mapping</h3>
-<p>The file name (without <code>.ts</code>) becomes the C# class name:</p>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Generated Class</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>App.ts</code></td>
-<td><code>class App</code></td>
-</tr>
-<tr>
-<td><code>UserService.ts</code></td>
-<td><code>class UserService</code></td>
-</tr>
-<tr>
-<td><code>my-utils.ts</code></td>
-<td><code>class myutils</code></td>
-</tr>
-<tr>
-<td><code>todo-list.ts</code></td>
-<td><code>class todolist</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="directory-to-namespace-mapping">Directory to Namespace Mapping</h3>
-<p>Each directory becomes a namespace segment:</p>
-<pre><code>MyApp/              (root namespace)
-├── Models/         -&gt; MyApp.Models
-│   ├── User.ts     -&gt; MyApp.Models.User
-│   └── Product.ts  -&gt; MyApp.Models.Product
-└── Services/       -&gt; MyApp.Services
-    └── Api.ts      -&gt; MyApp.Services.Api
-</code></pre>
-<h3 id="case-preservation-no-renaming">Case Preservation (No Renaming)</h3>
-<p>Tsonic does not apply casing transforms. If you want CLR-style casing, name your folders/files that way.</p>
-<pre><code>src/Models/User.ts   -&gt; MyApp.Models.User
-src/models/User.ts   -&gt; MyApp.models.User
-</code></pre>
-<h3 id="static-container-classes">Static Container Classes</h3>
-<p>Files with top-level exports become static classes:</p>
-<pre><code class="language-typescript">// Math.ts
-export const pi = 3.14159;
-export function add(a: number, b: number): number {
-  return a + b;
-}
-</code></pre>
-<p>Becomes:</p>
-<pre><code class="language-csharp">namespace MyApp
-{
-    public static class Math
-    {
-        public static readonly double pi = 3.14159;
-        public static double add(double a, double b)
-        {
-            return a + b;
-        }
-    }
-}
-</code></pre>
-<h3 id="importing-across-namespaces">Importing Across Namespaces</h3>
-<p>TypeScript imports resolve to C# namespace references:</p>
-<pre><code class="language-typescript">// src/Services/UserService.ts
-import { User } from &quot;../Models/User.js&quot;;
-
-export class UserService {
-  getUser(): User {
-    return new User(&quot;John&quot;);
-  }
-}
-</code></pre>
-<p>Becomes:</p>
-<pre><code class="language-csharp">namespace MyApp.Services
-{
-    public class UserService
-    {
-        public MyApp.Models.User getUser()
-        {
-            return new MyApp.Models.User(&quot;John&quot;);
-        }
-    }
-}
-</code></pre>
+<p>See <code>numeric-types.md</code>.</p>
+<h2 id="intrinsics">Intrinsics</h2>
+<p>Supported core intrinsics:</p>
+<ul>
+<li><code>stackalloc</code></li>
+<li><code>sizeof</code></li>
+<li><code>defaultof</code></li>
+<li><code>nameof</code></li>
+<li><code>trycast</code></li>
+<li><code>asinterface</code></li>
+<li><code>istype</code></li>
+<li><code>out</code> / <code>ref</code> / <code>inref</code></li>
+<li>attributes DSL</li>
+</ul>
+<p>See <code>lang-intrinsics.md</code>.</p>
+<h2 id="current-explicit-non-goals">Current Explicit Non-Goals</h2>
+<ul>
+<li>arbitrary <code>any</code></li>
+<li>open-world JS execution</li>
+<li>generic function values with no monomorphic runtime shape</li>
+<li>unrestricted <code>import.meta</code></li>
+<li>unrestricted dynamic <code>import()</code></li>
+</ul>
+<p>See <code>limitations.md</code>.</p>
 </div>
 </article>
 </main>

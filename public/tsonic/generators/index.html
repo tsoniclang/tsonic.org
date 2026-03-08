@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -235,459 +138,47 @@
   </div>
 
   <div class="content"><h1 id="generators">Generators</h1>
-<p>Tsonic supports JavaScript generator functions with full bidirectional communication. This guide covers basic generators, async generators, and the advanced bidirectional patterns.</p>
-<h2 id="overview">Overview</h2>
-<p>Generator functions are declared with <code>function*</code> and use <code>yield</code> to produce values:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function* counter(): Generator&lt;number&gt; {
+<p>Tsonic supports generators, async generators, and broad deterministic yield lowering.</p>
+<h2 id="basic-generator">Basic Generator</h2>
+<pre><code class="language-ts">export function* numbers(): Generator&lt;number, void, void&gt; {
   yield 1;
   yield 2;
   yield 3;
 }
-
-for (const n of counter()) {
-  Console.WriteLine(n); // 1, 2, 3
+</code></pre>
+<h2 id="generator-with-return-value">Generator With Return Value</h2>
+<pre><code class="language-ts">export function* work(): Generator&lt;number, string, void&gt; {
+  yield 1;
+  return &quot;done&quot;;
 }
 </code></pre>
-<h2 id="generator-type-signature">Generator Type Signature</h2>
-<p>The full generator type is <code>Generator&lt;TYield, TReturn, TNext&gt;</code>:</p>
-<table>
-<thead>
-<tr>
-<th>Type Parameter</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>TYield</code></td>
-<td>Type of values yielded by the generator</td>
-<td>Required</td>
-</tr>
-<tr>
-<td><code>TReturn</code></td>
-<td>Type of the final return value</td>
-<td><code>void</code></td>
-</tr>
-<tr>
-<td><code>TNext</code></td>
-<td>Type of values passed to <code>next()</code></td>
-<td><code>undefined</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="basic-generator-yield-only">Basic Generator (Yield Only)</h3>
-<p>When you only need to yield values:</p>
-<pre><code class="language-typescript">function* range(start: number, end: number): Generator&lt;number&gt; {
-  for (let i = start; i &lt;= end; i++) {
-    yield i;
-  }
+<h2 id="bidirectional-generator">Bidirectional Generator</h2>
+<pre><code class="language-ts">export function* echo(): Generator&lt;string, void, string&gt; {
+  const first = yield &quot;ready&quot;;
+  console.log(first);
 }
 </code></pre>
-<h3 id="generator-with-return-value">Generator with Return Value</h3>
-<p>When the generator returns a final value:</p>
-<pre><code class="language-typescript">function* countdown(n: number): Generator&lt;number, string&gt; {
-  while (n &gt; 0) {
-    yield n;
-    n--;
-  }
-  return &quot;Liftoff!&quot;;
-}
-</code></pre>
-<h3 id="bidirectional-generator">Bidirectional Generator</h3>
-<p>When the generator receives values from the caller:</p>
-<pre><code class="language-typescript">function* accumulator(start: number): Generator&lt;number, void, number&gt; {
-  let total = start;
-  while (true) {
-    const received = yield total;
-    total += received;
-  }
-}
-</code></pre>
-<h2 id="using-generators">Using Generators</h2>
-<h3 id="iteration">Iteration</h3>
-<p>Use <code>for...of</code> to iterate over yielded values:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function* fibonacci(): Generator&lt;number&gt; {
-  let a = 0,
-    b = 1;
-  while (a &lt; 100) {
-    yield a;
-    [a, b] = [b, a + b];
-  }
-}
-
-for (const n of fibonacci()) {
-  Console.WriteLine(n); // 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89
-}
-</code></pre>
-<h3 id="manual-iteration-with-next">Manual Iteration with <code>next()</code></h3>
-<p>Use <code>.next()</code> for manual control:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function* counter(): Generator&lt;number&gt; {
+<h2 id="async-generator">Async Generator</h2>
+<pre><code class="language-ts">export async function* stream(): AsyncGenerator&lt;number, void, void&gt; {
   yield 1;
   yield 2;
-  yield 3;
-}
-
-const gen = counter();
-Console.WriteLine(gen.next().value); // 1
-Console.WriteLine(gen.next().value); // 2
-Console.WriteLine(gen.next().value); // 3
-Console.WriteLine(gen.next().done); // true
-</code></pre>
-<h3 id="iteratorresult">IteratorResult</h3>
-<p>Each <code>next()</code> call returns an <code>IteratorResult&lt;T&gt;</code>:</p>
-<pre><code class="language-typescript">interface IteratorResult&lt;T&gt; {
-  value: T;
-  done: boolean;
 }
 </code></pre>
+<h2 id="yield-lowering">Yield Lowering</h2>
+<p>Supported yield contexts now include many direct and nested positions:</p>
 <ul>
-<li><code>done: false</code> - Generator yielded a value</li>
-<li><code>done: true</code> - Generator has completed</li>
+<li>return expressions</li>
+<li>conditional expressions</li>
+<li><code>if</code> / <code>while</code> / <code>switch</code> conditions</li>
+<li><code>for</code> initializer / condition / update</li>
+<li><code>for-of</code> / <code>for-in</code> expression positions</li>
+<li>compound assignment patterns in supported target shapes</li>
 </ul>
-<h2 id="bidirectional-communication">Bidirectional Communication</h2>
-<h3 id="sending-values-with-nextvalue">Sending Values with <code>next(value)</code></h3>
-<p>Pass values into the generator using <code>next(value)</code>:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function* accumulator(start: number): Generator&lt;number, void, number&gt; {
-  let total = start;
-  while (true) {
-    const received = yield total;
-    total = total + received;
-  }
-}
-
-export function main(): void {
-  const gen = accumulator(0);
-
-  // First next() starts the generator - value is ignored
-  Console.WriteLine(gen.next().value); // 0
-
-  // Subsequent next(value) passes value to generator
-  Console.WriteLine(gen.next(5).value); // 5
-  Console.WriteLine(gen.next(10).value); // 15
-  Console.WriteLine(gen.next(3).value); // 18
-}
-</code></pre>
-<h3 id="first-next-semantics">First <code>next()</code> Semantics</h3>
-<p>The value passed to the first <code>next()</code> call is <strong>always ignored</strong> (per JavaScript spec):</p>
-<pre><code class="language-typescript">function* echo(): Generator&lt;string, void, string&gt; {
-  while (true) {
-    const msg = yield &quot;ready&quot;;
-    yield `Echo: ${msg}`;
-  }
-}
-
-const gen = echo();
-gen.next(&quot;ignored&quot;); // First call - &quot;ignored&quot; is discarded
-// Returns: { value: &quot;ready&quot;, done: false }
-gen.next(&quot;hello&quot;); // &quot;hello&quot; is received
-// Returns: { value: &quot;Echo: hello&quot;, done: false }
-</code></pre>
-<h3 id="practical-example-data-processor">Practical Example: Data Processor</h3>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function* dataProcessor(): Generator&lt;string, number, number&gt; {
-  let sum = 0;
-  let count = 0;
-
-  while (true) {
-    const value = yield `Received ${count} values, sum = ${sum}`;
-    if (value &lt; 0) {
-      return sum; // Negative value signals end
-    }
-    sum = sum + value;
-    count = count + 1;
-  }
-}
-
-export function main(): void {
-  const processor = dataProcessor();
-
-  Console.WriteLine(processor.next().value); // &quot;Received 0 values, sum = 0&quot;
-  Console.WriteLine(processor.next(10).value); // &quot;Received 1 values, sum = 10&quot;
-  Console.WriteLine(processor.next(20).value); // &quot;Received 2 values, sum = 30&quot;
-  Console.WriteLine(processor.next(5).value); // &quot;Received 3 values, sum = 35&quot;
-
-  const final = processor.next(-1);
-  Console.WriteLine(`Done: ${final.done}`); // &quot;Done: true&quot;
-}
-</code></pre>
-<h2 id="generator-control-methods">Generator Control Methods</h2>
-<h3 id="nextvalue"><code>next(value?)</code></h3>
-<p>Advances the generator to the next yield point:</p>
-<pre><code class="language-typescript">const gen = myGenerator();
-const result = gen.next(); // Start or resume
-const result2 = gen.next(42); // Resume with value 42
-</code></pre>
-<h3 id="returnvalue"><code>return(value)</code></h3>
-<p>Terminates the generator with a specified return value:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function* counter(): Generator&lt;number, string&gt; {
-  let i = 0;
-  while (true) {
-    yield i++;
-  }
-}
-
-const gen = counter();
-Console.WriteLine(gen.next().value); // 0
-Console.WriteLine(gen.next().value); // 1
-gen.return(&quot;done&quot;); // Terminates generator
-Console.WriteLine(gen.next().done); // true
-</code></pre>
-<p><strong>Note:</strong> The value passed to <code>return()</code> becomes the generator's return value but does NOT appear in the <code>IteratorResult.value</code>. Access it via the <code>returnValue</code> property (Tsonic extension).</p>
-<h3 id="throwerror---limitation"><code>throw(error)</code> - Limitation</h3>
-<p>The <code>throw()</code> method terminates the generator, but <strong>does NOT inject the exception at the yield point</strong> like JavaScript does.</p>
-<pre><code class="language-typescript">// This JavaScript pattern does NOT work the same in Tsonic:
-function* withTryCatch(): Generator&lt;number&gt; {
-  try {
-    yield 1;
-    yield 2;
-  } catch (e) {
-    yield -1; // In JS, gen.throw() would resume here
-  }
-}
-
-const gen = withTryCatch();
-gen.next(); // { value: 1, done: false }
-gen.throw(Error()); // In JS: { value: -1, done: false }
-// In Tsonic: throws immediately, no catch
-</code></pre>
-<p>This is a fundamental limitation of C# iterators which don't support resumption with exceptions.</p>
-<h2 id="return-values">Return Values</h2>
-<h3 id="capturing-return-values">Capturing Return Values</h3>
-<p>Generators can return a final value using <code>return</code>:</p>
-<pre><code class="language-typescript">function* countdown(n: number): Generator&lt;number, string, number&gt; {
-  while (n &gt; 0) {
-    const step = yield n;
-    n = n - (step &gt; 0 ? step : 1);
-  }
-  return &quot;Liftoff!&quot;;
-}
-</code></pre>
-<h3 id="accessing-return-values">Accessing Return Values</h3>
-<p>The return value is available after the generator completes:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-const gen = countdown(3);
-Console.WriteLine(gen.next().value); // 3
-Console.WriteLine(gen.next(1).value); // 2
-Console.WriteLine(gen.next(1).value); // 1
-const final = gen.next(1);
-Console.WriteLine(final.done); // true
-// final.value in JS would be &quot;Liftoff!&quot;
-</code></pre>
-<p><strong>Tsonic Extension:</strong> Use the <code>returnValue</code> property to access the return value:</p>
-<pre><code class="language-typescript">const returnValue = gen.returnValue; // &quot;Liftoff!&quot;
-</code></pre>
-<h2 id="async-generators">Async Generators</h2>
-<h3 id="basic-async-generator">Basic Async Generator</h3>
-<p>Use <code>async function*</code> for asynchronous generators:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-async function* fetchPages(): AsyncGenerator&lt;string&gt; {
-  for (let page = 1; page &lt;= 3; page++) {
-    await delay(100);
-    yield `Page ${page}`;
-  }
-}
-
-export async function main(): Promise&lt;void&gt; {
-  for await (const page of fetchPages()) {
-    Console.WriteLine(page);
-  }
-}
-</code></pre>
-<h3 id="bidirectional-async-generator">Bidirectional Async Generator</h3>
-<p>Async generators also support bidirectional communication:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-async function* asyncAccumulator(
-  start: number
-): AsyncGenerator&lt;number, number, number&gt; {
-  let total = start;
-  while (true) {
-    const received = yield total;
-    total = total + received;
-  }
-}
-
-export async function main(): Promise&lt;void&gt; {
-  const gen = asyncAccumulator(10);
-
-  const r1 = await gen.next();
-  Console.WriteLine(`Initial: ${r1.value}`); // 10
-
-  const r2 = await gen.next(5);
-  Console.WriteLine(`After +5: ${r2.value}`); // 15
-
-  const r3 = await gen.next(20);
-  Console.WriteLine(`After +20: ${r3.value}`); // 35
-}
-</code></pre>
-<h3 id="for-await-loops">For-Await Loops</h3>
-<p>Use <code>for await...of</code> to iterate over async generators:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-async function* asyncRange(start: number, end: number): AsyncGenerator&lt;number&gt; {
-  for (let i = start; i &lt;= end; i++) {
-    await delay(100);
-    yield i;
-  }
-}
-
-export async function main(): Promise&lt;void&gt; {
-  for await (const n of asyncRange(1, 5)) {
-    Console.WriteLine(n); // 1, 2, 3, 4, 5 (with delays)
-  }
-}
-</code></pre>
-<h2 id="yield-delegation">Yield Delegation</h2>
-<p>Use <code>yield*</code> to delegate to another generator:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function* inner(): Generator&lt;number&gt; {
-  yield 1;
-  yield 2;
-}
-
-function* outer(): Generator&lt;number&gt; {
-  yield 0;
-  yield* inner(); // Delegate to inner
-  yield 3;
-}
-
-for (const n of outer()) {
-  Console.WriteLine(n); // 0, 1, 2, 3
-}
-</code></pre>
-<h3 id="async-yield-delegation">Async Yield Delegation</h3>
-<p>Async generators can delegate to other async iterables:</p>
-<pre><code class="language-typescript">async function* asyncInner(): AsyncGenerator&lt;string&gt; {
-  yield &quot;a&quot;;
-  yield &quot;b&quot;;
-}
-
-async function* asyncOuter(): AsyncGenerator&lt;string&gt; {
-  yield &quot;start&quot;;
-  yield* asyncInner();
-  yield &quot;end&quot;;
-}
-</code></pre>
-<h2 id="generated-c-code">Generated C# Code</h2>
-<p>Tsonic generates wrapper classes for bidirectional generators. Understanding this helps with debugging.</p>
-<h3 id="simple-generator">Simple Generator</h3>
-<pre><code class="language-typescript">function* counter(): Generator&lt;number&gt; {
-  yield 1;
-  yield 2;
-}
-</code></pre>
-<p>Generates a simple <code>IEnumerable&lt;double&gt;</code>:</p>
-<pre><code class="language-csharp">public static IEnumerable&lt;double&gt; counter()
-{
-    yield return 1.0;
-    yield return 2.0;
-}
-</code></pre>
-<h3 id="bidirectional-generator-1">Bidirectional Generator</h3>
-<pre><code class="language-typescript">function* accumulator(): Generator&lt;number, void, number&gt; {
-  let total = 0;
-  while (true) {
-    const v = yield total;
-    total += v;
-  }
-}
-</code></pre>
-<p>Generates a wrapper class with exchange object:</p>
-<pre><code class="language-csharp">// Exchange object for bidirectional communication
-public sealed class accumulator_exchange
-{
-    public double? Input { get; set; }
-    public double Output { get; set; }
-}
-
-// Wrapper class providing next(), return(), throw()
-public sealed class accumulator_Generator
-{
-    private readonly IEnumerator&lt;accumulator_exchange&gt; _enumerator;
-    private readonly accumulator_exchange _exchange;
-    private bool _done = false;
-
-    public IteratorResult&lt;double&gt; next(double? value = default) { ... }
-    public IteratorResult&lt;double&gt; @return(object? value = default) { ... }
-    public IteratorResult&lt;double&gt; @throw(object e) { ... }
-}
-</code></pre>
-<h2 id="common-patterns">Common Patterns</h2>
-<h3 id="infinite-sequence">Infinite Sequence</h3>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function* naturals(): Generator&lt;number&gt; {
-  let n = 0;
-  while (true) {
-    yield n++;
-  }
-}
-
-// Take first 5
-const gen = naturals();
-for (let i = 0; i &lt; 5; i++) {
-  Console.WriteLine(gen.next().value);
-}
-</code></pre>
-<h3 id="state-machine">State Machine</h3>
-<pre><code class="language-typescript">type State = &quot;idle&quot; | &quot;running&quot; | &quot;stopped&quot;;
-
-function* stateMachine(): Generator&lt;State, void, string&gt; {
-  let state: State = &quot;idle&quot;;
-  while (true) {
-    const command = yield state;
-    if (command === &quot;start&quot; &amp;&amp; state === &quot;idle&quot;) {
-      state = &quot;running&quot;;
-    } else if (command === &quot;stop&quot; &amp;&amp; state === &quot;running&quot;) {
-      state = &quot;stopped&quot;;
-    } else if (command === &quot;reset&quot;) {
-      state = &quot;idle&quot;;
-    }
-  }
-}
-</code></pre>
-<h3 id="coroutine-communication">Coroutine Communication</h3>
-<pre><code class="language-typescript">function* producer(): Generator&lt;number, void, void&gt; {
-  for (let i = 0; i &lt; 5; i++) {
-    yield i;
-  }
-}
-
-function* consumer(gen: Generator&lt;number&gt;): Generator&lt;void, number, void&gt; {
-  let sum = 0;
-  for (const n of gen) {
-    sum += n;
-    yield;
-  }
-  return sum;
-}
-</code></pre>
-<h2 id="limitations">Limitations</h2>
-<ol>
-<li><strong><code>.throw()</code> doesn't inject exceptions</strong> - Exceptions are thrown externally, not at yield point</li>
-<li><strong>No generator delegation return values</strong> - <code>yield*</code> doesn't capture delegated return values</li>
-<li><strong>Type restrictions</strong> - TNext must be compatible with C# nullable types</li>
-</ol>
-<h2 id="see-also">See Also</h2>
+<p>Irreducible residual cases still fail with <code>TSN6101</code>.</p>
+<h2 id="guidance">Guidance</h2>
 <ul>
-<li><a href="/tsonic/async-patterns/">Async Patterns</a> - Async/await and for-await loops</li>
-<li><a href="/tsonic/language/">Language Reference</a> - Full language feature list</li>
-<li><a href="/tsonic/dotnet-interop/">.NET Interop</a> - Working with .NET async</li>
+<li>keep generator state machines explicit</li>
+<li>if a yield position still fails, prefer rewriting it to a clearer statement-level shape instead of trying to force the compiler through an ambiguous nested expression</li>
 </ul>
 </div>
 </article>

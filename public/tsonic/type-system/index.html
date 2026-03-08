@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -235,591 +138,138 @@
   </div>
 
   <div class="content"><h1 id="type-system">Type System</h1>
-<p>How TypeScript types map to C# types in Tsonic.</p>
-<h2 id="primitive-types">Primitive Types</h2>
-<h3 id="default-mappings">Default Mappings</h3>
-<table>
-<thead>
-<tr>
-<th>TypeScript</th>
-<th>C# Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>number</code></td>
-<td><code>double</code></td>
-</tr>
-<tr>
-<td><code>string</code></td>
-<td><code>string</code></td>
-</tr>
-<tr>
-<td><code>boolean</code></td>
-<td><code>bool</code></td>
-</tr>
-<tr>
-<td><code>null</code></td>
-<td><code>null</code></td>
-</tr>
-<tr>
-<td><code>undefined</code></td>
-<td><code>null</code></td>
-</tr>
-<tr>
-<td><code>void</code></td>
-<td><code>void</code></td>
-</tr>
-<tr>
-<td><code>never</code></td>
-<td>N/A (compile error)</td>
-</tr>
-<tr>
-<td><code>any</code></td>
-<td>Not supported</td>
-</tr>
-<tr>
-<td><code>unknown</code></td>
-<td><code>object</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="explicit-numeric-types">Explicit Numeric Types</h3>
-<p>Use <code>@tsonic/core</code> for precise numeric control:</p>
-<pre><code class="language-typescript">import { int, float, long, byte, short, char } from &quot;@tsonic/core/types.js&quot;;
-
-const count: int = 42; // System.Int32
-const ratio: float = 3.14; // System.Single
-const big: long = 9999999999; // System.Int64
-const small: byte = 255; // System.Byte
-const medium: short = 32000; // System.Int16
-const letter: char = &quot;A&quot;; // System.Char
-</code></pre>
+<p>Tsonic is strict-AOT and deterministic. The type system is built to answer one question:</p>
 <blockquote>
-<p><strong>See also:</strong> <a href="/tsonic/numeric-types/">Numeric Types Guide</a> for complete coverage of integer types, narrowing patterns, and when to use integers vs numbers.</p>
+<p>can this TypeScript program be lowered to one stable CLR/runtime shape?</p>
 </blockquote>
-<h3 id="char-systemchar">char (System.Char)</h3>
-<p>Tsonic supports <code>char</code> (a distinct CLR primitive: <code>System.Char</code>) via <code>@tsonic/core</code>.</p>
-<p>TypeScript represents <code>char</code> as <code>string</code> for TSC compatibility, so Tsonic enforces <strong>char validity</strong> during compilation:</p>
+<p>If yes, it compiles. If not, it fails early.</p>
+<h2 id="main-principles">Main Principles</h2>
+<h3 id="1-no-any">1. No <code>any</code></h3>
+<p>Explicit <code>any</code> remains out of scope.</p>
+<pre><code class="language-ts">const value: any = 1; // rejected
+</code></pre>
+<h3 id="2-declared-unknown-is-allowed">2. Declared <code>unknown</code> Is Allowed</h3>
+<p>Explicit <code>unknown</code> from library contracts is valid.</p>
+<pre><code class="language-ts">const root = JSON.parse(text); // unknown by declaration
+
+if (typeof root === &quot;object&quot; &amp;&amp; root !== null) {
+  console.log(Object.entries(root).length.toString());
+}
+</code></pre>
+<p>Tsonic distinguishes:</p>
 <ul>
-<li>A <code>char</code> value must be a <strong>single-character string literal</strong> (<code>&quot;A&quot;</code>, <code>&quot;\\n&quot;</code>, <code>&quot;'&quot;</code>, etc.), or</li>
-<li>A value that is already typed as <code>char</code> (e.g., from an API returning <code>char</code>).</li>
+<li>deliberate declared <code>unknown</code></li>
+<li>failed/poisoned inference</li>
 </ul>
-<p>If you pass a non-literal <code>string</code> (or a multi-character literal) where <code>char</code> is expected, Tsonic emits <code>TSN7418</code>.</p>
-<pre><code class="language-ts">import { char, int } from &quot;@tsonic/core/types.js&quot;;
-import { Console, Char } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function takesChar(c: char): void {
-  Console.WriteLine(c);
-}
-
-takesChar(&quot;Z&quot;); // OK
-// takesChar(&quot;ZZ&quot;); // TSN7418
-
-const s = &quot;hello&quot;;
-const c: char = s[0]; // OK (context expects char)
-
-const parsed: char = Char.parse(&quot;Q&quot;); // Use parsing for dynamic strings
-void parsed;
-</code></pre>
-<h3 id="number-handling">Number Handling</h3>
-<pre><code class="language-typescript">// Default: number → double
-const x = 42; // double
-const y = 3.14; // double
-const z = x / 4; // 10.5 (floating point division)
-
-// Integer math
-import { int } from &quot;@tsonic/core/types.js&quot;;
-const a: int = 42;
-const b: int = 4;
-const c = a / b; // Integer division in C#
-</code></pre>
-<h2 id="arrays">Arrays</h2>
-<h3 id="native-arrays">Native Arrays</h3>
-<p>Arrays emit as C# native arrays (<code>T[]</code>):</p>
-<pre><code class="language-typescript">// Array&lt;T&gt; or T[] syntax both emit as native arrays
-const numbers: number[] = [1, 2, 3];
-const strings: Array&lt;string&gt; = [&quot;a&quot;, &quot;b&quot;];
-
-// Generated: double[] numbers = [1, 2, 3];
-// Generated: string[] strings = [&quot;a&quot;, &quot;b&quot;];
-</code></pre>
-<h3 id="list-for-dynamic-collections">List<T> for Dynamic Collections</h3>
-<p>For collections that need add/remove operations, use <code>List&lt;T&gt;</code>:</p>
-<pre><code class="language-typescript">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
-
-const list = new List&lt;number&gt;();
-list.Add(1);
-list.Add(2);
-list.Add(3);
-// Generated: var list = new List&lt;double&gt;(); list.Add(...);
-
-// Or create empty and add items
-const names = new List&lt;string&gt;();
-names.Add(&quot;Alice&quot;);
-</code></pre>
-<h2 id="tuples">Tuples</h2>
-<p>Fixed-length arrays with specific element types:</p>
-<pre><code class="language-typescript">const point: [number, number] = [10, 20];
-const record: [string, number, boolean] = [&quot;name&quot;, 42, true];
-</code></pre>
-<p>Generates <code>ValueTuple&lt;T1, T2, ...&gt;</code> in C#:</p>
-<pre><code class="language-csharp">ValueTuple&lt;double, double&gt; point = (10.0, 20.0);
-ValueTuple&lt;string, double, bool&gt; record = (&quot;name&quot;, 42.0, true);
-</code></pre>
-<p>Supports up to 8 elements. Access via <code>.Item1</code>, <code>.Item2</code>, etc.</p>
-<h2 id="objects-and-interfaces">Objects and Interfaces</h2>
-<h3 id="interface-to-class">Interface to Class</h3>
-<pre><code class="language-typescript">export interface User {
-  id: number;
-  name: string;
-  email?: string;
-}
-</code></pre>
-<p>Generates:</p>
-<pre><code class="language-csharp">public class User
-{
-    public double id { get; set; }
-    public string name { get; set; }
-    public string? email { get; set; }
-}
-</code></pre>
-<h3 id="optional-properties">Optional Properties</h3>
-<pre><code class="language-typescript">interface Config {
-  required: string;
-  optional?: number;
-}
-</code></pre>
-<p>Optional properties become nullable in C#:</p>
-<pre><code class="language-csharp">public string required { get; set; }
-public double? optional { get; set; }
-</code></pre>
-<h2 id="dictionary-and-hashset">Dictionary and HashSet</h2>
-<p>Tsonic does not include JavaScript <code>Map</code>/<code>Set</code> in the default globals. Use .NET collections:</p>
-<pre><code class="language-typescript">import { Dictionary, HashSet } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
-
-const userMap = new Dictionary&lt;string, User&gt;();
-userMap.Add(&quot;alice&quot;, alice);
-userMap.ContainsKey(&quot;bob&quot;); // boolean
-userMap.remove(&quot;alice&quot;);
-userMap.clear();
-const dictSize = userMap.Count;
-
-const ids = new HashSet&lt;number&gt;();
-ids.Add(1);
-ids.Add(2);
-const hasOne = ids.Contains(1); // true
-ids.remove(1);
-ids.clear();
-const setSize = ids.Count;
-
-void dictSize;
-void setSize;
-</code></pre>
-<h2 id="dictionary-types">Dictionary Types</h2>
-<h3 id="recordk-v">Record&lt;K, V&gt;</h3>
-<pre><code class="language-typescript">const scores: Record&lt;string, number&gt; = { alice: 100, bob: 95 };
-const ages: Record&lt;number, string&gt; = { 1: &quot;one&quot;, 2: &quot;two&quot; };
-</code></pre>
-<p>Key type must be <code>string</code> or <code>number</code>. Generates <code>Dictionary&lt;TKey, TValue&gt;</code>.</p>
-<h3 id="index-signatures">Index Signatures</h3>
-<pre><code class="language-typescript">interface StringDict {
-  [key: string]: number;
-}
-
-interface NumberDict {
-  [key: number]: string;
-}
-</code></pre>
-<p>Both generate <code>Dictionary&lt;TKey, TValue&gt;</code> with appropriate key types.</p>
-<h2 id="union-types">Union Types</h2>
-<h3 id="simple-unions">Simple Unions</h3>
-<pre><code class="language-typescript">type StringOrNumber = string | number;
-</code></pre>
-<p>Generates <code>object</code> with runtime type checking.</p>
-<h3 id="discriminated-unions">Discriminated Unions</h3>
-<pre><code class="language-typescript">type Result&lt;T&gt; = { ok: true; value: T } | { ok: false; error: string };
-</code></pre>
-<p>Generates separate classes with a common base.</p>
-<h3 id="nullable-types">Nullable Types</h3>
-<pre><code class="language-typescript">type MaybeString = string | null;
-type OptionalNumber = number | undefined;
-</code></pre>
-<p>Both become <code>string?</code> and <code>double?</code> respectively.</p>
-<h2 id="generics">Generics</h2>
-<h3 id="generic-functions">Generic Functions</h3>
-<pre><code class="language-typescript">export function identity&lt;T&gt;(value: T): T {
-  return value;
-}
-</code></pre>
-<p>Generates:</p>
-<pre><code class="language-csharp">public static T Identity&lt;T&gt;(T value)
-{
-    return value;
-}
-</code></pre>
-<h3 id="generic-classes">Generic Classes</h3>
-<pre><code class="language-typescript">export class Container&lt;T&gt; {
-  private value: T;
-
-  constructor(value: T) {
-    this.value = value;
-  }
-
-  get(): T {
-    return this.value;
-  }
-}
-</code></pre>
-<h3 id="generic-constraints">Generic Constraints</h3>
-<pre><code class="language-typescript">interface HasId {
-  id: number;
-}
-
-export function getId&lt;T extends HasId&gt;(item: T): number {
-  return item.id;
-}
-</code></pre>
-<p>Generates <code>where T : HasId</code> constraint in C#.</p>
-<h3 id="null-handling-in-generics">Null Handling in Generics</h3>
-<p>In generic contexts, <code>null</code> is emitted as <code>default</code> to correctly handle both reference and value types:</p>
-<pre><code class="language-typescript">function getOrDefault&lt;T&gt;(value: T | null, fallback: T): T {
-  return value ?? fallback;
-}
-
-function createEmpty&lt;T&gt;(): T | null {
-  return null; // Emits: return default;
-}
-</code></pre>
-<p>This ensures generics work correctly whether <code>T</code> is a class, struct, or primitive.</p>
-<h2 id="function-types">Function Types</h2>
-<h3 id="function-signatures">Function Signatures</h3>
-<pre><code class="language-typescript">type Callback = (value: number) =&gt; void;
-type Transformer&lt;T, U&gt; = (input: T) =&gt; U;
-</code></pre>
-<p>Generates:</p>
-<pre><code class="language-csharp">// Action&lt;double&gt; for Callback
-// Func&lt;T, U&gt; for Transformer
-</code></pre>
-<blockquote>
-<p><strong>See also:</strong> <a href="/tsonic/callbacks/">Callbacks Guide</a> for complete coverage of Action, Func, and higher-order function patterns.</p>
-</blockquote>
-<h3 id="async-functions">Async Functions</h3>
-<pre><code class="language-typescript">export async function fetchData(): Promise&lt;string&gt; {
-  return &quot;data&quot;;
-}
-</code></pre>
-<p>Generates:</p>
-<pre><code class="language-csharp">public static async Task&lt;string&gt; FetchData()
-{
-    return &quot;data&quot;;
-}
-</code></pre>
-<blockquote>
-<p><strong>See also:</strong> <a href="/tsonic/async-patterns/">Async Patterns Guide</a> for async/await, for-await loops, and async generators.</p>
-</blockquote>
-<h2 id="enums">Enums</h2>
-<h3 id="numeric-enums">Numeric Enums</h3>
-<pre><code class="language-typescript">export enum Status {
-  Pending, // 0
-  Active, // 1
-  Completed, // 2
-}
-</code></pre>
-<p>Generates:</p>
-<pre><code class="language-csharp">public enum Status
-{
-    Pending = 0,
-    Active = 1,
-    Completed = 2
-}
-</code></pre>
-<h3 id="string-enums">String Enums</h3>
-<pre><code class="language-typescript">export enum Color {
-  Red = &quot;red&quot;,
-  Green = &quot;green&quot;,
-  Blue = &quot;blue&quot;,
-}
-</code></pre>
-<p>Generates a class with string constants.</p>
-<h2 id="type-aliases">Type Aliases</h2>
-<h3 id="simple-aliases">Simple Aliases</h3>
-<pre><code class="language-typescript">export type UserId = number;
-export type UserName = string;
-</code></pre>
-<p>Aliases are resolved at compile time.</p>
-<h3 id="complex-aliases">Complex Aliases</h3>
-<pre><code class="language-typescript">export type Point = { x: number; y: number };
-export type Handler = (event: Event) =&gt; void;
-</code></pre>
-<h2 id="readonly-and-const">Readonly and Const</h2>
-<pre><code class="language-typescript">interface Config {
-  readonly apiUrl: string;
-}
-
-const MAX_SIZE = 100;
-</code></pre>
+<h3 id="3-expected-type-threading">3. Expected-Type Threading</h3>
+<p>Tsonic aggressively threads expected types through:</p>
 <ul>
-<li><code>readonly</code> becomes <code>{ get; }</code> (no setter)</li>
-<li><code>const</code> becomes <code>const</code> or <code>static readonly</code></li>
+<li>array literals and spreads</li>
+<li>ternaries</li>
+<li>nullish coalescing</li>
+<li>control-flow returns</li>
+<li>object literal members</li>
 </ul>
-<h2 id="type-inference">Type Inference</h2>
-<p>Tsonic infers types where possible:</p>
-<pre><code class="language-typescript">const x = 42; // Inferred: number
-const s = &quot;hello&quot;; // Inferred: string
-const arr = [1, 2, 3]; // Inferred: number[]
+<p>That keeps C# lowering deterministic and avoids fallback to weak shapes.</p>
+<h3 id="4-deterministic-generic-function-values">4. Deterministic Generic Function Values</h3>
+<p>Supported when a concrete callable shape exists:</p>
+<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
+
+const f: (x: number) =&gt; number = id;
+const arr: Array&lt;(x: number) =&gt; number&gt; = [id];
+const obj: { run: (x: number) =&gt; number } = { run: id };
 </code></pre>
-<p>Explicit types recommended for:</p>
+<p>Still rejected when the value remains polymorphic with no runtime shape:</p>
+<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
+const copy = id; // rejected
+</code></pre>
+<h3 id="5-union-member-access-must-be-coherent">5. Union Member Access Must Be Coherent</h3>
+<p>This is allowed:</p>
+<pre><code class="language-ts">type A = { x: number };
+type B = { x: number };
+declare const value: A | B;
+const y = value.x;
+</code></pre>
+<p>This is rejected:</p>
+<pre><code class="language-ts">type A = { x: number };
+type B = { x: string };
+declare const value: A | B;
+const y = value.x;
+</code></pre>
+<h3 id="6-numeric-proof-is-separate-from-ts-typing">6. Numeric Proof Is Separate From TS Typing</h3>
+<p>TypeScript cannot distinguish <code>int</code> from <code>double</code>. Tsonic proves numeric intent later.</p>
+<p>See <code>numeric-types.md</code>.</p>
+<h2 id="source-packages">Source Packages</h2>
+<p>Installed packages with:</p>
+<pre><code class="language-text">node_modules/&lt;pkg&gt;/tsonic/package-manifest.json
+</code></pre>
+<p>and:</p>
+<pre><code class="language-json">{
+  &quot;kind&quot;: &quot;tsonic-source-package&quot;
+}
+</code></pre>
+<p>are compiled as part of the same TS program and dependency graph, subject to surface compatibility.</p>
+<p>Surface compatibility is based on resolved surface chains, not only exact string equality.</p>
+<p>Example:</p>
 <ul>
-<li>Function parameters</li>
-<li>Function return types</li>
-<li>Complex objects</li>
+<li>active surface: <code>@acme/surface-node</code></li>
+<li>resolved modes: <code>[&quot;@tsonic/js&quot;, &quot;@acme/surface-node&quot;]</code></li>
+<li>package manifest declaring <code>[&quot;@tsonic/js&quot;]</code> is accepted</li>
 </ul>
-<h2 id="type-assertions">Type Assertions</h2>
-<p>Use the <code>as</code> keyword to perform type conversions.</p>
-<h3 id="numeric-type-assertions">Numeric Type Assertions</h3>
-<p>Prefer numeric type annotations to control emitted CLR numeric types:</p>
-<pre><code class="language-typescript">import { int, byte, short, long, float } from &quot;@tsonic/core/types.js&quot;;
-
-const intValue: int = 1000;
-const byteValue: byte = 255;
-const shortValue: short = 1000;
-const longValue: long = 1000000;
-const floatValue: float = 1.5;
-const doubleValue: number = 1.5;
-</code></pre>
-<p>Generates CLR numeric declarations:</p>
-<pre><code class="language-csharp">int intValue = 1000;
-byte byteValue = 255;
-short shortValue = 1000;
-long longValue = 1000000L;
-float floatValue = 1.5f;
-double doubleValue = 1.5;
-</code></pre>
-<blockquote>
-<p><strong>See also:</strong> <a href="/tsonic/numeric-types/">Numeric Types Guide</a> for complete coverage of numeric casting and overflow behavior.</p>
-</blockquote>
-<h3 id="reference-type-assertions">Reference Type Assertions</h3>
-<p>Downcast reference types:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-class Animal {
-  name!: string;
-}
-
-class Dog extends Animal {
-  breed!: string;
-}
-
-function getDog(animal: Animal): Dog {
-  return animal as Dog;
-}
-
-function castFromObject(obj: object): Animal {
-  return obj as Animal;
-}
-</code></pre>
-<p>Generates C# casts:</p>
-<pre><code class="language-csharp">public static Dog GetDog(Animal animal)
-{
-    return (Dog)animal;
-}
-
-public static Animal CastFromObject(object obj)
-{
-    return (Animal)obj;
-}
-</code></pre>
-<h3 id="safe-casting-with-trycast">Safe Casting with trycast</h3>
-<p>Use <code>trycast&lt;T&gt;(value)</code> for safe type casting that returns <code>null</code> on failure instead of throwing:</p>
-<pre><code class="language-typescript">class Animal {
-  name!: string;
-}
-
-class Dog extends Animal {
-  breed!: string;
-}
-
-function tryGetDog(animal: Animal): Dog | null {
-  return trycast&lt;Dog&gt;(animal);
-}
-
-function process(animal: Animal): void {
-  const dog = trycast&lt;Dog&gt;(animal);
-  if (dog !== null) {
-    Console.WriteLine(dog.breed);
-  }
-}
-</code></pre>
-<p>Generates C# <code>as</code> operator:</p>
-<pre><code class="language-csharp">public static Dog? TryGetDog(Animal animal)
-{
-    return animal as Dog;
-}
-
-public static void Process(Animal animal)
-{
-    var dog = animal as Dog;
-    if (dog != null)
-    {
-        Console.WriteLine(dog.breed);
-    }
-}
-</code></pre>
-<p><strong>Difference from type assertions:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Syntax</th>
-<th>C# Code</th>
-<th>On Failure</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>value as T</code></td>
-<td><code>(T)value</code></td>
-<td>Throws <code>InvalidCastException</code></td>
-</tr>
-<tr>
-<td><code>trycast&lt;T&gt;(value)</code></td>
-<td><code>value as T</code></td>
-<td>Returns <code>null</code></td>
-</tr>
-</tbody>
-</table>
-<p>Use <code>trycast</code> when:</p>
+<h2 id="object-literal-typing">Object Literal Typing</h2>
+<p>Current supported deterministic cases:</p>
 <ul>
-<li>The cast might fail at runtime</li>
-<li>You want to check before using the result</li>
-<li>You're implementing type guards or polymorphic patterns</li>
+<li>finite spreads</li>
+<li>method shorthand</li>
+<li>computed constant keys</li>
+<li>accessors</li>
+<li>behavioral selection across coherent union targets</li>
 </ul>
-<h2 id="anonymous-objects">Anonymous Objects</h2>
-<p>Tsonic automatically synthesizes nominal classes for anonymous object type literals.</p>
-<h3 id="inline-object-types">Inline Object Types</h3>
-<p>When you use object type literals inline, Tsonic generates named classes:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function createPoint(): { x: number; y: number } {
-  return { x: 10, y: 20 };
-}
-
-function processData(data: { id: number; name: string }): void {
-  Console.WriteLine(data.name);
-}
-</code></pre>
-<p>Generates synthesized classes:</p>
-<pre><code class="language-csharp">// Auto-generated record class
-public record CreatePoint_Return(double X, double Y);
-
-public record ProcessData_data(double Id, string Name);
-
-public static CreatePoint_Return CreatePoint()
-{
-    return new CreatePoint_Return(10, 20);
-}
-
-public static void ProcessData(ProcessData_data data)
-{
-    Console.WriteLine(data.Name);
-}
-</code></pre>
-<h3 id="when-to-use-named-interfaces">When to Use Named Interfaces</h3>
-<p>For reusable types, prefer explicit interfaces:</p>
-<pre><code class="language-typescript">// ✅ Preferred for reusable types
-import { Math } from &quot;@tsonic/dotnet/System.js&quot;;
-
-interface Point {
-  x: number;
-  y: number;
-}
-
-function distance(a: Point, b: Point): number {
-  return Math.Sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
-}
-</code></pre>
-<p>Use anonymous object types for:</p>
+<p>Tsonic can synthesize nominal helper types where needed, but only when the result shape is finite and stable.</p>
+<h2 id="dynamic-import-typing">Dynamic Import Typing</h2>
+<p>Supported:</p>
 <ul>
-<li>One-off return types</li>
-<li>Function-specific parameters</li>
-<li>Intermediate data shapes</li>
+<li>local closed-world dynamic imports</li>
+<li>side-effect imports</li>
+<li>namespace values when runtime export shape is representable</li>
 </ul>
-<h2 id="nullable-narrowing">Nullable Narrowing</h2>
-<p>TypeScript null checks automatically narrow types in C#.</p>
-<h3 id="reference-types">Reference Types</h3>
-<pre><code class="language-typescript">function greet(name: string | null): string {
-  if (name !== null) {
-    return `Hello, ${name}`;
-  }
-  return &quot;Hello, stranger&quot;;
-}
-</code></pre>
-<h3 id="value-types">Value Types</h3>
-<p>Nullable value types require <code>.Value</code> access after null checks in C#. Tsonic handles this automatically:</p>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
-
-function processValue(value: int | null): int {
-  if (value !== null) {
-    return value * 2; // Narrowed to int
-  }
-  return 0;
-}
-</code></pre>
-<p>Generates:</p>
-<pre><code class="language-csharp">public static int ProcessValue(int? value)
-{
-    if (value != null)
-    {
-        return value.Value * 2;  // .Value access
-    }
-    return 0;
-}
-</code></pre>
-<blockquote>
-<p><strong>See also:</strong> <a href="/tsonic/dotnet-interop/#nullable-value-type-narrowing">.NET Interop Guide</a> for compound conditions and advanced nullable patterns.</p>
-</blockquote>
-<h2 id="unsupported-types">Unsupported Types</h2>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Reason</th>
-<th>Alternative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>any</code></td>
-<td>No type safety</td>
-<td>Use <code>unknown</code> or specific type</td>
-</tr>
-<tr>
-<td><code>symbol</code></td>
-<td>No C# equivalent</td>
-<td>Use string keys</td>
-</tr>
-<tr>
-<td><code>bigint</code></td>
-<td>Limited support</td>
-<td>Use <code>long</code></td>
-</tr>
-<tr>
-<td>Mapped types</td>
-<td>Complex transform</td>
-<td>Define explicitly</td>
-</tr>
-<tr>
-<td>Conditional types</td>
-<td>Complex transform</td>
-<td>Define explicitly</td>
-</tr>
-<tr>
-<td>Intersection types</td>
-<td>No C# equivalent</td>
-<td>Create combined interface</td>
-</tr>
-</tbody>
-</table>
+<p>Rejected:</p>
+<ul>
+<li>non-literal specifiers</li>
+<li>package/open-world dynamic imports</li>
+<li>namespace shapes the runtime cannot represent deterministically</li>
+</ul>
+<h2 id="importmeta"><code>import.meta</code></h2>
+<p>Supported:</p>
+<ul>
+<li><code>import.meta</code></li>
+<li><code>import.meta.url</code></li>
+<li><code>import.meta.filename</code></li>
+<li><code>import.meta.dirname</code></li>
+</ul>
+<p>Rejected:</p>
+<ul>
+<li>environment/tooling-specific fields like <code>import.meta.env</code></li>
+</ul>
+<h2 id="conditional--mapped--utility-types">Conditional / Mapped / Utility Types</h2>
+<p>The compiler now lowers a useful deterministic subset directly instead of blanket rejection.</p>
+<p>Supported examples include:</p>
+<ul>
+<li><code>Partial&lt;T&gt;</code></li>
+<li><code>Pick&lt;T, K&gt;</code></li>
+<li><code>Omit&lt;T, K&gt;</code></li>
+<li>finite mapped types</li>
+<li>deterministic conditional aliases</li>
+<li><code>keyof</code>/template-literal/indexed-access combinations that normalize to concrete shapes</li>
+</ul>
+<p>The guiding rule is still representability, not “accept all TS syntax”.</p>
+<h2 id="practical-guidance">Practical Guidance</h2>
+<ul>
+<li>prefer explicit imported numeric types when CLR width matters</li>
+<li>keep generics monomorphic at value boundaries</li>
+<li>keep object-literal shapes finite</li>
+<li>use JS surface for JS ambient APIs, not CLR fallback</li>
+</ul>
 </div>
 </article>
 </main>

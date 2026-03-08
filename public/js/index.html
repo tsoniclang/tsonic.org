@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>js compat | Tsonic</title>
+    <title>js | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link active" href="/js/">js compat</a>
+          <a class="mount-link active" href="/js/">js</a>
         
       
     </nav>
@@ -196,7 +196,7 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-      <span>js compat</span>
+      <span>js</span>
     </nav>
     <a class="edit" href="https://github.com/tsoniclang/js-runtime/blob/main/docs/README.md">Edit on GitHub</a>
   </div>
@@ -207,8 +207,8 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 <h3 id="getting-started">Getting Started</h3>
 <ol>
-<li><a href="/js/getting-started/">Getting Started</a> - enable <code>@tsonic/js</code> in a Tsonic project</li>
-<li><a href="/js/imports/">Importing APIs</a> - importing from <code>@tsonic/js/index.js</code></li>
+<li><a href="/js/getting-started/">Getting Started</a> - enable <code>@tsonic/js</code> in a Tsonic project (<code>--surface js</code>)</li>
+<li><a href="/js/imports/">Importing APIs</a> - natural surface usage + optional direct imports</li>
 </ol>
 <h3 id="apis">APIs</h3>
 <ol start="3">
@@ -226,14 +226,13 @@
 <li><a href="/js/modules/string/">String</a></li>
 </ol>
 <h2 id="overview">Overview</h2>
-<p>In Tsonic projects you import JS runtime APIs from <code>@tsonic/js/index.js</code>:</p>
-<pre><code class="language-ts">import { console, JSON } from &quot;@tsonic/js/index.js&quot;;
-
-export function main(): void {
+<p>In JS surface projects you can write natural JS with no explicit runtime imports:</p>
+<pre><code class="language-ts">export function main(): void {
   const value = JSON.parse&lt;{ x: number }&gt;('{&quot;x&quot;: 1}');
   console.log(JSON.stringify(value));
 }
 </code></pre>
+<p>Direct imports from <code>@tsonic/js/index.js</code> are still supported.</p>
 <h2 id="relationship-to-tsonicnodejs">Relationship to <code>@tsonic/nodejs</code></h2>
 <ul>
 <li><code>@tsonic/js</code> provides JavaScript runtime APIs (JSON, Math, Date, timers, JS collections).</li>

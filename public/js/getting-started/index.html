@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link active" href="/js/">js compat</a>
+          <a class="mount-link active" href="/js/">js</a>
         
       
     </nav>
@@ -196,7 +196,7 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-        <a href="/js/">js compat</a>
+        <a href="/js/">js</a>
         <span class="sep">/</span>
       
       <span>Getting Started</span>
@@ -207,7 +207,7 @@
   <div class="content"><h1 id="getting-started">Getting Started</h1>
 <h2 id="enable-js-runtime-apis-in-a-tsonic-project">Enable JS Runtime APIs in a Tsonic Project</h2>
 <h3 id="new-project">New project</h3>
-<pre><code class="language-bash">npx --yes tsonic@latest init
+<pre><code class="language-bash">npx --yes tsonic@latest init --surface js
 npx --yes tsonic@latest add npm @tsonic/js
 </code></pre>
 <h3 id="existing-project">Existing project</h3>
@@ -224,15 +224,14 @@ npx --yes tsonic@latest add npm @tsonic/js
 </ul>
 </li>
 </ul>
-<p>Then run <code>tsonic restore</code> (or just <code>tsonic build</code>, which will restore via <code>dotnet</code>) to materialize the .NET dependencies.</p>
+<p>Then run <code>npx --yes tsonic@latest restore</code> (or <code>npx --yes tsonic@latest build</code>) to materialize .NET dependencies.</p>
 <h2 id="minimal-example">Minimal Example</h2>
-<pre><code class="language-ts">import { console, JSON } from &quot;@tsonic/js/index.js&quot;;
-
-export function main(): void {
+<pre><code class="language-ts">export function main(): void {
   const obj = JSON.parse&lt;{ ok: boolean }&gt;('{&quot;ok&quot;: true}');
   console.log(obj.ok);
 }
 </code></pre>
+<p>Direct imports from <code>@tsonic/js/index.js</code> remain supported when you want explicit symbols.</p>
 </div>
 </article>
 </main>
