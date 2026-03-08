@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -238,211 +141,49 @@
   </div>
 
   <div class="content"><h1 id="architecture-overview">Architecture Overview</h1>
-<p>High-level view of the Tsonic compiler architecture.</p>
-<h2 id="design-principles">Design Principles</h2>
-<h3 id="1-layered-architecture">1. Layered Architecture</h3>
-<p>The compiler is organized into distinct layers with clear boundaries:</p>
-<pre><code>CLI Layer
-    |
-    v
-Frontend Layer (TypeScript -&gt; IR)
-    |
-    v
-Emitter Layer (IR -&gt; C#)
-    |
-    v
-Backend Layer (C# -&gt; Binary)
-</code></pre>
-<p>Each layer:</p>
-<ul>
-<li>Has a single responsibility</li>
-<li>Knows nothing about layers above</li>
-<li>Communicates via well-defined interfaces</li>
-</ul>
-<h3 id="2-functional-core">2. Functional Core</h3>
-<p>All business logic is pure functional:</p>
-<ul>
-<li>No mutable state</li>
-<li>Functions return values, not modify parameters</li>
-<li>Side effects isolated to boundaries (CLI, I/O)</li>
-</ul>
-<h3 id="3-explicit-over-implicit">3. Explicit Over Implicit</h3>
-<ul>
-<li>All dependencies passed as parameters</li>
-<li>No global state or singletons</li>
-<li>Configuration explicit, not magic</li>
-</ul>
-<h3 id="4-error-as-values">4. Error as Values</h3>
-<p>Errors are returned, not thrown:</p>
-<pre><code class="language-typescript">const result = compile(source);
-if (!result.ok) {
-  console.log(result.error);
-  return;
-}
-const { value } = result;
-</code></pre>
-<h2 id="component-overview">Component Overview</h2>
-<h3 id="cli-packagescli">CLI (<code>packages/cli</code>)</h3>
-<p>Command-line interface and orchestration:</p>
-<ul>
-<li>Argument parsing</li>
-<li>Configuration loading</li>
-<li>Command dispatch (init, restore, generate, build, run)</li>
-<li>Error reporting</li>
-</ul>
-<p>Entry point for all user interactions.</p>
-<h3 id="frontend-packagesfrontend">Frontend (<code>packages/frontend</code>)</h3>
-<p>TypeScript to IR transformation:</p>
-<ul>
-<li>TypeScript program creation (via TS Compiler API)</li>
-<li>Module resolution</li>
-<li>Import/export validation</li>
-<li>IR building</li>
-<li>Dependency graph construction</li>
-</ul>
-<h3 id="emitter-packagesemitter">Emitter (<code>packages/emitter</code>)</h3>
-<p>IR to C# code generation:</p>
-<ul>
-<li>Type emission</li>
-<li>Expression emission</li>
-<li>Statement emission</li>
-<li>Generic specialization</li>
-<li>Module/namespace structure</li>
-</ul>
-<h3 id="backend-packagesbackend">Backend (<code>packages/backend</code>)</h3>
-<p>.NET compilation:</p>
-<ul>
-<li>.csproj generation</li>
-<li>Program.cs generation</li>
-<li>dotnet CLI wrapper</li>
-<li>Build orchestration</li>
-</ul>
-<h3 id="runtime-runtime">Runtime (<code>runtime/</code>)</h3>
-<p>C# runtime libraries:</p>
-<ul>
-<li><code>Tsonic.Runtime</code>: Core types and utilities (IteratorResult, etc.)</li>
-</ul>
-<h2 id="data-flow">Data Flow</h2>
-<h3 id="compilation-pipeline">Compilation Pipeline</h3>
-<pre><code>1. CLI receives: tsonic build src/App.ts
+<h2 id="layer-map">Layer Map</h2>
+<pre><code class="language-text">CLI
+  -&gt; config resolution
+  -&gt; workspace/package manifest orchestration
 
-2. Config loaded:
-   - tsonic.workspace.json parsed
-   - packages/&lt;project&gt;/tsonic.json parsed
-   - CLI args merged
-   - Resolved config created
+Frontend
+  -&gt; TypeScript program creation
+  -&gt; surface/core globals injection
+  -&gt; import resolution
+  -&gt; validation
+  -&gt; IR construction
+  -&gt; dependency graph
 
-3. Frontend processes:
-   - TypeScript program created
-   - Source files parsed
-   - Imports resolved
-   - IR modules built
-   - Dependency graph constructed
+Emitter
+  -&gt; semantic preparation
+  -&gt; CSharpAst construction
+  -&gt; printer
 
-4. Emitter generates:
-   - C# files from IR modules
-   - Program.cs entry point
-   - tsonic.csproj project file
-
-5. Backend compiles:
-   - dotnet restore
-   - dotnet publish (NativeAOT)
-   - Binary copied to out/
+Backend
+  -&gt; generated project files
+  -&gt; dotnet build/publish/test/pack
 </code></pre>
-<h3 id="key-data-structures">Key Data Structures</h3>
-<p><strong>IrModule</strong>: Represents a compiled TypeScript file</p>
-<pre><code class="language-typescript">type IrModule = {
-  filePath: string;
-  namespace: string;
-  className: string;
-  imports: IrImport[];
-  exports: IrExport[];
-  body: IrStatement[];
-};
-</code></pre>
-<p><strong>ResolvedConfig</strong>: Merged configuration</p>
-<pre><code class="language-typescript">type ResolvedConfig = {
-  rootNamespace: string;
-  entryPoint: string;
-  sourceRoot: string;
-  outputDirectory: string;
-  // ...
-};
-</code></pre>
-<h2 id="error-handling">Error Handling</h2>
-<h3 id="diagnostics">Diagnostics</h3>
-<p>All errors are collected as diagnostics:</p>
-<pre><code class="language-typescript">type Diagnostic = {
-  code: string; // e.g., &quot;TSN1001&quot;
-  severity: &quot;error&quot; | &quot;warning&quot;;
-  message: string;
-  location?: SourceLocation;
-  suggestion?: string;
-};
-</code></pre>
-<h3 id="diagnostic-codes">Diagnostic Codes</h3>
-<table>
-<thead>
-<tr>
-<th>Range</th>
-<th>Category</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TSN1xxx</td>
-<td>Module resolution</td>
-</tr>
-<tr>
-<td>TSN2xxx</td>
-<td>Syntax/feature support</td>
-</tr>
-<tr>
-<td>TSN3xxx</td>
-<td>Type system</td>
-</tr>
-<tr>
-<td>TSN4xxx</td>
-<td>Code generation</td>
-</tr>
-<tr>
-<td>TSN5xxx</td>
-<td>Build/runtime</td>
-</tr>
-</tbody>
-</table>
-<h3 id="error-propagation">Error Propagation</h3>
-<p>Errors bubble up through Result types:</p>
-<pre><code class="language-typescript">const parseResult = parse(source);
-if (!parseResult.ok) return parseResult;
-
-const validateResult = validate(parseResult.value);
-if (!validateResult.ok) return validateResult;
-
-// Continue with valid data
-</code></pre>
-<h2 id="extension-points">Extension Points</h2>
-<h3 id="custom-libraries">Custom Libraries</h3>
-<p>External .NET library bindings via <code>--lib</code>:</p>
+<h2 id="current-design-rules">Current Design Rules</h2>
+<h3 id="compiler-core-vs-surface">Compiler Core vs Surface</h3>
 <ul>
-<li>TypeScript declarations describe .NET API</li>
-<li>Compiler resolves types</li>
-<li>Generated code references library</li>
+<li>core globals are compiler-owned</li>
+<li>surface globals come from the active surface package</li>
+<li>packages such as <code>@tsonic/nodejs</code> add importable modules, not ambient worlds</li>
 </ul>
-<h3 id="output-types">Output Types</h3>
-<p>Multiple output configurations:</p>
+<h3 id="first-party-source-packages">First-Party Source Packages</h3>
+<p>Installed Tsonic source packages are not opaque imports. They are pulled into:</p>
 <ul>
-<li>Executable (NativeAOT)</li>
-<li>Library (DLL)</li>
-<li>Console app (non-AOT)</li>
+<li>the same TS Program</li>
+<li>the same dependency graph</li>
+<li>the same deterministic type/lowering pipeline</li>
 </ul>
-<h3 id="nuget-integration">NuGet Integration</h3>
-<p>Packages specified in config:</p>
-<ul>
-<li>Added to .csproj</li>
-<li>Restored by dotnet</li>
-<li>Available in generated code</li>
-</ul>
+<h3 id="ast-only-emitter">AST-Only Emitter</h3>
+<p>The emitter no longer assembles C# through mixed string shims in the pipeline.</p>
+<p>Current path:</p>
+<pre><code class="language-text">IR -&gt; CSharpAst -&gt; printer -&gt; C# text
+</code></pre>
+<h3 id="strict-aot-policy">Strict-AOT Policy</h3>
+<p>The compiler rejects ambiguity before emission instead of weakening semantics and relying on later C# failures.</p>
 </div>
 </article>
 </main>

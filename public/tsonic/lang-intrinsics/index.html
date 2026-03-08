@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -235,133 +138,102 @@
   </div>
 
   <div class="content"><h1 id="language-intrinsics">Language Intrinsics</h1>
-<p>Tsonic includes a small set of <strong>language intrinsics</strong> in <code>@tsonic/core/lang.js</code>. These are TypeScript declarations that compile to C# keywords and special forms.</p>
-<pre><code class="language-typescript">import {
-  stackalloc,
-  sizeof,
-  nameof,
-  defaultof,
-  trycast,
-  asinterface,
-  istype,
-} from &quot;@tsonic/core/lang.js&quot;;
-</code></pre>
-<h2 id="stackalloc">stackalloc</h2>
-<p>Allocate stack memory and get a <code>Span&lt;T&gt;</code>:</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-import { stackalloc } from &quot;@tsonic/core/lang.js&quot;;
-import { int } from &quot;@tsonic/core/types.js&quot;;
+<p>These come from <code>@tsonic/core/lang.js</code> unless noted otherwise.</p>
+<h2 id="stackalloc"><code>stackalloc</code></h2>
+<pre><code class="language-ts">import { stackalloc } from &quot;@tsonic/core/lang.js&quot;;
+import type { Span, int } from &quot;@tsonic/core/types.js&quot;;
 
-export function main(): void {
-  const buffer = stackalloc&lt;int&gt;(256);
-  buffer[0] = 42;
+const buffer: Span&lt;int&gt; = stackalloc&lt;int&gt;(16 as int);
+buffer[0] = 42 as int;
+</code></pre>
+<p>Lowers to C# <code>stackalloc</code>.</p>
+<h2 id="sizeof"><code>sizeof</code></h2>
+<pre><code class="language-ts">import { sizeof } from &quot;@tsonic/core/lang.js&quot;;
+import type { int, long } from &quot;@tsonic/core/types.js&quot;;
 
-  Console.WriteLine(`First: ${buffer[0]}`);
-  Console.WriteLine(`Length: ${buffer.Length}`);
-}
+const a: int = sizeof&lt;int&gt;();
+const b: int = sizeof&lt;long&gt;();
 </code></pre>
-<p>This emits C# like:</p>
-<pre><code class="language-csharp">Span&lt;int&gt; buffer = stackalloc int[256];
-buffer[0] = 42;
-</code></pre>
-<h2 id="sizeof">sizeof</h2>
-<p>Get the size (bytes) of an unmanaged type:</p>
-<pre><code class="language-typescript">import { sizeof } from &quot;@tsonic/core/lang.js&quot;;
-import { int } from &quot;@tsonic/core/types.js&quot;;
-
-const bytes: int = sizeof&lt;int&gt;();
-</code></pre>
-<h2 id="defaultof">defaultof</h2>
-<p>Get the default value for a type:</p>
-<pre><code class="language-typescript">import { defaultof } from &quot;@tsonic/core/lang.js&quot;;
-import { int } from &quot;@tsonic/core/types.js&quot;;
+<p>Current rule:</p>
+<ul>
+<li><code>sizeof&lt;T&gt;()</code> requires a known value-compatible type</li>
+<li>primitives and known CLR structs are supported</li>
+</ul>
+<h2 id="defaultof"><code>defaultof</code></h2>
+<pre><code class="language-ts">import { defaultof } from &quot;@tsonic/core/lang.js&quot;;
+import type { int } from &quot;@tsonic/core/types.js&quot;;
 
 const zero: int = defaultof&lt;int&gt;();
-const nothing = defaultof&lt;object&gt;(); // null
 </code></pre>
-<h2 id="nameof">nameof</h2>
-<p>Get a symbol name as a string:</p>
-<pre><code class="language-typescript">import { nameof } from &quot;@tsonic/core/lang.js&quot;;
+<h2 id="nameof"><code>nameof</code></h2>
+<pre><code class="language-ts">import { nameof } from &quot;@tsonic/core/lang.js&quot;;
 
-export function main(): void {
-  const myVariable = 123;
-  const field = nameof(myVariable); // &quot;myVariable&quot;
-  void field;
+const field = nameof(user.name); // &quot;name&quot;
+const local = nameof(user);      // &quot;user&quot;
+</code></pre>
+<p>Current supported forms:</p>
+<ul>
+<li>identifier</li>
+<li><code>this</code></li>
+<li>dotted member access</li>
+</ul>
+<p>The intrinsic is recognized by provenance from <code>@tsonic/core/lang.js</code>, not just by identifier spelling.</p>
+<h2 id="trycast"><code>trycast</code></h2>
+<pre><code class="language-ts">import { trycast } from &quot;@tsonic/core/lang.js&quot;;
+
+const person = trycast&lt;Person&gt;(value);
+if (person !== null) {
+  console.log(person.name);
 }
 </code></pre>
-<h2 id="trycast">trycast</h2>
-<p>Safe cast that returns <code>null</code> on failure (C# <code>as</code>):</p>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-import { trycast } from &quot;@tsonic/core/lang.js&quot;;
+<h2 id="asinterface"><code>asinterface</code></h2>
+<p>Compile-time-only interface view. Use when you need CLR interface typing without forcing a runtime cast.</p>
+<pre><code class="language-ts">import { asinterface } from &quot;@tsonic/core/lang.js&quot;;
+import type { IQueryable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
 
-class Animal {
-  name!: string;
-}
+const q = asinterface&lt;IQueryable&lt;User&gt;&gt;(db.Users);
+</code></pre>
+<h2 id="interfacet"><code>Interface&lt;T&gt;</code></h2>
+<p>Use only in <code>implements</code> clauses when implementing CLR interface bindings from TypeScript.</p>
+<pre><code class="language-ts">import type { Interface } from &quot;@tsonic/core/lang.js&quot;;
+import type { IDisposable } from &quot;@tsonic/dotnet/System.js&quot;;
 
-class Dog extends Animal {
-  breed!: string;
-}
-
-export function main(animal: Animal): void {
-  const dog = trycast&lt;Dog&gt;(animal);
-  if (dog !== null) {
-    Console.WriteLine(dog.breed);
-  }
+export class Resource implements Interface&lt;IDisposable&gt; {
+  Dispose(): void {}
 }
 </code></pre>
-<h2 id="asinterface">asinterface</h2>
-<p><code>asinterface&lt;T&gt;(x)</code> is a <strong>compile-time-only</strong> interface view.</p>
-<p>It exists to treat a value as a CLR interface/nominal type in TypeScript without emitting
-runtime casts in C#.</p>
-<pre><code class="language-typescript">import { asinterface } from &quot;@tsonic/core/lang.js&quot;;
-import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
-import type { IEnumerable } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
-import type { ExtensionMethods as Linq } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
+<h2 id="fieldt"><code>field&lt;T&gt;</code></h2>
+<p>Forces class member emission as a C# field instead of an auto-property.</p>
+<pre><code class="language-ts">import type { field } from &quot;@tsonic/core/lang.js&quot;;
 
-type Seq&lt;T&gt; = Linq&lt;IEnumerable&lt;T&gt;&gt;;
-
-const xs = new List&lt;number&gt;([1, 2, 3]);
-const seq = asinterface&lt;Seq&lt;number&gt;&gt;(xs);
-
-// Note: asinterface is particularly important for EF Core query precompilation,
-// where runtime casts can break query analyzers.
-seq.Count();
-</code></pre>
-<h2 id="istype-overload-specialization">istype (overload specialization)</h2>
-<p><code>istype&lt;T&gt;(x)</code> is a <strong>compile-time-only</strong> marker used to specialize a single overload implementation
-into one CLR method per signature.</p>
-<p>Tsonic must erase <code>istype&lt;T&gt;(...)</code> before emitting C#. If it reaches emission, compilation fails with <code>TSN7441</code>.</p>
-<pre><code class="language-typescript">import { istype } from &quot;@tsonic/core/lang.js&quot;;
-
-Foo(x: string): string;
-Foo(x: boolean): string;
-Foo(p0: unknown): unknown {
-  if (istype&lt;string&gt;(p0)) return `s:${p0}`;
-  if (istype&lt;boolean&gt;(p0)) return p0 ? &quot;t&quot; : &quot;f&quot;;
-  throw new Error(&quot;unreachable&quot;);
+export class User {
+  private _name: field&lt;string&gt; = &quot;&quot;;
 }
 </code></pre>
-<h2 id="thisarg-extension-method-receiver">thisarg (extension method receiver)</h2>
-<p><code>thisarg&lt;T&gt;</code> marks the <strong>receiver parameter</strong> of a C# extension method. It is only valid on the <strong>first parameter</strong> of a <strong>top-level</strong> function declaration.</p>
-<pre><code class="language-typescript">import type { thisarg } from &quot;@tsonic/core/lang.js&quot;;
-import { int } from &quot;@tsonic/core/types.js&quot;;
+<h2 id="out-ref-inref"><code>out</code>, <code>ref</code>, <code>inref</code></h2>
+<p>Call-site parameter modifier intrinsics:</p>
+<pre><code class="language-ts">import { defaultof, out, ref, inref } from &quot;@tsonic/core/lang.js&quot;;
+import type { int } from &quot;@tsonic/core/types.js&quot;;
 
-export function inc(x: thisarg&lt;int&gt;): int {
-  return x + 1;
+let value = defaultof&lt;int&gt;();
+dict.TryGetValue(&quot;key&quot;, out(value));
+mutate(ref(value));
+inspect(inref(value));
+</code></pre>
+<p>Use the function forms from <code>@tsonic/core/lang.js</code>. The type aliases in <code>@tsonic/core/types.js</code> remain available for declaration typing.</p>
+<h2 id="istypet"><code>istype&lt;T&gt;</code></h2>
+<p>Overload/nominal specialization predicate:</p>
+<pre><code class="language-ts">import { istype } from &quot;@tsonic/core/lang.js&quot;;
+
+if (istype&lt;string&gt;(value)) {
+  console.log(value.toUpperCase());
 }
 </code></pre>
-<p>This emits C# like:</p>
-<pre><code class="language-csharp">public static int Inc(this int x) =&gt; x + 1;
-</code></pre>
-<h2 id="ptr-unsafe-pointers">ptr (unsafe pointers)</h2>
-<p><code>ptr&lt;T&gt;</code> is a type marker for unsafe pointer types (<code>T*</code>). It is defined in <code>@tsonic/core/types.js</code>.</p>
-<pre><code class="language-typescript">import type { ptr } from &quot;@tsonic/core/types.js&quot;;
-import { int } from &quot;@tsonic/core/types.js&quot;;
-
-export function accept(p: ptr&lt;int&gt;): void {}
-export function accept2(p: ptr&lt;ptr&lt;int&gt;&gt;): void {} // int**
-</code></pre>
-<p>Pointers are intended for interop and low-level scenarios; prefer safe APIs (<code>Span&lt;T&gt;</code>, <code>IntPtr</code>, etc.) when possible.</p>
+<h2 id="thisargt"><code>thisarg&lt;T&gt;</code></h2>
+<p>Type marker for extension-method receiver positions in declaration surfaces.</p>
+<h2 id="attributes-dsl">Attributes DSL</h2>
+<p>Current attribute authoring lives in <code>@tsonic/core/lang.js</code> and supports explicit targets/builders rather than ad hoc decorator lowering.</p>
+<p>Use it when you need CLR attributes in authored TypeScript. See <code>dotnet-interop.md</code>.</p>
 </div>
 </article>
 </main>

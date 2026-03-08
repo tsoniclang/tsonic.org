@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -238,359 +141,35 @@
   </div>
 
   <div class="content"><h1 id="basic-examples">Basic Examples</h1>
-<p>Simple Tsonic programs to get started.</p>
-<h2 id="hello-world">Hello World</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+<h2 id="default-clr-surface">Default CLR Surface</h2>
+<pre><code class="language-ts">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 
 export function main(): void {
-  Console.WriteLine(&quot;Hello, Tsonic!&quot;);
+  Console.WriteLine(&quot;Hello from CLR&quot;);
 }
 </code></pre>
-<h2 id="variables">Variables</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+<h2 id="js-surface">JS Surface</h2>
+<pre><code class="language-ts">export function main(): void {
+  const name = &quot;  tsonic  &quot;.trim().toUpperCase();
+  console.log(name);
+}
+</code></pre>
+<h2 id="js-surface--node-package">JS Surface + Node Package</h2>
+<pre><code class="language-ts">import * as fs from &quot;node:fs&quot;;
+import * as path from &quot;node:path&quot;;
 
 export function main(): void {
-  const name = &quot;Alice&quot;;
-  const age = 30;
-  const active = true;
-
-  Console.WriteLine(`${name} is ${age} years old`);
-  Console.WriteLine(`Active: ${active}`);
+  const file = path.join(&quot;src&quot;, &quot;App.ts&quot;);
+  console.log(fs.existsSync(file));
 }
 </code></pre>
-<h2 id="functions">Functions</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function greet(name: string): string {
-  return `Hello, ${name}!`;
-}
-
-function add(a: number, b: number): number {
-  return a + b;
-}
+<h2 id="source-package-consumption">Source Package Consumption</h2>
+<pre><code class="language-ts">import { clamp } from &quot;@acme/math&quot;;
 
 export function main(): void {
-  Console.WriteLine(greet(&quot;Bob&quot;));
-  Console.WriteLine(add(5, 3));
+  console.log(clamp(10, 0, 5).toString());
 }
 </code></pre>
-<h2 id="classes">Classes</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-class Person {
-  private name: string;
-  private age: number;
-
-  constructor(name: string, age: number) {
-    this.name = name;
-    this.age = age;
-  }
-
-  greet(): string {
-    return `Hi, I'm ${this.name}`;
-  }
-}
-
-export function main(): void {
-  const person = new Person(&quot;Alice&quot;, 30);
-  Console.WriteLine(person.greet());
-}
-</code></pre>
-<h2 id="interfaces">Interfaces</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-interface User {
-  id: number;
-  name: string;
-  email?: string;
-}
-
-function displayUser(user: User): void {
-  Console.WriteLine(`User: ${user.name} (${user.id})`);
-  if (user.email) {
-    Console.WriteLine(`Email: ${user.email}`);
-  }
-}
-
-export function main(): void {
-  const user: User = {
-    id: 1,
-    name: &quot;Bob&quot;,
-    email: &quot;bob@example.com&quot;,
-  };
-  displayUser(user);
-}
-</code></pre>
-<h2 id="control-flow">Control Flow</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-export function main(): void {
-  // If/else
-  const x = 10;
-  if (x &gt; 5) {
-    Console.WriteLine(&quot;Greater than 5&quot;);
-  } else {
-    Console.WriteLine(&quot;5 or less&quot;);
-  }
-
-  // For loop
-  for (let i = 0; i &lt; 5; i++) {
-    Console.WriteLine(i);
-  }
-
-  // For-of loop
-  const items = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
-  for (const item of items) {
-    Console.WriteLine(item);
-  }
-
-  // While loop
-  let count = 0;
-  while (count &lt; 3) {
-    Console.WriteLine(count);
-    count++;
-  }
-
-  // Switch
-  const value = 2;
-  switch (value) {
-    case 1:
-      Console.WriteLine(&quot;one&quot;);
-      break;
-    case 2:
-      Console.WriteLine(&quot;two&quot;);
-      break;
-    default:
-      Console.WriteLine(&quot;other&quot;);
-  }
-}
-</code></pre>
-<h2 id="enums">Enums</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-enum Status {
-  Pending,
-  Active,
-  Completed,
-}
-
-enum Color {
-  Red = &quot;red&quot;,
-  Green = &quot;green&quot;,
-  Blue = &quot;blue&quot;,
-}
-
-export function main(): void {
-  const status = Status.Active;
-  Console.WriteLine(status); // 1
-
-  const color = Color.Green;
-  Console.WriteLine(color); // &quot;green&quot;
-}
-</code></pre>
-<h2 id="generics">Generics</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function identity&lt;T&gt;(value: T): T {
-  return value;
-}
-
-class Container&lt;T&gt; {
-  private value: T;
-
-  constructor(value: T) {
-    this.value = value;
-  }
-
-  get(): T {
-    return this.value;
-  }
-}
-
-export function main(): void {
-  const num = identity(42);
-  const str = identity(&quot;hello&quot;);
-
-  const box = new Container(&quot;contents&quot;);
-  Console.WriteLine(box.get());
-}
-</code></pre>
-<h2 id="tuples">Tuples</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-// Fixed-length typed arrays
-const point: [number, number] = [10, 20];
-const record: [string, number, boolean] = [&quot;Alice&quot;, 30, true];
-
-export function main(): void {
-  const [x, y] = point;
-  Console.WriteLine(`Point: ${x}, ${y}`);
-
-  const [name, age, active] = record;
-  Console.WriteLine(`${name} is ${age} years old`);
-}
-</code></pre>
-<h2 id="dictionary-and-hashset">Dictionary and HashSet</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-import { Dictionary, HashSet } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
-
-export function main(): void {
-  // Dictionary&lt;TKey, TValue&gt; - key-value pairs
-  const scores = new Dictionary&lt;string, number&gt;();
-  scores.Add(&quot;Alice&quot;, 100);
-  scores.Add(&quot;Bob&quot;, 85);
-  Console.WriteLine(scores.ContainsKey(&quot;Alice&quot;)); // true
-  Console.WriteLine(scores.Count); // 2
-
-  // HashSet&lt;T&gt; - unique values
-  const tags = new HashSet&lt;string&gt;();
-  tags.Add(&quot;typescript&quot;);
-  tags.Add(&quot;native&quot;);
-  tags.Add(&quot;typescript&quot;); // Ignored (duplicate)
-  Console.WriteLine(tags.Count); // 2
-}
-</code></pre>
-<h2 id="anonymous-objects">Anonymous Objects</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-// Simple objects auto-synthesize types
-const point = { x: 10, y: 20 };
-const config = { name: &quot;app&quot;, debug: true };
-
-// Arrow function properties work
-const handler = {
-  id: 1,
-  process: (x: number): number =&gt; x * 2,
-};
-
-export function main(): void {
-  Console.WriteLine(point.x);
-  Console.WriteLine(handler.process(5)); // 10
-}
-</code></pre>
-<h2 id="type-guards">Type Guards</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-interface Dog {
-  bark(): void;
-}
-
-interface Cat {
-  meow(): void;
-}
-
-function isDog(pet: Dog | Cat): pet is Dog {
-  return &quot;bark&quot; in pet;
-}
-
-export function main(): void {
-  const pet: Dog | Cat = { bark: (): void =&gt; Console.WriteLine(&quot;Woof!&quot;) };
-
-  if (isDog(pet)) {
-    pet.bark(); // TypeScript knows pet is Dog here
-  }
-}
-</code></pre>
-<h2 id="asyncawait">Async/Await</h2>
-<pre><code class="language-typescript">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-import { Task } from &quot;@tsonic/dotnet/System.Threading.Tasks.js&quot;;
-
-async function delay(ms: number): Promise&lt;void&gt; {
-  await Task.Delay(ms);
-}
-
-async function fetchData(): Promise&lt;string&gt; {
-  await delay(100);
-  return &quot;data&quot;;
-}
-
-export async function main(): Promise&lt;void&gt; {
-  const data = await fetchData();
-  Console.WriteLine(data);
-}
-</code></pre>
-<h2 id="error-handling">Error Handling</h2>
-<pre><code class="language-typescript">import { Console, Exception } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function riskyOperation(): void {
-  throw new Exception(&quot;Something went wrong&quot;);
-}
-
-export function main(): void {
-  try {
-    riskyOperation();
-  } catch (error) {
-    Console.WriteLine(&quot;Caught error&quot;);
-  } finally {
-    Console.WriteLine(&quot;Cleanup&quot;);
-  }
-}
-</code></pre>
-<h2 id="integer-types">Integer Types</h2>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
-import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function sumRange(start: int, end: int): int {
-  let total: int = 0;
-  for (let i: int = start; i &lt;= end; i = i + 1) {
-    total = total + i;
-  }
-  return total;
-}
-
-export function main(): void {
-  const a: int = 10;
-  const b: int = 20;
-  const sum: int = a + b; // Integer arithmetic
-
-  Console.WriteLine(`Sum: ${sum}`);
-  Console.WriteLine(`Range sum 1-10: ${sumRange(1, 10)}`);
-
-  // Integer division truncates
-  const x: int = 10;
-  const y: int = 3;
-  Console.WriteLine(`10 / 3 = ${x / y}`); // 3 (not 3.333...)
-}
-</code></pre>
-<blockquote>
-<p><strong>See also:</strong> <a href="/tsonic/numeric-types/">Numeric Types Guide</a> for complete coverage.</p>
-</blockquote>
-<h2 id="callbacks">Callbacks</h2>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
-import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-// Action&lt;T&gt; - no return value
-function forEach(items: int[], action: (item: int) =&gt; void): void {
-  for (const item of items) {
-    action(item);
-  }
-}
-
-// Func&lt;T, TResult&gt; - with return value
-function map(items: int[], transform: (item: int) =&gt; int): int[] {
-  const result: int[] = [];
-  for (const item of items) {
-    result.push(transform(item));
-  }
-  return result;
-}
-
-export function main(): void {
-  const nums: int[] = [1, 2, 3];
-
-  // Inline callback
-  forEach(nums, (n: int) =&gt; {
-    Console.WriteLine(`Item: ${n}`);
-  });
-
-  // Transform callback
-  const doubled = map(nums, (n: int) =&gt; n * 2);
-  Console.WriteLine(`Doubled: ${doubled}`);
-}
-</code></pre>
-<blockquote>
-<p><strong>See also:</strong> <a href="/tsonic/callbacks/">Callbacks Guide</a> for Action/Func patterns.</p>
-</blockquote>
 </div>
 </article>
 </main>

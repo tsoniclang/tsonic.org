@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -234,552 +137,99 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/diagnostics.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="diagnostic-error-codes">Diagnostic Error Codes</h1>
-<p>Tsonic uses diagnostic codes in the format <code>TSNxxxx</code> to identify specific errors.</p>
-<h2 id="error-code-ranges">Error Code Ranges</h2>
-<table>
-<thead>
-<tr>
-<th>Range</th>
-<th>Category</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TSN1xxx</td>
-<td>Module resolution and imports</td>
-</tr>
-<tr>
-<td>TSN2xxx</td>
-<td>Type system errors</td>
-</tr>
-<tr>
-<td>TSN3xxx</td>
-<td>C# identifier and keyword errors</td>
-</tr>
-<tr>
-<td>TSN4xxx</td>
-<td>.NET interop errors</td>
-</tr>
-<tr>
-<td>TSN5xxx</td>
-<td>NativeAOT and runtime errors</td>
-</tr>
-<tr>
-<td>TSN6xxx</td>
-<td>Internal compiler errors</td>
-</tr>
-<tr>
-<td>TSN7xxx</td>
-<td>Language semantics and validation</td>
-</tr>
-<tr>
-<td>TSN9xxx</td>
-<td>Metadata and bindings loading</td>
-</tr>
-</tbody>
-</table>
-<h2 id="tsn1xxx-module-resolution">TSN1xxx: Module Resolution</h2>
-<h3 id="tsn1001-missing-ts-extension">TSN1001: Missing .ts Extension</h3>
-<p>Local imports must use the <code>.ts</code> extension.</p>
-<pre><code class="language-typescript">// Wrong
-import { User } from &quot;./models/User&quot;;
-
-// Correct
-import { User } from &quot;./models/User.js&quot;;
-</code></pre>
-<h3 id="tsn1002-circular-dependency">TSN1002: Circular Dependency</h3>
-<p>Modules have a circular import dependency.</p>
-<pre><code class="language-typescript">// A.ts imports B.ts
-// B.ts imports A.ts  // Circular
-</code></pre>
-<p><strong>Fix:</strong> Extract shared code to a third module.</p>
-<h3 id="tsn1003-case-mismatch">TSN1003: Case Mismatch</h3>
-<p>Import path case doesn't match file on disk.</p>
-<pre><code class="language-typescript">// File: ./models/User.ts
-import { User } from &quot;./models/user.js&quot;; // Wrong case
-</code></pre>
-<h3 id="tsn1004-module-not-found">TSN1004: Module Not Found</h3>
-<p>Referenced module doesn't exist.</p>
-<h3 id="tsn1005-conflicting-exports">TSN1005: Conflicting Exports</h3>
-<p>Multiple modules export the same name creating ambiguity.</p>
-<h3 id="tsn1006-invalid-namespace">TSN1006: Invalid Namespace</h3>
-<p>The import specifier doesn't form a valid namespace.</p>
-<h2 id="tsn2xxx-type-system">TSN2xxx: Type System</h2>
-<h3 id="tsn2001-unsupported-typescript-feature">TSN2001: Unsupported TypeScript Feature</h3>
-<p>Feature not supported in Tsonic.</p>
-<pre><code class="language-typescript">// Examples of unsupported features:
-type Readonly&lt;T&gt; = { readonly [K in keyof T]: T[K] }; // Mapped types
-type Result&lt;T&gt; = T extends string ? string : number; // Conditional types
-</code></pre>
-<h3 id="tsn2002-invalid-type-mapping">TSN2002: Invalid Type Mapping</h3>
-<p>Type cannot be mapped to C#.</p>
-<h3 id="tsn2003-name-conflict">TSN2003: Name Conflict</h3>
-<p>File name conflicts with an exported member name.</p>
-<pre><code class="language-typescript">// File: User.ts
-export class User {} // Conflicts with file name
-</code></pre>
-<p><strong>Fix:</strong> Rename either the file or the export.</p>
-<h2 id="tsn3xxx-c-identifiers">TSN3xxx: C# Identifiers</h2>
-<h3 id="tsn3001-c-reserved-keyword">TSN3001: C# Reserved Keyword</h3>
-<p>Identifier uses a C# reserved keyword.</p>
-<pre><code class="language-typescript">// &quot;class&quot;, &quot;namespace&quot;, &quot;event&quot;, etc. are reserved in C#
-const event = &quot;click&quot;; // Error
-</code></pre>
-<h3 id="tsn3002-invalid-c-identifier">TSN3002: Invalid C# Identifier</h3>
-<p>Identifier cannot be used in C#.</p>
-<h3 id="tsn3011-promise-chaining-not-supported">TSN3011: Promise Chaining Not Supported</h3>
-<p><code>.then()</code>, <code>.catch()</code>, <code>.finally()</code> are not supported.</p>
-<pre><code class="language-typescript">// Wrong
-promise.then((result) =&gt; doSomething(result));
-
-// Correct - use async/await
-const result = await promise;
-doSomething(result);
-</code></pre>
-<h2 id="tsn4xxx-net-interop">TSN4xxx: .NET Interop</h2>
-<h3 id="tsn4001-net-interop-error">TSN4001: .NET Interop Error</h3>
-<p>Error accessing .NET types or members.</p>
-<h3 id="tsn4002-missing-net-type-declaration">TSN4002: Missing .NET Type Declaration</h3>
-<p>.NET type is used but not declared in typings.</p>
-<h2 id="tsn5xxx-nativeaotruntime">TSN5xxx: NativeAOT/Runtime</h2>
-<h3 id="tsn5001-nativeaot-limitation">TSN5001: NativeAOT Limitation</h3>
-<p>Code uses feature incompatible with NativeAOT.</p>
-<h3 id="tsn5002-runtime-implementation-missing">TSN5002: Runtime Implementation Missing</h3>
-<p>Required runtime feature not available.</p>
-<h2 id="tsn6xxx-internal-compiler">TSN6xxx: Internal Compiler</h2>
-<h3 id="tsn6001-internal-compiler-error">TSN6001: Internal Compiler Error</h3>
-<p>Unexpected error in compilation. Please report this as a bug.</p>
-<h2 id="tsn7xxx-language-semantics">TSN7xxx: Language Semantics</h2>
-<h3 id="tsn7101-recursive-mapped-types">TSN7101: Recursive Mapped Types</h3>
-<p>Recursive mapped types are not supported.</p>
-<h3 id="tsn7102-conditional-types-with-infer">TSN7102: Conditional Types with Infer</h3>
-<p>Conditional types using <code>infer</code> are not supported.</p>
-<h3 id="tsn7103-this-typing">TSN7103: <code>this</code> Typing</h3>
-<p><code>this</code> type expressions are not supported.</p>
-<h3 id="tsn7104-generic-constructor-constraints">TSN7104: Generic Constructor Constraints</h3>
-<p>Generic constructor constraints with rest parameters are not supported.</p>
-<h3 id="tsn7105-type-specialization">TSN7105: Type Specialization</h3>
-<p>Cannot determine required type specializations for generics.</p>
-<h3 id="tsn7201-recursive-structural-alias">TSN7201: Recursive Structural Alias</h3>
-<p>Recursive structural type aliases are not supported.</p>
-<h3 id="tsn7202-conditional-alias-resolution">TSN7202: Conditional Alias Resolution</h3>
-<p>Conditional type alias cannot be resolved statically.</p>
-<h3 id="tsn7203-symbol-keys">TSN7203: Symbol Keys</h3>
-<p>Symbol keys in objects are not supported.</p>
-<h3 id="tsn7204-variadic-generic-interface">TSN7204: Variadic Generic Interface</h3>
-<p>Variadic generic interfaces are not supported.</p>
-<h3 id="tsn7301-implements-nominalized-interface">TSN7301: Implements Nominalized Interface</h3>
-<p>Classes cannot implement TypeScript interfaces directly.</p>
-<pre><code class="language-typescript">interface Printable {
-  print(): void;
-}
-
-class Document implements Printable {
-  // Error
-  print(): void {}
-}
-</code></pre>
-<p>In Tsonic, TypeScript interfaces become C# classes. Use <code>extends</code> instead:</p>
-<pre><code class="language-typescript">class Document extends Printable {
-  // Correct
-  print(): void {}
-}
-</code></pre>
-<p>Or use composition/duck typing.</p>
-<h3 id="tsn7401-any-type-not-supported">TSN7401: <code>any</code> Type Not Supported</h3>
-<p>The <code>any</code> type cannot be used. Provide explicit types.</p>
-<pre><code class="language-typescript">// Wrong
-function process(data: any) {}
-
-// Correct
-function process(data: unknown) {}
-function process(data: string) {}
-</code></pre>
-<h3 id="tsn7403-object-literal-requires-type">TSN7403: Object Literal Requires Type</h3>
-<p>Object literals need a contextual nominal type, OR must be eligible for auto-synthesis.</p>
-<p><strong>Auto-synthesized (no error):</strong></p>
-<pre><code class="language-typescript">const point = { x: 1, y: 2 }; // OK - synthesizes __Anon_file_1_1
-const handler = { process: (x: number) =&gt; x * 2 }; // OK - arrow functions allowed
-const config = { name: &quot;test&quot;, count: 42 }; // OK - property assignments
-</code></pre>
-<p><strong>Requires explicit type (error):</strong></p>
-<pre><code class="language-typescript">const obj = {
-  foo() {
-    return 1;
-  },
-}; // Error - method shorthand not allowed
-const obj = {
-  get x() {
-    return 1;
-  },
-}; // Error - getters not allowed
-</code></pre>
-<p>Use arrow function syntax for function properties, or provide explicit type annotation:</p>
-<pre><code class="language-typescript">interface Point {
-  x: number;
-  y: number;
-}
-const obj: Point = { x: 1, y: 2 }; // Explicit type annotation
-</code></pre>
-<h3 id="tsn7405-untyped-lambda-parameter">TSN7405: Untyped Lambda Parameter</h3>
-<p>Lambda parameters require explicit type annotations when contextual type cannot be inferred.</p>
-<p><strong>Contextual inference works (no error):</strong></p>
-<pre><code class="language-typescript">const numbers = [1, 2, 3];
-const doubled = numbers.map((x) =&gt; x * 2); // OK - x inferred as number
-const filtered = items.filter((item) =&gt; item.active); // OK - item inferred
-
-const callback: (n: number) =&gt; number = (x) =&gt; x * 2; // OK - typed variable
-</code></pre>
-<p><strong>Requires explicit types (error):</strong></p>
-<pre><code class="language-typescript">const fn = (x) =&gt; x * 2; // Error - no contextual type available
-
-// Fix: Add explicit type annotation
-const fn = (x: number): number =&gt; x * 2;
-</code></pre>
-<h3 id="tsn7413-dictionary-key-type">TSN7413: Dictionary Key Type</h3>
-<p>Dictionary keys must be <code>string</code> or <code>number</code> type.</p>
-<pre><code class="language-typescript">// OK
-const byName: Record&lt;string, User&gt; = {};
-const byId: Record&lt;number, User&gt; = {};
-
-interface StringDict {
-  [key: string]: number;
-}
-
-interface NumberDict {
-  [key: number]: string;
-}
-
-// Error
-const bySymbol: Record&lt;symbol, User&gt; = {}; // Symbols not supported
-</code></pre>
-<h3 id="tsn7406-mapped-types-not-supported">TSN7406: Mapped Types Not Supported</h3>
-<p>Mapped types (utility types that transform properties) are not supported.</p>
-<pre><code class="language-typescript">// Error
-type ReadonlyUser = Readonly&lt;User&gt;;
-type PartialConfig = Partial&lt;Config&gt;;
-type RequiredFields = Required&lt;OptionalFields&gt;;
-
-// Fix: Create explicit interface with desired properties
-interface ReadonlyUser {
-  readonly name: string;
-  readonly email: string;
-}
-</code></pre>
-<h3 id="tsn7407-conditional-types-not-supported">TSN7407: Conditional Types Not Supported</h3>
-<p>Conditional types are not supported.</p>
-<pre><code class="language-typescript">// Error
-type Result&lt;T&gt; = T extends string ? StringResult : OtherResult;
-type NonNullable&lt;T&gt; = T extends null | undefined ? never : T;
-
-// Fix: Use explicit type unions or separate types
-type StringResult = { kind: &quot;string&quot;; value: string };
-type OtherResult = { kind: &quot;other&quot;; value: unknown };
-</code></pre>
-<h3 id="tsn7410-intersection-types-not-supported">TSN7410: Intersection Types Not Supported</h3>
-<p>Intersection types (<code>A &amp; B</code>) are not supported.</p>
-<pre><code class="language-typescript">// Error
-type Combined = TypeA &amp; TypeB;
-type WithTimestamp = User &amp; { timestamp: number };
-
-// Fix: Create explicit interface combining both types
-interface Combined {
-  // Include all members from TypeA
-  // Include all members from TypeB
-}
-
-interface UserWithTimestamp {
-  name: string;
-  email: string;
-  timestamp: number;
-}
-</code></pre>
-<h3 id="tsn7408-mixed-variadic-tuples-not-supported">TSN7408: Mixed Variadic Tuples Not Supported</h3>
-<p>Variadic tuple types with mixed elements are not supported.</p>
-<pre><code class="language-typescript">// Error
-type Mixed = [string, ...number[]];
-
-// Fix: Use a regular array or fixed tuple
-type Fixed = [string, number, number];
-type NumberArray = number[];
-</code></pre>
-<h3 id="tsn7409-infer-keyword-not-supported">TSN7409: 'infer' Keyword Not Supported</h3>
-<p>The <code>infer</code> keyword in conditional types is not supported.</p>
-<pre><code class="language-typescript">// Error
-type UnwrapPromise&lt;T&gt; = T extends Promise&lt;infer U&gt; ? U : T;
-
-// Fix: Use explicit type parameters or overloads
-</code></pre>
-<h3 id="tsn7414-type-cannot-be-represented">TSN7414: Type Cannot Be Represented</h3>
-<p>The type cannot be represented in the compiler's type subset.</p>
-<pre><code class="language-typescript">// Error: Complex types that can't map to C#
-type Complex = { [K in keyof T]: T[K] };
-
-// Fix: Use simpler, explicit type definitions
-</code></pre>
-<h3 id="tsn7415-nullable-union-with-unconstrained-generic">TSN7415: Nullable Union with Unconstrained Generic</h3>
-<p>Nullable unions with unconstrained generic type parameters cannot be represented in C#.</p>
-<pre><code class="language-typescript">// Error
-function getValue&lt;T&gt;(value: T | null): T {
-  return value ?? getDefault();
-}
-
-// The problem: In C#, T? for an unconstrained type parameter T
-// does not provide nullability for value types.
-// If T is int, then T? is still int (not Nullable&lt;int&gt;)
-</code></pre>
-<p><strong>Why this happens:</strong></p>
-<p>In C#, nullable generics work differently based on constraints:</p>
+  <div class="content"><h1 id="diagnostics-guide">Diagnostics Guide</h1>
+<p>This page documents the current diagnostic categories and the most important active codes.</p>
+<p>It is intentionally curated rather than a generated dump of every internal code path.</p>
+<h2 id="ranges">Ranges</h2>
 <ul>
-<li><code>T? where T : struct</code> → <code>Nullable&lt;T&gt;</code> (works for value types)</li>
-<li><code>T? where T : class</code> → nullable reference (works for reference types)</li>
-<li><code>T?</code> with no constraint → just <code>T</code> for value types (no nullability!)</li>
+<li><code>TSN1xxx</code> — module/import/resolution/config</li>
+<li><code>TSN2xxx</code> — unsupported syntax or unrepresentable type constructs</li>
+<li><code>TSN3xxx</code> — naming/emission conflicts</li>
+<li><code>TSN5xxx</code> — numeric proof and backend/runtime generation errors</li>
+<li><code>TSN6xxx</code> — yield lowering</li>
+<li><code>TSN7xxx</code> — static/AOT safety and deterministic typing</li>
+<li><code>TSN8Axx</code> — Aikya/source-package manifest/runtime mapping</li>
+<li><code>TSN9xxx</code> — type universe and missing-core failures</li>
 </ul>
-<p><strong>Fix options:</strong></p>
-<ol>
-<li><strong>Use <code>object | null</code></strong> to box the value:</li>
-</ol>
-<pre><code class="language-typescript">function getValue&lt;T&gt;(value: object | null): T {
-  return (value ?? getDefault()) as T;
-}
-</code></pre>
-<ol start="2">
-<li><strong>Add a constraint</strong> if T is always a reference type:</li>
-</ol>
-<pre><code class="language-typescript">function getValue&lt;T extends object&gt;(value: T | null): T {
-  return value ?? getDefault();
-}
-</code></pre>
-<ol start="3">
-<li><strong>Use <code>struct</code> constraint</strong> if T is always a value type:</li>
-</ol>
-<pre><code class="language-typescript">function getValue&lt;T extends struct&gt;(value: T | null): T {
-  return value ?? getDefault();
-}
-</code></pre>
-<blockquote>
-<p><strong>See also:</strong> <a href="/tsonic/troubleshooting/#nullable-generics">Troubleshooting Guide</a> for more patterns.</p>
-</blockquote>
-<h3 id="tsn7417-empty-array-literal-requires-type">TSN7417: Empty Array Literal Requires Type</h3>
-<p>Empty array literals must have a type annotation. Tsonic cannot infer the element type of an empty array.</p>
-<pre><code class="language-typescript">// Error
-const arr = []; // What type are the elements?
-
-// Correct
-const arr: number[] = [];
-const strings: string[] = [];
-const items: Array&lt;User&gt; = [];
-</code></pre>
-<p><strong>Why this is required:</strong></p>
-<p>In TypeScript, <code>[]</code> is inferred as <code>any[]</code> or contextually typed. In Tsonic, we compile to C# where arrays have fixed element types at compile time. Without a type annotation, we cannot determine what C# type to generate.</p>
-<p><strong>Patterns that work without annotation:</strong></p>
-<pre><code class="language-typescript">// Non-empty arrays infer the type from elements
-const numbers = [1, 2, 3]; // Tsonic infers: int[]
-const mixed = [1, 2.5, 3]; // Inferred as double[]
-const largeNumbers = [1, 2147483648]; // Inferred as long[] (element exceeds int range)
-
-// Function return types provide context
-function getNumbers(): number[] {
-  return []; // OK - contextual type from return type
-}
-</code></pre>
-<h3 id="tsn7418-invalid-char-value">TSN7418: Invalid char Value</h3>
-<p><code>char</code> represents the CLR type <code>System.Char</code> (imported from <code>@tsonic/core/types.js</code>).</p>
-<p>TypeScript models <code>char</code> as <code>string</code> for compatibility, so Tsonic validates <code>char</code> <strong>during compilation</strong>:</p>
+<h2 id="common-active-diagnostics">Common Active Diagnostics</h2>
+<h3 id="tsn1004"><code>TSN1004</code></h3>
+<p>General module/package/config resolution failure.</p>
+<p>Examples:</p>
 <ul>
-<li>A <code>char</code> value must be a <strong>single-character string literal</strong> (including escapes like <code>&quot;\\n&quot;</code>), or</li>
-<li>A value that is already typed as <code>char</code> (for example, from APIs that return <code>char</code>).</li>
+<li>invalid source package manifest</li>
+<li>unresolved export target in <code>package-manifest.json</code></li>
+<li>malformed installed package metadata</li>
 </ul>
-<pre><code class="language-typescript">import { char } from &quot;@tsonic/core/types.js&quot;;
-
-function takesChar(c: char): void {}
-
-takesChar(&quot;A&quot;); // OK
-// takesChar(&quot;AB&quot;); // TSN7418 (multi-character literal)
-
-const s = &quot;hello&quot;;
-// takesChar(s);    // TSN7418 (not a literal / not char-typed)
-takesChar(s[0]);    // OK (context expects char)
-</code></pre>
-<p><strong>Fix:</strong> Use a single-character literal in a <code>char</code> position, or obtain a <code>char</code> from an API returning <code>char</code> (for example <code>System.Char.parse(&quot;Q&quot;)</code>).</p>
-<h3 id="tsn7421-anonymous-object-type-not-lowered">TSN7421: Anonymous Object Type Not Lowered</h3>
-<p>Internal compiler error indicating an anonymous object type was not properly lowered to a synthesized class. This is a compiler bug - please report it.</p>
-<h3 id="tsn7422-object-rest-requires-finite-object-shape">TSN7422: Object Rest Requires Finite Object Shape</h3>
-<p>Object rest patterns (<code>...rest</code>) require a known, finite set of properties to determine what goes in the rest object.</p>
-<pre><code class="language-typescript">// Error: Cannot determine rest shape
-function process(obj: Record&lt;string, unknown&gt;): void {
-  const { id, ...rest } = obj; // Error - infinite keys possible
-}
-
-// OK: Finite shape known
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-function process(user: User): void {
-  const { id, ...rest } = user; // OK - rest is { name, email }
-}
-</code></pre>
-<h3 id="tsn7423-unsupported-destructuring-pattern">TSN7423: Unsupported Destructuring Pattern</h3>
-<p>The destructuring pattern is not supported. This may include:</p>
+<h3 id="tsn2001"><code>TSN2001</code></h3>
+<p>Unsupported TypeScript feature in the current strict-AOT subset.</p>
+<p>Current common cases:</p>
 <ul>
-<li>Computed property keys in destructuring</li>
-<li>Patterns that cannot be lowered to C#</li>
+<li>unsupported <code>import.meta</code> field</li>
+<li>unsupported dynamic <code>import()</code> form</li>
+<li>other syntax that does not have a deterministic lowering</li>
 </ul>
-<h3 id="tsn7430-arrow-function-requires-explicit-types-escape-hatch">TSN7430: Arrow Function Requires Explicit Types (Escape Hatch)</h3>
-<p>Arrow functions can only infer parameter and return types from context when they meet the &quot;simple arrow&quot; criteria:</p>
-<ol>
-<li>Not async</li>
-<li>Expression body (not block body)</li>
-<li>All parameters are simple identifiers (no destructuring)</li>
-<li>No default parameter values</li>
-<li>No rest parameters</li>
-</ol>
-<p><strong>Contextual inference works (no error):</strong></p>
-<pre><code class="language-typescript">const numbers = [1, 2, 3];
-const doubled = numbers.map((x) =&gt; x * 2); // OK - simple arrow with context
-const filtered = items.filter((item) =&gt; item.active); // OK
-
-const callback: (n: number) =&gt; number = (x) =&gt; x * 2; // OK - typed variable
-</code></pre>
-<p><strong>Requires explicit types (error):</strong></p>
-<pre><code class="language-typescript">// No contextual type
-const fn = (x) =&gt; x * 2; // Error - no context for inference
-
-// Block body (not expression body)
-items.map((x) =&gt; {
-  const y = x + 1;
-  return y;
-}); // Error - block body requires explicit return type
-
-// Async arrow
-items.map(async (x) =&gt; await fetch(x)); // Error - async requires explicit types
-
-// Destructuring pattern
-items.map(({ id, name }) =&gt; id + name); // Error - destructuring requires explicit types
-
-// Default parameter
-items.map((x = 0) =&gt; x * 2); // Error - defaults require explicit types
-
-// Rest parameter
-items.map((...args) =&gt; args.length); // Error - rest requires explicit types
-</code></pre>
-<p><strong>Fix: Add explicit type annotations:</strong></p>
-<pre><code class="language-typescript">// For block bodies, add return type
-items.map((x): number =&gt; {
-  const y = x + 1;
-  return y;
-});
-
-// For complex arrows, fully annotate
-const fn = (x: number): number =&gt; x * 2;
-</code></pre>
-<h3 id="tsn7431-cannot-infer-arrow-return-type">TSN7431: Cannot Infer Arrow Return Type</h3>
-<p>The arrow function's return type cannot be inferred safely. This occurs when the body expression produces an unsafe type (any, unknown, or anonymous structural type).</p>
-<pre><code class="language-typescript">// Error: Return type is 'any' or 'unknown'
-items.map((x) =&gt; someAnyFunction(x)); // Cannot infer return type
-
-// Error: Return type is anonymous object type
-items.map((x) =&gt; ({ id: x, name: &quot;test&quot; })); // Anonymous type needs nominal type
-</code></pre>
-<p><strong>Fix: Provide explicit return type annotation:</strong></p>
-<pre><code class="language-typescript">interface Result {
-  id: number;
-  name: string;
-}
-
-items.map((x): Result =&gt; ({ id: x, name: &quot;test&quot; }));
-</code></pre>
-<h2 id="tsn5xxx-numeric-proof-errors">TSN5xxx: Numeric Proof Errors</h2>
-<h3 id="tsn5101-tsn5110-numeric-type-errors">TSN5101-TSN5110: Numeric Type Errors</h3>
-<p>Errors related to numeric type narrowing and proof:</p>
-<table>
-<thead>
-<tr>
-<th>Code</th>
-<th>Error</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TSN5101</td>
-<td>Cannot prove numeric narrowing is safe</td>
-</tr>
-<tr>
-<td>TSN5102</td>
-<td>Numeric literal out of range</td>
-</tr>
-<tr>
-<td>TSN5103</td>
-<td>Binary operation produces wrong numeric type</td>
-</tr>
-<tr>
-<td>TSN5104</td>
-<td>Cannot narrow from source to target type</td>
-</tr>
-<tr>
-<td>TSN5105</td>
-<td>Unproven numeric type at parameter boundary</td>
-</tr>
-<tr>
-<td>TSN5106</td>
-<td>Unproven numeric type at return boundary</td>
-</tr>
-<tr>
-<td>TSN5107</td>
-<td>Array index must be Int32</td>
-</tr>
-<tr>
-<td>TSN5108</td>
-<td>Value exceeds JS safe integer range</td>
-</tr>
-<tr>
-<td>TSN5109</td>
-<td>Computed access kind not classified (ICE)</td>
-</tr>
-<tr>
-<td>TSN5110</td>
-<td>Integer literal cannot be implicitly converted</td>
-</tr>
-</tbody>
-</table>
-<h2 id="tsn6xxx-yield-lowering-errors">TSN6xxx: Yield Lowering Errors</h2>
-<h3 id="tsn6101-yield-expression-in-unsupported-position">TSN6101: Yield Expression in Unsupported Position</h3>
-<p>The yield expression is in a position that cannot be lowered to C# iterators.</p>
-<pre><code class="language-typescript">// Error: yield in expression position
-const x = (yield 1) + 2; // Not supported
-
-// OK: yield as statement
-yield 1;
-const x = yield; // Bidirectional yield
-</code></pre>
-<h2 id="tsn9xxx-type-universe-resolution">TSN9xxx: Type Universe Resolution</h2>
-<p>Tsonic resolves nominal types (including stdlib types like <code>System.String</code>) through loaded CLR bindings (<code>&lt;Namespace&gt;/bindings.json</code> in tsbindgen packages).</p>
-<h3 id="tsn9001-missing-stdlib-type-fatal">TSN9001: Missing Stdlib Type (fatal)</h3>
-<p>Emitted when a required stdlib type cannot be found in the loaded bindings. This is <strong>fatal</strong> because the compiler cannot safely proceed.</p>
-<p>Fixes:</p>
+<h3 id="tsn3001--tsn3002"><code>TSN3001</code> / <code>TSN3002</code></h3>
+<p>C# naming/identifier problems after lowering.</p>
+<h3 id="tsn5101tsn5110"><code>TSN5101</code>–<code>TSN5110</code></h3>
+<p>Numeric proof failures.</p>
+<p>Typical examples:</p>
 <ul>
-<li>Ensure <code>@tsonic/dotnet</code> + <code>@tsonic/globals</code> are installed</li>
-<li>Run <code>tsonic restore</code> to refresh bindings and NuGet closure</li>
+<li>narrowing <code>number</code> to <code>int</code> without proof</li>
+<li>branch results that do not prove an integer-space target</li>
+<li>value-space/range mismatches</li>
 </ul>
-<h3 id="tsn9002-unknown-type-error">TSN9002: Unknown Type (error)</h3>
-<p>Emitted when a nominal type name cannot be resolved from bindings. This is recoverable: Tsonic substitutes <code>unknown</code> so it can continue analysis and report additional issues.</p>
-<h2 id="getting-help">Getting Help</h2>
-<p>If you encounter an error:</p>
-<ol>
-<li>Check this guide for the specific error code</li>
-<li>Check the <a href="/tsonic/troubleshooting/">troubleshooting guide</a></li>
-<li>Search <a href="https://github.com/tsoniclang/tsonic/issues">GitHub issues</a></li>
-<li>Open a new issue with:
+<h3 id="tsn6101"><code>TSN6101</code></h3>
+<p><code>yield</code> appeared in a position the lowering pipeline cannot rewrite.</p>
+<p>Many direct and nested yield cases are now supported, but irreducible ones still fail with <code>TSN6101</code>.</p>
+<h3 id="tsn7203"><code>TSN7203</code></h3>
+<p>Dictionary/symbol-key lowering issue. Most useful symbol-key dictionary paths are now supported; remaining failures mean the key/value shape still is not representable.</p>
+<h3 id="tsn7401"><code>TSN7401</code></h3>
+<p>Explicit <code>any</code> is not supported.</p>
+<h3 id="tsn7403"><code>TSN7403</code></h3>
+<p>Object-literal case still requires a deterministic finite target shape or supported shorthand/runtime analysis.</p>
+<h3 id="tsn7414"><code>TSN7414</code></h3>
+<p>Type cannot be represented deterministically in the current lowering model.</p>
+<h3 id="tsn7418"><code>TSN7418</code></h3>
+<p>Invalid <code>char</code> value.</p>
+<h3 id="tsn7419"><code>TSN7419</code></h3>
+<p><code>never</code> used as a generic type argument in an unsupported deterministic context.</p>
+<h3 id="tsn7432"><code>TSN7432</code></h3>
+<p>Generic function value usage is outside the supported monomorphic/runtime-shape subset.</p>
+<p>Accepted examples do <strong>not</strong> produce this code:</p>
+<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
+const f: (x: number) =&gt; number = id;
+</code></pre>
+<p>Rejected examples do:</p>
+<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
+const copy = id;
+</code></pre>
+<h3 id="tsn8a01tsn8a05"><code>TSN8A01</code>–<code>TSN8A05</code></h3>
+<p>Aikya/source-package manifest errors:</p>
 <ul>
-<li>Error code and message</li>
-<li>Minimal reproduction case</li>
-<li>Tsonic version (<code>tsonic --version</code>)</li>
+<li>invalid schema</li>
+<li>unresolved runtime mapping</li>
+<li>conflicting runtime mapping</li>
+<li>missing bindings root</li>
+<li>missing runtime mapping entry</li>
 </ul>
-</li>
-</ol>
+<h3 id="tsn9001--tsn9002"><code>TSN9001</code> / <code>TSN9002</code></h3>
+<p>Core type universe failures:</p>
+<ul>
+<li>missing required stdlib/core type</li>
+<li>unknown type leaked into later compilation</li>
+</ul>
+<h2 id="retired--no-longer-accurate-old-expectations">Retired / No Longer Accurate Old Expectations</h2>
+<p>These old blanket statements are no longer true:</p>
+<ul>
+<li><code>Promise.then/catch/finally</code> unsupported</li>
+<li>all dynamic <code>import()</code> unsupported</li>
+<li>all <code>import.meta</code> unsupported</li>
+<li>mapped/conditional/intersection types blanket-rejected</li>
+<li>object-literal method shorthand blanket-rejected</li>
+</ul>
+<h2 id="reading-diagnostics-correctly">Reading Diagnostics Correctly</h2>
+<p>Tsonic errors are emitted at compile time for authored TypeScript semantics, not deferred to C# where proof is expected earlier.</p>
+<p>That is deliberate. The compiler should reject ambiguity before emission.</p>
 </div>
 </article>
 </main>

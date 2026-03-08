@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -232,92 +135,47 @@
   </div>
 
   <div class="content"><h1 id="tsonic-user-guide">Tsonic User Guide</h1>
-<p>Tsonic compiles TypeScript to native executables via C# and .NET NativeAOT.</p>
-<h2 id="table-of-contents">Table of Contents</h2>
-<h3 id="getting-started">Getting Started</h3>
-<ol>
-<li><a href="/tsonic/getting-started/">Getting Started</a> - Installation and first project</li>
-<li><a href="/tsonic/cli/">CLI Reference</a> - Commands and options</li>
-<li><a href="/tsonic/configuration/">Configuration</a> - Workspace + project config</li>
-</ol>
-<h3 id="language">Language</h3>
-<ol start="4">
-<li><a href="/tsonic/language/">Language Guide</a> - Supported features</li>
-<li><a href="/tsonic/type-system/">Type System</a> - Type mappings</li>
-<li><a href="/tsonic/numeric-types/">Numeric Types</a> - Integer types and narrowing</li>
-<li><a href="/tsonic/generators/">Generators</a> - Sync, async, and bidirectional generators</li>
-<li><a href="/tsonic/callbacks/">Callbacks</a> - Action and Func patterns</li>
-<li><a href="/tsonic/async-patterns/">Async Patterns</a> - Async/await and for-await</li>
-<li><a href="/tsonic/dotnet-interop/">.NET Interop</a> - Using .NET BCL</li>
-<li><a href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a> - Where bindings live; multi-project repos</li>
-<li><a href="/tsonic/lang-intrinsics/">Language Intrinsics</a> - stackalloc, trycast, thisarg, etc.</li>
-<li><a href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a> - Optional JS-style APIs via <code>@tsonic/js</code></li>
-</ol>
-<h3 id="build">Build</h3>
-<ol start="14">
-<li><a href="/tsonic/build-output/">Build Output</a> - Pipeline and output</li>
-<li><a href="/tsonic/diagnostics/">Diagnostics</a> - Error codes reference</li>
-</ol>
-<h3 id="reference">Reference</h3>
-<ol start="16">
-<li><a href="/tsonic/examples/">Examples</a> - Code examples</li>
-<li><a href="/tsonic/troubleshooting/">Troubleshooting</a> - Common issues</li>
-<li><a href="/tsonic/limitations/">Limitations</a> - What Tsonic can’t do (yet)</li>
-</ol>
-<h2 id="quick-links">Quick Links</h2>
+<p>This guide documents the current <code>main</code> behavior of Tsonic V1.</p>
+<h2 id="start-here">Start Here</h2>
 <ul>
-<li><a href="/tsonic/architecture/">Architecture Documentation</a> - For contributors and advanced users</li>
-<li><a href="https://github.com/tsoniclang/tsonic">GitHub Repository</a></li>
-<li><a href="https://www.npmjs.com/package/tsonic">npm Package</a></li>
+<li><code>getting-started.md</code> — install, init, build, run</li>
+<li><code>cli.md</code> — command reference</li>
+<li><code>configuration.md</code> — workspace and project config</li>
+<li><code>language.md</code> — supported TypeScript subset</li>
 </ul>
-<h2 id="overview">Overview</h2>
-<h3 id="what-is-tsonic">What is Tsonic?</h3>
-<p>Tsonic is a compiler that transforms TypeScript source code into native executables:</p>
-<pre><code>TypeScript → IR → C# → NativeAOT → Native Binary
-</code></pre>
-<h3 id="why-tsonic">Why Tsonic?</h3>
+<h2 id="core-topics">Core Topics</h2>
 <ul>
-<li><strong>Native Performance</strong>: Compile to fast, single-file executables</li>
-<li><strong>TypeScript Familiarity</strong>: Use the language you know</li>
-<li><strong>Full .NET Access</strong>: Call any .NET library</li>
-<li><strong>No Runtime Required</strong>: Self-contained binaries</li>
+<li><code>lang-intrinsics.md</code> — <code>stackalloc</code>, <code>sizeof</code>, <code>nameof</code>, <code>defaultof</code>, <code>trycast</code>, <code>asinterface</code>, modifiers, attributes</li>
+<li><code>numeric-types.md</code> — <code>number</code> vs <code>int</code> / <code>long</code> / <code>double</code> policy</li>
+<li><code>type-system.md</code> — deterministic typing and current generic rules</li>
+<li><code>bindings.md</code> — CLR packages, source packages, Aikya manifests</li>
+<li><code>dotnet-interop.md</code> — BCL and external CLR interop</li>
+<li><code>build-output.md</code> — generated layout and output types</li>
+<li><code>diagnostics.md</code> — diagnostic guide</li>
+<li><code>limitations.md</code> — explicit out-of-scope cases</li>
+<li><code>troubleshooting.md</code> — common failures and fixes</li>
 </ul>
-<h3 id="direct-net-access">Direct .NET Access</h3>
+<h2 id="runtime-oriented-topics">Runtime-Oriented Topics</h2>
 <ul>
-<li>C# semantics for all types</li>
-<li>Import from System.*, System.IO, System.Linq, etc.</li>
-<li>Full BCL access</li>
-<li>Native arrays (<code>T[]</code>) and .NET collections</li>
+<li><code>async-patterns.md</code></li>
+<li><code>callbacks.md</code></li>
+<li><code>generators.md</code></li>
 </ul>
-<h2 id="prerequisites">Prerequisites</h2>
+<h2 id="architecture">Architecture</h2>
 <ul>
-<li><strong>Node.js 22+</strong>: For the CLI and type packages</li>
-<li><strong>.NET 10 SDK</strong>: For compilation</li>
-<li><strong>npm</strong>: For package management</li>
+<li><code>architecture/README.md</code></li>
 </ul>
-<p>Verify installation:</p>
-<pre><code class="language-bash">node --version   # v22.0.0 or higher
-dotnet --version # 10.0.x
-</code></pre>
-<h2 id="installation">Installation</h2>
-<pre><code class="language-bash">npm install -g tsonic
-tsonic --version
-</code></pre>
-<h2 id="your-first-program">Your First Program</h2>
-<pre><code class="language-bash"># Create project
-mkdir hello &amp;&amp; cd hello
-tsonic init
-
-# Build
-npm run build
-
-# Run
-./packages/hello/out/hello
-</code></pre>
-<p>Output:</p>
-<pre><code>Hello from Tsonic!
-Doubled: 2, 4, 6, 8, 10
-</code></pre>
+<h2 id="examples">Examples</h2>
+<ul>
+<li><code>examples/README.md</code></li>
+</ul>
+<h2 id="surfaces-in-one-sentence">Surfaces in One Sentence</h2>
+<ul>
+<li>compiler core = always-on noLib baseline</li>
+<li><code>clr</code> = default ambient CLR-first surface</li>
+<li><code>@tsonic/js</code> = JS ambient surface</li>
+<li><code>@tsonic/nodejs</code> = normal package for <code>node:*</code> modules</li>
+</ul>
 </div>
 
   

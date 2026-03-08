@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link active" href="/js/">js compat</a>
+          <a class="mount-link active" href="/js/">js</a>
         
       
     </nav>
@@ -196,7 +196,7 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-        <a href="/js/">js compat</a>
+        <a href="/js/">js</a>
         <span class="sep">/</span>
       
       <span>Imports</span>
@@ -205,12 +205,18 @@
   </div>
 
   <div class="content"><h1 id="importing-apis">Importing APIs</h1>
-<p>Import JS runtime APIs from <code>@tsonic/js/index.js</code>:</p>
+<p>In <code>--surface js</code>, you can use JS builtins directly:</p>
+<pre><code class="language-ts">export function main(): void {
+  console.log(JSON.stringify({ ok: true }));
+}
+</code></pre>
+<p>Direct imports are still supported when you want explicit symbols:</p>
 <pre><code class="language-ts">import { console, JSON, Math, Timers } from &quot;@tsonic/js/index.js&quot;;
 </code></pre>
 <p>This is a <strong>Tsonic-specific</strong> bindings package; it is not the Node/Browser global environment.</p>
 <p>If you also want Node-style libraries like <code>fs</code> and <code>path</code>, use <code>@tsonic/nodejs</code> separately:</p>
-<pre><code class="language-ts">import { fs, path } from &quot;@tsonic/nodejs/index.js&quot;;
+<pre><code class="language-ts">import { readFileSync } from &quot;node:fs&quot;;
+import { join } from &quot;node:path&quot;;
 </code></pre>
 </div>
 </article>

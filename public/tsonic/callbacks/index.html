@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -235,361 +138,38 @@
   </div>
 
   <div class="content"><h1 id="callbacks">Callbacks</h1>
-<p>Tsonic maps TypeScript function types to .NET delegate types. This guide covers how to use callbacks with <code>Action&lt;T&gt;</code> and <code>Func&lt;T, TResult&gt;</code>.</p>
-<h2 id="overview">Overview</h2>
-<p>TypeScript arrow function types map to .NET delegates:</p>
-<table>
-<thead>
-<tr>
-<th>TypeScript</th>
-<th>C# Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>(x: T) =&gt; void</code></td>
-<td><code>Action&lt;T&gt;</code></td>
-<td>Callback with no return</td>
-</tr>
-<tr>
-<td><code>(x: T) =&gt; R</code></td>
-<td><code>Func&lt;T, R&gt;</code></td>
-<td>Callback with return value</td>
-</tr>
-<tr>
-<td><code>(x: T) =&gt; boolean</code></td>
-<td><code>Func&lt;T, bool&gt;</code></td>
-<td>Predicate callback</td>
-</tr>
-</tbody>
-</table>
-<h2 id="action-callbacks">Action Callbacks</h2>
-<p>Use <code>Action&lt;T&gt;</code> for callbacks that don't return a value.</p>
-<h3 id="single-parameter">Single Parameter</h3>
-<pre><code class="language-typescript">	import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-	import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
-import { int } from &quot;@tsonic/core/types.js&quot;;
-
-function forEach(items: List&lt;int&gt;, callback: (item: int) =&gt; void): void {
-  const len = items.Count;
-  for (let i: int = 0; i &lt; len; i++) {
-    callback(items[i]);
-  }
+<p>Tsonic lowers callbacks to concrete CLR delegate shapes.</p>
+<h2 id="plain-callbacks">Plain Callbacks</h2>
+<pre><code class="language-ts">const xs = [1, 2, 3];
+const ys = xs.map((x) =&gt; x + 1);
+</code></pre>
+<h2 id="contextual-typing">Contextual Typing</h2>
+<p>Supported:</p>
+<pre><code class="language-ts">const f: ({ x }: { x: number }) =&gt; number = ({ x }) =&gt; x;
+const g: (x?: number) =&gt; number = (x = 0) =&gt; x + 1;
+const h: (...xs: number[]) =&gt; number = (...xs) =&gt; xs.length;
+</code></pre>
+<p>These are strict-valid TS cases and are part of current V1 support.</p>
+<h2 id="promise-callbacks">Promise Callbacks</h2>
+<pre><code class="language-ts">async function load(): Promise&lt;number&gt; {
+  return 1;
 }
 
-export function main(): void {
-  const numbers = new List&lt;int&gt;();
-  numbers.Add(1);
-  numbers.Add(2);
-  numbers.Add(3);
-
-  forEach(numbers, (n: int) =&gt; {
-    Console.WriteLine(`Item: ${n}`);
-  });
-}
+const next = load().then((x) =&gt; x + 1);
 </code></pre>
-<p>Generated C#:</p>
-<pre><code class="language-csharp">public static void forEach(List&lt;int&gt; items, Action&lt;int&gt; callback)
-{
-    var len = items.Count;
-    for (var i = 0; i &lt; len; i++)
-    {
-        callback(items[i]);
-    }
-}
+<h2 id="generic-function-values">Generic Function Values</h2>
+<p>Supported in deterministic callable contexts:</p>
+<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
+const f: (x: number) =&gt; number = id;
 </code></pre>
-<h3 id="multiple-parameters">Multiple Parameters</h3>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
-
-function forEachWithIndex(
-  items: List&lt;int&gt;,
-  callback: (item: int, index: int) =&gt; void
-): void {
-  const len = items.Count;
-  for (let i: int = 0; i &lt; len; i++) {
-    callback(items[i], i);
-  }
-}
-
-// Usage
-forEachWithIndex(numbers, (item: int, index: int) =&gt; {
-  Console.WriteLine(`[${index}] = ${item}`);
-});
+<p>Rejected when the value stays polymorphic with no runtime callable shape:</p>
+<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
+const copy = id;
 </code></pre>
-<p>Generated C#:</p>
-<pre><code class="language-csharp">public static void forEachWithIndex(List&lt;int&gt; items, Action&lt;int, int&gt; callback)
-</code></pre>
-<h2 id="func-callbacks">Func Callbacks</h2>
-<p>Use <code>Func&lt;T, TResult&gt;</code> for callbacks that return a value.</p>
-<h3 id="transform-functions">Transform Functions</h3>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
-
-function map(items: List&lt;int&gt;, transform: (item: int) =&gt; int): List&lt;int&gt; {
-  const result = new List&lt;int&gt;();
-  const len = items.Count;
-  for (let i: int = 0; i &lt; len; i++) {
-    result.Add(transform(items[i]));
-  }
-  return result;
-}
-
-// Usage
-const doubled = map(numbers, (n: int) =&gt; n * 2);
-</code></pre>
-<p>Generated C#:</p>
-<pre><code class="language-csharp">public static List&lt;int&gt; map(List&lt;int&gt; items, Func&lt;int, int&gt; transform)
-</code></pre>
-<h3 id="predicate-functions">Predicate Functions</h3>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
-
-function filter(
-  items: List&lt;int&gt;,
-  predicate: (item: int) =&gt; boolean
-): List&lt;int&gt; {
-  const result = new List&lt;int&gt;();
-  const len = items.Count;
-  for (let i: int = 0; i &lt; len; i++) {
-    const item = items[i];
-    if (predicate(item)) {
-      result.Add(item);
-    }
-  }
-  return result;
-}
-
-// Usage
-const evens = filter(numbers, (n: int) =&gt; n % 2 === 0);
-</code></pre>
-<p>Generated C#:</p>
-<pre><code class="language-csharp">public static List&lt;int&gt; filter(List&lt;int&gt; items, Func&lt;int, bool&gt; predicate)
-</code></pre>
-<h3 id="reducer-functions">Reducer Functions</h3>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
-
-function reduce(
-  items: List&lt;int&gt;,
-  reducer: (acc: int, item: int) =&gt; int,
-  initial: int
-): int {
-  let result = initial;
-  const len = items.Count;
-  for (let i: int = 0; i &lt; len; i++) {
-    result = reducer(result, items[i]);
-  }
-  return result;
-}
-
-// Usage
-const sum = reduce(numbers, (acc: int, n: int) =&gt; acc + n, 0);
-</code></pre>
-<p>Generated C#:</p>
-<pre><code class="language-csharp">public static int reduce(List&lt;int&gt; items, Func&lt;int, int, int&gt; reducer, int initial)
-</code></pre>
-<h2 id="type-mappings">Type Mappings</h2>
-<h3 id="action-variants">Action Variants</h3>
-<table>
-<thead>
-<tr>
-<th>TypeScript</th>
-<th>C#</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>() =&gt; void</code></td>
-<td><code>Action</code></td>
-</tr>
-<tr>
-<td><code>(a: A) =&gt; void</code></td>
-<td><code>Action&lt;A&gt;</code></td>
-</tr>
-<tr>
-<td><code>(a: A, b: B) =&gt; void</code></td>
-<td><code>Action&lt;A, B&gt;</code></td>
-</tr>
-<tr>
-<td><code>(a: A, b: B, c: C) =&gt; void</code></td>
-<td><code>Action&lt;A, B, C&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="func-variants">Func Variants</h3>
-<table>
-<thead>
-<tr>
-<th>TypeScript</th>
-<th>C#</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>() =&gt; R</code></td>
-<td><code>Func&lt;R&gt;</code></td>
-</tr>
-<tr>
-<td><code>(a: A) =&gt; R</code></td>
-<td><code>Func&lt;A, R&gt;</code></td>
-</tr>
-<tr>
-<td><code>(a: A, b: B) =&gt; R</code></td>
-<td><code>Func&lt;A, B, R&gt;</code></td>
-</tr>
-<tr>
-<td><code>(a: A, b: B, c: C) =&gt; R</code></td>
-<td><code>Func&lt;A, B, C, R&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="inline-lambdas">Inline Lambdas</h2>
-<p>Pass arrow functions directly:</p>
-<pre><code class="language-typescript">	import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-	import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
-import { int } from &quot;@tsonic/core/types.js&quot;;
-
-const numbers = new List&lt;int&gt;();
-numbers.Add(1);
-numbers.Add(2);
-numbers.Add(3);
-
-// Inline Action (List&lt;T&gt;.ForEach)
-numbers.ForEach((n: int) =&gt; {
-  Console.WriteLine(`${n}`);
-});
-
-// Inline Func with return
-const doubled = map(numbers, (n: int) =&gt; n * 2);
-</code></pre>
-<h2 id="higher-order-functions">Higher-Order Functions</h2>
-<h3 id="returning-functions">Returning Functions</h3>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
-
-function createMultiplier(factor: int): (n: int) =&gt; int {
-  return (n: int) =&gt; n * factor;
-}
-
-const double = createMultiplier(2);
-const triple = createMultiplier(3);
-
-Console.WriteLine(`${double(5)}`); // 10
-Console.WriteLine(`${triple(5)}`); // 15
-</code></pre>
-<h3 id="function-composition">Function Composition</h3>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
-
-function compose(f: (x: int) =&gt; int, g: (x: int) =&gt; int): (x: int) =&gt; int {
-  return (x: int) =&gt; f(g(x));
-}
-
-const addOne = (x: int) =&gt; x + 1;
-const double = (x: int) =&gt; x * 2;
-
-const addThenDouble = compose(double, addOne);
-Console.WriteLine(`${addThenDouble(5)}`); // 12
-</code></pre>
-<h2 id="async-callbacks">Async Callbacks</h2>
-<p>For async callbacks, use <code>Promise</code> return types:</p>
-<pre><code class="language-typescript">	import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-async function processAsync(callback: () =&gt; Promise&lt;string&gt;): Promise&lt;void&gt; {
-  const result = await callback();
-  Console.WriteLine(result);
-}
-
-await processAsync(async () =&gt; {
-  return &quot;Async result&quot;;
-});
-</code></pre>
-<p>Generated C#:</p>
-<pre><code class="language-csharp">public static async Task processAsync(Func&lt;Task&lt;string&gt;&gt; callback)
-{
-    var result = await callback();
-    Console.WriteLine(result);
-}
-</code></pre>
-<h2 id="common-patterns">Common Patterns</h2>
-<h3 id="event-handlers">Event Handlers</h3>
-<pre><code class="language-typescript">type EventHandler = (sender: object, args: EventArgs) =&gt; void;
-
-function addClickHandler(handler: EventHandler): void {
-  // ...
-}
-
-addClickHandler((sender: object, args: EventArgs) =&gt; {
-  Console.WriteLine(&quot;Clicked!&quot;);
-});
-</code></pre>
-<h3 id="comparison-functions">Comparison Functions</h3>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
-
-function sort(items: List&lt;int&gt;, compare: (a: int, b: int) =&gt; int): void {
-  // Use compare function for sorting
-}
-
-// Usage with comparison
-sort(numbers, (a: int, b: int) =&gt; a - b);
-</code></pre>
-<h3 id="factory-functions">Factory Functions</h3>
-<pre><code class="language-typescript">function createItem&lt;T&gt;(factory: () =&gt; T): T {
-  return factory();
-}
-
-const user = createItem(() =&gt; ({
-  name: &quot;Alice&quot;,
-  age: 30,
-}));
-</code></pre>
-<h2 id="using-with-linq">Using with LINQ</h2>
-<p>Callbacks work seamlessly with LINQ:</p>
-<pre><code class="language-typescript">import { int } from &quot;@tsonic/core/types.js&quot;;
-	import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
-	import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
-
-const numbers = new List&lt;int&gt;();
-numbers.Add(1);
-numbers.Add(2);
-numbers.Add(3);
-numbers.Add(4);
-numbers.Add(5);
-
-// LINQ Where with predicate
-const evens = Enumerable.Where(numbers, (n: int) =&gt; n % 2 === 0);
-
-// LINQ Select with transform
-const doubled = Enumerable.Select(numbers, (n: int) =&gt; n * 2);
-
-// LINQ Aggregate with reducer
-const sum = Enumerable.Aggregate(
-  numbers,
-  0,
-  (acc: int, n: int) =&gt; acc + n
-);
-</code></pre>
-<h2 id="tips">Tips</h2>
-<h3 id="type-annotations-in-lambdas">Type Annotations in Lambdas</h3>
-<p>Always include type annotations in lambda parameters for clarity:</p>
-<pre><code class="language-typescript">// Good - explicit types
-forEach(items, (item: int) =&gt; { ... });
-
-// Avoid - implicit types may cause issues
-forEach(items, item =&gt; { ... });
-</code></pre>
-<h3 id="returning-from-lambdas">Returning from Lambdas</h3>
-<p>For single-expression returns, use concise syntax:</p>
-<pre><code class="language-typescript">// Concise return
-const doubled = map(numbers, (n: int) =&gt; n * 2);
-
-// Block return
-const processed = map(numbers, (n: int) =&gt; {
-  const result = n * 2;
-  return result;
-});
-</code></pre>
-<h2 id="see-also">See Also</h2>
+<h2 id="guidance">Guidance</h2>
 <ul>
-<li><a href="/tsonic/type-system/">Type System</a> - Function type mappings</li>
-<li><a href="/tsonic/dotnet-interop/">.NET Interop</a> - Working with .NET APIs</li>
-<li><a href="/tsonic/async-patterns/">Async Patterns</a> - Async callbacks</li>
+<li>let contextual types carry callback parameter types where possible</li>
+<li>when in doubt, annotate the target callable shape instead of the callback body only</li>
 </ul>
 </div>
 </article>

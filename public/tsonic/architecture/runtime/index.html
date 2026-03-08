@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -237,286 +140,42 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/runtime.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="runtime-libraries">Runtime Libraries</h1>
-<p>Tsonic uses a .NET runtime library to support TypeScript semantics.</p>
-<h2 id="overview">Overview</h2>
-<table>
-<thead>
-<tr>
-<th>Package</th>
-<th>Purpose</th>
-<th>Required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Tsonic.Runtime</code></td>
-<td>TypeScript language primitives</td>
-<td>Always</td>
-</tr>
-</tbody>
-</table>
-<h2 id="tsonicruntime">Tsonic.Runtime</h2>
-<p>TypeScript language features that don't exist in C#.</p>
-<h3 id="union-types">Union Types</h3>
-<p>TypeScript unions don't exist in C#:</p>
-<pre><code class="language-csharp">namespace Tsonic.Runtime
-{
-    public sealed class Union&lt;T1, T2&gt;
-    {
-        private readonly object? _value;
-        private readonly int _index;
-
-        private Union(object? value, int index)
-        {
-            _value = value;
-            _index = index;
-        }
-
-        public static Union&lt;T1, T2&gt; From1(T1 value) =&gt; new(value, 0);
-        public static Union&lt;T1, T2&gt; From2(T2 value) =&gt; new(value, 1);
-
-        public bool Is1() =&gt; _index == 0;
-        public bool Is2() =&gt; _index == 1;
-
-        public T1 As1() =&gt; _index == 0 ? (T1)_value! : throw new InvalidOperationException();
-        public T2 As2() =&gt; _index == 1 ? (T2)_value! : throw new InvalidOperationException();
-
-        public TResult Match&lt;TResult&gt;(Func&lt;T1, TResult&gt; onT1, Func&lt;T2, TResult&gt; onT2) =&gt;
-            _index == 0 ? onT1((T1)_value!) : onT2((T2)_value!);
-
-        // Implicit conversions
-        public static implicit operator Union&lt;T1, T2&gt;(T1 value) =&gt; From1(value);
-        public static implicit operator Union&lt;T1, T2&gt;(T2 value) =&gt; From2(value);
-    }
-
-    // Similar for Union&lt;T1, T2, T3&gt; through Union&lt;T1..T8&gt;
-}
-</code></pre>
-<p>Usage mapping:</p>
-<table>
-<thead>
-<tr>
-<th>TypeScript</th>
-<th>C#</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>T \| null \| undefined</code></td>
-<td><code>T?</code></td>
-</tr>
-<tr>
-<td>2-8 type unions</td>
-<td><code>Union&lt;T1, T2, ...&gt;</code></td>
-</tr>
-<tr>
-<td>9+ type unions</td>
-<td><code>object</code> (fallback)</td>
-</tr>
-</tbody>
-</table>
-<p>Example:</p>
-<pre><code class="language-typescript">// TypeScript
-import { Random } from &quot;@tsonic/dotnet/System.js&quot;;
-
-function getValue(): string | number {
-  return Random.Shared.NextDouble() &gt; 0.5 ? &quot;hello&quot; : 42;
-}
-</code></pre>
-<pre><code class="language-csharp">// Generated C#
-public static Union&lt;string, double&gt; getValue()
-{
-    return global::System.Random.Shared.NextDouble() &gt; 0.5 ? &quot;hello&quot; : 42.0;
-}
-</code></pre>
-<h3 id="structural-typing">Structural Typing</h3>
-<p>TypeScript uses structural typing (duck typing). Two types are compatible if they have the same shape.</p>
-<pre><code class="language-csharp">namespace Tsonic.Runtime
-{
-    public static class Structural
-    {
-        public static T? Clone&lt;T&gt;(object? source) where T : new()
-        {
-            if (source == null) return default;
-
-            var target = new T();
-            var sourceType = source.GetType();
-            var targetType = typeof(T);
-
-            var targetProperties = targetType.GetProperties()
-                .Where(p =&gt; p.CanWrite);
-
-            foreach (var targetProp in targetProperties)
-            {
-                var sourceProp = sourceType.GetProperty(targetProp.Name);
-                if (sourceProp != null &amp;&amp; sourceProp.CanRead)
-                {
-                    var sourceValue = sourceProp.GetValue(source);
-                    targetProp.SetValue(target, sourceValue);
-                }
-            }
-
-            return target;
-        }
-
-        public static Dictionary&lt;string, object?&gt; ToDictionary(object? source)
-        {
-            var result = new Dictionary&lt;string, object?&gt;();
-            if (source == null) return result;
-
-            var properties = source.GetType().GetProperties();
-            foreach (var prop in properties)
-            {
-                if (prop.CanRead)
-                {
-                    result[prop.Name] = prop.GetValue(source);
-                }
-            }
-            return result;
-        }
-    }
-}
-</code></pre>
-<p>Example:</p>
-<pre><code class="language-typescript">// TypeScript - structural compatibility
-interface Point {
-  x: number;
-  y: number;
-}
-interface Point3D {
-  x: number;
-  y: number;
-  z: number;
-}
-
-function use2DPoint(p: Point): void {
-  /* ... */
-}
-const p3d: Point3D = { x: 1, y: 2, z: 3 };
-use2DPoint(p3d); // OK - structural typing
-</code></pre>
-<pre><code class="language-csharp">// Generated C#
-use2DPoint(Structural.Clone&lt;Point&gt;(p3d));
-</code></pre>
-<h3 id="index-signatures">Index Signatures</h3>
-<p>TypeScript index signatures <code>{ [key: string]: T }</code>:</p>
-<pre><code class="language-csharp">namespace Tsonic.Runtime
-{
-    public class DictionaryAdapter&lt;T&gt;
-    {
-        private readonly Dictionary&lt;string, object?&gt; _dictionary;
-
-        public DictionaryAdapter(Dictionary&lt;string, object?&gt; dictionary)
-        {
-            _dictionary = dictionary ?? new Dictionary&lt;string, object?&gt;();
-        }
-
-        public T? this[string key]
-        {
-            get
-            {
-                if (_dictionary.TryGetValue(key, out var value) &amp;&amp; value is T typedValue)
-                {
-                    return typedValue;
-                }
-                return default;
-            }
-            set =&gt; _dictionary[key] = value;
-        }
-
-        public IEnumerable&lt;string&gt; Keys =&gt; _dictionary.Keys;
-        public bool ContainsKey(string key) =&gt; _dictionary.ContainsKey(key);
-    }
-}
-</code></pre>
-<h3 id="typeof-operator">typeof Operator</h3>
-<p>JavaScript-style typeof returns different strings than .NET:</p>
-<pre><code class="language-csharp">namespace Tsonic.Runtime
-{
-    public static class Operators
-    {
-        public static string @typeof(object? value)
-        {
-            if (value == null) return &quot;undefined&quot;;
-            if (value is string) return &quot;string&quot;;
-            if (value is double || value is int || value is float || value is long)
-                return &quot;number&quot;;
-            if (value is bool) return &quot;boolean&quot;;
-            if (value is Delegate) return &quot;function&quot;;
-            return &quot;object&quot;;
-        }
-    }
-}
-</code></pre>
-<h3 id="dynamic-object">Dynamic Object</h3>
-<p>For dynamic property access:</p>
-<pre><code class="language-csharp">namespace Tsonic.Runtime
-{
-    public class DynamicObject
-    {
-        private readonly Dictionary&lt;string, object?&gt; _properties = new();
-
-        public object? this[string key]
-        {
-            get =&gt; _properties.TryGetValue(key, out var value) ? value : null;
-            set =&gt; _properties[key] = value;
-        }
-
-        public bool HasProperty(string key) =&gt; _properties.ContainsKey(key);
-        public void DeleteProperty(string key) =&gt; _properties.Remove(key);
-        public IEnumerable&lt;string&gt; GetKeys() =&gt; _properties.Keys;
-    }
-}
-</code></pre>
-<h2 id="runtime-dependency">Runtime Dependency</h2>
-<p>Projects include only Tsonic.Runtime:</p>
-<pre><code class="language-xml">&lt;PackageReference Include=&quot;Tsonic.Runtime&quot; Version=&quot;1.0.0&quot; /&gt;
-</code></pre>
-<p>Arrays compile to native C# arrays:</p>
-<pre><code class="language-typescript">// TypeScript
-const arr = [1, 2, 3];
-</code></pre>
-<pre><code class="language-csharp">// Generated C#
-int[] arr = [1, 2, 3];
-</code></pre>
-<p>For dynamic collections, use List<T> explicitly:</p>
-<pre><code class="language-typescript">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
-const list = new List&lt;number&gt;();
-list.Add(1);
-list.Add(2);
-list.Add(3);
-list.Add(4);
-</code></pre>
-<h2 id="nativeaot-compatibility">NativeAOT Compatibility</h2>
-<p>Tsonic.Runtime is fully NativeAOT compatible:</p>
+  <div class="content"><h1 id="runtime">Runtime</h1>
+<p>Runtime support is split across focused assemblies/packages.</p>
+<h2 id="core-runtime">Core Runtime</h2>
 <ul>
-<li>Minimal reflection (only for structural cloning with proper annotations)</li>
-<li>No dynamic dispatch</li>
-<li>No runtime code generation</li>
-<li>Trim-safe - all types explicitly referenced</li>
+<li><code>Tsonic.Runtime</code></li>
 </ul>
-<p>Reflection annotations for AOT:</p>
-<pre><code class="language-csharp">public static T? Clone&lt;
-    [DynamicallyAccessedMembers(
-        DynamicallyAccessedMemberTypes.PublicConstructors |
-        DynamicallyAccessedMemberTypes.PublicProperties
-    )] T
-&gt;(object? source) where T : new()
-</code></pre>
-<h2 id="package-structure">Package Structure</h2>
-<h3 id="tsonicruntime-1">Tsonic.Runtime</h3>
-<pre><code>tsonic-runtime/
-  src/Tsonic.Runtime/
-    Union.cs
-    Structural.cs
-    DictionaryAdapter.cs
-    Operators.cs
-    IteratorResult.cs
-    Tsonic.Runtime.csproj
-  tests/Tsonic.Runtime.Tests/
-</code></pre>
-<p>Tsonic.Runtime is published as a NuGet package.</p>
+<p>Provides:</p>
+<ul>
+<li>iterator/generator runtime helpers</li>
+<li>shared compiler support types</li>
+<li>other core emitted-runtime dependencies</li>
+</ul>
+<h2 id="js-runtime">JS Runtime</h2>
+<ul>
+<li><code>Tsonic.JSRuntime</code></li>
+</ul>
+<p>Provides implementation for the JS surface:</p>
+<ul>
+<li><code>console</code></li>
+<li><code>JSON</code></li>
+<li><code>Date</code></li>
+<li>timers</li>
+<li><code>Array</code>/<code>String</code>/<code>Map</code>/<code>Set</code> helper operations</li>
+</ul>
+<h2 id="node-runtime">Node Runtime</h2>
+<ul>
+<li><code>Tsonic.Nodejs</code> / <code>nodejs.dll</code></li>
+</ul>
+<p>Provides module/runtime support for <code>node:*</code> bindings.</p>
+<h2 id="surface-projection">Surface Projection</h2>
+<p>Runtime implementation and surface projection must remain coherent:</p>
+<ul>
+<li>runtime code lives in runtime repos</li>
+<li>surface package manifests/projection configs describe the ambient/module shape</li>
+<li>published packages must include the nested bindings/internal declaration trees that member binding lookup needs</li>
+</ul>
 </div>
 </article>
 </main>

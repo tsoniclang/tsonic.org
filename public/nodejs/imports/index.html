@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -249,27 +249,28 @@
   </div>
 
   <div class="content"><h1 id="importing-modules">Importing Modules</h1>
-<h2 id="importing-from-tsonicnodejsindexjs">Importing from <code>@tsonic/nodejs/index.js</code></h2>
-<p>Most Node-style modules are exported as named values from the package root entry point:</p>
-<pre><code class="language-ts">import { console, fs, path, process, crypto } from &quot;@tsonic/nodejs/index.js&quot;;
+<h2 id="preferred-in---surface-nodejs-node-style-specifiers">Preferred in <code>--surface nodejs</code>: Node-style specifiers</h2>
+<p>With Node surface enabled, import using Node module names:</p>
+<pre><code class="language-ts">import { readFileSync } from &quot;node:fs&quot;;
+import { join } from &quot;node:path&quot;;
+import * as process from &quot;node:process&quot;;
 </code></pre>
-<p>Types that are part of those modules are also exported from the root entry point:</p>
+<p>Bare aliases are also supported:</p>
+<pre><code class="language-ts">import { readFileSync } from &quot;fs&quot;;
+import { join } from &quot;path&quot;;
+</code></pre>
+<h2 id="direct-package-imports-remain-supported">Direct package imports remain supported</h2>
+<p>You can still import directly from <code>@tsonic/nodejs/index.js</code>:</p>
+<pre><code class="language-ts">import { fs, path, process, crypto } from &quot;@tsonic/nodejs/index.js&quot;;
+</code></pre>
+<p>Types exported from the package root are also available there:</p>
 <pre><code class="language-ts">import { EventEmitter } from &quot;@tsonic/nodejs/index.js&quot;;
 </code></pre>
-<h2 id="importing-submodules-namespaces">Importing submodules (namespaces)</h2>
-<p>Some namespaces are emitted as separate entry points. For example, HTTP lives in the <code>nodejs.Http</code> namespace:</p>
+<h2 id="submodules-separate-namespaces">Submodules (separate namespaces)</h2>
+<p>Some namespaces are emitted as separate entry points. Example:</p>
 <pre><code class="language-ts">import { http, IncomingMessage, ServerResponse } from &quot;@tsonic/nodejs/nodejs.Http.js&quot;;
 </code></pre>
-<h2 id="do-not-import-node-builtins-fs-path-">Do not import Node builtins (<code>&quot;fs&quot;</code>, <code>&quot;path&quot;</code>, ...)</h2>
-<p>Tsonic projects compile to .NET and do <strong>not</strong> run on Node.js. You should not write:</p>
-<pre><code class="language-ts">// ❌ Not supported
-import * as fs from &quot;fs&quot;;
-import * as path from &quot;path&quot;;
-</code></pre>
-<p>Instead import from <code>@tsonic/nodejs/index.js</code>:</p>
-<pre><code class="language-ts">// ✅ Supported
-import { fs, path } from &quot;@tsonic/nodejs/index.js&quot;;
-</code></pre>
+<p><code>node:http</code> is currently not mapped by the surface alias set.</p>
 </div>
 </article>
 </main>

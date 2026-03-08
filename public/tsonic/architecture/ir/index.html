@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -237,305 +140,41 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/ir.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="intermediate-representation-ir">Intermediate Representation (IR)</h1>
-<p>The IR is the core data structure that bridges TypeScript and C#.</p>
-<h2 id="purpose">Purpose</h2>
-<p>The IR provides:</p>
+  <div class="content"><h1 id="ir">IR</h1>
+<p>Tsonic’s IR is the frontend/backend boundary.</p>
+<h2 id="what-ir-captures">What IR Captures</h2>
 <ul>
-<li>Language-independent representation</li>
-<li>Semantic preservation</li>
-<li>Optimization opportunities</li>
-<li>Clean separation between parsing and emission</li>
+<li>module identity</li>
+<li>imports/exports</li>
+<li>statements</li>
+<li>expressions</li>
+<li>resolved types</li>
+<li>generic substitutions</li>
+<li>backend-relevant semantic decisions that must survive into emission</li>
 </ul>
-<h2 id="irmodule">IrModule</h2>
-<p>Top-level structure representing a TypeScript file:</p>
-<pre><code class="language-typescript">type IrModule = {
-  readonly filePath: string; // Relative path: &quot;src/utils/math.ts&quot;
-  readonly namespace: string; // C# namespace: &quot;MyApp.utils&quot;
-  readonly className: string; // C# class name: &quot;math&quot;
-  readonly imports: readonly IrImport[];
-  readonly exports: readonly IrExport[];
-  readonly body: readonly IrStatement[];
-};
-</code></pre>
-<h2 id="imports">Imports</h2>
-<h3 id="irimport">IrImport</h3>
-<pre><code class="language-typescript">type IrImport = {
-  readonly kind: &quot;import&quot;;
-  readonly moduleSpecifier: string; // &quot;./utils.js&quot; or &quot;@tsonic/dotnet/System.js&quot;
-  readonly specifiers: readonly IrImportSpecifier[];
-  readonly isTypeOnly: boolean;
-  readonly resolved?: {
-    readonly isLocal: boolean;
-    readonly absolutePath?: string;
-    readonly clrNamespace?: string;
-  };
-};
-
-type IrImportSpecifier =
-  | { kind: &quot;named&quot;; name: string; alias?: string }
-  | { kind: &quot;default&quot;; alias: string }
-  | { kind: &quot;namespace&quot;; alias: string };
-</code></pre>
-<h2 id="exports">Exports</h2>
-<h3 id="irexport">IrExport</h3>
-<pre><code class="language-typescript">type IrExport =
-  | { kind: &quot;declaration&quot;; declaration: IrStatement }
-  | { kind: &quot;named&quot;; name: string; alias?: string }
-  | { kind: &quot;reexport&quot;; moduleSpecifier: string; specifiers: ... };
-</code></pre>
-<h2 id="statements">Statements</h2>
-<h3 id="variable-declaration">Variable Declaration</h3>
-<pre><code class="language-typescript">type IrVariableDeclaration = {
-  readonly kind: &quot;variableDeclaration&quot;;
-  readonly declarationKind: &quot;const&quot; | &quot;let&quot; | &quot;var&quot;;
-  readonly declarations: readonly IrVariableDeclarator[];
-};
-
-type IrVariableDeclarator = {
-  readonly pattern: IrPattern;
-  readonly type?: IrType;
-  readonly init?: IrExpression;
-};
-</code></pre>
-<h3 id="function-declaration">Function Declaration</h3>
-<pre><code class="language-typescript">type IrFunctionDeclaration = {
-  readonly kind: &quot;functionDeclaration&quot;;
-  readonly name: string;
-  readonly typeParameters?: readonly IrTypeParameter[];
-  readonly parameters: readonly IrParameter[];
-  readonly returnType?: IrType;
-  readonly body?: IrBlockStatement;
-  readonly isAsync: boolean;
-  readonly isGenerator: boolean;
-  readonly isExported: boolean;
-};
-</code></pre>
-<h3 id="class-declaration">Class Declaration</h3>
-<pre><code class="language-typescript">type IrClassDeclaration = {
-  readonly kind: &quot;classDeclaration&quot;;
-  readonly name: string;
-  readonly typeParameters?: readonly IrTypeParameter[];
-  readonly extends?: IrReferenceType;
-  readonly implements?: readonly IrReferenceType[];
-  readonly members: readonly IrClassMember[];
-  readonly isExported: boolean;
-  readonly isAbstract: boolean;
-};
-
-type IrClassMember =
-  | IrPropertyDeclaration
-  | IrMethodDeclaration
-  | IrConstructorDeclaration;
-</code></pre>
-<h3 id="interface-declaration">Interface Declaration</h3>
-<pre><code class="language-typescript">type IrInterfaceDeclaration = {
-  readonly kind: &quot;interfaceDeclaration&quot;;
-  readonly name: string;
-  readonly typeParameters?: readonly IrTypeParameter[];
-  readonly extends?: readonly IrReferenceType[];
-  readonly members: readonly IrInterfaceMember[];
-  readonly isExported: boolean;
-};
-</code></pre>
-<h3 id="control-flow">Control Flow</h3>
-<pre><code class="language-typescript">type IrIfStatement = {
-  readonly kind: &quot;ifStatement&quot;;
-  readonly test: IrExpression;
-  readonly consequent: IrStatement;
-  readonly alternate?: IrStatement;
-};
-
-type IrForStatement = {
-  readonly kind: &quot;forStatement&quot;;
-  readonly init?: IrVariableDeclaration | IrExpression;
-  readonly test?: IrExpression;
-  readonly update?: IrExpression;
-  readonly body: IrStatement;
-};
-
-type IrForOfStatement = {
-  readonly kind: &quot;forOfStatement&quot;;
-  readonly left: IrVariableDeclaration | IrPattern;
-  readonly right: IrExpression;
-  readonly body: IrStatement;
-  readonly isAwait: boolean;
-};
-</code></pre>
-<h2 id="expressions">Expressions</h2>
-<h3 id="literals">Literals</h3>
-<pre><code class="language-typescript">type IrLiteralExpression = {
-  readonly kind: &quot;literal&quot;;
-  readonly value: string | number | boolean | null;
-  readonly raw: string;
-};
-</code></pre>
-<h3 id="identifiers">Identifiers</h3>
-<pre><code class="language-typescript">type IrIdentifierExpression = {
-  readonly kind: &quot;identifier&quot;;
-  readonly name: string;
-  readonly type?: IrType;
-};
-</code></pre>
-<h3 id="binary-expressions">Binary Expressions</h3>
-<pre><code class="language-typescript">type IrBinaryExpression = {
-  readonly kind: &quot;binary&quot;;
-  readonly operator: IrBinaryOperator;
-  readonly left: IrExpression;
-  readonly right: IrExpression;
-};
-
-type IrBinaryOperator =
-  | &quot;+&quot;
-  | &quot;-&quot;
-  | &quot;*&quot;
-  | &quot;/&quot;
-  | &quot;%&quot;
-  | &quot;==&quot;
-  | &quot;!=&quot;
-  | &quot;===&quot;
-  | &quot;!==&quot;
-  | &quot;&lt;&quot;
-  | &quot;&gt;&quot;
-  | &quot;&lt;=&quot;
-  | &quot;&gt;=&quot;
-  | &quot;&amp;&amp;&quot;
-  | &quot;||&quot;
-  | &quot;??&quot;
-  | &quot;&amp;&quot;
-  | &quot;|&quot;
-  | &quot;^&quot;
-  | &quot;&lt;&lt;&quot;
-  | &quot;&gt;&gt;&quot;;
-</code></pre>
-<h3 id="call-expressions">Call Expressions</h3>
-<pre><code class="language-typescript">type IrCallExpression = {
-  readonly kind: &quot;call&quot;;
-  readonly callee: IrExpression;
-  readonly typeArguments?: readonly IrType[];
-  readonly arguments: readonly IrExpression[];
-};
-</code></pre>
-<h3 id="member-access">Member Access</h3>
-<pre><code class="language-typescript">type IrMemberExpression = {
-  readonly kind: &quot;member&quot;;
-  readonly object: IrExpression;
-  readonly property: string | IrExpression;
-  readonly computed: boolean; // obj[prop] vs obj.prop
-  readonly optional: boolean; // obj?.prop
-};
-</code></pre>
-<h3 id="object-and-array-literals">Object and Array Literals</h3>
-<pre><code class="language-typescript">type IrArrayExpression = {
-  readonly kind: &quot;array&quot;;
-  readonly elements: readonly (IrExpression | null)[]; // null = hole
-};
-
-type IrObjectExpression = {
-  readonly kind: &quot;object&quot;;
-  readonly properties: readonly IrObjectProperty[];
-};
-
-type IrObjectProperty = {
-  readonly key: string | IrExpression;
-  readonly value: IrExpression;
-  readonly computed: boolean;
-  readonly shorthand: boolean;
-  readonly method: boolean;
-};
-</code></pre>
-<h2 id="types">Types</h2>
-<h3 id="primitive-types">Primitive Types</h3>
-<pre><code class="language-typescript">type IrPrimitiveType = {
-  readonly kind: &quot;primitiveType&quot;;
-  readonly name: &quot;number&quot; | &quot;string&quot; | &quot;boolean&quot; | &quot;null&quot; | &quot;undefined&quot;;
-};
-</code></pre>
-<h3 id="reference-types">Reference Types</h3>
-<pre><code class="language-typescript">type IrReferenceType = {
-  readonly kind: &quot;referenceType&quot;;
-  readonly name: string;
-  readonly typeArguments?: readonly IrType[];
-  readonly clrType?: string; // e.g., &quot;System.Collections.Generic.List&quot;
-};
-</code></pre>
-<h3 id="array-types">Array Types</h3>
-<pre><code class="language-typescript">type IrArrayType = {
-  readonly kind: &quot;arrayType&quot;;
-  readonly elementType: IrType;
-};
-</code></pre>
-<h3 id="function-types">Function Types</h3>
-<pre><code class="language-typescript">type IrFunctionType = {
-  readonly kind: &quot;functionType&quot;;
-  readonly parameters: readonly IrParameter[];
-  readonly returnType: IrType;
-  readonly typeParameters?: readonly IrTypeParameter[];
-};
-</code></pre>
-<h3 id="tuple-types">Tuple Types</h3>
-<pre><code class="language-typescript">type IrTupleType = {
-  readonly kind: &quot;tupleType&quot;;
-  readonly elementTypes: readonly IrType[];
-};
-</code></pre>
-<p>Generates <code>ValueTuple&lt;T1, T2, ...&gt;</code> in C#.</p>
-<h3 id="union-and-intersection">Union and Intersection</h3>
-<pre><code class="language-typescript">type IrUnionType = {
-  readonly kind: &quot;unionType&quot;;
-  readonly types: readonly IrType[];
-};
-
-type IrIntersectionType = {
-  readonly kind: &quot;intersectionType&quot;;
-  readonly types: readonly IrType[];
-};
-</code></pre>
-<h2 id="patterns">Patterns</h2>
-<p>Used in destructuring and parameters:</p>
-<pre><code class="language-typescript">type IrPattern = IrIdentifierPattern | IrArrayPattern | IrObjectPattern;
-
-type IrIdentifierPattern = {
-  readonly kind: &quot;identifier&quot;;
-  readonly name: string;
-  readonly type?: IrType;
-};
-
-type IrArrayPattern = {
-  readonly kind: &quot;array&quot;;
-  readonly elements: readonly (IrPattern | null)[];
-  readonly rest?: IrPattern;
-};
-
-type IrObjectPattern = {
-  readonly kind: &quot;object&quot;;
-  readonly properties: readonly IrObjectPatternProperty[];
-  readonly rest?: IrPattern;
-};
-</code></pre>
-<h2 id="building-ir">Building IR</h2>
-<p>The IR is built by traversing the TypeScript AST:</p>
-<pre><code class="language-typescript">// Simplified flow
-const buildIrModule = (
-  sourceFile: ts.SourceFile,
-  checker: ts.TypeChecker
-): IrModule =&gt; {
-  const body = sourceFile.statements.map((stmt) =&gt;
-    convertStatement(stmt, checker)
-  );
-  const imports = extractImports(sourceFile);
-  const exports = extractExports(sourceFile, body);
-
-  return {
-    filePath: getRelativePath(sourceFile.fileName),
-    namespace: computeNamespace(sourceFile.fileName),
-    className: computeClassName(sourceFile.fileName),
-    imports,
-    exports,
-    body,
-  };
-};
-</code></pre>
+<h2 id="what-ir-does-not-try-to-be">What IR Does Not Try To Be</h2>
+<ul>
+<li>it is not a backend syntax tree</li>
+<li>it is not raw TypeScript AST</li>
+<li>it is not Roslyn AST</li>
+</ul>
+<p>The backend syntax tree is a later layer: <code>CSharpAst</code>.</p>
+<h2 id="why-this-split-exists">Why This Split Exists</h2>
+<p>IR keeps frontend reasoning separate from backend syntax concerns.</p>
+<p>Examples:</p>
+<ul>
+<li>source-package resolution belongs in the frontend/IR side</li>
+<li>C# keyword escaping belongs in the backend AST/printer side</li>
+<li>numeric proof belongs before backend emission</li>
+</ul>
+<h2 id="current-pressure-points-captured-in-ir">Current Pressure Points Captured in IR</h2>
+<ul>
+<li><code>nameof</code> / <code>sizeof</code></li>
+<li>Promise chain normalization</li>
+<li>dynamic import normalization</li>
+<li>object-literal method/accessor lowering intent</li>
+<li>generic function value specialization state</li>
+</ul>
 </div>
 </article>
 </main>

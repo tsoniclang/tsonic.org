@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -235,70 +138,51 @@
   </div>
 
   <div class="content"><h1 id="limitations">Limitations</h1>
-<p>This document captures <strong>current constraints</strong> of Tsonic’s compilation model (TypeScript → C# → NativeAOT).</p>
-<h2 id="not-a-javascript-runtime">Not a JavaScript Runtime</h2>
-<p>Tsonic targets .NET. Code is meant to compile to native binaries; it is not meant to run under Node.js/browser JS runtimes.</p>
-<ul>
-<li>JavaScript globals like <code>Date</code>, <code>Map</code>, and <code>Set</code> are <strong>not</strong> part of the default globals.</li>
-<li>Prefer .NET APIs (<code>System.DateTime</code>, <code>System.Collections.Generic.Dictionary</code>, <code>HashSet</code>, etc.).</li>
-<li>If you want JavaScript-style APIs, opt in explicitly via <code>@tsonic/js</code>:</li>
-</ul>
-<pre><code class="language-typescript">import { Date, Map, Set, console } from &quot;@tsonic/js/index.js&quot;;
+<p>These are the deliberate current non-goals or still-rejected cases on <code>main</code>.</p>
+<h2 id="open-world-dynamic-import">Open-World Dynamic Import</h2>
+<p>Rejected:</p>
+<pre><code class="language-ts">const mod = await import(specifier);
+const pkg = await import(&quot;zod&quot;);
 </code></pre>
-<h2 id="module-system-constraints">Module System Constraints</h2>
+<p>Reason: no closed-world module graph.</p>
+<h2 id="importmeta-beyond-the-supported-subset"><code>import.meta</code> Beyond the Supported Subset</h2>
+<p>Supported:</p>
 <ul>
-<li>Local imports must include a file extension (<code>.js</code> recommended; <code>.ts</code> also accepted).</li>
-<li>Arbitrary <code>node_modules</code> runtime imports are not supported. Use:
-<ul>
-<li>local project files, or</li>
-<li>CLR bindings packages (<code>@tsonic/dotnet/...</code>, tsbindgen-generated packages, etc.).</li>
-</ul>
-</li>
-</ul>
-<h2 id="unsupported--rejected-features">Unsupported / Rejected Features</h2>
-<p>These are rejected by the compiler front-end:</p>
-<ul>
-<li>Dynamic <code>import()</code> (use static imports)</li>
 <li><code>import.meta</code></li>
-<li><code>with</code> statement</li>
-<li>Promise chaining: <code>.then()</code>, <code>.catch()</code>, <code>.finally()</code> (use <code>async</code>/<code>await</code>)</li>
-<li><code>any</code> and <code>as any</code> (use concrete types or <code>unknown</code>)</li>
+<li><code>import.meta.url</code></li>
+<li><code>import.meta.filename</code></li>
+<li><code>import.meta.dirname</code></li>
 </ul>
-<h2 id="semantic-differences-vs-javascript">Semantic Differences vs JavaScript</h2>
-<ul>
-<li>Integer division truncates toward zero when using integer types (<code>int</code>, <code>long</code>, etc.).</li>
-<li>Generator <code>.throw()</code> does not inject at the suspended yield point (C# iterator limitation).</li>
-</ul>
-<h2 id="generics--nullability">Generics + Nullability</h2>
-<p>C# cannot represent every TypeScript generic/nullability combination. A common example is <code>T | null</code> with an unconstrained <code>T</code>.</p>
-<p>When you hit these diagnostics, add appropriate constraints (<code>T extends object</code>) or use boxing (<code>object | null</code>) depending on the intent.</p>
-<h2 id="ef-core--nativeaot-experimental">EF Core + NativeAOT (Experimental)</h2>
-<p>EF Core’s NativeAOT support relies on <strong>query precompilation</strong>, which performs static analysis of your source code and generates C# <strong>interceptors</strong>. This is an EF Core feature (not Tsonic-specific) and is still experimental.</p>
-<ul>
-<li><strong>Dynamic queries are not supported</strong> by EF query precompilation. Avoid composing a query across multiple statements (e.g. <code>let q = ...; if (...) q = q.Where(...);</code>).</li>
-<li>Interceptors are <strong>invalidated by any source change</strong>. Treat precompilation as part of a publish/CI pipeline, not an inner-loop workflow.</li>
-<li>Some runtime operations are not supported under NativeAOT (e.g. <code>EnsureCreated()</code>); prefer <strong>migrations</strong> / migration bundles.</li>
-</ul>
-<p>If you are publishing a Tsonic + EF Core app with NativeAOT, you generally need to run EF’s optimizer against the generated C# project (or use EF’s MSBuild integration):</p>
-<pre><code class="language-bash"># 1) Generate C# (and the .csproj)
-tsonic generate
-
-# 2) Run EF optimization in the generated project directory
-dotnet ef dbcontext optimize --precompile-queries --nativeaot \
-  --project tsonic.csproj \
-  --output-dir ef-compiled-model \
-  --context AppDbContext
-
-# 3) Publish without re-running `tsonic generate`
-# (EF writes additional C# sources into the generated directory.)
-tsonic build --no-generate
+<p>Rejected:</p>
+<pre><code class="language-ts">const env = import.meta.env;
 </code></pre>
-<p>When using <code>--nativeaot</code>, EF generates C# interceptor source under the namespace <code>Microsoft.EntityFrameworkCore.GeneratedInterceptors</code>. The C# compiler requires an explicit MSBuild opt-in:</p>
+<h2 id="generic-function-values-with-no-runtime-shape">Generic Function Values With No Runtime Shape</h2>
+<p>Rejected:</p>
+<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
+const copy = id;
+</code></pre>
+<p>Reason: the value remains polymorphic with no monomorphic callable runtime shape.</p>
+<h2 id="object-literal-super">Object-Literal <code>super</code></h2>
+<p>Rejected:</p>
+<pre><code class="language-ts">const obj = {
+  __proto__: base,
+  greet() {
+    return super.greet();
+  },
+};
+</code></pre>
+<p>Reason: requires full JS home-object/prototype semantics that Tsonic does not currently model.</p>
+<h2 id="unsupported-object-literal-arguments-cases">Unsupported Object-Literal <code>arguments</code> Cases</h2>
+<p>Some narrow <code>arguments.length</code> / <code>arguments[index]</code> patterns are supported in object-literal methods. Broader JS function-object behavior is still rejected.</p>
+<h2 id="explicit-any">Explicit <code>any</code></h2>
+<p>Tsonic remains strict-AOT. Explicit <code>any</code> is out of scope.</p>
+<h2 id="general-npm-ecosystem-execution">General npm Ecosystem Execution</h2>
+<p>Tsonic V1 supports:</p>
 <ul>
-<li>Add <code>dotnet.msbuildProperties.InterceptorsNamespaces</code> in <code>tsonic.workspace.json</code>, or</li>
-<li>Provide your own <code>.csproj</code> at the project root and include <code>&lt;InterceptorsNamespaces&gt;...</code>.</li>
+<li>CLR bindings packages</li>
+<li>Tsonic-authored source packages with manifests</li>
 </ul>
-<p>See EF Core docs for the current limitations and recommended rewrites.</p>
+<p>It does <strong>not</strong> claim full execution compatibility for arbitrary npm JS/TS packages.</p>
 </div>
 </article>
 </main>

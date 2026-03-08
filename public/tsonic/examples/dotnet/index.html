@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -101,109 +101,12 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/cli/">CLI Reference</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/configuration/">Configuration</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Language</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/language/">Language Guide</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/type-system/">Type System</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/generators/">Generators</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/callbacks/">Callbacks</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/bindings/">CLR Bindings &amp; Workspaces</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/dotnet-interop/#javascript-runtime-apis-tsonicjs">JavaScript Runtime</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Build</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/build-output/">Build Output</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Reference</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsonic/examples/">Examples</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsonic/limitations/">Limitations</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul>
+      <li><a href="/tsonic/">Overview</a></li>
+    </ul>
+  </div>
 
 
 
@@ -237,315 +140,34 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/examples/dotnet.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="net-integration-examples">.NET Integration Examples</h1>
-<p>Using .NET Base Class Library (BCL) in Tsonic.</p>
-<h2 id="file-operations">File Operations</h2>
-<pre><code class="language-typescript">	import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-	import { File, Directory, Path } from &quot;@tsonic/dotnet/System.IO.js&quot;;
+  <div class="content"><h1 id="clr--net-examples">CLR / .NET Examples</h1>
+<h2 id="console">Console</h2>
+<pre><code class="language-ts">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 
-	export function main(): void {
-	  // Read file
-	  const content = File.ReadAllText(&quot;input.txt&quot;);
-	  Console.WriteLine(content);
-
-	  // Write file
-	  File.WriteAllText(&quot;output.txt&quot;, &quot;Hello, World!&quot;);
-
-	  // Check existence
-	  if (File.Exists(&quot;config.json&quot;)) {
-	    const config = File.ReadAllText(&quot;config.json&quot;);
-	  }
-
-	  // List files
-	  const files = Directory.GetFiles(&quot;.&quot;);
-	  for (const file of files) {
-	    Console.WriteLine(file);
-	  }
-
-	  // Create directory
-	  Directory.CreateDirectory(&quot;data&quot;);
-
-	  // Path manipulation
-	  const fullPath = Path.Combine(&quot;data&quot;, &quot;file.txt&quot;);
-	  const extension = Path.GetExtension(&quot;file.txt&quot;);
-	  const filename = Path.GetFileName(&quot;/path/to/file.txt&quot;);
-	}
+export function main(): void {
+  Console.WriteLine(&quot;Hello&quot;);
+}
 </code></pre>
 <h2 id="collections">Collections</h2>
-<pre><code class="language-typescript">	import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-	import {
-	  List,
-	  Dictionary,
-	  HashSet,
-	} from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+<pre><code class="language-ts">import { Dictionary } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 
-	export function main(): void {
-	  // List&lt;T&gt;
-	  const numbers = new List&lt;number&gt;();
-	  numbers.Add(1);
-	  numbers.Add(2);
-	  numbers.Add(3);
-
-	  Console.WriteLine(numbers.Count);
-	  Console.WriteLine(numbers.Contains(2));
-
-	  numbers.Remove(2);
-	  numbers.Clear();
-
-	  // Dictionary&lt;K,V&gt;
-	  const ages = new Dictionary&lt;string, number&gt;();
-	  ages.Add(&quot;Alice&quot;, 30);
-	  ages.Add(&quot;Bob&quot;, 25);
-
-	  const aliceAge = ages[&quot;Alice&quot;];
-	  const hasAlice = ages.ContainsKey(&quot;Alice&quot;);
-
-	  // HashSet&lt;T&gt;
-	  const unique = new HashSet&lt;string&gt;();
-	  unique.Add(&quot;a&quot;);
-	  unique.Add(&quot;b&quot;);
-	  unique.Add(&quot;a&quot;); // Duplicate, ignored
-
-	  Console.WriteLine(unique.Count); // 2
-
-	  // Dictionary with number keys
-	  const byId = new Dictionary&lt;number, string&gt;();
-	  byId.Add(1, &quot;Alice&quot;);
-	  byId.Add(2, &quot;Bob&quot;);
-	  const name = byId[1]; // &quot;Alice&quot;
-	}
+const map = new Dictionary&lt;string, number&gt;();
+map.Add(&quot;a&quot;, 1);
 </code></pre>
-<h2 id="tuples">Tuples</h2>
-<pre><code class="language-typescript">	import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+<h2 id="json">JSON</h2>
+<pre><code class="language-ts">import { JsonSerializer } from &quot;@tsonic/dotnet/System.Text.Json.js&quot;;
 
-	export function main(): void {
-	  // Create tuple
-	  const point: [number, number] = [10, 20];
-
-	  // Destructure
-	  const [x, y] = point;
-	  Console.WriteLine(`Point: ${x}, ${y}`);
-
-	  // Return multiple values
-	  const result = getMinMax([5, 2, 8, 1, 9]);
-	  Console.WriteLine(`Min: ${result[0]}, Max: ${result[1]}`);
-	}
-
-function getMinMax(numbers: number[]): [number, number] {
-  let min = numbers[0];
-  let max = numbers[0];
-  for (const n of numbers) {
-    if (n &lt; min) min = n;
-    if (n &gt; max) max = n;
-  }
-  return [min, max];
-}
+const text = JsonSerializer.Serialize({ ok: true });
 </code></pre>
-<h2 id="linq-operations">LINQ Operations</h2>
-<pre><code class="language-typescript">	import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
+<h2 id="explicit-numeric-types">Explicit Numeric Types</h2>
+<pre><code class="language-ts">import type { int } from &quot;@tsonic/core/types.js&quot;;
+import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 
-interface User {
-  id: number;
-  name: string;
-  age: number;
-}
-
-	export function main(): void {
-  const users: User[] = [
-    { id: 1, name: &quot;Alice&quot;, age: 30 },
-    { id: 2, name: &quot;Bob&quot;, age: 25 },
-    { id: 3, name: &quot;Charlie&quot;, age: 35 },
-  ];
-
-  // Types are contextually inferred from the array element type
-	  // Filter (Where)
-	  const adults = Enumerable.Where(users, (u) =&gt; u.age &gt;= 30);
-
-  // Transform (Select)
-	  const names = Enumerable.Select(users, (u) =&gt; u.name);
-
-  // First matching
-	  const alice = Enumerable.FirstOrDefault(users, (u) =&gt; u.name === &quot;Alice&quot;);
-
-  // Sorting
-	  const byAge = Enumerable.OrderBy(users, (u) =&gt; u.age);
-
-  // Aggregation
-	  const totalAge = Enumerable.Sum(users, (u) =&gt; u.age);
-	  const averageAge = Enumerable.Average(users, (u) =&gt; u.age);
-
-  // Any/All
-	  const anyAdult = Enumerable.Any(users, (u) =&gt; u.age &gt;= 18);
-	  const allAdults = Enumerable.All(users, (u) =&gt; u.age &gt;= 18);
-	}
+const value: int = 1 as int;
+Console.WriteLine(value.ToString());
 </code></pre>
-<p>Lambda parameter types are contextually inferred from the collection element type.</p>
-<h2 id="string-operations">String Operations</h2>
-<pre><code class="language-typescript">	import { Console, String } from &quot;@tsonic/dotnet/System.js&quot;;
-	import { StringBuilder } from &quot;@tsonic/dotnet/System.Text.js&quot;;
-
-	export function main(): void {
-	  // Efficient string building
-	  const sb = new StringBuilder();
-	  sb.Append(&quot;Hello&quot;);
-	  sb.Append(&quot;, &quot;);
-	  sb.Append(&quot;World&quot;);
-	  sb.AppendLine(&quot;!&quot;);
-
-	  const result = sb.ToString();
-	  Console.WriteLine(result);
-
-	  // String formatting
-	  const formatted = String.Format(&quot;Name: {0}, Age: {1}&quot;, &quot;Alice&quot;, 30);
-	}
-</code></pre>
-<h2 id="date-and-time">Date and Time</h2>
-<pre><code class="language-typescript">	import { Console, DateTime, TimeSpan } from &quot;@tsonic/dotnet/System.js&quot;;
-
-	export function main(): void {
-	  // Current time
-	  const now = DateTime.Now;
-	  const utcNow = DateTime.UtcNow;
-
-  // Create specific date
-  const date = new DateTime(2024, 12, 25);
-
-	  // Date arithmetic
-	  const tomorrow = now.AddDays(1);
-	  const nextWeek = now.AddDays(7);
-	  const nextMonth = now.AddMonths(1);
-
-  // TimeSpan
-  const duration = new TimeSpan(1, 30, 0); // 1 hour 30 minutes
-	  const later = now.Add(duration);
-
-	  // Formatting
-	  const formatted = now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;);
-	  Console.WriteLine(formatted);
-
-	  // Parsing
-	  const parsed = DateTime.Parse(&quot;2024-12-25&quot;);
-	}
-</code></pre>
-<h2 id="console-io">Console I/O</h2>
-<pre><code class="language-typescript">	import { Console, ConsoleColor } from &quot;@tsonic/dotnet/System.js&quot;;
-
-	export function main(): void {
-	  // Output
-	  Console.WriteLine(&quot;Hello, World!&quot;);
-	  Console.Write(&quot;No newline&quot;);
-
-	  // Formatted output
-	  Console.WriteLine(&quot;Name: {0}, Age: {1}&quot;, &quot;Alice&quot;, 30);
-
-	  // Colors
-	  Console.ForegroundColor = ConsoleColor.Green;
-	  Console.WriteLine(&quot;Green text&quot;);
-	  Console.ResetColor();
-
-	  // Read input
-	  Console.Write(&quot;Enter name: &quot;);
-	  const name = Console.ReadLine();
-	  Console.WriteLine(`Hello, ${name}!`);
-	}
-</code></pre>
-<h2 id="math-operations">Math Operations</h2>
-<pre><code class="language-typescript">	import { Math, Random } from &quot;@tsonic/dotnet/System.js&quot;;
-
-	export function main(): void {
-	  // Basic operations
-	  const abs = Math.Abs(-5); // 5
-	  const max = Math.Max(10, 20); // 20
-	  const min = Math.Min(10, 20); // 10
-
-	  // Rounding
-	  const floor = Math.Floor(4.7); // 4
-	  const ceil = Math.Ceiling(4.2); // 5
-	  const round = Math.Round(4.5); // 4 (banker's rounding)
-
-	  // Power and roots
-	  const pow = Math.Pow(2, 10); // 1024
-	  const sqrt = Math.Sqrt(16); // 4
-
-	  // Trigonometry
-	  const sin = Math.Sin(Math.PI / 2);
-	  const cos = Math.Cos(0);
-
-	  // Random
-	  const random = new Random();
-	  const value = random.Next(1, 100); // 1-99
-	  const doubleValue = random.NextDouble(); // 0.0-1.0
-	}
-</code></pre>
-<h2 id="environment">Environment</h2>
-<pre><code class="language-typescript">	import { Console, Environment } from &quot;@tsonic/dotnet/System.js&quot;;
-
-	export function main(): void {
-	  // Environment variables
-	  const path = Environment.GetEnvironmentVariable(&quot;PATH&quot;);
-	  Environment.SetEnvironmentVariable(&quot;MY_VAR&quot;, &quot;value&quot;);
-
-	  // System info
-	  const machineName = Environment.MachineName;
-	  const userName = Environment.UserName;
-	  const osVersion = Environment.OSVersion;
-
-	  // Current directory
-	  const cwd = Environment.CurrentDirectory;
-
-	  // Command line args
-	  const args = Environment.GetCommandLineArgs();
-	  for (const arg of args) {
-	    Console.WriteLine(arg);
-	  }
-
-	  // Exit code
-	  Environment.Exit(0);
-	}
-</code></pre>
-<h2 id="http-client">HTTP Client</h2>
-<pre><code class="language-typescript">	import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-	import { HttpClient } from &quot;@tsonic/dotnet/System.Net.Http.js&quot;;
-
-	export async function main(): Promise&lt;void&gt; {
-	  const client = new HttpClient();
-
-	  // GET request
-	  const response = await client.GetStringAsync(&quot;https://api.example.com/data&quot;);
-	  Console.WriteLine(response);
-	}
-</code></pre>
-<h2 id="json-serialization">JSON Serialization</h2>
-<pre><code class="language-typescript">	import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-	import { JsonSerializer } from &quot;@tsonic/dotnet/System.Text.Json.js&quot;;
-
-interface User {
-  id: number;
-  name: string;
-}
-
-	export function main(): void {
-	  // Serialize
-	  const user: User = { id: 1, name: &quot;Alice&quot; };
-	  const json = JsonSerializer.Serialize(user);
-	  Console.WriteLine(json); // {&quot;id&quot;:1,&quot;name&quot;:&quot;Alice&quot;}
-
-	  // Deserialize
-	  const parsed = JsonSerializer.Deserialize&lt;User&gt;('{&quot;id&quot;:2,&quot;name&quot;:&quot;Bob&quot;}');
-	  Console.WriteLine(parsed?.name); // Bob
-	}
-</code></pre>
-<h3 id="nativeaot-compatibility">NativeAOT Compatibility</h3>
-<p>Tsonic automatically generates a <code>JsonSerializerContext</code> for NativeAOT compatibility.
-You don't need to do anything special—just use <code>JsonSerializer</code> as shown above.</p>
-<p>Behind the scenes, Tsonic:</p>
-<ol>
-<li>Detects all <code>JsonSerializer.Serialize()</code> and <code>Deserialize&lt;T&gt;()</code> calls</li>
-<li>Collects the types being serialized</li>
-<li>Generates <code>__tsonic_json.g.cs</code> with <code>[JsonSerializable]</code> attributes</li>
-<li>Rewrites calls to use the generated context</li>
-</ol>
-<p>This ensures your code works in NativeAOT without reflection-based serialization.</p>
+<h2 id="attributes--interop-oriented-intrinsics">Attributes / Interop-Oriented Intrinsics</h2>
+<p>Use <code>@tsonic/core/lang.js</code> when you need CLR-specific semantics such as <code>asinterface</code>, <code>nameof</code>, <code>sizeof</code>, or attributes DSL support.</p>
 </div>
 </article>
 </main>

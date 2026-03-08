@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
@@ -55,7 +55,7 @@
         
       
         
-          <a class="mount-link " href="/js/">js compat</a>
+          <a class="mount-link " href="/js/">js</a>
         
       
     </nav>
@@ -251,11 +251,11 @@
   <div class="content"><h1 id="getting-started">Getting Started</h1>
 <h2 id="enable-nodejs-apis-in-a-tsonic-project">Enable Node.js APIs in a Tsonic Project</h2>
 <h3 id="new-project">New project</h3>
-<pre><code class="language-bash">tsonic init
-tsonic add npm @tsonic/nodejs
+<pre><code class="language-bash">npx --yes tsonic@latest init --surface nodejs
+npx --yes tsonic@latest add npm @tsonic/nodejs
 </code></pre>
 <h3 id="existing-project">Existing project</h3>
-<pre><code class="language-bash">tsonic add npm @tsonic/nodejs
+<pre><code class="language-bash">npx --yes tsonic@latest add npm @tsonic/nodejs
 </code></pre>
 <p>That will:</p>
 <ul>
@@ -267,22 +267,21 @@ tsonic add npm @tsonic/nodejs
 </ul>
 </li>
 </ul>
-<p>Then run <code>tsonic restore</code> (or just <code>tsonic build</code>, which will restore via <code>dotnet</code>) to materialize the .NET dependencies.</p>
+<p>Then run <code>npx --yes tsonic@latest restore</code> (or <code>npx --yes tsonic@latest build</code>) to materialize .NET dependencies.</p>
 <h2 id="minimal-example">Minimal Example</h2>
-<pre><code class="language-ts">import { console, fs, path } from &quot;@tsonic/nodejs/index.js&quot;;
+<pre><code class="language-ts">import { readFileSync } from &quot;node:fs&quot;;
+import { join } from &quot;node:path&quot;;
 
 export function main(): void {
-  const fullPath = path.join(&quot;src&quot;, &quot;App.ts&quot;);
+  const fullPath = join(&quot;src&quot;, &quot;App.ts&quot;);
   console.log(fullPath);
-
-  if (fs.existsSync(fullPath)) {
-    console.log(fs.readFileSync(fullPath, &quot;utf-8&quot;));
-  }
+  console.log(readFileSync(fullPath, &quot;utf-8&quot;));
 }
 </code></pre>
 <h2 id="notes">Notes</h2>
 <ul>
-<li>Tsonic is ESM-first. Import submodules with <code>.js</code> when you use a subpath (example: <code>@tsonic/nodejs/nodejs.Http.js</code>).</li>
+<li>In <code>--surface nodejs</code>, prefer Node-style imports (<code>node:fs</code>, <code>node:path</code>, ...).</li>
+<li>Tsonic is ESM-first. Import submodules with <code>.js</code> for subpaths (example: <code>@tsonic/nodejs/nodejs.Http.js</code>).</li>
 <li>This library is Node-inspired, but many APIs intentionally follow .NET behavior where it improves ergonomics.</li>
 </ul>
 </div>
