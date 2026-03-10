@@ -280,13 +280,20 @@ export declare const List_1: {
 export type List_1&lt;T&gt; = List_1$instance&lt;T&gt; &amp; __List_1$views&lt;T&gt;;
 </code></pre>
 <h2 id="generating-a-custom-assembly-with-dependencies">Generating a Custom Assembly (with Dependencies)</h2>
-<p>If your assembly references other DLLs outside the runtime directory, add one or
-more <code>--ref-dir</code> entries so tsbindgen can resolve the full closure.</p>
-<pre><code class="language-bash">npx tsbindgen generate -a ./MyLibrary.dll -d $DOTNET_RUNTIME -o ./my-lib-types \
+<p>For normal SDK/runtime installs, tsbindgen automatically discovers the runtime
+reference set. Add <code>--ref-dir</code> only when your assembly references extra DLLs
+outside that standard runtime closure.</p>
+<pre><code class="language-bash">npx tsbindgen generate -a ./MyLibrary.dll -o ./my-lib-types
+
+# Add extra ref dirs only for non-runtime dependencies
+npx tsbindgen generate -a ./MyLibrary.dll -o ./my-lib-types \
   --ref-dir ./libs
 </code></pre>
 <p>To inspect resolution without generating, use <code>resolve-closure</code>:</p>
-<pre><code class="language-bash">npx tsbindgen resolve-closure -a ./MyLibrary.dll --ref-dir $DOTNET_RUNTIME --ref-dir ./libs
+<pre><code class="language-bash">npx tsbindgen resolve-closure -a ./MyLibrary.dll
+
+# Add extra ref dirs only for non-runtime dependencies
+npx tsbindgen resolve-closure -a ./MyLibrary.dll --ref-dir ./libs
 </code></pre>
 <h2 id="validating-output">Validating Output</h2>
 <p>Run TypeScript validation:</p>
