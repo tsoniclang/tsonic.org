@@ -207,14 +207,14 @@
   <div class="content"><h1 id="getting-started">Getting Started</h1>
 <h2 id="enable-js-runtime-apis-in-a-tsonic-project">Enable JS Runtime APIs in a Tsonic Project</h2>
 <h3 id="new-project">New project</h3>
-<pre><code class="language-bash">npx --yes tsonic@latest init --surface js
-npx --yes tsonic@latest add npm @tsonic/js
+<pre><code class="language-bash">npx --yes tsonic@latest init --surface @tsonic/js
 </code></pre>
 <h3 id="existing-project">Existing project</h3>
 <pre><code class="language-bash">npx --yes tsonic@latest add npm @tsonic/js
 </code></pre>
 <p>If you have <code>tsonic</code> installed globally, you can drop the <code>npx --yes tsonic@latest</code> prefix.</p>
-<p>That will:</p>
+<p>For a new project, <code>init --surface @tsonic/js</code> already installs and wires the
+JS package. For an existing project, <code>add npm @tsonic/js</code> will:</p>
 <ul>
 <li>Install the <code>@tsonic/js</code> bindings package in your workspace (<code>package.json</code>) for <code>tsc</code> typechecking</li>
 <li>Apply the package’s <code>.NET</code> dependency manifest (<code>tsonic.bindings.json</code>) to <code>tsonic.workspace.json</code>

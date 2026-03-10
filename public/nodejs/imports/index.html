@@ -249,8 +249,8 @@
   </div>
 
   <div class="content"><h1 id="importing-modules">Importing Modules</h1>
-<h2 id="preferred-in---surface-nodejs-node-style-specifiers">Preferred in <code>--surface nodejs</code>: Node-style specifiers</h2>
-<p>With Node surface enabled, import using Node module names:</p>
+<h2 id="preferred-with-surface-tsonicjs-and-tsonicnodejs-node-style-specifiers">Preferred with <code>surface: &quot;@tsonic/js&quot;</code> and <code>@tsonic/nodejs</code>: Node-style specifiers</h2>
+<p>With <code>surface: &quot;@tsonic/js&quot;</code> and <code>@tsonic/nodejs</code> installed, import using Node module names:</p>
 <pre><code class="language-ts">import { readFileSync } from &quot;node:fs&quot;;
 import { join } from &quot;node:path&quot;;
 import * as process from &quot;node:process&quot;;
@@ -270,7 +270,6 @@ import { join } from &quot;path&quot;;
 <p>Some namespaces are emitted as separate entry points. Example:</p>
 <pre><code class="language-ts">import { http, IncomingMessage, ServerResponse } from &quot;@tsonic/nodejs/nodejs.Http.js&quot;;
 </code></pre>
-<p><code>node:http</code> is currently not mapped by the surface alias set.</p>
 </div>
 </article>
 </main>

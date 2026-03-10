@@ -251,7 +251,7 @@
   <div class="content"><h1 id="getting-started">Getting Started</h1>
 <h2 id="enable-nodejs-apis-in-a-tsonic-project">Enable Node.js APIs in a Tsonic Project</h2>
 <h3 id="new-project">New project</h3>
-<pre><code class="language-bash">npx --yes tsonic@latest init --surface nodejs
+<pre><code class="language-bash">npx --yes tsonic@latest init --surface @tsonic/js
 npx --yes tsonic@latest add npm @tsonic/nodejs
 </code></pre>
 <h3 id="existing-project">Existing project</h3>
@@ -280,7 +280,7 @@ export function main(): void {
 </code></pre>
 <h2 id="notes">Notes</h2>
 <ul>
-<li>In <code>--surface nodejs</code>, prefer Node-style imports (<code>node:fs</code>, <code>node:path</code>, ...).</li>
+<li>With <code>surface: &quot;@tsonic/js&quot;</code> and <code>@tsonic/nodejs</code> installed, prefer Node-style imports (<code>node:fs</code>, <code>node:path</code>, ...).</li>
 <li>Tsonic is ESM-first. Import submodules with <code>.js</code> for subpaths (example: <code>@tsonic/nodejs/nodejs.Http.js</code>).</li>
 <li>This library is Node-inspired, but many APIs intentionally follow .NET behavior where it improves ergonomics.</li>
 </ul>
