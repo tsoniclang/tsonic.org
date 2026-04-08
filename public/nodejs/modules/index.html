@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -105,126 +109,39 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/imports/">Importing Modules</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Modules</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/console/">console</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/path/">path</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/fs/">fs</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/buffer/">Buffer</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/events/">events</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/timers/">timers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/process/">process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/os/">os</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/util/">util</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/assert/">assert</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/performance/">performance</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/stream/">stream</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/readline/">readline</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/querystring/">querystring</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/zlib/">zlib</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/crypto/">crypto</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/tls/">tls</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/x509/">X509 / Certificate</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dns/">dns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/net/">net</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dgram/">dgram</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/child_process/">child_process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/http/">http</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">nodejs</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/nodejs/">Overview</a></li>
+      
+        <li><a class="nav-link active" href="/nodejs/modules/">Modules</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/nodejs/modules/crypto/">crypto</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/events/">events</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/fs/">fs</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/http/">http</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/path/">path</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/process/">process</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -240,64 +157,63 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-        <a href="/nodejs/">nodejs</a>
+        <a href="/nodejs/">Node.js Package</a>
         <span class="sep">/</span>
       
       <span>Modules</span>
     </nav>
-    
+    <a class="edit" href="https://github.com/tsoniclang/nodejs/blob/main/docs/modules/README.md">Edit on GitHub</a>
   </div>
 
-  <h1 class="page-title">Modules</h1>
+  <div class="content"><h1 id="modules">Modules</h1>
+<p><code>@tsonic/nodejs</code> currently covers a practical Node-style module set, including:</p>
+<ul>
+<li><code>fs</code></li>
+<li><code>path</code></li>
+<li><code>http</code></li>
+<li><code>crypto</code></li>
+<li><code>events</code></li>
+<li><code>process</code></li>
+<li><code>stream</code></li>
+<li><code>net</code></li>
+<li><code>tls</code></li>
+<li><code>url</code></li>
+<li><code>dns</code></li>
+<li><code>dgram</code></li>
+<li><code>zlib</code></li>
+<li><code>querystring</code></li>
+<li><code>readline</code></li>
+<li><code>os</code></li>
+<li><code>perf_hooks</code></li>
+<li><code>child_process</code></li>
+</ul>
+<p>The package is not documented here as a byte-for-byte clone of Node. It is a
+curated first-party source package for Tsonic.</p>
+<h2 id="pages">Pages</h2>
+<ul>
+<li><a href="/nodejs/modules/fs/"><code>fs</code></a></li>
+<li><a href="/nodejs/modules/path/"><code>path</code></a></li>
+<li><a href="/nodejs/modules/http/"><code>http</code></a></li>
+<li><a href="/nodejs/modules/crypto/"><code>crypto</code></a></li>
+<li><a href="/nodejs/modules/process/"><code>process</code></a></li>
+<li><a href="/nodejs/modules/events/"><code>events</code></a></li>
+</ul>
+</div>
 
   
     <ul class="page-list">
       
-        <li><a href="/nodejs/modules/assert/">Assert</a></li>
+        <li><a href="/nodejs/modules/crypto/">crypto</a></li>
       
-        <li><a href="/nodejs/modules/buffer/">Buffer</a></li>
+        <li><a href="/nodejs/modules/events/">events</a></li>
       
-        <li><a href="/nodejs/modules/child_process/">Child Process</a></li>
+        <li><a href="/nodejs/modules/fs/">fs</a></li>
       
-        <li><a href="/nodejs/modules/console/">Console</a></li>
+        <li><a href="/nodejs/modules/http/">http</a></li>
       
-        <li><a href="/nodejs/modules/crypto/">Crypto</a></li>
+        <li><a href="/nodejs/modules/path/">path</a></li>
       
-        <li><a href="/nodejs/modules/dgram/">Dgram</a></li>
-      
-        <li><a href="/nodejs/modules/dns/">Dns</a></li>
-      
-        <li><a href="/nodejs/modules/events/">Events</a></li>
-      
-        <li><a href="/nodejs/modules/fs/">Fs</a></li>
-      
-        <li><a href="/nodejs/modules/http/">Http</a></li>
-      
-        <li><a href="/nodejs/modules/net/">Net</a></li>
-      
-        <li><a href="/nodejs/modules/os/">Os</a></li>
-      
-        <li><a href="/nodejs/modules/path/">Path</a></li>
-      
-        <li><a href="/nodejs/modules/performance/">Performance</a></li>
-      
-        <li><a href="/nodejs/modules/process/">Process</a></li>
-      
-        <li><a href="/nodejs/modules/querystring/">Querystring</a></li>
-      
-        <li><a href="/nodejs/modules/readline/">Readline</a></li>
-      
-        <li><a href="/nodejs/modules/stream/">Stream</a></li>
-      
-        <li><a href="/nodejs/modules/timers/">Timers</a></li>
-      
-        <li><a href="/nodejs/modules/tls/">Tls</a></li>
-      
-        <li><a href="/nodejs/modules/util/">Util</a></li>
-      
-        <li><a href="/nodejs/modules/x509/">X509</a></li>
-      
-        <li><a href="/nodejs/modules/zlib/">Zlib</a></li>
+        <li><a href="/nodejs/modules/process/">process</a></li>
       
     </ul>
   

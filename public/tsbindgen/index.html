@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -103,61 +107,47 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Type Generation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Validation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">tsbindgen</div>
+    <ul class="nav-items">
+      <li><a class="nav-link active" href="/tsbindgen/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/naming/">Naming</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/testing/">Testing</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/what-tsbindgen-generates/">What tsbindgen Generates</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/workflow/">Workflow</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -180,76 +170,50 @@
     <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/README.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="tsbindgen-documentation">tsbindgen Documentation</h1>
-<p>tsbindgen generates TypeScript declaration files from .NET assemblies.</p>
-<h2 id="table-of-contents">Table of Contents</h2>
-<h3 id="getting-started">Getting Started</h3>
-<ol>
-<li><a href="/tsbindgen/getting-started/">Getting Started</a> - Installation and first generation</li>
-<li><a href="/tsbindgen/cli/">CLI Reference</a> - Commands and options</li>
-</ol>
-<h3 id="type-generation">Type Generation</h3>
-<ol start="3">
-<li><a href="/tsbindgen/type-mappings/">Type Mappings</a> - How CLR types map to TypeScript</li>
-<li><a href="/tsbindgen/naming/">Naming &amp; Identifiers</a> - CLR-faithful names and TS-safe identifiers</li>
-<li><a href="/tsbindgen/library-mode/">Library Mode</a> - Generating for custom assemblies</li>
-</ol>
-<h3 id="validation">Validation</h3>
-<ol start="6">
-<li><a href="/tsbindgen/testing/">Testing</a> - Validation and regression tests</li>
-<li><a href="/tsbindgen/troubleshooting/">Troubleshooting</a> - Common issues</li>
-</ol>
-<h2 id="quick-links">Quick Links</h2>
+  <div class="content"><h1 id="tsbindgen">tsbindgen</h1>
+<p><code>tsbindgen</code> generates TypeScript declaration packages from .NET assemblies and
+frameworks.</p>
+<h2 id="current-role-in-the-stack">Current role in the stack</h2>
+<p><code>tsbindgen</code> is the generator for CLR binding packages. It is <strong>not</strong> the
+source-of-truth for first-party authored packages like <code>@tsonic/js</code>,
+<code>@tsonic/nodejs</code>, or <code>@tsonic/express</code>.</p>
+<h2 id="pages">Pages</h2>
 <ul>
-<li><a href="/tsbindgen/architecture/">Architecture Documentation</a> - For contributors</li>
-<li><a href="https://github.com/tsoniclang/tsbindgen">GitHub Repository</a></li>
+<li><a href="/tsbindgen/getting-started/">Getting Started</a></li>
+<li><a href="/tsbindgen/cli/">CLI</a></li>
+<li><a href="/tsbindgen/what-tsbindgen-generates/">What tsbindgen Generates</a></li>
+<li><a href="/tsbindgen/type-mappings/">Type Mappings</a></li>
+<li><a href="/tsbindgen/naming/">Naming</a></li>
+<li><a href="/tsbindgen/library-mode/">Library Mode</a></li>
+<li><a href="/tsbindgen/testing/">Testing</a></li>
+<li><a href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
+<li><a href="architecture/">Architecture</a></li>
+<li><a href="/tsbindgen/workflow/">Workflow and Publish Discipline</a></li>
 </ul>
-<h2 id="overview">Overview</h2>
-<h3 id="what-is-tsbindgen">What is tsbindgen?</h3>
-<p>tsbindgen generates TypeScript declaration files (.d.ts) from .NET assemblies:</p>
-<pre><code>.NET Assembly (DLL) -&gt; Reflection -&gt; TypeScript Declarations (.d.ts)
-</code></pre>
-<h3 id="why-tsbindgen">Why tsbindgen?</h3>
+<h2 id="output-families">Output families</h2>
+<p>The current generated package families include:</p>
 <ul>
-<li><strong>Complete BCL Coverage</strong>: All 130 namespaces, 4,296 types, 50,675+ members</li>
-<li><strong>Type Safety</strong>: Branded primitives, generic constraints preserved</li>
-<li><strong>IDE Support</strong>: Full IntelliSense for .NET types in TypeScript</li>
-<li><strong>CLR-faithful names</strong>: No casing transforms; names match the CLR surface</li>
+<li><code>@tsonic/dotnet</code></li>
+<li><code>@tsonic/aspnetcore</code></li>
+<li><code>@tsonic/microsoft-extensions</code></li>
+<li><code>@tsonic/efcore</code></li>
+<li><code>@tsonic/efcore-sqlite</code></li>
+<li><code>@tsonic/efcore-sqlserver</code></li>
+<li><code>@tsonic/efcore-npgsql</code></li>
 </ul>
-<h3 id="output-example">Output Example</h3>
-<pre><code class="language-typescript">// System.Collections.Generic
-export interface List_1&lt;T&gt; {
-    readonly Count: int;
-    Add(item: T): void;
-    Remove(item: T): boolean;
-    Clear(): void;
-}
-
-export declare const List_1: {
-    new &lt;T&gt;(): List_1&lt;T&gt;;
-    new &lt;T&gt;(capacity: int): List_1&lt;T&gt;;
-};
-</code></pre>
-<h2 id="prerequisites">Prerequisites</h2>
+<h2 id="what-makes-it-important">What makes it important</h2>
+<p><code>tsbindgen</code> sits at the boundary between CLR ecosystems and Tsonic authoring.
+It is responsible for:</p>
 <ul>
-<li><strong>.NET 10 SDK</strong>: For assembly reflection</li>
-<li><strong>Node.js 18+</strong>: For validation scripts</li>
+<li>reflecting CLR assemblies and frameworks</li>
+<li>generating TypeScript declarations and binding metadata</li>
+<li>maintaining publishable package structure for binding repos</li>
+<li>participating in release-wave preflight and publish discipline</li>
 </ul>
-<p>Verify installation:</p>
-<pre><code class="language-bash">dotnet --version  # 10.0.x
-node --version    # v18.0.0 or higher
-</code></pre>
-<h2 id="quick-start">Quick Start</h2>
-<pre><code class="language-bash"># Clone and build
-git clone https://github.com/tsoniclang/tsbindgen
-cd tsbindgen
-dotnet build src/tsbindgen/tsbindgen.csproj
-
-# Generate BCL declarations
-dotnet run --project src/tsbindgen/tsbindgen.csproj -- \
-  generate -d ~/.dotnet/shared/Microsoft.NETCore.App/10.0.0 \
-  -o ./output
-</code></pre>
+<h2 id="why-this-section-exists">Why this section exists</h2>
+<p>The older site blurred authored packages and generated binding packages
+together. That is now a source of confusion. This section keeps the distinction
+explicit.</p>
 </div>
 
   
@@ -257,7 +221,7 @@ dotnet run --project src/tsbindgen/tsbindgen.csproj -- \
       
         <li><a href="/tsbindgen/architecture/">Architecture</a></li>
       
-        <li><a href="/tsbindgen/cli/">Cli</a></li>
+        <li><a href="/tsbindgen/cli/">CLI</a></li>
       
         <li><a href="/tsbindgen/getting-started/">Getting Started</a></li>
       
@@ -272,6 +236,10 @@ dotnet run --project src/tsbindgen/tsbindgen.csproj -- \
         <li><a href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
       
         <li><a href="/tsbindgen/type-mappings/">Type Mappings</a></li>
+      
+        <li><a href="/tsbindgen/what-tsbindgen-generates/">What tsbindgen Generates</a></li>
+      
+        <li><a href="/tsbindgen/workflow/">Workflow</a></li>
       
     </ul>
   

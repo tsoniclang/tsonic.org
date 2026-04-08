@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Ir | Tsonic</title>
+    <title>IR | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,51 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/backend/">Backend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/emitter/">Emitter</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/frontend/">Frontend</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/architecture/ir/">IR</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/packages/">Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/runtime/">Runtime</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -135,46 +175,46 @@
         <a href="/tsonic/architecture/">Architecture</a>
         <span class="sep">/</span>
       
-      <span>Ir</span>
+      <span>IR</span>
     </nav>
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/ir.md">Edit on GitHub</a>
   </div>
 
   <div class="content"><h1 id="ir">IR</h1>
-<p>Tsonic’s IR is the frontend/backend boundary.</p>
-<h2 id="what-ir-captures">What IR Captures</h2>
+<p>Tsonic IR is the frontend/backend boundary.</p>
+<h2 id="what-ir-captures">What IR captures</h2>
 <ul>
 <li>module identity</li>
-<li>imports/exports</li>
-<li>statements</li>
-<li>expressions</li>
+<li>imports and exports</li>
+<li>statements and expressions</li>
 <li>resolved types</li>
 <li>generic substitutions</li>
 <li>backend-relevant semantic decisions that must survive into emission</li>
 </ul>
-<h2 id="what-ir-does-not-try-to-be">What IR Does Not Try To Be</h2>
+<h2 id="what-ir-is-not">What IR is not</h2>
 <ul>
-<li>it is not a backend syntax tree</li>
-<li>it is not raw TypeScript AST</li>
-<li>it is not Roslyn AST</li>
+<li>not a backend syntax tree</li>
+<li>not raw TypeScript AST</li>
+<li>not Roslyn AST</li>
 </ul>
 <p>The backend syntax tree is a later layer: <code>CSharpAst</code>.</p>
-<h2 id="why-this-split-exists">Why This Split Exists</h2>
+<h2 id="why-the-split-exists">Why the split exists</h2>
 <p>IR keeps frontend reasoning separate from backend syntax concerns.</p>
 <p>Examples:</p>
 <ul>
-<li>source-package resolution belongs in the frontend/IR side</li>
-<li>C# keyword escaping belongs in the backend AST/printer side</li>
+<li>source-package resolution belongs in the frontend and IR side</li>
+<li>C# keyword escaping belongs in backend AST/printer</li>
 <li>numeric proof belongs before backend emission</li>
 </ul>
-<h2 id="current-pressure-points-captured-in-ir">Current Pressure Points Captured in IR</h2>
+<h2 id="why-ir-matters-in-practice">Why IR matters in practice</h2>
+<p>Most tricky bugs in the stack are frontend-to-backend contract bugs:</p>
 <ul>
-<li><code>nameof</code> / <code>sizeof</code></li>
-<li>Promise chain normalization</li>
-<li>dynamic import normalization</li>
-<li>object-literal method/accessor lowering intent</li>
-<li>generic function value specialization state</li>
+<li>a source-package call surface was not fully specialized</li>
+<li>a promise or callback result shape was normalized incorrectly</li>
+<li>a local package boundary carried the wrong ownership mode</li>
 </ul>
+<p>IR is where those decisions become explicit and testable before the backend has
+to print C# syntax.</p>
 </div>
 </article>
 </main>

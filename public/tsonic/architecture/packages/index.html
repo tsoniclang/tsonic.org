@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,51 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/backend/">Backend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/emitter/">Emitter</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/frontend/">Frontend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/ir/">IR</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/architecture/packages/">Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/runtime/">Runtime</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -140,9 +180,10 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/packages.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="package-architecture">Package Architecture</h1>
-<p>Tsonic uses several package families.</p>
-<h2 id="compiler-packages">Compiler Packages</h2>
+  <div class="content"><h1 id="packages">Packages</h1>
+<p>Tsonic uses several package families, and the architecture only makes sense if
+you keep those families separate.</p>
+<h2 id="compiler-packages">Compiler packages</h2>
 <ul>
 <li><code>@tsonic/frontend</code></li>
 <li><code>@tsonic/emitter</code></li>
@@ -150,26 +191,52 @@
 <li><code>@tsonic/cli</code></li>
 <li><code>tsonic</code></li>
 </ul>
-<h2 id="core-authoring-packages">Core Authoring Packages</h2>
+<p>These implement the compiler and CLI itself.</p>
+<h2 id="core-authoring-packages">Core authoring packages</h2>
 <ul>
 <li><code>@tsonic/core</code></li>
-<li><code>@tsonic/dotnet</code></li>
+<li><code>@tsonic/globals</code></li>
 </ul>
-<h2 id="surface--runtime-packages">Surface / Runtime Packages</h2>
+<p>These support language-facing types, intrinsics, and ambient declarations.</p>
+<h2 id="first-party-source-packages">First-party source packages</h2>
 <ul>
-<li><code>@tsonic/globals</code> — CLR ambient surface</li>
-<li><code>@tsonic/js</code> — JS ambient surface</li>
-<li><code>@tsonic/nodejs</code> — Node module package</li>
+<li><code>@tsonic/js</code></li>
+<li><code>@tsonic/nodejs</code></li>
+<li><code>@tsonic/express</code></li>
 </ul>
-<h2 id="source-packages">Source Packages</h2>
-<p>Tsonic-authored npm packages with <code>tsonic/package-manifest.json</code>.</p>
-<p>These are consumed as source, not just declarations.</p>
-<h2 id="important-separation">Important Separation</h2>
+<p>These packages are authored directly in TypeScript and consumed as source
+through <code>tsonic.package.json</code>.</p>
+<h2 id="generated-clr-binding-packages">Generated CLR binding packages</h2>
+<ul>
+<li><code>@tsonic/dotnet</code></li>
+<li><code>@tsonic/aspnetcore</code></li>
+<li><code>@tsonic/microsoft-extensions</code></li>
+<li><code>@tsonic/efcore*</code></li>
+</ul>
+<p>These are generated from CLR metadata by <code>tsbindgen</code>.</p>
+<h2 id="local-workspace-packages">Local workspace packages</h2>
+<p>These are user-authored sibling projects referenced through:</p>
+<pre><code class="language-json">{
+  &quot;references&quot;: {
+    &quot;packages&quot;: [
+      {
+        &quot;id&quot;: &quot;@acme/domain&quot;,
+        &quot;project&quot;: &quot;../domain&quot;
+      }
+    ]
+  }
+}
+</code></pre>
+<p>They can be owned as <code>source</code> or <code>dll</code>.</p>
+<h2 id="important-separation">Important separation</h2>
 <ul>
 <li>surface package = ambient world</li>
-<li>normal package = importable modules / bindings</li>
+<li>normal package = importable module or binding package</li>
+<li>authored source package = compiled transitively</li>
+<li>generated CLR binding package = declaration + metadata package</li>
 </ul>
-<p>That is why <code>@tsonic/js</code> is a surface, but <code>@tsonic/nodejs</code> is a normal package.</p>
+<p>That is why <code>@tsonic/js</code> can be a surface while <code>@tsonic/nodejs</code> is still a
+normal package.</p>
 </div>
 </article>
 </main>

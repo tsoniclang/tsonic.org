@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,51 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/backend/">Backend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/emitter/">Emitter</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/frontend/">Frontend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/ir/">IR</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/packages/">Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/runtime/">Runtime</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -140,19 +180,18 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/overview.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="architecture-overview">Architecture Overview</h1>
-<h2 id="layer-map">Layer Map</h2>
+  <div class="content"><h1 id="overview">Overview</h1>
+<h2 id="layer-map">Layer map</h2>
 <pre><code class="language-text">CLI
   -&gt; config resolution
-  -&gt; workspace/package manifest orchestration
+  -&gt; workspace/project/package orchestration
 
 Frontend
   -&gt; TypeScript program creation
-  -&gt; surface/core globals injection
-  -&gt; import resolution
+  -&gt; core + surface global setup
+  -&gt; package/source-package resolution
   -&gt; validation
   -&gt; IR construction
-  -&gt; dependency graph
 
 Emitter
   -&gt; semantic preparation
@@ -160,30 +199,39 @@ Emitter
   -&gt; printer
 
 Backend
-  -&gt; generated project files
+  -&gt; generated project layout
   -&gt; dotnet build/publish/test/pack
 </code></pre>
-<h2 id="current-design-rules">Current Design Rules</h2>
-<h3 id="compiler-core-vs-surface">Compiler Core vs Surface</h3>
+<h2 id="core-architectural-rules">Core architectural rules</h2>
+<h3 id="1-compiler-core-vs-surface">1. Compiler core vs surface</h3>
 <ul>
-<li>core globals are compiler-owned</li>
+<li>compiler core globals are compiler-owned</li>
 <li>surface globals come from the active surface package</li>
 <li>packages such as <code>@tsonic/nodejs</code> add importable modules, not ambient worlds</li>
 </ul>
-<h3 id="first-party-source-packages">First-Party Source Packages</h3>
+<h3 id="2-source-packages-are-compiled-as-source">2. Source packages are compiled as source</h3>
 <p>Installed Tsonic source packages are not opaque imports. They are pulled into:</p>
 <ul>
-<li>the same TS Program</li>
+<li>the same TypeScript program</li>
 <li>the same dependency graph</li>
 <li>the same deterministic type/lowering pipeline</li>
 </ul>
-<h3 id="ast-only-emitter">AST-Only Emitter</h3>
-<p>The emitter no longer assembles C# through mixed string shims in the pipeline.</p>
+<h3 id="3-generated-clr-binding-packages-are-different">3. Generated CLR binding packages are different</h3>
+<p>Generated binding packages are declaration + metadata packages. They are not
+compiled as authored source packages, and they are not explained by the same
+manifest model.</p>
+<h3 id="4-the-emitter-is-ast-only">4. The emitter is AST-only</h3>
+<p>The emitter no longer assembles C# through mixed string shims.</p>
 <p>Current path:</p>
 <pre><code class="language-text">IR -&gt; CSharpAst -&gt; printer -&gt; C# text
 </code></pre>
-<h3 id="strict-aot-policy">Strict-AOT Policy</h3>
-<p>The compiler rejects ambiguity before emission instead of weakening semantics and relying on later C# failures.</p>
+<h3 id="5-the-compiler-rejects-ambiguity-early">5. The compiler rejects ambiguity early</h3>
+<p>Tsonic favors deterministic rejection over permissive fallback. That means:</p>
+<ul>
+<li>ambiguous lowering is rejected before emission</li>
+<li>package graph problems surface as compiler diagnostics</li>
+<li>unsupported runtime-shape escapes are rejected rather than hidden</li>
+</ul>
 </div>
 </article>
 </main>

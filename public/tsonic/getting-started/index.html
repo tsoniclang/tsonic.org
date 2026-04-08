@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,75 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/bindings/">Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-modes/">Build Modes</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-output/">Build Output</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-bindings/">CLR Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/callbacks/">Callbacks</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/configuration/">Configuration</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/generators/">Generators</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/language/">Language</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/limitations/">Limitations</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/surfaces-and-packages/">Surfaces And Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/testing-and-quality/">Testing and Quality</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/type-system/">Type System</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/workspace-and-projects/">Workspace and Projects</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -140,110 +204,89 @@
   <div class="content"><h1 id="getting-started">Getting Started</h1>
 <h2 id="requirements">Requirements</h2>
 <ul>
-<li>Node.js <code>22+</code></li>
-<li>.NET <code>10</code> SDK</li>
+<li>Node.js 22+</li>
+<li>.NET 10 SDK</li>
 </ul>
-<p>Verify:</p>
-<pre><code class="language-bash">node --version
-dotnet --version
-</code></pre>
 <h2 id="install">Install</h2>
-<p>Global:</p>
 <pre><code class="language-bash">npm install -g tsonic
 </code></pre>
-<p>Local:</p>
-<pre><code class="language-bash">npm install --save-dev tsonic
-</code></pre>
-<h2 id="initialize-a-workspace">Initialize a Workspace</h2>
-<h3 id="default-clr-surface">Default CLR surface</h3>
+<h2 id="create-a-default-clr-workspace">Create a default CLR workspace</h2>
 <pre><code class="language-bash">mkdir hello-clr
 cd hello-clr
 tsonic init
+tsonic run
 </code></pre>
-<p>This creates:</p>
-<pre><code class="language-text">tsonic.workspace.json
-package.json
-packages/hello-clr/
-  package.json
-  tsonic.json
-  src/App.ts
-  tsonic/package-manifest.json
+<p>Generated sample:</p>
+<pre><code class="language-ts">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
+
+export function main(): void {
+  Console.WriteLine(&quot;Hello from Tsonic.&quot;);
+}
 </code></pre>
-<p>Run it:</p>
-<pre><code class="language-bash">tsonic run
-</code></pre>
-<h3 id="js-surface">JS surface</h3>
+<p>This is the simplest possible CLR-first workspace:</p>
+<ul>
+<li>default surface is <code>clr</code></li>
+<li>CLR APIs are imported explicitly</li>
+<li>the default generated project is an executable</li>
+</ul>
+<h2 id="create-a-js-workspace">Create a JS workspace</h2>
 <pre><code class="language-bash">mkdir hello-js
 cd hello-js
 tsonic init --surface @tsonic/js
 tsonic run
 </code></pre>
-<p>JS sample:</p>
 <pre><code class="language-ts">export function main(): void {
-  const message = &quot;  Hello from Tsonic JS surface!  &quot;.trim();
-  console.log(message);
+  const value = JSON.parse&lt;{ x: number }&gt;('{&quot;x&quot;: 1}');
+  console.log(JSON.stringify(value));
 }
 </code></pre>
-<h3 id="add-node-module-support">Add Node module support</h3>
-<p><code>node:*</code> APIs are not ambient. Keep the JS surface and add the Node package:</p>
-<pre><code class="language-bash">tsonic init --surface @tsonic/js
-tsonic add npm @tsonic/nodejs
+<p>This switches the workspace ambient world to <code>@tsonic/js</code>.</p>
+<h2 id="add-node-modules">Add Node modules</h2>
+<pre><code class="language-bash">tsonic add npm @tsonic/nodejs
 </code></pre>
-<p>Then author normal Node imports:</p>
 <pre><code class="language-ts">import * as fs from &quot;node:fs&quot;;
 import * as path from &quot;node:path&quot;;
 
 export function main(): void {
   const file = path.join(&quot;src&quot;, &quot;App.ts&quot;);
-  console.log(fs.existsSync(file));
+  console.log(file, fs.existsSync(file));
 }
 </code></pre>
-<h2 id="build-commands">Build Commands</h2>
-<p>Generate C# only:</p>
-<pre><code class="language-bash">tsonic generate
-</code></pre>
-<p>Build:</p>
-<pre><code class="language-bash">tsonic build
-</code></pre>
-<p>Build and run:</p>
-<pre><code class="language-bash">tsonic run
-</code></pre>
-<p>Run tests:</p>
-<pre><code class="language-bash">tsonic test
-</code></pre>
-<p>Pack a library project:</p>
-<pre><code class="language-bash">tsonic pack
-</code></pre>
-<h2 id="add-clr-dependencies">Add CLR Dependencies</h2>
-<p>NuGet:</p>
+<p>This is the current package model in action:</p>
+<ul>
+<li>ambient world from <code>@tsonic/js</code></li>
+<li>Node-style modules from <code>@tsonic/nodejs</code></li>
+</ul>
+<h2 id="add-clr-packages">Add CLR packages</h2>
 <pre><code class="language-bash">tsonic add nuget Microsoft.Extensions.Logging 10.0.0
+tsonic restore
 </code></pre>
-<p>Local DLL:</p>
-<pre><code class="language-bash">tsonic add package ./libs/MyCompany.MyLib.dll
+<p>Then import the generated binding package:</p>
+<pre><code class="language-ts">import { ILogger_1 } from &quot;@tsonic/microsoft-extensions/Microsoft.Extensions.Logging.js&quot;;
 </code></pre>
-<p>Regenerate local bindings/cache:</p>
-<pre><code class="language-bash">tsonic restore
-</code></pre>
-<h2 id="source-packages">Source Packages</h2>
-<p><code>tsonic init</code> makes each project npm-source-package-ready by default. The generated manifest:</p>
+<h2 id="first-party-source-packages">First-party source packages</h2>
+<p><code>tsonic init</code> now produces source-package-ready projects by default. Each
+project gets a <code>tsonic.package.json</code> manifest.</p>
+<p>Example:</p>
 <pre><code class="language-json">{
   &quot;schemaVersion&quot;: 1,
   &quot;kind&quot;: &quot;tsonic-source-package&quot;,
   &quot;surfaces&quot;: [&quot;@tsonic/js&quot;],
   &quot;source&quot;: {
     &quot;exports&quot;: {
-      &quot;.&quot;: &quot;./src/App.ts&quot;
+      &quot;.&quot;: &quot;./src/App.ts&quot;,
+      &quot;./index.js&quot;: &quot;./src/App.ts&quot;
     }
   }
 }
 </code></pre>
-<p>Installed packages with that manifest are compiled transitively as TypeScript source, not treated as opaque external modules.</p>
-<h2 id="next">Next</h2>
+<p>Installed source packages with that manifest are compiled transitively as part
+of the same Tsonic program.</p>
+<h2 id="what-to-read-next">What to read next</h2>
 <ul>
-<li><code>cli.md</code></li>
-<li><code>configuration.md</code></li>
-<li><code>language.md</code></li>
-<li><code>bindings.md</code></li>
+<li><a href="/tsonic/cli/">CLI Workflow</a></li>
+<li><a href="/tsonic/surfaces-and-packages/">Surfaces and Packages</a></li>
+<li><a href="/tsonic/workspace-and-projects/">Workspace and Project Files</a></li>
 </ul>
 </div>
 </article>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dotnet | Tsonic</title>
+    <title>CLR and .NET Examples | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,41 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/examples/arrays/">Arrays and Collections</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/basic/">Basic Examples</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/examples/dotnet/">CLR and .NET Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/imports/">Import Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/workspace-packages/">Workspace Package Graphs</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -135,7 +165,7 @@
         <a href="/tsonic/examples/">Examples</a>
         <span class="sep">/</span>
       
-      <span>Dotnet</span>
+      <span>CLR and .NET Examples</span>
     </nav>
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/examples/dotnet.md">Edit on GitHub</a>
   </div>
@@ -159,15 +189,36 @@ map.Add(&quot;a&quot;, 1);
 
 const text = JsonSerializer.Serialize({ ok: true });
 </code></pre>
-<h2 id="explicit-numeric-types">Explicit Numeric Types</h2>
+<h2 id="explicit-numeric-types">Explicit numeric types</h2>
 <pre><code class="language-ts">import type { int } from &quot;@tsonic/core/types.js&quot;;
 import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 
 const value: int = 1 as int;
 Console.WriteLine(value.ToString());
 </code></pre>
-<h2 id="attributes--interop-oriented-intrinsics">Attributes / Interop-Oriented Intrinsics</h2>
-<p>Use <code>@tsonic/core/lang.js</code> when you need CLR-specific semantics such as <code>asinterface</code>, <code>nameof</code>, <code>sizeof</code>, or attributes DSL support.</p>
+<h2 id="aspnet-core">ASP.NET Core</h2>
+<pre><code class="language-ts">import { WebApplication } from &quot;@tsonic/aspnetcore/Microsoft.AspNetCore.Builder.js&quot;;
+import type { ExtensionMethods } from &quot;@tsonic/aspnetcore/Microsoft.AspNetCore.Builder.js&quot;;
+
+export function main(): void {
+  const builder = WebApplication.CreateBuilder();
+  const app = builder.Build() as ExtensionMethods&lt;WebApplication&gt;;
+  app.MapGet(&quot;/&quot;, () =&gt; &quot;Hello&quot;);
+  app.Run(&quot;http://localhost:8080&quot;);
+}
+</code></pre>
+<h2 id="attributes-and-interop-intrinsics">Attributes and interop intrinsics</h2>
+<p>Use <code>@tsonic/core/lang.js</code> when you need CLR-specific semantics such as:</p>
+<ul>
+<li><code>asinterface</code></li>
+<li><code>nameof</code></li>
+<li><code>sizeof</code></li>
+<li><code>defaultof</code></li>
+<li><code>out</code></li>
+<li>attribute markers and overload-family markers</li>
+</ul>
+<p>The current package model keeps those CLR-facing tools explicit instead of
+hiding them behind ambient JS-style behavior.</p>
 </div>
 </article>
 </main>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cli | Tsonic</title>
+    <title>CLI | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,75 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/bindings/">Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-modes/">Build Modes</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-output/">Build Output</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-bindings/">CLR Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/callbacks/">Callbacks</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/configuration/">Configuration</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/generators/">Generators</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/language/">Language</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/limitations/">Limitations</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/surfaces-and-packages/">Surfaces And Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/testing-and-quality/">Testing and Quality</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/type-system/">Type System</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/workspace-and-projects/">Workspace and Projects</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -132,106 +196,226 @@
         <a href="/tsonic/">Tsonic</a>
         <span class="sep">/</span>
       
-      <span>Cli</span>
+      <span>CLI</span>
     </nav>
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/cli.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="cli-reference">CLI Reference</h1>
-<p>This page documents the current Tsonic CLI.</p>
-<h2 id="workspace-model">Workspace Model</h2>
-<p>Tsonic always works inside a workspace:</p>
+  <div class="content"><h1 id="cli-workflow">CLI Workflow</h1>
+<p>The <code>tsonic</code> CLI owns the whole user workflow:</p>
+<pre><code class="language-bash">tsonic init
+tsonic add
+tsonic restore
+tsonic generate
+tsonic build
+tsonic run
+tsonic test
+tsonic pack
+</code></pre>
+<p>The CLI is intentionally opinionated:</p>
 <ul>
-<li>root config: <code>tsonic.workspace.json</code></li>
-<li>projects: <code>packages/&lt;name&gt;/tsonic.json</code></li>
-<li>one active ambient surface per workspace</li>
-<li>external CLR/npm dependencies live at workspace scope</li>
+<li>workspaces are mandatory</li>
+<li>projects live under <code>packages/&lt;name&gt;/</code></li>
+<li>external CLR dependencies are workspace-scoped</li>
+<li>source-package manifests and binding manifests drive restore behavior</li>
 </ul>
-<h2 id="commands">Commands</h2>
+<h2 id="the-normal-loop">The normal loop</h2>
+<p>For a JS + Node project:</p>
+<pre><code class="language-bash">tsonic init --surface @tsonic/js
+tsonic add npm @tsonic/nodejs
+tsonic restore
+tsonic run
+</code></pre>
+<p>For a CLR-first project:</p>
+<pre><code class="language-bash">tsonic init
+tsonic run
+</code></pre>
+<h2 id="what-each-command-does">What each command does</h2>
 <h3 id="tsonic-init"><code>tsonic init</code></h3>
-<p>Initializes a workspace and a default project.</p>
-<p>Examples:</p>
+<p>Initializes a workspace plus a default project under <code>packages/&lt;workspaceName&gt;/</code>
+and creates:</p>
+<ul>
+<li><code>tsonic.workspace.json</code></li>
+<li><code>packages/&lt;name&gt;/tsonic.json</code></li>
+<li><code>packages/&lt;name&gt;/tsonic.package.json</code></li>
+<li><code>packages/&lt;name&gt;/src/App.ts</code></li>
+<li>root <code>package.json</code> configured as an npm workspace</li>
+</ul>
+<p>Useful forms:</p>
 <pre><code class="language-bash">tsonic init
 tsonic init --surface @tsonic/js
-tsonic init --skip-types
 </code></pre>
-<p>Options:</p>
+<p>Key behavior:</p>
 <ul>
-<li><code>--surface &lt;name&gt;</code> — <code>clr</code> or exact surface package name such as <code>@tsonic/js</code></li>
-<li><code>--skip-types</code> — skip initial npm surface/type installs</li>
-<li><code>--types-version &lt;ver&gt;</code> — pin the installed package version</li>
+<li>creates a workspace-scoped <code>package.json</code> with npm workspaces</li>
+<li>creates a default project under <code>packages/&lt;workspace-name&gt;/</code></li>
+<li>creates <code>tsonic.package.json</code> so the default project is already a publishable
+source package</li>
+<li>bootstraps required surface packages when <code>--surface</code> is not <code>clr</code></li>
 </ul>
-<h3 id="tsonic-add-npm-package"><code>tsonic add npm &lt;package&gt;</code></h3>
-<p>Installs an npm package and merges any Tsonic manifest it carries into the workspace.</p>
+<h3 id="tsonic-add-npm-packagespec"><code>tsonic add npm &lt;packageSpec&gt;</code></h3>
+<p>Installs an npm package and applies its manifest contract.</p>
+<p>That package can be:</p>
+<ul>
+<li>a first-party source package with <code>tsonic.package.json</code></li>
+<li>a generated CLR binding package with <code>tsonic.bindings.json</code></li>
+</ul>
 <p>Examples:</p>
 <pre><code class="language-bash">tsonic add npm @tsonic/nodejs
-tsonic add npm @acme/math
+tsonic add npm @tsonic/express
+tsonic add npm file:../my-local-package
 </code></pre>
-<p>Supported package manifest families:</p>
+<p>Important distinction:</p>
 <ul>
-<li>first-party Aikya/source-package manifests</li>
-<li>bindings manifests for CLR/runtime packages</li>
+<li><code>tsonic.package.json</code> -&gt; authored source package consumed as source</li>
+<li><code>tsonic.bindings.json</code> -&gt; generated CLR binding package</li>
 </ul>
+<p><code>add npm</code> understands both and updates the workspace accordingly.</p>
 <h3 id="tsonic-add-package-dll-types"><code>tsonic add package &lt;dll&gt; [types]</code></h3>
-<p>Adds a local DLL reference.</p>
+<p>Adds a local DLL dependency to the workspace.</p>
+<p>If <code>types</code> is omitted, <code>tsonic</code> can generate a bindings package through
+<code>tsbindgen</code>.</p>
 <p>Examples:</p>
 <pre><code class="language-bash">tsonic add package ./libs/MyLib.dll
 tsonic add package ./libs/MyLib.dll @company/mylib-types
 </code></pre>
-<p>If <code>types</code> is omitted, Tsonic generates local bindings through <code>restore</code>.</p>
-<h3 id="tsonic-add-nuget-id-version-types"><code>tsonic add nuget &lt;id&gt; &lt;version&gt; [types]</code></h3>
-<p>Adds a NuGet package reference.</p>
+<p>When <code>types</code> is omitted, Tsonic resolves the DLL closure and generates a local
+bindings package through <code>tsbindgen</code>.</p>
+<h3 id="tsonic-add-nuget-packageid-version-types"><code>tsonic add nuget &lt;PackageId&gt; &lt;Version&gt; [types]</code></h3>
+<p>Adds a NuGet package reference at workspace scope.</p>
 <p>Examples:</p>
-<pre><code class="language-bash">tsonic add nuget Microsoft.Extensions.Logging 10.0.0
-tsonic add nuget Npgsql.EntityFrameworkCore.PostgreSQL 10.0.0 @tsonic/efcore-npgsql
+<pre><code class="language-bash">tsonic add nuget Microsoft.EntityFrameworkCore 10.0.0
+tsonic add nuget Microsoft.Extensions.Logging 10.0.0 @tsonic/microsoft-extensions
 </code></pre>
-<h3 id="tsonic-add-framework-frameworkreference-types"><code>tsonic add framework &lt;frameworkReference&gt; [types]</code></h3>
-<p>Adds a <code>FrameworkReference</code> to the workspace.</p>
+<p>If <code>types</code> is omitted, restore generates bindings for the package and its
+transitive closure. Versions are pinned; Tsonic does not silently upgrade or
+downgrade them for you.</p>
+<h3 id="tsonic-add-framework-frameworkreference-types"><code>tsonic add framework &lt;FrameworkReference&gt; [types]</code></h3>
+<p>Adds a <code>FrameworkReference</code> at workspace scope.</p>
 <p>Example:</p>
 <pre><code class="language-bash">tsonic add framework Microsoft.AspNetCore.App @tsonic/aspnetcore
 </code></pre>
-<h3 id="tsonic-remove-nuget-id"><code>tsonic remove nuget &lt;id&gt;</code></h3>
-<p>Removes a workspace NuGet package reference.</p>
-<h3 id="tsonic-update-nuget-id-version"><code>tsonic update nuget &lt;id&gt; &lt;version&gt;</code></h3>
-<p>Updates a workspace NuGet package version.</p>
+<p>If <code>types</code> is omitted, Tsonic generates a local bindings package for that
+framework from installed shared-framework assemblies.</p>
+<h3 id="tsonic-remove-nuget-packageid"><code>tsonic remove nuget &lt;PackageId&gt;</code></h3>
+<p>Removes a NuGet package reference from <code>tsonic.workspace.json</code>.</p>
+<p>Use this when the workspace no longer needs a CLR package or when you want to
+replace it with a different package family.</p>
+<h3 id="tsonic-update-nuget-packageid-version"><code>tsonic update nuget &lt;PackageId&gt; &lt;Version&gt;</code></h3>
+<p>Updates a pinned NuGet package version in <code>tsonic.workspace.json</code>.</p>
+<p>This command is intentionally explicit because version drift is part of the
+release discipline.</p>
 <h3 id="tsonic-restore"><code>tsonic restore</code></h3>
-<p>Restores workspace CLR dependencies and regenerates local bindings where needed.</p>
-<p>Use <code>--strict</code> to fail instead of applying constructor-constraint relaxations during bindgen.</p>
-<h3 id="tsonic-generate-entry"><code>tsonic generate [entry]</code></h3>
-<p>Generates C# only.</p>
-<h3 id="tsonic-build-entry"><code>tsonic build [entry]</code></h3>
-<p>Builds executable or library output.</p>
-<p>Useful flags:</p>
+<p>Synchronizes the workspace dependency graph and applies package-manifest
+runtime/binding requirements.</p>
+<p>Use this after changing:</p>
 <ul>
-<li><code>--rid &lt;rid&gt;</code></li>
-<li><code>--no-aot</code></li>
-<li><code>--no-generate</code></li>
-<li><code>--optimize size|speed</code></li>
-<li><code>--no-strip</code></li>
-<li><code>--lib &lt;path&gt;</code> (repeatable)</li>
+<li>npm packages</li>
+<li>framework references</li>
+<li>NuGet packages</li>
+<li>local package graphs</li>
 </ul>
-<h3 id="tsonic-run-entry----args"><code>tsonic run [entry] -- [args...]</code></h3>
-<p>Builds and runs the executable project.</p>
+<p>Restore is where Tsonic materializes workspace-scoped dependency intent:</p>
+<ul>
+<li>generated bindings for CLR inputs</li>
+<li>surface-required npm packages</li>
+<li>package-manifest runtime requirements</li>
+<li>normalized manifest data under <code>.tsonic/</code></li>
+</ul>
+<h3 id="tsonic-generate"><code>tsonic generate</code></h3>
+<p>Emits the generated C# project without compiling it.</p>
+<p>Use this when you want to:</p>
+<ul>
+<li>inspect generated source</li>
+<li>debug a package graph issue</li>
+<li>run custom downstream build steps on the generated project</li>
+<li>preserve generated output for external tools such as EF compiled-model steps</li>
+</ul>
+<p>The command also accepts an optional positional entry override:</p>
+<pre><code class="language-bash">tsonic generate src/App.ts --project api
+</code></pre>
+<h3 id="tsonic-build"><code>tsonic build</code></h3>
+<p>Compiles the selected project into the configured output shape.</p>
+<p>Useful forms:</p>
+<pre><code class="language-bash">tsonic build
+tsonic build --project api
+tsonic build src/App.ts --project api
+tsonic build --rid linux-x64
+tsonic build --no-aot
+</code></pre>
+<p><code>build</code> respects project output mode:</p>
+<ul>
+<li>executable</li>
+<li>library</li>
+<li>NativeAOT shared/static library</li>
+</ul>
+<p>It also respects local package ownership mode (<code>source</code> vs <code>dll</code>) when the
+project references sibling first-party packages.</p>
+<h3 id="tsonic-run"><code>tsonic run</code></h3>
+<p>Builds and runs the selected executable project.</p>
+<pre><code class="language-bash">tsonic run
+tsonic run --project api
+tsonic run src/App.ts --project api
+tsonic run --project api -- --port 8080
+</code></pre>
 <h3 id="tsonic-test"><code>tsonic test</code></h3>
-<p>Generates a non-NativeAOT test assembly from <code>tests.entryPoint</code> and runs <code>dotnet test</code>.</p>
+<p>Generates a non-NativeAOT test assembly and runs <code>dotnet test</code>.</p>
+<p>This uses the project’s <code>tests.entryPoint</code> configuration.</p>
+<p>It generates a managed test assembly and delegates execution to <code>dotnet test</code>.
+That means test-only framework references and NuGet packages live in
+<code>testDotnet</code> / <code>tests</code> configuration rather than in ad hoc shell scripts.</p>
 <h3 id="tsonic-pack"><code>tsonic pack</code></h3>
-<p>Creates a NuGet package for a library project.</p>
-<h2 id="global-options">Global Options</h2>
+<p>Packages a library project into a NuGet package.</p>
+<p>This only works when:</p>
 <ul>
-<li><code>--project &lt;name&gt;</code></li>
-<li><code>--config &lt;file&gt;</code></li>
-<li><code>--verbose</code></li>
-<li><code>--quiet</code></li>
-<li><code>--strict</code></li>
-<li><code>--help</code></li>
-<li><code>--version</code></li>
+<li><code>output.type</code> is <code>&quot;library&quot;</code></li>
+<li><code>output.packable</code> is <code>true</code></li>
 </ul>
-<h2 id="important-current-rules">Important Current Rules</h2>
+<p>The current pack flow is:</p>
+<ol>
+<li>generate the library project</li>
+<li>run <code>dotnet pack</code> on the generated <code>tsonic.csproj</code></li>
+<li>emit a <code>.nupkg</code> under the generated <code>bin/Release</code> tree</li>
+</ol>
+<h2 id="important-flags">Important flags</h2>
 <ul>
-<li>Surfaces are ambient-only selection.</li>
-<li><code>@tsonic/nodejs</code> is a package, not a surface.</li>
-<li><code>clr</code> is still the default when <code>surface</code> is omitted.</li>
-<li><code>build</code> / <code>run</code> / <code>test</code> operate on the selected project under <code>packages/&lt;name&gt;/</code>.</li>
+<li><code>--project &lt;name&gt;</code> — select <code>packages/&lt;name&gt;/</code></li>
+<li><code>--surface &lt;name&gt;</code> — choose the workspace ambient surface during <code>init</code></li>
+<li><code>--strict</code> — strict bindings generation for restore/add flows</li>
+<li><code>--deps &lt;dir&gt;</code> — extra assembly probe directories for generated bindings</li>
+<li><code>--rid &lt;rid&gt;</code> — runtime identifier for native builds</li>
+<li><code>--no-aot</code> — build managed output instead of NativeAOT</li>
+<li><code>--no-generate</code> — build or run from an existing generated directory</li>
+<li><code>--keep-temp</code> — keep build artifacts</li>
+</ul>
+<p>Other useful current flags:</p>
+<ul>
+<li>positional <code>&lt;entry&gt;</code> for <code>generate</code>, <code>build</code>, and <code>run</code></li>
+<li><code>-c, --config &lt;file&gt;</code> to select a workspace file explicitly</li>
+<li><code>-V, --verbose</code> and <code>-q, --quiet</code> for CLI noise control</li>
+<li><code>--types-version &lt;ver&gt;</code> and <code>--skip-types</code> for init bootstrapping</li>
+<li><code>-L, --lib &lt;path&gt;</code> for explicit DLL references during build flows</li>
+</ul>
+<h2 id="important-current-rules">Important current rules</h2>
+<ul>
+<li>surfaces are ambient-world selection, not normal packages</li>
+<li><code>@tsonic/nodejs</code> is a package, not a surface</li>
+<li><code>clr</code> remains the default when <code>surface</code> is omitted</li>
+<li><code>build</code>, <code>run</code>, <code>test</code>, and <code>pack</code> operate on the selected project under
+<code>packages/&lt;name&gt;/</code></li>
+<li>workspace-level dependencies live in <code>tsonic.workspace.json</code>, not per-project</li>
+<li>the CLI does not silently blur authored source packages and generated CLR
+binding packages</li>
+</ul>
+<h2 id="practical-guidance">Practical guidance</h2>
+<ul>
+<li>use <code>init</code> once per workspace root</li>
+<li>use <code>add npm</code> for authored source packages and prebuilt binding packages</li>
+<li>use <code>add nuget</code>, <code>add framework</code>, and <code>add package</code> for CLR inputs</li>
+<li>use <code>restore</code> after dependency-graph changes</li>
+<li>use <code>generate</code> when debugging or when a downstream tool needs the generated
+project</li>
+<li>use <code>build</code>, <code>run</code>, <code>test</code>, and <code>pack</code> for normal day-to-day workflows</li>
 </ul>
 </div>
 </article>

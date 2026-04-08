@@ -58,9 +58,13 @@
           <a class="mount-link active" href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -107,82 +111,37 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/js/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/imports/">Importing APIs</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">APIs</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/js/modules/console/">console</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/json/">JSON</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/math/">Math</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/timers/">Timers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/globals/">Globals</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/jsarray/">JSArray</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/collections/">Map/Set/WeakMap/WeakSet</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/typed-arrays/">ArrayBuffer + Typed Arrays</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/date/">Date</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/regexp/">RegExp</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/number/">Number</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/string/">String</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">js</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/js/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/js/modules/">Modules</a></li>
+        
+          <li><a class="nav-link " href="/js/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link active" href="/js/imports/">Imports</a></li>
+        
+          <li><a class="nav-link " href="/js/runtime-model/">Runtime Model</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
 
@@ -196,28 +155,29 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-        <a href="/js/">js</a>
+        <a href="/js/">JavaScript Surface</a>
         <span class="sep">/</span>
       
       <span>Imports</span>
     </nav>
-    <a class="edit" href="https://github.com/tsoniclang/js-runtime/blob/main/docs/imports.md">Edit on GitHub</a>
+    <a class="edit" href="https://github.com/tsoniclang/js/blob/main/docs/imports.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="importing-apis">Importing APIs</h1>
-<p>In a workspace using <code>--surface @tsonic/js</code>, you can use JS builtins directly:</p>
-<pre><code class="language-ts">export function main(): void {
-  console.log(JSON.stringify({ ok: true }));
-}
+  <div class="content"><h1 id="imports">Imports</h1>
+<p><code>@tsonic/js</code> is normally used through the ambient surface, but direct imports
+remain available.</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-ts">import { Date } from &quot;@tsonic/js/index.js&quot;;
+import { Math } from &quot;@tsonic/js/index.js&quot;;
 </code></pre>
-<p>Direct imports are still supported when you want explicit symbols:</p>
-<pre><code class="language-ts">import { console, JSON, Math, Timers } from &quot;@tsonic/js/index.js&quot;;
-</code></pre>
-<p>This is a <strong>Tsonic-specific</strong> bindings package; it is not the Node/Browser global environment.</p>
-<p>If you also want Node-style libraries like <code>fs</code> and <code>path</code>, use <code>@tsonic/nodejs</code> separately:</p>
-<pre><code class="language-ts">import { readFileSync } from &quot;node:fs&quot;;
-import { join } from &quot;node:path&quot;;
-</code></pre>
+<p>Use direct imports when you want an explicit package-root reference rather than
+the ambient surface view.</p>
+<h2 id="typical-cases-for-direct-imports">Typical cases for direct imports</h2>
+<ul>
+<li>explicit package ownership in a library surface</li>
+<li>importing non-ambient helpers</li>
+<li>documentation and examples where you want to show the package boundary clearly</li>
+</ul>
 </div>
 </article>
 </main>

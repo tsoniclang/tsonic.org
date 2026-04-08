@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -103,61 +107,51 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Type Generation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Validation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">tsbindgen</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsbindgen/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a></li>
+        
+          <li><a class="nav-link active" href="/tsbindgen/naming/">Naming</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/testing/">Testing</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/what-tsbindgen-generates/">What tsbindgen Generates</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/workflow/">Workflow</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -183,39 +177,19 @@
     <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/naming.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="naming--identifiers">Naming &amp; Identifiers</h1>
-<p>tsbindgen emits <strong>CLR-faithful names</strong>. There are no casing transforms (no camelCase/PascalCase modes).</p>
-<h2 id="member-names-methods--properties--fields">Member names (methods / properties / fields)</h2>
-<ul>
-<li>Members keep their <strong>CLR name</strong> exactly.</li>
-<li>This is required for “airplane-grade” correctness: casing transforms can mask real collisions and can silently redirect calls.</li>
-</ul>
-<pre><code class="language-ts">list.GetEnumerator();
-Console.WriteLine(&quot;hello&quot;);
-String.IsNullOrEmpty(s);
-Array.Sort(array);
-</code></pre>
-<p>If you want JavaScript-style names, define them in the library itself (e.g. <code>console.log</code> in <code>@tsonic/js</code>, <code>fs.readFile</code> in <code>@tsonic/nodejs</code>). tsbindgen will emit those names as-is because they are the CLR names.</p>
-<h2 id="type-names">Type names</h2>
-<p>Type names are derived deterministically from CLR names to be valid TS identifiers:</p>
-<ul>
-<li>Generic arity: <code>List`1</code> → <code>List_1</code></li>
-<li>Nested types: <code>Outer+Inner</code> → <code>Outer_Inner</code></li>
-</ul>
+  <div class="content"><h1 id="naming">Naming</h1>
+<p><code>tsbindgen</code> favors CLR-faithful naming over cosmetic translation.</p>
+<h2 id="why">Why</h2>
+<p>Generated binding packages are interop surfaces. Predictability against CLR
+names is more important than JavaScript-style renaming.</p>
+<h2 id="result">Result</h2>
+<p>Import paths and type names follow CLR namespace and member structure closely.</p>
 <p>Examples:</p>
-<pre><code class="language-ts">export type List_1&lt;T&gt; = List_1$instance&lt;T&gt; &amp; __List_1$views&lt;T&gt;;
-export type Dictionary_2&lt;TKey, TValue&gt; = Dictionary_2$instance&lt;TKey, TValue&gt; &amp; __Dictionary_2$views&lt;TKey, TValue&gt;;
-</code></pre>
-<h2 id="reserved-words">Reserved words</h2>
-<p>Type names and binding identifiers (vars/params) are sanitized in contexts where TS forbids them.</p>
 <ul>
-<li>Type names: <code>type string = ...</code> is illegal, so <code>string</code> would become <code>string_</code> if it ever appeared as a type alias name.</li>
-<li>Parameter names: <code>switch</code> becomes <code>switch_</code>.</li>
+<li><code>System.Text.Json</code> stays <code>System.Text.Json</code></li>
+<li><code>List&lt;T&gt;</code> becomes <code>List_1&lt;T&gt;</code> when arity needs to stay explicit</li>
+<li>friendly aliases may exist, but CLR identity still wins</li>
 </ul>
-<p>Member names (methods/properties) are emitted in <code>IdentifierName</code> positions, so keywords are allowed and are emitted as-is.</p>
-<h2 id="collisions">Collisions</h2>
-<p>If the CLR surface contains a collision that TypeScript cannot represent directly (e.g., same name used for incompatible member kinds), tsbindgen resolves it deterministically using numeric suffixes (<code>Foo</code>, <code>Foo2</code>, ...).</p>
-<p>These suffixes are a last resort and are validated so they do not leak onto “normal” surfaces unless unavoidable.</p>
 </div>
 </article>
 </main>

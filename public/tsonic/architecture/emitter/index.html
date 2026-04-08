@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,51 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/backend/">Backend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/architecture/emitter/">Emitter</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/frontend/">Frontend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/ir/">IR</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/packages/">Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/runtime/">Runtime</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -142,39 +182,39 @@
 
   <div class="content"><h1 id="emitter">Emitter</h1>
 <p>The emitter converts IR into <code>CSharpAst</code>, then the printer turns that into C#.</p>
-<h2 id="current-architecture">Current Architecture</h2>
+<h2 id="current-architecture">Current architecture</h2>
 <pre><code class="language-text">IR
   -&gt; semantic helpers
   -&gt; CSharpAst builders
   -&gt; printer
   -&gt; .cs text
 </code></pre>
-<h2 id="important-current-fact">Important Current Fact</h2>
+<h2 id="important-current-fact">Important current fact</h2>
 <p>The emitter is AST-only now.</p>
-<p>The old mixed pipeline of AST plus mid-pipeline C# text shims has been removed from the supported path.</p>
-<h2 id="major-areas">Major Areas</h2>
+<p>The old mixed pipeline of AST plus mid-pipeline C# text shims is no longer the
+supported architecture.</p>
+<h2 id="major-areas">Major areas</h2>
 <ul>
 <li>type emission</li>
 <li>expression emission</li>
 <li>statement emission</li>
 <li>module assembly</li>
-<li>imports/namespaces</li>
+<li>imports and namespaces</li>
 <li>specialization and helper synthesis</li>
-<li>mutable-storage/runtime helper generation</li>
 </ul>
-<h2 id="promise-lowering">Promise Lowering</h2>
-<p>Promise constructors and chains are normalized before final emission so the emitter works with the normalized result type rather than leaking wrapper unions into backend generics.</p>
-<h2 id="object-literals">Object Literals</h2>
-<p>Emitter handles deterministic object-literal lowering for:</p>
+<h2 id="where-the-hard-problems-usually-live">Where the hard problems usually live</h2>
+<p>Emitter bugs usually show up in clusters like:</p>
 <ul>
-<li>synthesized nominal helper types</li>
-<li>accessors</li>
-<li>shorthand methods</li>
-<li>supported runtime captures</li>
-<li>unknown/object-bag fallbacks where the contextual target demands it</li>
+<li>overload specialization</li>
+<li>generic substitution at call sites</li>
+<li>wrapper/unwrapper normalization for unions and promises</li>
+<li>conversion of source-package semantics into backend-safe shapes</li>
 </ul>
-<h2 id="output-boundary">Output Boundary</h2>
-<p>The printer is the only stage that produces final C# text.</p>
+<p>That is why emitter tests, goldens, and E2E fixtures remain one of the heaviest
+parts of the <code>run-all</code> suite.</p>
+<h2 id="promise-lowering">Promise lowering</h2>
+<p>Promise constructors and chains are normalized before final emission so the
+emitter works with the normalized result type rather than stale wrapper shapes.</p>
 </div>
 </article>
 </main>

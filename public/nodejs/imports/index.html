@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -105,126 +109,37 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/imports/">Importing Modules</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Modules</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/console/">console</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/path/">path</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/fs/">fs</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/buffer/">Buffer</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/events/">events</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/timers/">timers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/process/">process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/os/">os</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/util/">util</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/assert/">assert</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/performance/">performance</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/stream/">stream</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/readline/">readline</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/querystring/">querystring</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/zlib/">zlib</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/crypto/">crypto</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/tls/">tls</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/x509/">X509 / Certificate</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dns/">dns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/net/">net</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dgram/">dgram</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/child_process/">child_process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/http/">http</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">nodejs</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/nodejs/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/nodejs/modules/">Modules</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link active" href="/nodejs/imports/">Imports</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules-and-runtime/">Modules And Runtime</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -240,36 +155,42 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-        <a href="/nodejs/">nodejs</a>
+        <a href="/nodejs/">Node.js Package</a>
         <span class="sep">/</span>
       
       <span>Imports</span>
     </nav>
-    <a class="edit" href="https://github.com/tsoniclang/nodejs-clr/blob/main/docs/imports.md">Edit on GitHub</a>
+    <a class="edit" href="https://github.com/tsoniclang/nodejs/blob/main/docs/imports.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="importing-modules">Importing Modules</h1>
-<h2 id="preferred-with-surface-tsonicjs-and-tsonicnodejs-node-style-specifiers">Preferred with <code>surface: &quot;@tsonic/js&quot;</code> and <code>@tsonic/nodejs</code>: Node-style specifiers</h2>
-<p>With <code>surface: &quot;@tsonic/js&quot;</code> and <code>@tsonic/nodejs</code> installed, import using Node module names:</p>
-<pre><code class="language-ts">import { readFileSync } from &quot;node:fs&quot;;
-import { join } from &quot;node:path&quot;;
-import * as process from &quot;node:process&quot;;
+  <div class="content"><h1 id="imports">Imports</h1>
+<p>You can use either:</p>
+<ul>
+<li>Node-style aliases such as <code>node:fs</code></li>
+<li>direct package subpaths such as <code>@tsonic/nodejs/fs.js</code></li>
+</ul>
+<h2 id="recommended-style">Recommended style</h2>
+<p>Prefer <code>node:*</code> imports when you want the most natural authoring style:</p>
+<pre><code class="language-ts">import * as fs from &quot;node:fs&quot;;
+import * as path from &quot;node:path&quot;;
 </code></pre>
-<p>Bare aliases are also supported:</p>
-<pre><code class="language-ts">import { readFileSync } from &quot;fs&quot;;
-import { join } from &quot;path&quot;;
-</code></pre>
-<h2 id="direct-package-imports-remain-supported">Direct package imports remain supported</h2>
-<p>You can still import directly from <code>@tsonic/nodejs/index.js</code>:</p>
+<p>Use direct package imports when you want explicit package-root references.</p>
+<h2 id="package-root-imports">Package root imports</h2>
+<p>These remain valid:</p>
 <pre><code class="language-ts">import { fs, path, process, crypto } from &quot;@tsonic/nodejs/index.js&quot;;
 </code></pre>
-<p>Types exported from the package root are also available there:</p>
-<pre><code class="language-ts">import { EventEmitter } from &quot;@tsonic/nodejs/index.js&quot;;
-</code></pre>
-<h2 id="submodules-separate-namespaces">Submodules (separate namespaces)</h2>
-<p>Some namespaces are emitted as separate entry points. Example:</p>
-<pre><code class="language-ts">import { http, IncomingMessage, ServerResponse } from &quot;@tsonic/nodejs/nodejs.Http.js&quot;;
-</code></pre>
+<p>Use them when you want explicit package-root access rather than Node-style
+module specifiers.</p>
+<h2 id="bare-aliases">Bare aliases</h2>
+<p>The package currently also declares bare aliases such as:</p>
+<ul>
+<li><code>fs</code></li>
+<li><code>path</code></li>
+<li><code>crypto</code></li>
+<li><code>process</code></li>
+</ul>
+<p>But the recommended public style remains <code>node:*</code> imports because they are
+clearer and match user expectation better.</p>
 </div>
 </article>
 </main>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Fs | Tsonic</title>
+    <title>fs | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -105,126 +109,43 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/imports/">Importing Modules</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Modules</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/console/">console</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/path/">path</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/fs/">fs</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/buffer/">Buffer</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/events/">events</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/timers/">timers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/process/">process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/os/">os</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/util/">util</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/assert/">assert</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/performance/">performance</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/stream/">stream</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/readline/">readline</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/querystring/">querystring</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/zlib/">zlib</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/crypto/">crypto</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/tls/">tls</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/x509/">X509 / Certificate</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dns/">dns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/net/">net</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dgram/">dgram</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/child_process/">child_process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/http/">http</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">nodejs</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/nodejs/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/nodejs/modules/">Modules</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/nodejs/modules/crypto/">crypto</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/events/">events</a></li>
+        
+          <li><a class="nav-link active" href="/nodejs/modules/fs/">fs</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/http/">http</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/path/">path</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/process/">process</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -240,121 +161,47 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-        <a href="/nodejs/">nodejs</a>
+        <a href="/nodejs/">Node.js Package</a>
         <span class="sep">/</span>
       
         <a href="/nodejs/modules/">Modules</a>
         <span class="sep">/</span>
       
-      <span>Fs</span>
+      <span>fs</span>
     </nav>
-    <a class="edit" href="https://github.com/tsoniclang/nodejs-clr/blob/main/docs/modules/fs.md">Edit on GitHub</a>
+    <a class="edit" href="https://github.com/tsoniclang/nodejs/blob/main/docs/modules/fs.md">Edit on GitHub</a>
   </div>
 
   <div class="content"><h1 id="fs"><code>fs</code></h1>
 <p>Import:</p>
-<pre><code class="language-ts">import { fs } from &quot;@tsonic/nodejs/index.js&quot;;
+<pre><code class="language-ts">import { existsSync, readFileSync, writeFileSync } from &quot;node:fs&quot;;
 </code></pre>
 <p>Examples:</p>
-<pre><code class="language-ts">import { console, fs } from &quot;@tsonic/nodejs/index.js&quot;;
+<pre><code class="language-ts">import { existsSync, readFileSync, writeFileSync } from &quot;node:fs&quot;;
 
 export function main(): void {
   const file = &quot;./README.md&quot;;
 
-  if (!fs.existsSync(file)) {
+  if (!existsSync(file)) {
     console.log(&quot;Missing README.md&quot;);
     return;
   }
 
-  const text = fs.readFileSync(file, &quot;utf-8&quot;);
+  const text = readFileSync(file, &quot;utf-8&quot;);
   console.log(text);
 
-  fs.writeFileSync(&quot;./out.txt&quot;, &quot;Hello from Tsonic!&quot;);
+  writeFileSync(&quot;./out.txt&quot;, &quot;Hello from Tsonic!&quot;);
 }
 </code></pre>
-<h2 id="api-reference">API Reference</h2>
-<!-- API:START -->
-<h3 id="fs-1"><code>fs</code></h3>
-<pre><code class="language-ts">export declare const fs: {
-  access(path: string, mode?: int): Task;
-  accessSync(path: string, mode?: int): void;
-  appendFile(path: string, data: string, encoding?: string): Task;
-  appendFileSync(path: string, data: string, encoding?: string): void;
-  chmod(path: string, mode: int): Task;
-  chmodSync(path: string, mode: int): void;
-  close(fd: int): Task;
-  closeSync(fd: int): void;
-  copyFile(src: string, dest: string, mode?: int): Task;
-  copyFileSync(src: string, dest: string, mode?: int): void;
-  cp(src: string, dest: string, recursive?: boolean): Task;
-  cpSync(src: string, dest: string, recursive?: boolean): void;
-  existsSync(path: string): boolean;
-  fstat(fd: int): Task&lt;Stats&gt;;
-  fstatSync(fd: int): Stats;
-  mkdir(path: string, recursive?: boolean): Task;
-  mkdirSync(path: string, recursive?: boolean): void;
-  open(path: string, flags: string, mode?: Nullable&lt;System_Internal.Int32&gt;): Task&lt;System_Internal.Int32&gt;;
-  openSync(path: string, flags: string, mode?: Nullable&lt;System_Internal.Int32&gt;): int;
-  read(fd: int, buffer: byte[], offset: int, length: int, position: Nullable&lt;System_Internal.Int32&gt;): Task&lt;System_Internal.Int32&gt;;
-  readdir(path: string, withFileTypes?: boolean): Task&lt;string[]&gt;;
-  readdirSync(path: string, withFileTypes?: boolean): string[];
-  readFile(path: string, encoding?: string): Task&lt;System_Internal.String&gt;;
-  readFileBytes(path: string): Task&lt;byte[]&gt;;
-  readFileSync(path: string, encoding?: string): string;
-  readFileSyncBytes(path: string): byte[];
-  readlink(path: string): Task&lt;System_Internal.String&gt;;
-  readlinkSync(path: string): string;
-  readSync(fd: int, buffer: byte[], offset: int, length: int, position: Nullable&lt;System_Internal.Int32&gt;): int;
-  realpath(path: string): Task&lt;System_Internal.String&gt;;
-  realpathSync(path: string): string;
-  rename(oldPath: string, newPath: string): Task;
-  renameSync(oldPath: string, newPath: string): void;
-  rm(path: string, recursive?: boolean): Task;
-  rmdir(path: string, recursive?: boolean): Task;
-  rmdirSync(path: string, recursive?: boolean): void;
-  rmSync(path: string, recursive?: boolean): void;
-  stat(path: string): Task&lt;Stats&gt;;
-  statSync(path: string): Stats;
-  symlink(target: string, path: string, type?: string): Task;
-  symlinkSync(target: string, path: string, type?: string): void;
-  truncate(path: string, len?: long): Task;
-  truncateSync(path: string, len?: long): void;
-  unlink(path: string): Task;
-  unlinkSync(path: string): void;
-  write(fd: int, buffer: byte[], offset: int, length: int, position: Nullable&lt;System_Internal.Int32&gt;): Task&lt;System_Internal.Int32&gt;;
-  write(fd: int, data: string, position?: Nullable&lt;System_Internal.Int32&gt;, encoding?: string): Task&lt;System_Internal.Int32&gt;;
-  writeFile(path: string, data: string, encoding?: string): Task;
-  writeFileBytes(path: string, data: byte[]): Task;
-  writeFileSync(path: string, data: string, encoding?: string): void;
-  writeFileSyncBytes(path: string, data: byte[]): void;
-  writeSync(fd: int, buffer: byte[], offset: int, length: int, position: Nullable&lt;System_Internal.Int32&gt;): int;
-  writeSync(fd: int, data: string, position?: Nullable&lt;System_Internal.Int32&gt;, encoding?: string): int;
-};
-</code></pre>
-<h3 id="stats"><code>Stats</code></h3>
-<pre><code class="language-ts">export interface Stats {
-    atime: DateTime;
-    birthtime: DateTime;
-    ctime: DateTime;
-    isDirectory2: boolean;
-    isFile2: boolean;
-    mode: int;
-    mtime: DateTime;
-    size: long;
-    isBlockDevice(): boolean;
-    isCharacterDevice(): boolean;
-    isDirectory(): boolean;
-    isFIFO(): boolean;
-    isFile(): boolean;
-    isSocket(): boolean;
-    isSymbolicLink(): boolean;
-}
-
-export const Stats: {
-    new(): Stats;
-};
-</code></pre>
-<!-- API:END -->
+<p>Common patterns also include:</p>
+<ul>
+<li><code>fs.readFile(...)</code></li>
+<li><code>fs.readdir(...)</code></li>
+<li><code>fs.mkdir(...)</code></li>
+<li><code>fs.mkdirSync(...)</code></li>
+</ul>
+<p>Use <code>node:fs</code> for the normal Node-style authoring model, not <code>@tsonic/nodejs</code>
+subpaths unless you need an explicit package-root import.</p>
 </div>
 </article>
 </main>

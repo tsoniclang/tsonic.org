@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,47 @@
   
     
       
+
+
+
+  
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link active" href="/tsonic/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/backend/">Backend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/emitter/">Emitter</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/frontend/">Frontend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/ir/">IR</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/packages/">Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/runtime/">Runtime</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -138,33 +174,27 @@
   </div>
 
   <div class="content"><h1 id="architecture">Architecture</h1>
-<p>Tsonic is split into four main layers:</p>
+<p>This section is the detailed architecture companion to the main compiler guide.</p>
+<h2 id="read-in-this-order">Read in this order</h2>
 <ul>
-<li>CLI</li>
-<li>frontend</li>
-<li>emitter</li>
-<li>backend</li>
+<li><a href="/tsonic/architecture/overview/">Overview</a></li>
+<li><a href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+<li><a href="/tsonic/architecture/frontend/">Frontend</a></li>
+<li><a href="/tsonic/architecture/ir/">IR</a></li>
+<li><a href="/tsonic/architecture/emitter/">Emitter</a></li>
+<li><a href="/tsonic/architecture/backend/">Backend</a></li>
+<li><a href="/tsonic/architecture/packages/">Packages</a></li>
+<li><a href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+<li><a href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
 </ul>
-<p>The important current architectural facts are:</p>
+<h2 id="current-design-rules">Current design rules</h2>
 <ul>
 <li>compiler-owned core globals are injected virtually by the frontend</li>
 <li>ambient surfaces are resolved through surface manifests</li>
-<li>Node is package-driven, not a surface</li>
-<li>first-party source packages are compiled as part of the same TS program</li>
-<li>the emitter is now AST-only (<code>IR -&gt; CSharpAst -&gt; printer</code>)</li>
-</ul>
-<h2 id="reading-order">Reading Order</h2>
-<ul>
-<li><code>overview.md</code></li>
-<li><code>pipeline.md</code></li>
-<li><code>frontend.md</code></li>
-<li><code>ir.md</code></li>
-<li><code>emitter.md</code></li>
-<li><code>backend.md</code></li>
-<li><code>runtime.md</code></li>
-<li><code>packages.md</code></li>
-<li><code>type-mappings.md</code></li>
-<li><code>diagnostics.md</code></li>
+<li><code>@tsonic/nodejs</code> is package-driven, not a surface</li>
+<li>first-party source packages are compiled as part of the same TypeScript
+program</li>
+<li>the emitter is AST-only: <code>IR -&gt; CSharpAst -&gt; printer</code></li>
 </ul>
 </div>
 
@@ -179,7 +209,7 @@
       
         <li><a href="/tsonic/architecture/frontend/">Frontend</a></li>
       
-        <li><a href="/tsonic/architecture/ir/">Ir</a></li>
+        <li><a href="/tsonic/architecture/ir/">IR</a></li>
       
         <li><a href="/tsonic/architecture/overview/">Overview</a></li>
       

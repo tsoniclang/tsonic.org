@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -103,61 +107,55 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Type Generation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Validation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">tsbindgen</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsbindgen/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsbindgen/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/concepts/">Concepts</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/emit/">Emit</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/load/">Load</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/model/">Model</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/normalize/">Normalize</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/output-files/">Output Files</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/phasegate/">Phasegate</a></li>
+        
+          <li><a class="nav-link active" href="/tsbindgen/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/plan/">Plan</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/renaming/">Renaming</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/shape/">Shape</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -186,70 +184,30 @@
     <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/architecture/pipeline.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="pipeline-flow">Pipeline Flow</h1>
-<p>The tsbindgen pipeline transforms .NET assemblies through six distinct phases.</p>
-<h2 id="phase-1-load">Phase 1: Load</h2>
-<p><strong>File:</strong> <code>Load/AssemblyLoader.cs</code></p>
-<p>Loads .NET assemblies using <code>MetadataLoadContext</code> and reflects all type information.</p>
-<p><strong>Input:</strong> Assembly file paths
-<strong>Output:</strong> Initial <code>SymbolGraph</code> with raw CLR data</p>
-<p><strong>Operations:</strong></p>
-<ol>
-<li>Create <code>MetadataLoadContext</code> for isolated assembly inspection</li>
-<li>Load each assembly from disk</li>
-<li>Reflect all public types and their members</li>
-<li>Build <code>TypeSymbol</code> for each type</li>
-<li>Create <code>NamespaceSymbol</code> groupings</li>
-</ol>
-<h2 id="phase-2-model-index-building">Phase 2: Model (Index Building)</h2>
-<p><strong>File:</strong> <code>Builder.cs</code> (inline)</p>
-<p>Builds indices for fast type lookup and applies library mode filtering.</p>
-<p><strong>Operations:</strong></p>
-<ol>
-<li>Build <code>TypeIndex</code> dictionary (CLR full name to TypeSymbol)</li>
-<li>Apply <code>--lib</code> filtering (exclude types from library package)</li>
-<li>Resolve forward references between types</li>
-</ol>
-<h2 id="phase-3-shape-23-transformation-passes">Phase 3: Shape (23 Transformation Passes)</h2>
-<p><strong>File:</strong> <code>Shape/*.cs</code></p>
-<p>Transforms the symbol graph for TypeScript emission. See <a href="/tsbindgen/architecture/shape/">shape.md</a> for all passes.</p>
-<h2 id="phase-35-normalize">Phase 3.5: Normalize</h2>
-<p><strong>File:</strong> <code>Normalize/NameReservation.cs</code></p>
-<p>Reserves all TypeScript identifiers and resolves conflicts. See <a href="/tsbindgen/architecture/normalize/">normalize.md</a>.</p>
-<h2 id="phase-4-plan">Phase 4: Plan</h2>
-<p><strong>File:</strong> <code>Plan/*.cs</code></p>
-<p>Plans all import/export statements and validates invariants. See <a href="/tsbindgen/architecture/plan/">plan.md</a>.</p>
-<h2 id="phase-5-emit">Phase 5: Emit</h2>
-<p><strong>File:</strong> <code>Emit/*.cs</code></p>
-<p>Generates TypeScript declaration files. See <a href="/tsbindgen/architecture/emit/">emit.md</a>.</p>
-<h2 id="pipeline-orchestration">Pipeline Orchestration</h2>
-<p><strong>File:</strong> <code>Builder.cs</code></p>
-<pre><code class="language-csharp">public static void Build(BuildContext ctx, GenerateOptions options)
-{
-    // Phase 1: Load
-    var graph = AssemblyLoader.Load(ctx, options.Assemblies);
-
-    // Phase 2: Model
-    graph = BuildIndices(graph);
-
-    // Phase 3: Shape (23 passes)
-    graph = StructuralConformance.Analyze(ctx, graph);
-    graph = ViewPlanner.Plan(ctx, graph);
-    // ... more passes ...
-
-    // Phase 3.5: Normalize
-    NameReservation.ReserveAll(ctx, graph);
-
-    // Phase 4: Plan
-    var emissionPlan = EmissionPlanner.Plan(ctx, graph, ...);
-    PhaseGate.Validate(ctx, emissionPlan);
-
-    // Phase 5: Emit
-    InternalIndexEmitter.Emit(ctx, emissionPlan, options.OutDir);
-    FacadeEmitter.Emit(ctx, emissionPlan, options.OutDir);
-    FamilyIndexEmitter.Emit(ctx, families, options.OutDir);  // families.json
-}
-</code></pre>
+  <div class="content"><h1 id="pipeline">Pipeline</h1>
+<h2 id="phases">Phases</h2>
+<h3 id="load">Load</h3>
+<p>Read CLR assemblies and reflect public type information.</p>
+<h3 id="model">Model</h3>
+<p>Build type indices and assemble the symbol graph.</p>
+<h3 id="shape">Shape</h3>
+<p>Transform CLR-oriented symbols into a TypeScript-friendly intermediate form.</p>
+<h3 id="normalize">Normalize</h3>
+<p>Reserve and stabilize TypeScript identifiers.</p>
+<h3 id="plan">Plan</h3>
+<p>Plan imports, exports, aliases, and output package structure.</p>
+<h3 id="phasegate">Phasegate</h3>
+<p>Validate invariants before writing files.</p>
+<h3 id="emit">Emit</h3>
+<p>Write declaration files, facades, and binding metadata.</p>
+<h2 id="why-these-phases-exist">Why these phases exist</h2>
+<p>The pipeline is intentionally split so tsbindgen can:</p>
+<ul>
+<li>preserve CLR identity</li>
+<li>still emit readable TypeScript</li>
+<li>catch naming and ownership conflicts before file output</li>
+<li>keep large binding waves deterministic</li>
+</ul>
 </div>
 </article>
 </main>

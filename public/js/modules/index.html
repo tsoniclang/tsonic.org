@@ -58,9 +58,13 @@
           <a class="mount-link active" href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -107,82 +111,25 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/js/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/imports/">Importing APIs</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">APIs</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/js/modules/console/">console</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/json/">JSON</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/math/">Math</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/timers/">Timers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/globals/">Globals</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/jsarray/">JSArray</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/collections/">Map/Set/WeakMap/WeakSet</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/typed-arrays/">ArrayBuffer + Typed Arrays</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/date/">Date</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/regexp/">RegExp</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/number/">Number</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/string/">String</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">js</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/js/">Overview</a></li>
+      
+        <li><a class="nav-link active" href="/js/modules/">Modules</a></li>
+      
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
 
@@ -196,44 +143,36 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-        <a href="/js/">js</a>
+        <a href="/js/">JavaScript Surface</a>
         <span class="sep">/</span>
       
       <span>Modules</span>
     </nav>
-    
+    <a class="edit" href="https://github.com/tsoniclang/js/blob/main/docs/modules/README.md">Edit on GitHub</a>
   </div>
 
-  <h1 class="page-title">Modules</h1>
+  <div class="content"><h1 id="modules">Modules</h1>
+<p><code>@tsonic/js</code> provides the JavaScript ambient surface APIs most Tsonic
+JS-surface projects expect.</p>
+<h2 id="major-families">Major families</h2>
+<ul>
+<li>console and process-keepalive helpers</li>
+<li><code>JSON</code></li>
+<li><code>Date</code>, <code>Math</code>, <code>Number</code>, <code>String</code>, <code>Boolean</code></li>
+<li><code>Map</code>, <code>Set</code></li>
+<li>typed arrays and array buffers</li>
+<li>reflection/object helpers</li>
+<li>timers</li>
+<li>error types such as <code>RangeError</code></li>
+</ul>
+<h2 id="important-framing">Important framing</h2>
+<p>This section is not trying to be a full browser or Node reference manual. The
+package is documented here as a curated first-party JS surface for Tsonic.</p>
+<h2 id="relationship-to-the-manifest">Relationship to the manifest</h2>
+<p>The exported module/subpath set comes from the package manifest, not from a
+hand-waved “JS mode” concept.</p>
+</div>
 
-  
-    <ul class="page-list">
-      
-        <li><a href="/js/modules/collections/">Collections</a></li>
-      
-        <li><a href="/js/modules/console/">Console</a></li>
-      
-        <li><a href="/js/modules/date/">Date</a></li>
-      
-        <li><a href="/js/modules/globals/">Globals</a></li>
-      
-        <li><a href="/js/modules/jsarray/">Jsarray</a></li>
-      
-        <li><a href="/js/modules/json/">Json</a></li>
-      
-        <li><a href="/js/modules/math/">Math</a></li>
-      
-        <li><a href="/js/modules/number/">Number</a></li>
-      
-        <li><a href="/js/modules/regexp/">Regexp</a></li>
-      
-        <li><a href="/js/modules/string/">String</a></li>
-      
-        <li><a href="/js/modules/timers/">Timers</a></li>
-      
-        <li><a href="/js/modules/typed-arrays/">Typed Arrays</a></li>
-      
-    </ul>
   
 </article>
 </main>

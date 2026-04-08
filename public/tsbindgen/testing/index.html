@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -103,61 +107,51 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Type Generation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Validation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">tsbindgen</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsbindgen/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/naming/">Naming</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
+        
+          <li><a class="nav-link active" href="/tsbindgen/testing/">Testing</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/what-tsbindgen-generates/">What tsbindgen Generates</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/workflow/">Workflow</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -184,198 +178,40 @@
   </div>
 
   <div class="content"><h1 id="testing">Testing</h1>
-<p>tsbindgen includes validation and regression testing to ensure correct TypeScript output.</p>
-<h2 id="validation">Validation</h2>
-<h3 id="running-validation">Running Validation</h3>
-<pre><code class="language-bash"># Full BCL validation (2-3 minutes)
-node test/validate/validate.js --strict
-
-# Capture output for analysis
-node test/validate/validate.js --strict 2&gt;&amp;1 | tee .tests/validation-$(date +%s).txt
-</code></pre>
-<h3 id="what-validation-does">What Validation Does</h3>
+<p>Generated bindings should not be treated as correct just because generation
+completed.</p>
+<h2 id="validation-expectations">Validation expectations</h2>
+<ul>
+<li>verify repo-local generation results</li>
+<li>run compiler gates where the new bindings are used</li>
+<li>rerun downstreams when the changes affect real application graphs</li>
+<li>rerun publish preflight when versions or package contents changed</li>
+</ul>
+<p>Typical real gate sequence:</p>
 <ol>
-<li>Cleans <code>.tests/validate/</code></li>
-<li>Creates <code>tsconfig.json</code> in <code>.tests/validate/</code></li>
-<li>Runs <code>tsbindgen generate</code> against the local .NET runtime</li>
-<li>Verifies each namespace has <code>internal/index.d.ts</code> and <code>bindings.json</code></li>
-<li>Installs <code>@tsonic/core</code> into <code>.tests/validate/</code> (requires npm network access)</li>
-<li>Runs <code>npx tsc</code> and writes output to <code>.tests/tsc-validation.txt</code></li>
+<li>regenerate bindings</li>
+<li>run relevant repo-local tests</li>
+<li>rerun <code>tsonic</code> compiler gates when call surfaces changed</li>
+<li>rerun downstream applications when package graphs changed</li>
+<li>run wave preflight before publishing</li>
 </ol>
-<h3 id="success-criteria">Success Criteria</h3>
-<table>
-<thead>
-<tr>
-<th>Criteria</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Zero TypeScript errors</td>
-<td>Required when using <code>--strict</code></td>
-</tr>
-<tr>
-<td>Zero syntax errors (TS1xxx)</td>
-<td>Required (always)</td>
-</tr>
-<tr>
-<td>All assemblies generate</td>
-<td>Required</td>
-</tr>
-<tr>
-<td>All bindings manifests present</td>
-<td>Required</td>
-</tr>
-</tbody>
-</table>
-<h2 id="regression-tests">Regression Tests</h2>
-<p>Individual test scripts verify specific behaviors.</p>
-<h3 id="running-all-tests">Running All Tests</h3>
-<pre><code class="language-bash">./test/scripts/run-all.sh
-</code></pre>
-<h3 id="individual-tests">Individual Tests</h3>
-<table>
-<thead>
-<tr>
-<th>Test</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>test-lib.sh</code></td>
-<td>Library mode functionality</td>
-</tr>
-<tr>
-<td><code>test-naming-js.sh</code></td>
-<td>Naming invariants (no casing transforms)</td>
-</tr>
-<tr>
-<td><code>test-strict-mode.sh</code></td>
-<td>Strict mode validation</td>
-</tr>
-<tr>
-<td><code>test-delegate-callable.sh</code></td>
-<td>Delegate callable signatures</td>
-</tr>
-<tr>
-<td><code>test-delegate-typescript.sh</code></td>
-<td>Delegate typing in TS</td>
-</tr>
-<tr>
-<td><code>test-primitive-identity.sh</code></td>
-<td>Primitive type mappings</td>
-</tr>
-<tr>
-<td><code>test-primitive-lifting.sh</code></td>
-<td>Primitive type lifting in generic args</td>
-</tr>
-<tr>
-<td><code>test-primitive-constraints.sh</code></td>
-<td>Primitive constraint invariants</td>
-</tr>
-<tr>
-<td><code>test-multiarity-import.sh</code></td>
-<td>Multi-arity types import correctly</td>
-</tr>
-<tr>
-<td><code>test-multiarity-no-wrong-export.sh</code></td>
-<td>Facades don't export wrong arity</td>
-</tr>
-<tr>
-<td><code>test-facade-constraint-invariants.sh</code></td>
-<td>Constraint invariants validation</td>
-</tr>
-<tr>
-<td><code>test-facade-clean-exports.sh</code></td>
-<td>Facades don't leak internal types</td>
-</tr>
-<tr>
-<td><code>test-facade-value-exports.sh</code></td>
-<td>Facade value exports correctness</td>
-</tr>
-<tr>
-<td><code>test-params-rest.sh</code></td>
-<td>C# params → TS rest parameters</td>
-</tr>
-<tr>
-<td><code>test-cross-module-alias.sh</code></td>
-<td>Cross-module type aliases</td>
-</tr>
-<tr>
-<td><code>test-surface-manifest.sh</code></td>
-<td>Surface regression guard</td>
-</tr>
-</tbody>
-</table>
-<h3 id="running-a-single-test">Running a Single Test</h3>
-<pre><code class="language-bash">./test/scripts/test-lib.sh
-</code></pre>
-<h2 id="analyzing-errors">Analyzing Errors</h2>
-<h3 id="error-categories">Error Categories</h3>
-<pre><code>TS1xxx - Syntax errors (CRITICAL - must be zero)
-TS2xxx - Semantic errors (FIXED in v0.7.4 - now zero)
-TS6200 - Duplicate type aliases (expected for primitive type aliases)
-</code></pre>
-<h3 id="finding-specific-errors">Finding Specific Errors</h3>
-<pre><code class="language-bash"># Run validation with capture
-node test/validate/validate.js 2&gt;&amp;1 | tee .tests/run.txt
-
-# Count errors by type
-grep &quot;error TS&quot; .tests/run.txt | sed 's/.*error \(TS[0-9]*\).*/\1/' | sort | uniq -c | sort -rn
-
-# Find specific error examples
-grep &quot;TS2417&quot; .tests/run.txt | head -20
-
-# Errors for specific namespace
-grep &quot;System.Collections.Generic&quot; .tests/run.txt
-</code></pre>
-<h2 id="known-semantic-errors">Known Semantic Errors</h2>
-<p><strong>As of v0.7.4</strong>: The BCL compiles with <strong>zero semantic errors</strong>. All previously known issues have been fixed.</p>
-<h3 id="ts2417---property-covariance-fixed">TS2417 - Property Covariance (FIXED)</h3>
-<p>C# allows properties to return more specific types than interfaces require. TypeScript doesn't support property overloads.</p>
-<p><strong>Status</strong>: <strong>FIXED</strong> in v0.7.4 - PropertyOverrideUnifier uses union types for covariant properties.</p>
-<h3 id="ts2430---interface-method-conflicts-fixed">TS2430 - Interface Method Conflicts (FIXED)</h3>
-<p>Method signature mismatch between class and inherited interface (e.g., different method overloads).</p>
-<p><strong>Status</strong>: <strong>FIXED</strong> in v0.7.4 - ClassPrinter emits inherited method overloads.</p>
-<h3 id="ts2344---constraint-violations-fixed">TS2344 - Constraint Violations (FIXED)</h3>
-<p>Multi-arity facade type parameters passed to constrained internal types without verification.</p>
-<p><strong>Status</strong>: <strong>FIXED</strong> in v0.7.4 - MultiArityAliasEmit uses nested constraint guards.</p>
-<h3 id="ts6200---duplicate-type-aliases">TS6200 - Duplicate Type Aliases</h3>
-<p>Expected for primitive type aliases that may be declared in multiple namespaces.</p>
-<p><strong>Status</strong>: Harmless, declaration merging handles it.</p>
-<h2 id="test-output-directories">Test Output Directories</h2>
-<table>
-<thead>
-<tr>
-<th>Directory</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>.tests/</code></td>
-<td>Captured validation output (gitignored)</td>
-</tr>
-<tr>
-<td><code>.tests/validate/</code></td>
-<td>Generated declarations for <code>validate.js</code></td>
-</tr>
-<tr>
-<td><code>test/baselines/</code></td>
-<td>Surface manifest baselines</td>
-</tr>
-</tbody>
-</table>
-<h2 id="surface-manifest-testing">Surface Manifest Testing</h2>
-<p>Tracks the public API surface for regression detection.</p>
-<pre><code class="language-bash"># Capture baseline (writes `test/baselines/bcl-surface-manifest.json`)
-bash test/scripts/capture-baseline.sh
-
-# Verify current output matches baseline
-bash test/scripts/test-surface-manifest.sh
-</code></pre>
+<h2 id="what-counts-as-repo-local-testing">What counts as repo-local testing</h2>
+<p>Depending on the repo, that can mean:</p>
+<ul>
+<li>generation scripts completing cleanly</li>
+<li>package-local smoke tests or selftests</li>
+<li>local install/overlay checks in downstream workspaces</li>
+<li>version-drift checks during publish preflight</li>
+</ul>
+<h2 id="why-this-is-strict">Why this is strict</h2>
+<p>Binding regressions can break:</p>
+<ul>
+<li>overload selection</li>
+<li>nullable and generic projection</li>
+<li>package metadata expectations</li>
+<li>downstream builds that only fail after full graph resolution</li>
+</ul>
+<p>A green generator run is not enough by itself.</p>
 </div>
 </article>
 </main>

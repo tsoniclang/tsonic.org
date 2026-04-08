@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Crypto | Tsonic</title>
+    <title>crypto | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -105,126 +109,43 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/imports/">Importing Modules</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Modules</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/console/">console</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/path/">path</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/fs/">fs</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/buffer/">Buffer</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/events/">events</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/timers/">timers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/process/">process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/os/">os</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/util/">util</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/assert/">assert</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/performance/">performance</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/stream/">stream</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/readline/">readline</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/querystring/">querystring</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/zlib/">zlib</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/crypto/">crypto</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/tls/">tls</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/x509/">X509 / Certificate</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dns/">dns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/net/">net</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dgram/">dgram</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/child_process/">child_process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/http/">http</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">nodejs</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/nodejs/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/nodejs/modules/">Modules</a></li>
+      
+      
+        
+          <li><a class="nav-link active" href="/nodejs/modules/crypto/">crypto</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/events/">events</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/fs/">fs</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/http/">http</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/path/">path</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/process/">process</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -240,384 +161,34 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-        <a href="/nodejs/">nodejs</a>
+        <a href="/nodejs/">Node.js Package</a>
         <span class="sep">/</span>
       
         <a href="/nodejs/modules/">Modules</a>
         <span class="sep">/</span>
       
-      <span>Crypto</span>
+      <span>crypto</span>
     </nav>
-    <a class="edit" href="https://github.com/tsoniclang/nodejs-clr/blob/main/docs/modules/crypto.md">Edit on GitHub</a>
+    <a class="edit" href="https://github.com/tsoniclang/nodejs/blob/main/docs/modules/crypto.md">Edit on GitHub</a>
   </div>
 
   <div class="content"><h1 id="crypto"><code>crypto</code></h1>
 <p>Import:</p>
-<pre><code class="language-ts">import { crypto } from &quot;@tsonic/nodejs/index.js&quot;;
+<pre><code class="language-ts">import { createHash } from &quot;node:crypto&quot;;
 </code></pre>
 <p>Example:</p>
-<pre><code class="language-ts">import { console, crypto } from &quot;@tsonic/nodejs/index.js&quot;;
+<pre><code class="language-ts">import { createHash } from &quot;node:crypto&quot;;
 
 export function main(): void {
-  const hash = crypto.createHash(&quot;sha256&quot;).update(&quot;hello&quot;).digest(&quot;hex&quot;);
+  const hash = createHash(&quot;sha256&quot;).update(&quot;hello&quot;).digest(&quot;hex&quot;);
   console.log(hash);
 }
 </code></pre>
-<h2 id="api-reference">API Reference</h2>
-<!-- API:START -->
-<h3 id="certificate"><code>Certificate</code></h3>
-<pre><code class="language-ts">export declare const Certificate: {
-  exportChallenge(spkac: byte[]): byte[];
-  exportChallenge(spkac: string): byte[];
-  exportPublicKey(spkac: byte[]): byte[];
-  exportPublicKey(spkac: string): byte[];
-  verifySpkac(spkac: byte[]): boolean;
-  verifySpkac(spkac: string): boolean;
-};
-</code></pre>
-<h3 id="cipher"><code>Cipher</code></h3>
-<pre><code class="language-ts">export interface Cipher extends Transform {
-    dispose(): void;
-    final(outputEncoding?: string): string;
-    final(): byte[];
-    getAuthTag(): byte[];
-    setAAD(buffer: byte[]): void;
-    setAuthTag(tagLength: int): void;
-    update(data: string, inputEncoding?: string, outputEncoding?: string): string;
-    update(data: byte[], outputEncoding?: string): string;
-}
-
-export const Cipher: {
-    new(): Cipher;
-};
-</code></pre>
-<h3 id="crypto-1"><code>crypto</code></h3>
-<pre><code class="language-ts">export declare const crypto: {
-  createCipheriv(algorithm: string, key: byte[], iv: byte[]): Cipher;
-  createCipheriv(algorithm: string, key: string, iv: string): Cipher;
-  createDecipheriv(algorithm: string, key: byte[], iv: byte[]): Decipher;
-  createDecipheriv(algorithm: string, key: string, iv: string): Decipher;
-  createDiffieHellman(prime: byte[], generator: byte[]): DiffieHellman;
-  createDiffieHellman(prime: byte[], generator?: int): DiffieHellman;
-  createDiffieHellman(primeLength: int, generator?: int): DiffieHellman;
-  createDiffieHellman(prime: string, primeEncoding: string, generator?: int): DiffieHellman;
-  createDiffieHellman(prime: string, primeEncoding: string, generator: string, generatorEncoding: string): DiffieHellman;
-  createECDH(curveName: string): ECDH;
-  createHash(algorithm: string): Hash;
-  createHmac(algorithm: string, key: byte[]): Hmac;
-  createHmac(algorithm: string, key: string): Hmac;
-  createPrivateKey(key: byte[]): KeyObject;
-  createPrivateKey(key: string): KeyObject;
-  createPublicKey(key: KeyObject): KeyObject;
-  createPublicKey(key: byte[]): KeyObject;
-  createPublicKey(key: string): KeyObject;
-  createSecretKey(key: byte[]): KeyObject;
-  createSecretKey(key: string, encoding?: string): KeyObject;
-  createSign(algorithm: string): Sign;
-  createVerify(algorithm: string): Verify;
-  generateKey(type: string, options: unknown, callback: Action&lt;Exception, KeyObject&gt;): void;
-  generateKey(type: string, options: unknown): KeyObject;
-  generateKeyPair(type: string, options: unknown, callback: Action&lt;Exception, unknown, unknown&gt;): void;
-  generateKeyPairSync(type: string, options?: unknown): ValueTuple&lt;KeyObject, KeyObject&gt;;
-  getCiphers(): string[];
-  getCurves(): string[];
-  getDefaultCipherList(): string;
-  getDiffieHellman(groupName: string): DiffieHellman;
-  getFips(): boolean;
-  getHashes(): string[];
-  hash(algorithm: string, data: byte[], outputEncoding?: string): byte[];
-  hkdf(digest: string, ikm: byte[], salt: byte[], info: byte[], keylen: int, callback: Action&lt;Exception, byte[]&gt;): void;
-  hkdfSync(digest: string, ikm: byte[], salt: byte[], info: byte[], keylen: int): byte[];
-  pbkdf2(password: string, salt: string, iterations: int, keylen: int, digest: string, callback: Action&lt;Exception, byte[]&gt;): void;
-  pbkdf2Sync(password: byte[], salt: byte[], iterations: int, keylen: int, digest: string): byte[];
-  pbkdf2Sync(password: string, salt: string, iterations: int, keylen: int, digest: string): byte[];
-  privateDecrypt(key: unknown, buffer: byte[]): byte[];
-  privateDecrypt(key: string, buffer: byte[]): byte[];
-  privateEncrypt(key: unknown, buffer: byte[]): byte[];
-  privateEncrypt(key: string, buffer: byte[]): byte[];
-  publicDecrypt(key: unknown, buffer: byte[]): byte[];
-  publicDecrypt(key: string, buffer: byte[]): byte[];
-  publicEncrypt(key: unknown, buffer: byte[]): byte[];
-  publicEncrypt(key: string, buffer: byte[]): byte[];
-  randomBytes(size: int, callback: Action&lt;Exception, byte[]&gt;): void;
-  randomBytes(size: int): byte[];
-  randomFill(buffer: byte[], offset: int, size: int, callback: Action&lt;Exception, byte[]&gt;): void;
-  randomFillSync(buffer: byte[], offset?: int, size?: Nullable&lt;System_Internal.Int32&gt;): byte[];
-  randomInt(min: int, max: int): int;
-  randomInt(max: int): int;
-  randomUUID(): string;
-  scrypt(password: string, salt: string, keylen: int, options: unknown, callback: Action&lt;Exception, byte[]&gt;): void;
-  scryptSync(password: byte[], salt: byte[], keylen: int, options?: unknown): byte[];
-  scryptSync(password: string, salt: string, keylen: int, options?: unknown): byte[];
-  setDefaultEncoding(encoding: string): void;
-  setFips(enabled: boolean): void;
-  sign(algorithm: string, data: byte[], privateKey: KeyObject): byte[];
-  sign(algorithm: string, data: byte[], privateKey: string): byte[];
-  timingSafeEqual(a: byte[], b: byte[]): boolean;
-  verify(algorithm: string, data: byte[], publicKey: KeyObject, signature: byte[]): boolean;
-  verify(algorithm: string, data: byte[], publicKey: string, signature: byte[]): boolean;
-};
-</code></pre>
-<h3 id="decipher"><code>Decipher</code></h3>
-<pre><code class="language-ts">export interface Decipher extends Transform {
-    dispose(): void;
-    final(outputEncoding?: string): string;
-    final(): byte[];
-    setAAD(buffer: byte[]): void;
-    setAuthTag(buffer: byte[]): void;
-    update(data: string, inputEncoding?: string, outputEncoding?: string): string;
-    update(data: byte[], outputEncoding?: string): string;
-}
-
-export const Decipher: {
-    new(): Decipher;
-};
-</code></pre>
-<h3 id="diffiehellman"><code>DiffieHellman</code></h3>
-<pre><code class="language-ts">export interface DiffieHellman {
-    computeSecret(otherPublicKey: string, inputEncoding?: string, outputEncoding?: string): string;
-    computeSecret(otherPublicKey: byte[], outputEncoding?: string): string;
-    computeSecret(otherPublicKey: byte[]): byte[];
-    dispose(): void;
-    generateKeys(encoding?: string): string;
-    generateKeys(): byte[];
-    getGenerator(encoding?: string): string;
-    getGenerator(): byte[];
-    getPrime(encoding?: string): string;
-    getPrime(): byte[];
-    getPrivateKey(encoding?: string): string;
-    getPrivateKey(): byte[];
-    getPublicKey(encoding?: string): string;
-    getPublicKey(): byte[];
-    getVerifyError(): int;
-    setPrivateKey(privateKey: string, encoding?: string): void;
-    setPrivateKey(privateKey: byte[]): void;
-    setPublicKey(publicKey: string, encoding?: string): void;
-    setPublicKey(publicKey: byte[]): void;
-}
-
-export const DiffieHellman: {
-    new(): DiffieHellman;
-};
-</code></pre>
-<h3 id="dsaprivatekeyobject"><code>DSAPrivateKeyObject</code></h3>
-<pre><code class="language-ts">export interface DSAPrivateKeyObject extends KeyObject {
-    readonly asymmetricKeyType: string | undefined;
-    readonly symmetricKeySize: Nullable&lt;System_Internal.Int32&gt;;
-    readonly type: string;
-    dispose(): void;
-    export(options?: unknown): unknown;
-}
-
-export const DSAPrivateKeyObject: {
-    new(): DSAPrivateKeyObject;
-};
-</code></pre>
-<h3 id="dsapublickeyobject"><code>DSAPublicKeyObject</code></h3>
-<pre><code class="language-ts">export interface DSAPublicKeyObject extends KeyObject {
-    readonly asymmetricKeyType: string | undefined;
-    readonly symmetricKeySize: Nullable&lt;System_Internal.Int32&gt;;
-    readonly type: string;
-    dispose(): void;
-    export(options?: unknown): unknown;
-}
-
-export const DSAPublicKeyObject: {
-    new(): DSAPublicKeyObject;
-};
-</code></pre>
-<h3 id="ecdh"><code>ECDH</code></h3>
-<pre><code class="language-ts">export interface ECDH {
-    computeSecret(otherPublicKey: string, inputEncoding?: string, outputEncoding?: string): string;
-    computeSecret(otherPublicKey: byte[], outputEncoding?: string): string;
-    computeSecret(otherPublicKey: byte[]): byte[];
-    dispose(): void;
-    generateKeys(encoding?: string, format?: string): string;
-    generateKeys(): byte[];
-    getPrivateKey(encoding?: string): string;
-    getPrivateKey(): byte[];
-    getPublicKey(encoding?: string, format?: string): string;
-    getPublicKey(): byte[];
-    setPrivateKey(privateKey: string, encoding?: string): void;
-    setPrivateKey(privateKey: byte[]): void;
-    setPublicKey(publicKey: string, encoding?: string): void;
-    setPublicKey(publicKey: byte[]): void;
-}
-
-export const ECDH: {
-    new(): ECDH;
-};
-</code></pre>
-<h3 id="eddsaprivatekeyobject"><code>EdDSAPrivateKeyObject</code></h3>
-<pre><code class="language-ts">export interface EdDSAPrivateKeyObject extends KeyObject {
-    readonly asymmetricKeyType: string | undefined;
-    readonly symmetricKeySize: Nullable&lt;System_Internal.Int32&gt;;
-    readonly type: string;
-    dispose(): void;
-    export(options?: unknown): unknown;
-}
-
-export const EdDSAPrivateKeyObject: {
-    new(): EdDSAPrivateKeyObject;
-};
-</code></pre>
-<h3 id="eddsapublickeyobject"><code>EdDSAPublicKeyObject</code></h3>
-<pre><code class="language-ts">export interface EdDSAPublicKeyObject extends KeyObject {
-    readonly asymmetricKeyType: string | undefined;
-    readonly symmetricKeySize: Nullable&lt;System_Internal.Int32&gt;;
-    readonly type: string;
-    dispose(): void;
-    export(options?: unknown): unknown;
-}
-
-export const EdDSAPublicKeyObject: {
-    new(): EdDSAPublicKeyObject;
-};
-</code></pre>
-<h3 id="hash"><code>Hash</code></h3>
-<pre><code class="language-ts">export interface Hash extends Transform {
-    copy(): Hash;
-    digest(encoding: string): string;
-    digest(): byte[];
-    digest(outputLength: int): byte[];
-    dispose(): void;
-    update(data: string, inputEncoding?: string): Hash;
-    update(data: byte[]): Hash;
-}
-
-export const Hash: {
-    new(): Hash;
-};
-</code></pre>
-<h3 id="hmac"><code>Hmac</code></h3>
-<pre><code class="language-ts">export interface Hmac extends Transform {
-    digest(encoding?: string): string;
-    digest(): byte[];
-    dispose(): void;
-    update(data: string, inputEncoding?: string): Hmac;
-    update(data: byte[]): Hmac;
-}
-
-export const Hmac: {
-    new(): Hmac;
-};
-</code></pre>
-<h3 id="keyobject"><code>KeyObject</code></h3>
-<pre><code class="language-ts">export interface KeyObject {
-    readonly asymmetricKeyType: string | undefined;
-    readonly symmetricKeySize: Nullable&lt;System_Internal.Int32&gt;;
-    readonly type: string;
-    dispose(): void;
-    export(options?: unknown): unknown;
-}
-
-export const KeyObject: {
-};
-</code></pre>
-<h3 id="privatekeyobject"><code>PrivateKeyObject</code></h3>
-<pre><code class="language-ts">export interface PrivateKeyObject extends KeyObject {
-    readonly asymmetricKeyType: string | undefined;
-    readonly symmetricKeySize: Nullable&lt;System_Internal.Int32&gt;;
-    readonly type: string;
-    dispose(): void;
-    export(options?: unknown): unknown;
-    export(format: string, type?: string, cipher?: string, passphrase?: string): string;
-}
-
-export const PrivateKeyObject: {
-    new(): PrivateKeyObject;
-};
-</code></pre>
-<h3 id="publickeyobject"><code>PublicKeyObject</code></h3>
-<pre><code class="language-ts">export interface PublicKeyObject extends KeyObject {
-    readonly asymmetricKeyType: string | undefined;
-    readonly symmetricKeySize: Nullable&lt;System_Internal.Int32&gt;;
-    readonly type: string;
-    dispose(): void;
-    export(options?: unknown): unknown;
-    export(format: string, type?: string): string;
-}
-
-export const PublicKeyObject: {
-    new(): PublicKeyObject;
-};
-</code></pre>
-<h3 id="secretkeyobject"><code>SecretKeyObject</code></h3>
-<pre><code class="language-ts">export interface SecretKeyObject extends KeyObject {
-    readonly asymmetricKeyType: string | undefined;
-    readonly symmetricKeySize: Nullable&lt;System_Internal.Int32&gt;;
-    readonly type: string;
-    dispose(): void;
-    export(options?: unknown): unknown;
-    export(): byte[];
-}
-
-export const SecretKeyObject: {
-    new(): SecretKeyObject;
-};
-</code></pre>
-<h3 id="sign"><code>Sign</code></h3>
-<pre><code class="language-ts">export interface Sign extends Transform {
-    dispose(): void;
-    sign(privateKey: string, outputEncoding?: string): string;
-    sign(privateKey: string): byte[];
-    sign(privateKey: unknown, outputEncoding?: string): string;
-    sign(privateKey: unknown): byte[];
-    update(data: string, inputEncoding?: string): Sign;
-    update(data: byte[]): Sign;
-}
-
-export const Sign: {
-    new(): Sign;
-};
-</code></pre>
-<h3 id="verify"><code>Verify</code></h3>
-<pre><code class="language-ts">export interface Verify extends Transform {
-    dispose(): void;
-    update(data: string, inputEncoding?: string): Verify;
-    update(data: byte[]): Verify;
-    verify(publicKey: string, signature: string, signatureEncoding?: string): boolean;
-    verify(publicKey: string, signature: byte[]): boolean;
-    verify(publicKey: unknown, signature: string, signatureEncoding?: string): boolean;
-    verify(publicKey: unknown, signature: byte[]): boolean;
-}
-
-export const Verify: {
-    new(): Verify;
-};
-</code></pre>
-<h3 id="x509certificateextensions"><code>X509CertificateExtensions</code></h3>
-<pre><code class="language-ts">export declare const X509CertificateExtensions: {
-  parseCertificate(certificate: byte[]): X509CertificateInfo;
-  parseCertificate(certificate: string): X509CertificateInfo;
-};
-</code></pre>
-<h3 id="x509certificateinfo"><code>X509CertificateInfo</code></h3>
-<pre><code class="language-ts">export interface X509CertificateInfo {
-    readonly fingerprint: string;
-    readonly fingerprint256: string;
-    readonly fingerprint512: string;
-    readonly issuer: string;
-    readonly publicKey: byte[];
-    readonly raw: byte[];
-    readonly serialNumber: string;
-    readonly subject: string;
-    readonly validFrom: DateTime;
-    readonly validTo: DateTime;
-    checkEmail(email: string): string | undefined;
-    checkHost(hostname: string): string | undefined;
-    checkIP(ip: string): string | undefined;
-    checkIssued(otherCert: X509CertificateInfo): string | undefined;
-    toPEM(): string;
-    toString(): string;
-    verify(issuerCert: X509CertificateInfo): boolean;
-}
-
-export const X509CertificateInfo: {
-    new(): X509CertificateInfo;
-};
-</code></pre>
-<!-- API:END -->
+<p>This is a package import, not ambient behavior. Keep the model explicit:</p>
+<ul>
+<li><code>@tsonic/js</code> gives you the JS world</li>
+<li><code>@tsonic/nodejs</code> gives you Node-style modules like <code>node:crypto</code></li>
+</ul>
 </div>
 </article>
 </main>

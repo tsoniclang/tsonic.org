@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,75 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/bindings/">Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-modes/">Build Modes</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-output/">Build Output</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-bindings/">CLR Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/callbacks/">Callbacks</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/configuration/">Configuration</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/generators/">Generators</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/language/">Language</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/limitations/">Limitations</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/surfaces-and-packages/">Surfaces And Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/testing-and-quality/">Testing and Quality</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/type-system/">Type System</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/workspace-and-projects/">Workspace and Projects</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -138,48 +202,31 @@
   </div>
 
   <div class="content"><h1 id="generators">Generators</h1>
-<p>Tsonic supports generators, async generators, and broad deterministic yield lowering.</p>
-<h2 id="basic-generator">Basic Generator</h2>
-<pre><code class="language-ts">export function* numbers(): Generator&lt;number, void, void&gt; {
-  yield 1;
-  yield 2;
-  yield 3;
-}
-</code></pre>
-<h2 id="generator-with-return-value">Generator With Return Value</h2>
-<pre><code class="language-ts">export function* work(): Generator&lt;number, string, void&gt; {
-  yield 1;
-  return &quot;done&quot;;
-}
-</code></pre>
-<h2 id="bidirectional-generator">Bidirectional Generator</h2>
-<pre><code class="language-ts">export function* echo(): Generator&lt;string, void, string&gt; {
-  const first = yield &quot;ready&quot;;
-  console.log(first);
-}
-</code></pre>
-<h2 id="async-generator">Async Generator</h2>
-<pre><code class="language-ts">export async function* stream(): AsyncGenerator&lt;number, void, void&gt; {
-  yield 1;
-  yield 2;
-}
-</code></pre>
-<h2 id="yield-lowering">Yield Lowering</h2>
-<p>Supported yield contexts now include many direct and nested positions:</p>
+<p>Generator support exists where lowering is explicit and deterministic.</p>
+<h2 id="rule">Rule</h2>
+<p>If a generator shape can be lowered to the current runtime model, it is
+supported. If not, it is rejected rather than emulated loosely.</p>
+<h2 id="what-that-means-in-practice">What that means in practice</h2>
+<p>Generators are best treated as a supported subset feature:</p>
 <ul>
-<li>return expressions</li>
-<li>conditional expressions</li>
-<li><code>if</code> / <code>while</code> / <code>switch</code> conditions</li>
-<li><code>for</code> initializer / condition / update</li>
-<li><code>for-of</code> / <code>for-in</code> expression positions</li>
-<li>compound assignment patterns in supported target shapes</li>
+<li>typed <code>yield</code> values are fine when the compiler can model the iterator shape</li>
+<li>ordinary <code>for...of</code> consumption is the expected usage pattern</li>
+<li>exotic coroutine tricks or open-ended dynamic generator manipulation are not
+the design target</li>
 </ul>
-<p>Irreducible residual cases still fail with <code>TSN6101</code>.</p>
-<h2 id="guidance">Guidance</h2>
-<ul>
-<li>keep generator state machines explicit</li>
-<li>if a yield position still fails, prefer rewriting it to a clearer statement-level shape instead of trying to force the compiler through an ambiguous nested expression</li>
-</ul>
+<p>Example:</p>
+<pre><code class="language-ts">export function* range(limit: number): Generator&lt;number, void, void&gt; {
+  for (let i = 0; i &lt; limit; i++) {
+    yield i;
+  }
+}
+</code></pre>
+<h2 id="why-this-matters">Why this matters</h2>
+<p>The same rule that applies to async and callbacks applies here: deterministic
+lowering beats permissive but fragile behavior.</p>
+<h2 id="practical-expectation">Practical expectation</h2>
+<p>Treat generators as a supported subset feature, not as a promise of all
+TypeScript generator patterns.</p>
 </div>
 </article>
 </main>

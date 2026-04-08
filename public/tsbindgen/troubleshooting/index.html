@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -103,61 +107,51 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Type Generation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Validation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">tsbindgen</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsbindgen/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/naming/">Naming</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/testing/">Testing</a></li>
+        
+          <li><a class="nav-link active" href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/what-tsbindgen-generates/">What tsbindgen Generates</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/workflow/">Workflow</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -184,158 +178,26 @@
   </div>
 
   <div class="content"><h1 id="troubleshooting">Troubleshooting</h1>
-<p>Common issues and solutions when using tsbindgen.</p>
-<h2 id="generation-issues">Generation Issues</h2>
-<h3 id="assembly-not-found">Assembly Not Found</h3>
-<pre><code>Error: Could not load assembly 'MyLibrary.dll'
-</code></pre>
-<p><strong>Causes:</strong></p>
+<h2 id="a-generated-package-compiles-but-consumers-fail">A generated package compiles but consumers fail</h2>
+<p>That usually means the package shape is syntactically valid but semantically
+wrong for the compiler or a downstream application. Treat it as a real bug in
+the binding wave.</p>
+<p>Common sources:</p>
 <ul>
-<li>Path is incorrect</li>
-<li>Assembly dependencies missing</li>
-<li>Wrong .NET version</li>
+<li>wrong overload family ownership</li>
+<li>incorrect nullable projection</li>
+<li>incorrect import source in library mode</li>
+<li>binding metadata drift</li>
 </ul>
-<p><strong>Solutions:</strong></p>
-<pre><code class="language-bash"># Verify assembly exists
-ls -la ./MyLibrary.dll
-
-# Standard SDK/runtime installs usually work directly
-npx tsbindgen generate -a ./MyLibrary.dll -o ./out
-
-# If the assembly references other DLLs outside the standard runtime closure,
-# add one or more extra search directories:
-npx tsbindgen generate -a ./MyLibrary.dll -o ./out \
-  --ref-dir ./libs
-
-# To debug resolution without generating, inspect the dependency closure (JSON):
-npx tsbindgen resolve-closure -a ./MyLibrary.dll
-npx tsbindgen resolve-closure -a ./MyLibrary.dll --ref-dir ./libs
-</code></pre>
-<h3 id="missing-runtime-directory">Missing Runtime Directory</h3>
-<pre><code>Error: No assemblies specified. Use --assembly or --assembly-dir
-</code></pre>
-<p><strong>Solution:</strong></p>
-<pre><code class="language-bash"># Pass either a runtime directory (-d) or one or more assemblies (-a)
-npx tsbindgen generate -d ~/.dotnet/shared/Microsoft.NETCore.App/10.0.0 -o ./out
-npx tsbindgen generate -a ./MyLibrary.dll -d ~/.dotnet/shared/Microsoft.NETCore.App/10.0.0 -o ./out
-</code></pre>
-<h3 id="namespace-not-generated">Namespace Not Generated</h3>
-<p>If a namespace is missing from output:</p>
-<ol>
-<li>Check if types are public (internal types are skipped)</li>
-<li>Verify namespace filter doesn't exclude it</li>
-<li>Check verbose output for skip reasons</li>
-</ol>
-<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out -v 2&gt;&amp;1 | grep &quot;MyNamespace&quot;
-</code></pre>
-<h2 id="typescript-errors">TypeScript Errors</h2>
-<h3 id="ts1xxx-syntax-errors">TS1xxx Syntax Errors</h3>
-<p>Syntax errors indicate a bug in tsbindgen. These should be reported.</p>
-<pre><code class="language-bash"># Capture full error output
-node test/validate/validate.js 2&gt;&amp;1 | tee error-report.txt
-</code></pre>
-<h3 id="ts2304---cannot-find-name">TS2304 - Cannot Find Name</h3>
-<pre><code>error TS2304: Cannot find name 'int'.
-</code></pre>
-<p><strong>Cause:</strong> You referenced a Tsonic primitive alias (<code>int</code>, <code>long</code>, <code>decimal</code>, etc.) without importing it.</p>
-<p><strong>Solution:</strong> Install <code>@tsonic/core</code> and import the primitive types you use:</p>
-<pre><code class="language-ts">import type { int } from &quot;@tsonic/core/types.js&quot;;
-</code></pre>
-<h3 id="ts2417---property-type-incompatible">TS2417 - Property Type Incompatible</h3>
-<pre><code>error TS2417: Property 'value' of type 'string' is not assignable...
-</code></pre>
-<p><strong>Cause:</strong> C# property covariance not supported in TypeScript.</p>
-<p><strong>Status:</strong> Fixed in v0.7.4. The <code>PropertyOverrideUnifier</code> pass now unifies covariant property types using union types. The BCL now compiles with <strong>zero semantic errors</strong>.</p>
-<h3 id="ts2320---interface-cannot-extend">TS2320 - Interface Cannot Extend</h3>
-<pre><code>error TS2320: Interface 'X' cannot simultaneously extend types 'A' and 'B'.
-</code></pre>
-<p><strong>Cause:</strong> Diamond inheritance with conflicting members.</p>
-<p><strong>Status:</strong> Fixed. The <code>SafeToExtendAnalyzer</code> detects conflicting members and routes them through views instead of extends.</p>
-<h3 id="ts2430---interface-method-conflicts">TS2430 - Interface Method Conflicts</h3>
-<pre><code>error TS2430: Interface 'X' incorrectly extends interface 'Y'.
-</code></pre>
-<p><strong>Cause:</strong> Method signature mismatch between class and inherited interface (e.g., different method overloads for numeric types).</p>
-<p><strong>Status:</strong> Fixed in v0.7.4. The <code>ClassPrinter</code> now emits inherited method overloads to satisfy both the class and interface contracts.</p>
-<h3 id="ts2344---constraint-violations">TS2344 - Constraint Violations</h3>
-<pre><code>error TS2344: Type 'T' does not satisfy the constraint 'C'.
-</code></pre>
-<p><strong>Cause:</strong> Multi-arity facade type parameters passed to constrained internal types without verification.</p>
-<p><strong>Status:</strong> Fixed in v0.7.4. The <code>MultiArityAliasEmit</code> now uses nested constraint guards (<code>[T] extends [C] ? Result : never</code>) to verify constraints before dispatch.</p>
-<h2 id="library-mode-issues">Library Mode Issues</h2>
-<h3 id="lib001---type-not-found">LIB001 - Type Not Found</h3>
-<pre><code>Error LIB001: Type 'System.String' not found in library
-</code></pre>
-<p><strong>Cause:</strong> The <code>--lib</code> directory is missing types your assembly references.</p>
-<p><strong>Solutions:</strong></p>
-<ol>
-<li>Regenerate BCL with same options</li>
-<li>Use published <code>@tsonic/dotnet</code> package</li>
-<li>Ensure all dependencies are in library path</li>
-</ol>
-<h3 id="lib002---signature-mismatch">LIB002 - Signature Mismatch</h3>
-<pre><code>Error LIB002: Member signature mismatch for 'List.Add'
-</code></pre>
-<p><strong>Cause:</strong> Library was generated against a different set of reference libraries / tool version than the <code>--lib</code> package.</p>
-<p><strong>Solution:</strong> Regenerate both with the same inputs:</p>
-<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./bcl
-npx tsbindgen generate -a ./MyLib.dll -d $DOTNET_RUNTIME -o ./out --lib ./bcl
-</code></pre>
-<h2 id="performance-issues">Performance Issues</h2>
-<h3 id="slow-generation">Slow Generation</h3>
-<p>Full BCL generation takes 30-60 seconds. For faster iteration:</p>
-<pre><code class="language-bash"># Generate BCL once, then use library mode for your assemblies
-npx tsbindgen generate -d $DOTNET_RUNTIME -o .tests/bcl
-npx tsbindgen generate -a ./MyLib.dll -d $DOTNET_RUNTIME -o ./out --lib .tests/bcl
-</code></pre>
-<h3 id="out-of-memory">Out of Memory</h3>
-<p>For very large assemblies:</p>
-<pre><code class="language-bash"># Increase heap size (only works with dotnet run from source)
-DOTNET_GCHeapHardLimit=2g npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out
-</code></pre>
-<h2 id="validation-issues">Validation Issues</h2>
-<h3 id="validation-takes-too-long">Validation Takes Too Long</h3>
-<p>Full validation runs TypeScript on 130 namespaces (2-3 minutes).</p>
-<p><strong>Workarounds:</strong></p>
-<pre><code class="language-bash"># Generate only (skip TypeScript compilation)
-node test/validate/validate.js --skip-tsc
-</code></pre>
-<h2 id="debugging-tips">Debugging Tips</h2>
-<h3 id="enable-verbose-output">Enable Verbose Output</h3>
-<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out -v
-</code></pre>
-<h3 id="enable-specific-logs">Enable Specific Logs</h3>
-<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out --logs ImportPlanner FacadeEmitter
-</code></pre>
-<p>Available log categories:</p>
+<h2 id="a-first-party-source-package-issue-looks-like-a-binding-issue">A first-party source package issue looks like a binding issue</h2>
+<p>Keep the ownership line clear:</p>
 <ul>
-<li><code>ImportPlanner</code> - Import statement planning</li>
-<li><code>FacadeEmitter</code> - Facade file generation</li>
-<li><code>InternalIndexEmitter</code> - Internal declaration generation</li>
-<li><code>ViewPlanner</code> - Explicit interface view planning</li>
-<li><code>StructuralConformance</code> - Interface conformance analysis</li>
-<li><code>SafeToExtendAnalyzer</code> - LINQ assignability analysis</li>
+<li><code>tsbindgen</code> owns generated binding packages</li>
+<li><code>js</code>, <code>nodejs</code>, and <code>express</code> own their own source packages</li>
 </ul>
-<h3 id="inspect-generated-files">Inspect Generated Files</h3>
-<pre><code class="language-bash"># View TypeScript output
-cat output/System.d.ts
-
-# View bindings
-cat output/System/bindings.json | jq .
-</code></pre>
-<h2 id="getting-help">Getting Help</h2>
-<p>If you encounter issues not covered here:</p>
-<ol>
-<li>Check existing issues: <a href="https://github.com/tsoniclang/tsbindgen/issues">https://github.com/tsoniclang/tsbindgen/issues</a></li>
-<li>File a new issue with:
-<ul>
-<li>tsbindgen version</li>
-<li>.NET version</li>
-<li>Command used</li>
-<li>Full error output</li>
-<li>Minimal reproduction steps</li>
-</ul>
-</li>
-</ol>
+<h2 id="closure-resolution-looks-wrong">Closure resolution looks wrong</h2>
+<p>Use <code>resolve-closure</code> before debugging generation output itself. Missing or
+mis-owned assemblies are often a closure input problem, not an emitter problem.</p>
 </div>
 </article>
 </main>
