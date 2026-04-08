@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Arrays | Tsonic</title>
+    <title>Arrays and Collections | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,41 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+      
+      
+        
+          <li><a class="nav-link active" href="/tsonic/examples/arrays/">Arrays and Collections</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/basic/">Basic Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/dotnet/">CLR and .NET Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/imports/">Import Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/workspace-packages/">Workspace Package Graphs</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -135,41 +165,51 @@
         <a href="/tsonic/examples/">Examples</a>
         <span class="sep">/</span>
       
-      <span>Arrays</span>
+      <span>Arrays and Collections</span>
     </nav>
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/examples/arrays.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="arrays-and-tuples">Arrays and Tuples</h1>
-<h2 id="native-arrays">Native Arrays</h2>
-<pre><code class="language-ts">const xs = [1, 2, 3];
-const first = xs[0];
-const len = xs.length;
+  <div class="content"><h1 id="arrays-and-collections">Arrays and Collections</h1>
+<h2 id="js-surface-array-methods">JS-surface array methods</h2>
+<pre><code class="language-ts">export function main(): void {
+  const xs = [1, 2, 3];
+  const ys = xs.map((x) =&gt; x + 1).filter((x) =&gt; x &gt; 2);
+  console.log(JSON.stringify(ys));
+}
 </code></pre>
-<h2 id="js-surface-array-methods">JS Surface Array Methods</h2>
-<pre><code class="language-ts">const xs = [1, 2, 3];
-const ys = xs.filter((x) =&gt; x &gt; 1).map((x) =&gt; x * 2);
-console.log(ys.join(&quot;,&quot;));
-</code></pre>
-<h2 id="arrayfrom"><code>Array.from</code></h2>
-<pre><code class="language-ts">const counts = new Map&lt;string, number&gt;();
-counts.set(&quot;alpha&quot;, 1);
-counts.set(&quot;beta&quot;, 2);
+<p>This behavior comes from the active <code>@tsonic/js</code> surface.</p>
+<h2 id="clr-collections">CLR collections</h2>
+<pre><code class="language-ts">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 
-const keys = Array.from(counts.keys());
-console.log(keys.join(&quot;,&quot;));
+const xs = new List&lt;number&gt;();
+xs.Add(1);
+xs.Add(2);
 </code></pre>
-<h2 id="tuples">Tuples</h2>
-<pre><code class="language-ts">const point: [number, number] = [10, 20];
-console.log(point[0], point[1]);
-</code></pre>
-<h2 id="clr-contrast">CLR Contrast</h2>
-<p>If you want explicit LINQ/BCL APIs, import them explicitly rather than relying on the JS surface:</p>
+<p>This behavior comes from generated CLR binding packages, not from the JS
+surface.</p>
+<h2 id="linq-contrast">LINQ contrast</h2>
 <pre><code class="language-ts">import { Enumerable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
 
 const xs = [1, 2, 3];
 const ys = Enumerable.Where(xs, (x: number): boolean =&gt; x &gt; 1);
 </code></pre>
+<p>Here the array is still a normal Tsonic/TypeScript array, but LINQ behavior is
+imported explicitly from CLR bindings.</p>
+<h2 id="typed-arrays">Typed arrays</h2>
+<p>On the JS surface, typed arrays come from <code>@tsonic/js</code>:</p>
+<pre><code class="language-ts">export function main(): void {
+  const bytes = new Uint8Array([1, 2, 3]);
+  bytes.set([4, 5], 1);
+  console.log(bytes.length);
+}
+</code></pre>
+<h2 id="rule-of-thumb">Rule of thumb</h2>
+<ul>
+<li>JS array/typed-array behavior comes from <code>@tsonic/js</code></li>
+<li>CLR collections and LINQ come from generated binding packages</li>
+<li>keep those models separate in your mental model and in your imports</li>
+</ul>
 </div>
 </article>
 </main>

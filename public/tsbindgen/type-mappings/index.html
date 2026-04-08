@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -103,61 +107,51 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Type Generation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Validation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">tsbindgen</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsbindgen/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/naming/">Naming</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/testing/">Testing</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link active" href="/tsbindgen/type-mappings/">Type Mappings</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/what-tsbindgen-generates/">What tsbindgen Generates</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/workflow/">Workflow</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -184,381 +178,39 @@
   </div>
 
   <div class="content"><h1 id="type-mappings">Type Mappings</h1>
-<p>How CLR types map to TypeScript declarations.</p>
-<h2 id="primitive-types">Primitive Types</h2>
-<p>CLR primitives map to type aliases from <code>@tsonic/core/types.js</code>:</p>
-<table>
-<thead>
-<tr>
-<th>CLR Type</th>
-<th>TypeScript</th>
-<th>Underlying</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>System.SByte</code></td>
-<td><code>sbyte</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.Byte</code></td>
-<td><code>byte</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.Int16</code></td>
-<td><code>short</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.UInt16</code></td>
-<td><code>ushort</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.Int32</code></td>
-<td><code>int</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.UInt32</code></td>
-<td><code>uint</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.Int64</code></td>
-<td><code>long</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.UInt64</code></td>
-<td><code>ulong</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.Single</code></td>
-<td><code>float</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.Double</code></td>
-<td><code>double</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.Decimal</code></td>
-<td><code>decimal</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.Char</code></td>
-<td><code>char</code></td>
-<td><code>string &amp; { __brand: &quot;char&quot; }</code></td>
-</tr>
-<tr>
-<td><code>System.Boolean</code></td>
-<td><code>bool</code></td>
-<td><code>boolean &amp; { __brand: &quot;bool&quot; }</code></td>
-</tr>
-<tr>
-<td><code>System.String</code></td>
-<td><code>string</code></td>
-<td>(native)</td>
-</tr>
-<tr>
-<td><code>System.IntPtr</code></td>
-<td><code>nint</code></td>
-<td><code>number</code></td>
-</tr>
-<tr>
-<td><code>System.UIntPtr</code></td>
-<td><code>nuint</code></td>
-<td><code>number</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="why-simple-aliases">Why Simple Aliases?</h3>
-<p>Numeric types are simple <code>number</code> aliases because TypeScript's structural typing doesn't enforce numeric bounds at runtime. Tsonic enforces numeric correctness at compile time via a proof system:</p>
-<pre><code class="language-typescript">const age: int = 42 as int;    // Tsonic validates 42 fits in Int32
-const temp: float = 98.6 as float; // Tsonic validates for Single
-</code></pre>
-<p>The <code>char</code> and <code>bool</code> types remain branded for semantic distinction.</p>
-<h2 id="generic-types">Generic Types</h2>
-<p>Generic type names include arity suffix:</p>
-<table>
-<thead>
-<tr>
-<th>CLR</th>
-<th>TypeScript</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>List&lt;T&gt;</code></td>
-<td><code>List_1&lt;T&gt;</code></td>
-</tr>
-<tr>
-<td><code>Dictionary&lt;K,V&gt;</code></td>
-<td><code>Dictionary_2&lt;K, V&gt;</code></td>
-</tr>
-<tr>
-<td><code>Tuple&lt;T1,T2,T3&gt;</code></td>
-<td><code>Tuple_3&lt;T1, T2, T3&gt;</code></td>
-</tr>
-<tr>
-<td><code>Action</code></td>
-<td><code>Action</code></td>
-</tr>
-<tr>
-<td><code>Action&lt;T&gt;</code></td>
-<td><code>Action_1&lt;T&gt;</code></td>
-</tr>
-<tr>
-<td><code>Func&lt;TResult&gt;</code></td>
-<td><code>Func_1&lt;TResult&gt;</code></td>
-</tr>
-<tr>
-<td><code>Func&lt;T,TResult&gt;</code></td>
-<td><code>Func_2&lt;T, TResult&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="friendly-aliases">Friendly Aliases</h3>
-<p>Facades export friendly aliases without arity suffix:</p>
-<pre><code class="language-typescript">// Both work:
-import { List_1 } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
-import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;  // Alias
-</code></pre>
-<h2 id="type-kinds">Type Kinds</h2>
-<table>
-<thead>
-<tr>
-<th>CLR Kind</th>
-<th>TypeScript Pattern</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Class</strong></td>
-<td><code>interface + const</code></td>
-</tr>
-<tr>
-<td><strong>Struct</strong></td>
-<td><code>interface + const</code></td>
-</tr>
-<tr>
-<td><strong>Interface</strong></td>
-<td><code>interface</code></td>
-</tr>
-<tr>
-<td><strong>Enum</strong></td>
-<td><code>const enum</code></td>
-</tr>
-<tr>
-<td><strong>Delegate</strong></td>
-<td><code>type</code> (callable)</td>
-</tr>
-<tr>
-<td><strong>Static class</strong></td>
-<td><code>abstract class</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="classstruct-pattern">Class/Struct Pattern</h3>
-<p>Classes and structs emit as interface + const:</p>
-<pre><code class="language-typescript">// Instance interface
-export interface List_1$instance&lt;T&gt; {
-    readonly count: int;
-    add(item: T): void;
-}
-
-// Value export (constructors + statics)
-export declare const List_1: {
-    new &lt;T&gt;(): List_1&lt;T&gt;;
-    new &lt;T&gt;(capacity: int): List_1&lt;T&gt;;
-};
-
-// Views interface (explicit implementations)
-export interface __List_1$views&lt;T&gt; {
-    As_IEnumerable_1(): IEnumerable_1&lt;T&gt;;
-}
-
-// Combined type
-export type List_1&lt;T&gt; = List_1$instance&lt;T&gt; &amp; __List_1$views&lt;T&gt;;
-</code></pre>
-<h3 id="interface-pattern">Interface Pattern</h3>
-<pre><code class="language-typescript">export interface IEnumerable_1$instance&lt;T&gt; {
-    getEnumerator(): IEnumerator_1&lt;T&gt;;
-}
-
-export type IEnumerable_1&lt;T&gt; = IEnumerable_1$instance&lt;T&gt;;
-</code></pre>
-<h3 id="enum-pattern">Enum Pattern</h3>
-<pre><code class="language-typescript">export const enum ConsoleColor {
-    Black = 0,
-    DarkBlue = 1,
-    DarkGreen = 2,
-    // ...
-}
-</code></pre>
-<h3 id="delegate-pattern">Delegate Pattern</h3>
-<p>Delegates emit as callable types:</p>
-<pre><code class="language-typescript">export type Action_1&lt;T&gt; = ((arg: T) =&gt; void) &amp; Action_1$instance&lt;T&gt; &amp; __Action_1$views&lt;T&gt;;
-export type Func_2&lt;T, TResult&gt; = ((arg: T) =&gt; TResult) &amp; Func_2$instance&lt;T, TResult&gt;;
-</code></pre>
-<p>This allows arrow functions:</p>
-<pre><code class="language-typescript">const fn: Func_2&lt;int, string&gt; = (x) =&gt; x.toString();
-</code></pre>
-<h3 id="static-class-pattern">Static Class Pattern</h3>
-<pre><code class="language-typescript">export abstract class Console {
-    static writeLine(value: string): void;
-    static readLine(): string;
-    // No constructor - abstract
-}
-</code></pre>
-<h2 id="special-types">Special Types</h2>
-<table>
-<thead>
-<tr>
-<th>CLR</th>
-<th>TypeScript</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>void</code></td>
-<td><code>void</code></td>
-</tr>
-<tr>
-<td><code>object</code></td>
-<td><code>unknown</code></td>
-</tr>
-<tr>
-<td><code>dynamic</code></td>
-<td><code>unknown</code></td>
-</tr>
-<tr>
-<td><code>T*</code> (pointer)</td>
-<td><code>ptr&lt;T&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="refoutin-parameters">ref/out/in Parameters</h3>
-<p>Parameter modifiers (<code>ref</code>, <code>out</code>, <code>in</code>) are tracked in the bindings manifest (<code>&lt;Namespace&gt;/bindings.json</code>), not the TypeScript declarations:</p>
-<pre><code class="language-typescript">// TypeScript declaration (no visible difference)
-function tryParse(value: string, result: int): bool;
-</code></pre>
-<pre><code class="language-json">// bindings.json tracks the modifier (simplified example)
-{
-  &quot;namespace&quot;: &quot;System&quot;,
-  &quot;types&quot;: [
-    {
-      &quot;clrName&quot;: &quot;System.Int32&quot;,
-      &quot;methods&quot;: [
-        {
-          &quot;clrName&quot;: &quot;TryParse&quot;,
-          &quot;parameterModifiers&quot;: [
-            { &quot;index&quot;: 1, &quot;modifier&quot;: &quot;out&quot; }
-          ]
-        }
-      ]
-    }
-  ]
-}
-</code></pre>
-<p>This approach is used because:</p>
-<ol>
-<li>TypeScript has no concept of by-reference parameters</li>
-<li>The Tsonic compiler needs this info for correct C# interop</li>
-<li>Runtime behavior differs for ref/out/in (ABI concern)</li>
-</ol>
-<p>See <a href="/tsbindgen/architecture/output-files/">Output Files</a> for manifest structure.</p>
-<h2 id="nullable-types">Nullable Types</h2>
-<h3 id="value-types-nullable">Value Types (Nullable<T>)</h3>
-<table>
-<thead>
-<tr>
-<th>CLR</th>
-<th>TypeScript</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>int?</code></td>
-<td><code>int \| null</code></td>
-</tr>
-<tr>
-<td><code>bool?</code></td>
-<td><code>bool \| null</code></td>
-</tr>
-<tr>
-<td><code>T?</code> where T: struct</td>
-<td><code>T \| null</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="nullable-reference-types-nrt">Nullable Reference Types (NRT)</h3>
-<p>C# nullable reference types are handled based on position:</p>
-<p><strong>Output positions</strong> (returns, properties, fields) emit <code>| undefined</code> for nullable:</p>
-<pre><code class="language-typescript">// C#: public string? Name { get; }
-readonly name: string | undefined;
-
-// C#: public List&lt;string?&gt;? GetItems()
-getItems(): List_1&lt;string | undefined&gt; | undefined;
-</code></pre>
-<p><strong>Input positions</strong> (parameters) are always non-nullable in TypeScript:</p>
-<pre><code class="language-typescript">// C#: public void Process(string? value)
-process(value: string): void;  // No undefined - caller must provide value
-</code></pre>
-<p>This asymmetric approach:</p>
-<ol>
-<li>Preserves null-safety guarantees from C# analysis</li>
-<li>Avoids unnecessary undefined checks for callers</li>
-<li>Matches TypeScript's strict null checks semantics</li>
-</ol>
-<h2 id="arrays">Arrays</h2>
-<table>
-<thead>
-<tr>
-<th>CLR</th>
-<th>TypeScript</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>T[]</code></td>
-<td><code>T[]</code></td>
-</tr>
-<tr>
-<td><code>T[,]</code></td>
-<td><code>T[][]</code></td>
-</tr>
-<tr>
-<td><code>ReadOnlySpan&lt;T&gt;</code></td>
-<td><code>ReadOnlySpan_1&lt;T&gt;</code></td>
-</tr>
-<tr>
-<td><code>Span&lt;T&gt;</code></td>
-<td><code>Span_1&lt;T&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="primitive-lifting-in-generic-type-arguments">Primitive Lifting in Generic Type Arguments</h2>
-<p>For generic type arguments, tsbindgen emits CLR type names directly instead of TS primitive aliases:</p>
-<pre><code class="language-typescript">// Value positions use TS aliases for ergonomics
-function add(a: int, b: int): int;
-
-// Generic type arguments use CLR names
-type List = List_1&lt;Int32&gt;;  // Not List_1&lt;int&gt;
-tryFormat(destination: Span_1&lt;Char&gt;): boolean;  // Not Span_1&lt;char&gt;
-</code></pre>
-<p>This ensures:</p>
-<ol>
-<li>CLR type identity is preserved in type-level positions</li>
-<li>Generic constraints are satisfied without runtime type inference</li>
-<li>Tsonic compiler can enforce numeric correctness at compile time</li>
-</ol>
+<p><code>tsbindgen</code> projects CLR type shapes into TypeScript declarations.</p>
+<h2 id="goals">Goals</h2>
+<ul>
+<li>preserve CLR identity</li>
+<li>keep generated names stable and predictable</li>
+<li>expose enough shape for Tsonic typechecking and imports</li>
+</ul>
+<h2 id="important-examples">Important examples</h2>
+<ul>
+<li>CLR primitives map to <code>@tsonic/core/types.js</code> aliases where appropriate</li>
+<li>classes and structs emit as interface-plus-value patterns</li>
+<li>interfaces remain interface-only</li>
+<li>delegates emit as callable types</li>
+<li>enums emit as enum-style declaration surfaces</li>
+</ul>
+<p>Examples:</p>
+<ul>
+<li><code>System.Int32</code> -&gt; <code>int</code></li>
+<li><code>System.Int64</code> -&gt; <code>long</code></li>
+<li><code>List&lt;T&gt;</code> -&gt; <code>List_1&lt;T&gt;</code></li>
+<li><code>Dictionary&lt;TKey, TValue&gt;</code> -&gt; <code>Dictionary_2&lt;TKey, TValue&gt;</code></li>
+</ul>
+<h2 id="why-naming-discipline-matters">Why naming discipline matters</h2>
+<p>Generated packages must stay:</p>
+<ul>
+<li>stable enough for imports</li>
+<li>faithful enough for CLR identity</li>
+<li>predictable enough for large binding waves</li>
+</ul>
+<p>That is why tsbindgen does not try to “JavaScript-ify” CLR naming.</p>
+<h2 id="important-distinction">Important distinction</h2>
+<p>These mappings belong to generated binding packages. They do not define the
+semantics of first-party authored source packages like <code>@tsonic/js</code>.</p>
 </div>
 </article>
 </main>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Imports | Tsonic</title>
+    <title>Import Patterns | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,41 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/examples/arrays/">Arrays and Collections</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/basic/">Basic Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/dotnet/">CLR and .NET Examples</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/examples/imports/">Import Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/workspace-packages/">Workspace Package Graphs</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -135,19 +165,22 @@
         <a href="/tsonic/examples/">Examples</a>
         <span class="sep">/</span>
       
-      <span>Imports</span>
+      <span>Import Patterns</span>
     </nav>
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/examples/imports.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="import-examples">Import Examples</h1>
-<h2 id="local-relative-import">Local Relative Import</h2>
+  <div class="content"><h1 id="import-patterns">Import Patterns</h1>
+<h2 id="esm-rule-first">ESM rule first</h2>
+<p>Tsonic follows ESM-style import specifiers. Use explicit <code>.js</code> subpaths where
+appropriate.</p>
+<h2 id="local-relative-import">Local relative import</h2>
 <pre><code class="language-ts">import { add } from &quot;./math.js&quot;;
 </code></pre>
-<h2 id="clr-import">CLR Import</h2>
+<h2 id="clr-import">CLR import</h2>
 <pre><code class="language-ts">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 </code></pre>
-<h2 id="node-module-import">Node Module Import</h2>
+<h2 id="node-module-import">Node module import</h2>
 <pre><code class="language-ts">import * as fs from &quot;node:fs&quot;;
 import * as path from &quot;node:path&quot;;
 </code></pre>
@@ -156,18 +189,27 @@ import * as path from &quot;node:path&quot;;
 <li>workspace surface <code>@tsonic/js</code></li>
 <li>installed package <code>@tsonic/nodejs</code></li>
 </ul>
-<h2 id="source-package-import">Source Package Import</h2>
+<h2 id="source-package-import">Source package import</h2>
 <pre><code class="language-ts">import { clamp } from &quot;@acme/math&quot;;
 </code></pre>
-<p>Works when <code>@acme/math</code> is a Tsonic source package with a compatible manifest.</p>
-<h2 id="dynamic-import">Dynamic Import</h2>
+<p>Works when <code>@acme/math</code> is a Tsonic source package with a compatible
+<code>tsonic.package.json</code> manifest.</p>
+<h2 id="package-root-import">Package-root import</h2>
+<p>You can still import a source package explicitly by subpath:</p>
+<pre><code class="language-ts">import { fs, path } from &quot;@tsonic/nodejs/index.js&quot;;
+import { Date } from &quot;@tsonic/js/index.js&quot;;
+</code></pre>
+<h2 id="dynamic-import">Dynamic import</h2>
 <p>Supported deterministic forms:</p>
 <pre><code class="language-ts">const mod = await import(&quot;./module.js&quot;);
 await import(&quot;./side-effect.js&quot;);
 </code></pre>
 <p>Rejected:</p>
 <pre><code class="language-ts">await import(specifier);
+await import(&quot;some-package&quot;);
 </code></pre>
+<p>The rule is simple: the import graph must stay closed-world and resolvable at
+compile time.</p>
 </div>
 </article>
 </main>

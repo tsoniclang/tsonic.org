@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,51 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link active" href="/tsonic/architecture/backend/">Backend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/emitter/">Emitter</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/frontend/">Frontend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/ir/">IR</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/packages/">Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/runtime/">Runtime</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -147,25 +187,41 @@
 <li>write <code>Program.cs</code></li>
 <li>write <code>tsonic.csproj</code></li>
 <li>place emitted <code>.cs</code> files</li>
-<li>invoke <code>dotnet build</code> / <code>publish</code> / <code>test</code> / <code>pack</code></li>
+<li>lay out package-shaped generated source trees where needed</li>
+<li>invoke <code>dotnet build</code>, <code>publish</code>, <code>test</code>, and <code>pack</code></li>
 <li>manage NativeAOT vs managed output differences</li>
 </ul>
-<h2 id="output-modes">Output Modes</h2>
+<h2 id="output-modes">Output modes</h2>
 <ul>
 <li>executable</li>
 <li>managed library</li>
 <li>NativeAOT shared library</li>
 <li>NativeAOT static library</li>
 </ul>
-<h2 id="important-runtime-inputs">Important Runtime Inputs</h2>
+<h2 id="important-inputs">Important inputs</h2>
 <ul>
-<li><code>Tsonic.Runtime</code></li>
-<li>optional surface/runtime DLLs such as <code>Tsonic.JSRuntime</code> or <code>nodejs.dll</code></li>
-<li>workspace <code>libraries</code></li>
-<li>workspace/package/framework references</li>
+<li>compiler-emitted C#</li>
+<li>workspace DLL and NuGet references</li>
+<li>framework references</li>
+<li>runtime overlays from source-package metadata</li>
+<li>local package ownership mode (<code>source</code> vs <code>dll</code>)</li>
 </ul>
-<h2 id="build-reuse">Build Reuse</h2>
-<p><code>--no-generate</code> exists for workflows where generated C# is intentionally augmented by external tooling before the backend build step.</p>
+<h2 id="package-shaped-generated-source">Package-shaped generated source</h2>
+<p>When local or installed source packages are emitted into the closure, the
+backend preserves package hierarchy rather than flattening everything into one
+directory.</p>
+<p>That is why generated output often includes paths like:</p>
+<pre><code class="language-text">generated/node_modules/@tsonic/nodejs/...
+generated/node_modules/@acme/domain/...
+</code></pre>
+<p>That is intentional. It preserves module ownership and avoids collisions.</p>
+<h2 id="local-dll-boundaries">Local DLL boundaries</h2>
+<p>When a local package reference uses <code>mode: &quot;dll&quot;</code>, the backend:</p>
+<ul>
+<li>builds the referenced project first</li>
+<li>references its assembly boundary</li>
+<li>avoids generating that package’s source again into the same closure</li>
+</ul>
 </div>
 </article>
 </main>

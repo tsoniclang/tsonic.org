@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,51 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/backend/">Backend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/emitter/">Emitter</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/architecture/frontend/">Frontend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/ir/">IR</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/packages/">Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/runtime/">Runtime</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -144,7 +184,7 @@
 <p>The frontend owns TypeScript-facing semantics.</p>
 <h2 id="responsibilities">Responsibilities</h2>
 <ul>
-<li>TS Program creation</li>
+<li>TypeScript program creation</li>
 <li>core globals injection</li>
 <li>surface profile resolution</li>
 <li>source-package import resolution</li>
@@ -152,48 +192,49 @@
 <li>validation and diagnostics</li>
 <li>IR construction</li>
 </ul>
-<h2 id="program-creation">Program Creation</h2>
+<h2 id="program-creation">Program creation</h2>
 <p>Important current behavior:</p>
 <ul>
 <li>compiler core globals are injected virtually</li>
 <li><code>surface</code> selects the ambient runtime personality</li>
 <li>workspace <code>dotnet.typeRoots</code> is additive</li>
-<li>source-package files under <code>node_modules</code> are included in the same TS Program when resolved</li>
+<li>source-package files under <code>node_modules</code> are included in the same TypeScript
+program when resolved</li>
 </ul>
-<h2 id="surface-profiles">Surface Profiles</h2>
+<h2 id="surface-profiles">Surface profiles</h2>
 <p>Current model:</p>
 <ul>
 <li>builtin <code>clr</code></li>
-<li>custom/package surfaces via <code>tsonic.surface.json</code></li>
-<li>resolved surface chains (<code>resolvedModes</code>) for compatibility checks</li>
+<li>package surfaces via <code>tsonic.surface.json</code></li>
+<li>resolved surface chains for compatibility checks</li>
 </ul>
-<p>Example:</p>
-<ul>
-<li>active surface: <code>@acme/surface-node</code></li>
-<li>resolved modes may include <code>@tsonic/js</code></li>
-<li>source packages declaring <code>[&quot;@tsonic/js&quot;]</code> can still be accepted</li>
-</ul>
-<h2 id="source-packages">Source Packages</h2>
+<p>This is why a package can declare compatibility with <code>@tsonic/js</code> and still be
+accepted under a workspace surface that extends it.</p>
+<h2 id="source-packages">Source packages</h2>
 <p>The frontend recognizes installed packages with:</p>
 <pre><code class="language-text">package.json
-tsonic/package-manifest.json
+tsonic.package.json
 </code></pre>
-<p>and kind:</p>
+<p>and:</p>
 <pre><code class="language-json">{ &quot;kind&quot;: &quot;tsonic-source-package&quot; }
 </code></pre>
-<p>These are treated as TS source, not opaque module stubs.</p>
-<h2 id="validation-areas">Validation Areas</h2>
+<p>These are treated as source, not opaque <code>.d.ts</code> stubs.</p>
+<p>That means the frontend has to understand:</p>
 <ul>
-<li>unsupported/open-world features</li>
-<li>numeric proof</li>
-<li>generic function value determinism</li>
-<li>object literal runtime representability</li>
-<li><code>import.meta</code></li>
-<li>dynamic <code>import()</code></li>
-<li>source-package surface mismatch</li>
+<li>exports</li>
+<li>ambient files</li>
+<li>module aliases</li>
+<li>surface compatibility</li>
+<li>runtime metadata overlays</li>
 </ul>
-<h2 id="output">Output</h2>
-<p>Frontend output is IR plus diagnostics, not C#.</p>
+<h2 id="why-this-matters">Why this matters</h2>
+<p>This is the point where the current stack differs most from a normal TypeScript
+toolchain:</p>
+<ul>
+<li>authored source packages are part of the same program</li>
+<li>generated CLR binding packages are not</li>
+<li>the active surface changes ambient semantics without changing package imports</li>
+</ul>
 </div>
 </article>
 </main>

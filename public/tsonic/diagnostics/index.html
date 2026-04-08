@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,75 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/bindings/">Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-modes/">Build Modes</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-output/">Build Output</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-bindings/">CLR Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/callbacks/">Callbacks</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/configuration/">Configuration</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/generators/">Generators</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/language/">Language</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/limitations/">Limitations</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/surfaces-and-packages/">Surfaces And Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/testing-and-quality/">Testing and Quality</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/type-system/">Type System</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/workspace-and-projects/">Workspace and Projects</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -137,99 +201,66 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/diagnostics.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="diagnostics-guide">Diagnostics Guide</h1>
-<p>This page documents the current diagnostic categories and the most important active codes.</p>
-<p>It is intentionally curated rather than a generated dump of every internal code path.</p>
-<h2 id="ranges">Ranges</h2>
+  <div class="content"><h1 id="diagnostics">Diagnostics</h1>
+<p>Tsonic diagnostics are meant to stop unsupported lowering paths early.</p>
+<h2 id="common-classes-of-failures">Common classes of failures</h2>
 <ul>
-<li><code>TSN1xxx</code> — module/import/resolution/config</li>
-<li><code>TSN2xxx</code> — unsupported syntax or unrepresentable type constructs</li>
-<li><code>TSN3xxx</code> — naming/emission conflicts</li>
-<li><code>TSN5xxx</code> — numeric proof and backend/runtime generation errors</li>
-<li><code>TSN6xxx</code> — yield lowering</li>
-<li><code>TSN7xxx</code> — static/AOT safety and deterministic typing</li>
-<li><code>TSN8Axx</code> — Aikya/source-package manifest/runtime mapping</li>
-<li><code>TSN9xxx</code> — type universe and missing-core failures</li>
+<li>unsupported dynamic typing</li>
+<li>unresolved source-package/package-graph issues</li>
+<li>unsupported generic or overload lowering</li>
+<li>explicit AOT rejection for constructs that cannot be lowered deterministically</li>
+<li>package-manifest or binding-metadata mismatches</li>
+<li>runtime/package ownership mismatches in multi-project workspaces</li>
 </ul>
-<h2 id="common-active-diagnostics">Common Active Diagnostics</h2>
-<h3 id="tsn1004"><code>TSN1004</code></h3>
-<p>General module/package/config resolution failure.</p>
-<p>Examples:</p>
-<ul>
-<li>invalid source package manifest</li>
-<li>unresolved export target in <code>package-manifest.json</code></li>
-<li>malformed installed package metadata</li>
-</ul>
-<h3 id="tsn2001"><code>TSN2001</code></h3>
-<p>Unsupported TypeScript feature in the current strict-AOT subset.</p>
-<p>Current common cases:</p>
-<ul>
-<li>unsupported <code>import.meta</code> field</li>
-<li>unsupported dynamic <code>import()</code> form</li>
-<li>other syntax that does not have a deterministic lowering</li>
-</ul>
-<h3 id="tsn3001--tsn3002"><code>TSN3001</code> / <code>TSN3002</code></h3>
-<p>C# naming/identifier problems after lowering.</p>
-<h3 id="tsn5101tsn5110"><code>TSN5101</code>–<code>TSN5110</code></h3>
-<p>Numeric proof failures.</p>
-<p>Typical examples:</p>
-<ul>
-<li>narrowing <code>number</code> to <code>int</code> without proof</li>
-<li>branch results that do not prove an integer-space target</li>
-<li>value-space/range mismatches</li>
-</ul>
-<h3 id="tsn6101"><code>TSN6101</code></h3>
-<p><code>yield</code> appeared in a position the lowering pipeline cannot rewrite.</p>
-<p>Many direct and nested yield cases are now supported, but irreducible ones still fail with <code>TSN6101</code>.</p>
-<h3 id="tsn7203"><code>TSN7203</code></h3>
-<p>Dictionary/symbol-key lowering issue. Most useful symbol-key dictionary paths are now supported; remaining failures mean the key/value shape still is not representable.</p>
-<h3 id="tsn7401"><code>TSN7401</code></h3>
-<p>Explicit <code>any</code> is not supported.</p>
-<h3 id="tsn7403"><code>TSN7403</code></h3>
-<p>Object-literal case still requires a deterministic finite target shape or supported shorthand/runtime analysis.</p>
-<h3 id="tsn7414"><code>TSN7414</code></h3>
-<p>Type cannot be represented deterministically in the current lowering model.</p>
-<h3 id="tsn7418"><code>TSN7418</code></h3>
-<p>Invalid <code>char</code> value.</p>
-<h3 id="tsn7419"><code>TSN7419</code></h3>
-<p><code>never</code> used as a generic type argument in an unsupported deterministic context.</p>
-<h3 id="tsn7432"><code>TSN7432</code></h3>
-<p>Generic function value usage is outside the supported monomorphic/runtime-shape subset.</p>
-<p>Accepted examples do <strong>not</strong> produce this code:</p>
-<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
-const f: (x: number) =&gt; number = id;
+<h2 id="typical-examples">Typical examples</h2>
+<h3 id="surface-mismatch">Surface mismatch</h3>
+<pre><code class="language-ts">console.log(&quot;hello&quot;);
 </code></pre>
-<p>Rejected examples do:</p>
-<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
-const copy = id;
+<p>If the workspace is still on <code>clr</code>, this is a surface problem, not a random
+typecheck accident. The fix is to switch the workspace surface to <code>@tsonic/js</code>
+or use explicit CLR APIs.</p>
+<h3 id="package-graph-mismatch">Package-graph mismatch</h3>
+<pre><code class="language-ts">import * as fs from &quot;node:fs&quot;;
 </code></pre>
-<h3 id="tsn8a01tsn8a05"><code>TSN8A01</code>–<code>TSN8A05</code></h3>
-<p>Aikya/source-package manifest errors:</p>
+<p>If <code>@tsonic/nodejs</code> is not installed, the correct fix is package-graph setup,
+not a local code workaround.</p>
+<h3 id="determinism-failure">Determinism failure</h3>
+<pre><code class="language-ts">await import(specifier);
+</code></pre>
+<p>This fails because the import graph is no longer closed-world.</p>
+<h3 id="overload-or-generic-ambiguity">Overload or generic ambiguity</h3>
+<pre><code class="language-ts">Enumerable.Where(xs, (x) =&gt; x &gt; 0);
+</code></pre>
+<p>When callback return or receiver shape is not specific enough, Tsonic reports
+the ambiguity instead of guessing.</p>
+<h2 id="how-to-debug">How to debug</h2>
+<ol>
+<li>confirm the active surface</li>
+<li>confirm package manifests and imports</li>
+<li>inspect generated output with <code>tsonic generate</code></li>
+<li>reduce the failing construct to a minimal repro</li>
+<li>rerun the smallest focused test or downstream case that exercises it</li>
+</ol>
+<h2 id="where-to-start-fixing">Where to start fixing</h2>
 <ul>
-<li>invalid schema</li>
-<li>unresolved runtime mapping</li>
-<li>conflicting runtime mapping</li>
-<li>missing bindings root</li>
-<li>missing runtime mapping entry</li>
+<li>compiler diagnostics around parsing, typing, IR, or lowering -&gt; start in
+<code>tsonic</code></li>
+<li>authored source-package shape or runtime metadata -&gt; start in <code>js</code>, <code>nodejs</code>,
+<code>express</code>, or your own source package</li>
+<li>CLR import or namespace projection issues -&gt; start in <code>tsbindgen</code> or the
+generated binding repo</li>
 </ul>
-<h3 id="tsn9001--tsn9002"><code>TSN9001</code> / <code>TSN9002</code></h3>
-<p>Core type universe failures:</p>
+<h2 id="practical-rule">Practical rule</h2>
+<p>Treat diagnostics as real architecture information.</p>
+<p>The compiler is telling you one of these things:</p>
 <ul>
-<li>missing required stdlib/core type</li>
-<li>unknown type leaked into later compilation</li>
+<li>the surface is wrong</li>
+<li>the package graph is wrong</li>
+<li>the type information is not specific enough</li>
+<li>the construct cannot be lowered deterministically</li>
 </ul>
-<h2 id="retired--no-longer-accurate-old-expectations">Retired / No Longer Accurate Old Expectations</h2>
-<p>These old blanket statements are no longer true:</p>
-<ul>
-<li><code>Promise.then/catch/finally</code> unsupported</li>
-<li>all dynamic <code>import()</code> unsupported</li>
-<li>all <code>import.meta</code> unsupported</li>
-<li>mapped/conditional/intersection types blanket-rejected</li>
-<li>object-literal method shorthand blanket-rejected</li>
-</ul>
-<h2 id="reading-diagnostics-correctly">Reading Diagnostics Correctly</h2>
-<p>Tsonic errors are emitted at compile time for authored TypeScript semantics, not deferred to C# where proof is expected earlier.</p>
-<p>That is deliberate. The compiler should reject ambiguity before emission.</p>
+<p>The correct response is usually to fix the model, not to paper over the error
+with a workaround.</p>
 </div>
 </article>
 </main>

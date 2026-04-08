@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,75 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/bindings/">Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-modes/">Build Modes</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/build-output/">Build Output</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-bindings/">CLR Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/callbacks/">Callbacks</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/configuration/">Configuration</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/generators/">Generators</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/language/">Language</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/limitations/">Limitations</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/surfaces-and-packages/">Surfaces And Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/testing-and-quality/">Testing and Quality</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/type-system/">Type System</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/workspace-and-projects/">Workspace and Projects</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -138,91 +202,83 @@
   </div>
 
   <div class="content"><h1 id="build-output">Build Output</h1>
-<p>Tsonic emits C# under a generated project and then builds it with the .NET toolchain.</p>
-<h2 id="pipeline">Pipeline</h2>
-<pre><code class="language-text">TypeScript
-  -&gt; frontend IR
-  -&gt; CSharpAst
-  -&gt; printed C#
-  -&gt; generated project
-  -&gt; dotnet build/publish
-</code></pre>
-<h2 id="default-layout">Default Layout</h2>
-<pre><code class="language-text">packages/&lt;project&gt;/
-  generated/
-    src/
-    Program.cs
-    tsonic.csproj
-    bin/
-    obj/
-  out/
-</code></pre>
-<h2 id="generated-files">Generated Files</h2>
-<h3 id="generatedsrccs"><code>generated/src/*.cs</code></h3>
-<p>Per-module emitted C#.</p>
-<h3 id="generatedprogramcs"><code>generated/Program.cs</code></h3>
-<p>Entry wrapper for executable builds.</p>
-<h3 id="generatedtsoniccsproj"><code>generated/tsonic.csproj</code></h3>
-<p>Resolved project file containing:</p>
+<p>Tsonic emits a deterministic generated C# project and then compiles it through
+the .NET toolchain.</p>
+<h2 id="main-output-shapes">Main output shapes</h2>
 <ul>
-<li>target framework</li>
-<li>runtime identifier</li>
-<li>framework references</li>
-<li>package references</li>
-<li>local library references</li>
-<li>NativeAOT/runtime settings</li>
+<li>generated C# project</li>
+<li>managed executable</li>
+<li>managed library</li>
+<li>NativeAOT executable</li>
+<li>NativeAOT library</li>
 </ul>
-<h3 id="generatedsrc__tsonic_jsongcs"><code>generated/src/__tsonic_json.g.cs</code></h3>
-<p>Generated only when JSON AOT support is needed.</p>
-<h2 id="output-types">Output Types</h2>
-<h3 id="executable">Executable</h3>
-<p>Default app build.</p>
-<h3 id="managed-library">Managed library</h3>
-<p>Use <code>output.type = &quot;library&quot;</code> with NativeAOT disabled.</p>
-<h3 id="nativeaot-library">NativeAOT library</h3>
-<p>Use <code>output.type = &quot;library&quot;</code> with:</p>
+<h2 id="generated-project-layout">Generated project layout</h2>
+<p>For an executable project, the generated output typically looks like:</p>
+<pre><code class="language-text">packages/api/generated/
+  Program.cs
+  tsonic.csproj
+  src/
+    App.cs
+  node_modules/
+    @tsonic/js/...
+    @tsonic/nodejs/...
+    @acme/domain/...
+</code></pre>
+<p>The important detail is that the generated source tree preserves package
+ownership. It is not a flat dump of unrelated <code>.cs</code> files.</p>
+<h2 id="source-mode-local-packages">Source-mode local packages</h2>
+<p>When a local first-party package reference uses <code>mode: &quot;source&quot;</code> or omits
+<code>mode</code>, that package is emitted into the generated source closure.</p>
+<p>Example:</p>
 <pre><code class="language-json">{
-  &quot;output&quot;: {
-    &quot;type&quot;: &quot;library&quot;,
-    &quot;nativeAot&quot;: true,
-    &quot;nativeLib&quot;: &quot;shared&quot;
+  &quot;references&quot;: {
+    &quot;packages&quot;: [
+      {
+        &quot;id&quot;: &quot;@acme/domain&quot;,
+        &quot;project&quot;: &quot;../domain&quot;
+      }
+    ]
   }
 }
 </code></pre>
-<p><code>nativeLib</code> can be:</p>
+<p>Result:</p>
 <ul>
-<li><code>shared</code></li>
-<li><code>static</code></li>
+<li><code>@acme/domain</code> source appears under generated <code>node_modules</code></li>
+<li>the app and that package compile as one generated closure</li>
 </ul>
-<h2 id="useful-build-flags">Useful Build Flags</h2>
-<ul>
-<li><code>--no-generate</code> — reuse existing generated project</li>
-<li><code>--no-aot</code> — build managed output</li>
-<li><code>--rid &lt;rid&gt;</code></li>
-<li><code>--optimize size|speed</code></li>
-<li><code>--no-strip</code></li>
-<li><code>--keep-temp</code></li>
-</ul>
-<h2 id="when---no-generate-exists">When <code>--no-generate</code> Exists</h2>
-<p>This is for workflows where external tooling writes additional generated C# into the generated directory and you need to build/run without wiping it first.</p>
-<p>Examples:</p>
-<ul>
-<li>EF Core compiled models</li>
-<li>interceptor-generated sources</li>
-</ul>
-<h2 id="cross-compilation">Cross-Compilation</h2>
-<p>Examples:</p>
-<pre><code class="language-bash">tsonic build --rid linux-x64
-tsonic build --rid osx-arm64
-tsonic build --rid win-x64
+<h2 id="dll-mode-local-packages">DLL-mode local packages</h2>
+<p>When a local package reference uses <code>mode: &quot;dll&quot;</code>, Tsonic builds that package
+as a separate project and references its DLL boundary instead of emitting its
+source again.</p>
+<p>Example:</p>
+<pre><code class="language-json">{
+  &quot;references&quot;: {
+    &quot;packages&quot;: [
+      {
+        &quot;id&quot;: &quot;@acme/domain&quot;,
+        &quot;project&quot;: &quot;../domain&quot;,
+        &quot;mode&quot;: &quot;dll&quot;
+      }
+    ]
+  }
+}
 </code></pre>
-<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Result:</p>
 <ul>
-<li>inspect <code>generated/src/*.cs</code></li>
-<li>inspect <code>generated/tsonic.csproj</code></li>
-<li>rerun with <code>--verbose</code></li>
-<li>if package references changed, run <code>tsonic restore</code></li>
+<li>the local package is built first</li>
+<li>the current project references its DLL</li>
+<li>the generated source closure does not duplicate ownership for that package</li>
 </ul>
+<h2 id="why-generated-output-matters">Why generated output matters</h2>
+<p>The generated project reflects:</p>
+<ul>
+<li>the active surface</li>
+<li>the full package graph</li>
+<li>source-package manifests</li>
+<li>CLR framework and package references</li>
+<li>local package ownership mode</li>
+</ul>
+<p>See <a href="/tsonic/build-modes/">Build Modes</a> for the command-level view.</p>
 </div>
 </article>
 </main>

@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,75 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/bindings/">Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-modes/">Build Modes</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-output/">Build Output</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-bindings/">CLR Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/callbacks/">Callbacks</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/configuration/">Configuration</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/generators/">Generators</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/language/">Language</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/limitations/">Limitations</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/surfaces-and-packages/">Surfaces And Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/testing-and-quality/">Testing and Quality</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/type-system/">Type System</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/workspace-and-projects/">Workspace and Projects</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -137,182 +201,120 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/configuration.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="configuration-reference">Configuration Reference</h1>
-<p>Tsonic splits configuration into:</p>
+  <div class="content"><h1 id="configuration">Configuration</h1>
+<p>The current configuration model has three layers:</p>
 <ul>
-<li>workspace: <code>tsonic.workspace.json</code></li>
-<li>project: <code>packages/&lt;project&gt;/tsonic.json</code></li>
+<li>workspace config: <code>tsonic.workspace.json</code></li>
+<li>project config: <code>packages/&lt;project&gt;/tsonic.json</code></li>
+<li>package manifest: <code>packages/&lt;project&gt;/tsonic.package.json</code></li>
 </ul>
-<h2 id="tsonicworkspacejson"><code>tsonic.workspace.json</code></h2>
-<p>Example:</p>
+<p>See <a href="/tsonic/workspace-and-projects/">Workspace and Project Files</a> for the concrete
+shape. This page focuses on decision-making.</p>
+<h2 id="1-choose-the-ambient-surface">1. Choose the ambient surface</h2>
+<p>CLR-first:</p>
+<pre><code class="language-json">{
+  &quot;surface&quot;: &quot;clr&quot;
+}
+</code></pre>
+<p>JavaScript ambient world:</p>
+<pre><code class="language-json">{
+  &quot;surface&quot;: &quot;@tsonic/js&quot;
+}
+</code></pre>
+<p>Key rule:</p>
+<ul>
+<li>a workspace has exactly one active ambient surface at a time</li>
+</ul>
+<h2 id="2-declare-workspace-scoped-clr-context">2. Declare workspace-scoped CLR context</h2>
+<p>Use <code>tsonic.workspace.json</code> for shared CLR dependencies and type roots.</p>
+<p>Typical examples:</p>
 <pre><code class="language-json">{
   &quot;dotnetVersion&quot;: &quot;net10.0&quot;,
   &quot;surface&quot;: &quot;@tsonic/js&quot;,
-  &quot;rid&quot;: &quot;linux-x64&quot;,
-  &quot;optimize&quot;: &quot;speed&quot;,
   &quot;dotnet&quot;: {
-    &quot;typeRoots&quot;: [&quot;node_modules/@tsonic/nodejs&quot;],
-    &quot;libraries&quot;: [],
-    &quot;frameworkReferences&quot;: [],
-    &quot;packageReferences&quot;: []
-  },
-  &quot;testDotnet&quot;: {
-    &quot;packageReferences&quot;: [
-      {
-        &quot;id&quot;: &quot;xunit&quot;,
-        &quot;version&quot;: &quot;2.9.3&quot;
-      }
-    ]
-  }
-}
-</code></pre>
-<h3 id="fields">Fields</h3>
-<ul>
-<li><code>dotnetVersion</code> — required target framework, for example <code>net10.0</code></li>
-<li><code>surface</code> — active ambient surface
-<ul>
-<li>omitted =&gt; <code>clr</code></li>
-<li><code>@tsonic/js</code> =&gt; JS ambient world</li>
-</ul>
-</li>
-<li><code>rid</code> — default native target</li>
-<li><code>optimize</code> — <code>size</code> or <code>speed</code></li>
-<li><code>buildOptions.stripSymbols</code></li>
-<li><code>buildOptions.invariantGlobalization</code></li>
-</ul>
-<h3 id="dotnettyperoots"><code>dotnet.typeRoots</code></h3>
-<p>Additional ambient/module declaration roots for the workspace.</p>
-<p>Important:</p>
-<ul>
-<li>compiler core globals are always injected</li>
-<li>surface roots are resolved from the active surface manifest</li>
-<li><code>dotnet.typeRoots</code> is additive</li>
-</ul>
-<p>Example for JS + Node modules:</p>
-<pre><code class="language-json">{
-  &quot;surface&quot;: &quot;@tsonic/js&quot;,
-  &quot;dotnet&quot;: {
-    &quot;typeRoots&quot;: [&quot;node_modules/@tsonic/nodejs&quot;]
-  }
-}
-</code></pre>
-<h3 id="dotnetlibraries"><code>dotnet.libraries</code></h3>
-<p>Workspace DLL references.</p>
-<p>Supported forms:</p>
-<pre><code class="language-json">{
-  &quot;dotnet&quot;: {
-    &quot;libraries&quot;: [
-      &quot;./libs/MyLib.dll&quot;,
-      {
-        &quot;path&quot;: &quot;./libs/Other.dll&quot;,
-        &quot;types&quot;: &quot;@company/other-types&quot;
-      },
-      {
-        &quot;path&quot;: &quot;./libs/BuildOnly.dll&quot;,
-        &quot;types&quot;: false
-      }
-    ]
-  }
-}
-</code></pre>
-<h3 id="dotnetframeworkreferences"><code>dotnet.frameworkReferences</code></h3>
-<pre><code class="language-json">{
-  &quot;dotnet&quot;: {
+    &quot;typeRoots&quot;: [
+      &quot;node_modules/@tsonic/js&quot;,
+      &quot;node_modules/@tsonic/nodejs&quot;
+    ],
     &quot;frameworkReferences&quot;: [
-      &quot;Microsoft.AspNetCore.App&quot;,
       {
         &quot;id&quot;: &quot;Microsoft.AspNetCore.App&quot;,
         &quot;types&quot;: &quot;@tsonic/aspnetcore&quot;
       }
-    ]
-  }
-}
-</code></pre>
-<h3 id="dotnetpackagereferences"><code>dotnet.packageReferences</code></h3>
-<pre><code class="language-json">{
-  &quot;dotnet&quot;: {
+    ],
     &quot;packageReferences&quot;: [
       {
-        &quot;id&quot;: &quot;Microsoft.Extensions.Logging&quot;,
-        &quot;version&quot;: &quot;10.0.0&quot;
+        &quot;id&quot;: &quot;Microsoft.EntityFrameworkCore.Sqlite&quot;,
+        &quot;version&quot;: &quot;10.0.1&quot;,
+        &quot;types&quot;: &quot;@tsonic/efcore-sqlite&quot;
       }
     ]
   }
 }
 </code></pre>
-<h3 id="dotnetmsbuildproperties"><code>dotnet.msbuildProperties</code></h3>
-<p>Escape hatch for explicit <code>.csproj</code>-level properties:</p>
-<pre><code class="language-json">{
-  &quot;dotnet&quot;: {
-    &quot;msbuildProperties&quot;: {
-      &quot;InterceptorsNamespaces&quot;: &quot;$(InterceptorsNamespaces);Microsoft.EntityFrameworkCore.GeneratedInterceptors&quot;
-    }
-  }
-}
-</code></pre>
-<h3 id="testdotnet"><code>testDotnet</code></h3>
-<p>Test-only frameworks/packages/properties added only to <code>tsonic test</code>.</p>
-<h2 id="packagesprojecttsonicjson"><code>packages/&lt;project&gt;/tsonic.json</code></h2>
-<p>Example:</p>
-<pre><code class="language-json">{
-  &quot;rootNamespace&quot;: &quot;MyApp&quot;,
-  &quot;entryPoint&quot;: &quot;src/App.ts&quot;,
-  &quot;sourceRoot&quot;: &quot;src&quot;,
-  &quot;outputDirectory&quot;: &quot;generated&quot;,
-  &quot;outputName&quot;: &quot;app&quot;,
-  &quot;output&quot;: {
-    &quot;type&quot;: &quot;exe&quot;,
-    &quot;nativeAot&quot;: true
-  },
-  &quot;tests&quot;: {
-    &quot;entryPoint&quot;: &quot;tests/index.ts&quot;,
-    &quot;outputDirectory&quot;: &quot;generated-tests&quot;,
-    &quot;outputName&quot;: &quot;tests&quot;
-  },
-  &quot;references&quot;: {
-    &quot;libraries&quot;: [&quot;../shared/out/Shared.dll&quot;]
-  }
-}
-</code></pre>
-<h3 id="fields-1">Fields</h3>
+<p>Use workspace config for:</p>
 <ul>
-<li><code>rootNamespace</code> — required C# root namespace</li>
-<li><code>entryPoint</code> — defaults to project sample entry</li>
+<li><code>surface</code></li>
+<li><code>dotnetVersion</code></li>
+<li><code>typeRoots</code></li>
+<li>shared framework references</li>
+<li>shared NuGet packages</li>
+<li>shared local DLLs</li>
+<li>optional MSBuild property escape hatches</li>
+</ul>
+<h2 id="3-configure-each-project">3. Configure each project</h2>
+<p>Project-level config lives under <code>packages/&lt;project&gt;/tsonic.json</code>.</p>
+<p>Typical fields include:</p>
+<ul>
+<li><code>rootNamespace</code></li>
+<li><code>entryPoint</code></li>
 <li><code>sourceRoot</code></li>
 <li><code>outputDirectory</code></li>
 <li><code>outputName</code></li>
-<li>top-level <code>optimize</code></li>
-<li><code>buildOptions.*</code></li>
-<li><code>output.*</code></li>
-<li><code>tests.*</code></li>
+<li><code>output.type</code></li>
+<li><code>output.nativeAot</code></li>
+<li><code>tests.entryPoint</code></li>
 <li><code>references.libraries</code></li>
+<li><code>references.packages</code></li>
 </ul>
-<h2 id="output-configuration">Output Configuration</h2>
-<p>Common fields:</p>
+<h2 id="4-decide-local-package-ownership-mode">4. Decide local package ownership mode</h2>
+<p>The current model supports local first-party package references with explicit
+ownership:</p>
+<pre><code class="language-json">{
+  &quot;references&quot;: {
+    &quot;packages&quot;: [
+      {
+        &quot;id&quot;: &quot;@acme/domain&quot;,
+        &quot;project&quot;: &quot;../domain&quot;
+      },
+      {
+        &quot;id&quot;: &quot;@acme/search&quot;,
+        &quot;project&quot;: &quot;../search&quot;,
+        &quot;mode&quot;: &quot;dll&quot;
+      }
+    ]
+  }
+}
+</code></pre>
+<p>Meaning:</p>
 <ul>
-<li><code>type</code>: <code>exe</code> or <code>library</code></li>
-<li><code>nativeAot</code></li>
-<li><code>nativeLib</code>: <code>shared</code> or <code>static</code></li>
-<li><code>singleFile</code></li>
-<li><code>trimmed</code></li>
-<li><code>stripSymbols</code></li>
-<li><code>optimization</code></li>
-<li><code>invariantGlobalization</code></li>
-<li><code>selfContained</code></li>
-<li><code>targetFramework</code></li>
-<li><code>targetFrameworks</code></li>
-<li><code>generateDocumentation</code></li>
-<li><code>includeSymbols</code></li>
-<li><code>packable</code></li>
-<li><code>package</code></li>
+<li><code>source</code> (default) — compile that package into the generated source closure</li>
+<li><code>dll</code> — build that package separately and reference its DLL boundary</li>
 </ul>
-<h2 id="naming-rule">Naming Rule</h2>
-<p>Tsonic does not guess CLR names from TypeScript names.</p>
+<p>Use <code>source</code> unless you have a deliberate assembly-boundary reason to prefer
+<code>dll</code>.</p>
+<h2 id="5-define-package-metadata">5. Define package metadata</h2>
+<p>Use <code>tsonic.package.json</code> for authored source packages.</p>
+<p>That manifest is where a package declares:</p>
 <ul>
-<li>authored TS names stay authored TS names in the frontend model</li>
-<li>CLR names come from bindings</li>
-<li>user-defined C# member emission applies deterministic naming rules only at the backend layer</li>
+<li>surface compatibility</li>
+<li>exported subpaths</li>
+<li>ambient files</li>
+<li>module aliases</li>
+<li>runtime metadata when needed</li>
 </ul>
+<p>Generated CLR binding packages are different; they are owned by <code>tsbindgen</code> and
+do not use the same authored-source manifest model.</p>
 </div>
 </article>
 </main>

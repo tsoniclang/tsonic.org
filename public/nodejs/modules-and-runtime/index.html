@@ -1,0 +1,230 @@
+﻿<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Modules And Runtime | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+    <script defer src="/nav.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="/highlight-init.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <div class="top-inner">
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-controls="sidebar"
+      aria-expanded="false"
+    >
+      <span class="menu-bars" aria-hidden="true"></span>
+      <span class="sr-only">Menu</span>
+    </button>
+
+    <a class="brand" href="/">Tsonic</a>
+
+    <nav class="mount-nav">
+      
+        
+      
+        
+          <a class="mount-link " href="/tsonic/">Tsonic</a>
+        
+      
+        
+          <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+        
+      
+        
+          <a class="mount-link active" href="/nodejs/">nodejs</a>
+        
+      
+        
+          <a class="mount-link " href="/js/">js</a>
+        
+      
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
+    </nav>
+
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
+      <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+        />
+      </svg>
+      <span class="gh-text">GitHub</span>
+    </a>
+
+    <div class="search">
+      <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+      <div id="searchResults" class="search-results"></div>
+    </div>
+  </div>
+</header>
+
+    <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+    <div class="layout">
+      <aside id="sidebar" class="sidebar" aria-label="Site navigation">
+        <div class="sidebar-mobile-top">
+          <button class="menu-close" id="menuClose" type="button" aria-label="Close navigation menu">
+            Close
+          </button>
+        </div>
+        <div class="sidebar-inner">
+
+
+  
+    
+  
+
+
+
+
+
+  
+    
+  
+    
+  
+    
+  
+    
+      
+
+
+
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">nodejs</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/nodejs/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/nodejs/modules/">Modules</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/imports/">Imports</a></li>
+        
+          <li><a class="nav-link active" href="/nodejs/modules-and-runtime/">Modules And Runtime</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
+    
+  
+    
+  
+
+</div>
+      </aside>
+      <main class="main">
+<article class="doc">
+  <div class="doc-top">
+    <nav class="breadcrumbs">
+      
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+      
+        <a href="/nodejs/">Node.js Package</a>
+        <span class="sep">/</span>
+      
+      <span>Modules And Runtime</span>
+    </nav>
+    <a class="edit" href="https://github.com/tsoniclang/nodejs/blob/main/docs/modules-and-runtime.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="modules-and-runtime-model">Modules and Runtime Model</h1>
+<p><code>@tsonic/nodejs</code> declares its Node-style module graph in package metadata.</p>
+<p>It is a normal first-party source package, not a surface and not a generated
+binding package.</p>
+<h2 id="module-aliases">Module aliases</h2>
+<p>Examples include:</p>
+<ul>
+<li><code>node:fs</code></li>
+<li><code>node:path</code></li>
+<li><code>node:http</code></li>
+<li><code>node:crypto</code></li>
+<li><code>node:net</code></li>
+<li><code>node:tls</code></li>
+<li><code>node:zlib</code></li>
+</ul>
+<p>Direct package imports remain supported too:</p>
+<pre><code class="language-ts">import { readFileSync } from &quot;@tsonic/nodejs/fs.js&quot;;
+</code></pre>
+<p>That gives users two practical import styles:</p>
+<ul>
+<li>Node-style <code>node:*</code> / bare aliases for normal authored code</li>
+<li>explicit package subpaths when you want the import boundary to be obvious</li>
+</ul>
+<h2 id="package-metadata">Package metadata</h2>
+<p>The current manifest defines:</p>
+<ul>
+<li>ambient declarations</li>
+<li>module alias map</li>
+<li>exported subpaths</li>
+<li>required type roots</li>
+<li>runtime framework references where needed</li>
+<li>runtime package dependencies where needed</li>
+</ul>
+<p>That means the package manifest is doing real work. It is not just package
+decoration.</p>
+<p>That is why adding <code>@tsonic/nodejs</code> can update effective workspace runtime
+requirements without making Node a separate ambient surface.</p>
+<p>That is why the site now describes <code>@tsonic/nodejs</code> as a real first-party
+source package, not a generated companion.</p>
+<h2 id="relationship-to-aspnet-core-bindings">Relationship to ASP.NET Core bindings</h2>
+<p>Some Node-like capabilities rely on CLR frameworks underneath. The important
+thing for users is still the package boundary:</p>
+<ul>
+<li>author against <code>@tsonic/nodejs</code></li>
+<li>let package metadata pull in the CLR binding/runtime requirements</li>
+</ul>
+<p>In the current repo, that includes a framework reference on
+<code>Microsoft.AspNetCore.App</code> plus the required type package
+<code>@tsonic/aspnetcore</code>.</p>
+<p>That keeps the authoring model source-first even when CLR frameworks are part of
+the implementation underneath.</p>
+<h2 id="scope">Scope</h2>
+<p>This package aims for practical Node-style APIs for Tsonic projects. It is not a
+promise of byte-for-byte parity with upstream Node.</p>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>

@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,51 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/backend/">Backend</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/emitter/">Emitter</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/frontend/">Frontend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/ir/">IR</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/packages/">Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/runtime/">Runtime</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -141,8 +181,9 @@
   </div>
 
   <div class="content"><h1 id="diagnostics-architecture">Diagnostics Architecture</h1>
-<p>Diagnostics are produced primarily in the frontend and carried through later stages where needed.</p>
-<h2 id="where-diagnostics-come-from">Where Diagnostics Come From</h2>
+<p>Diagnostics are produced primarily in the frontend and carried through later
+stages where needed.</p>
+<h2 id="where-diagnostics-come-from">Where diagnostics come from</h2>
 <ul>
 <li>config loading</li>
 <li>surface/profile resolution</li>
@@ -152,23 +193,26 @@
 <li>numeric proof</li>
 <li>backend emission/build orchestration</li>
 </ul>
-<h2 id="design-rule">Design Rule</h2>
-<p>Reject ambiguity at the compiler layer rather than hoping C# will fail in a useful way later.</p>
+<h2 id="design-rule">Design rule</h2>
+<p>Reject ambiguity at the compiler layer rather than hoping C# will fail in a
+useful way later.</p>
 <p>This is why Tsonic emits compile-time diagnostics for:</p>
 <ul>
 <li>unproven numeric narrows</li>
 <li>unsupported object-literal runtime cases</li>
 <li>unresolved source-package manifest errors</li>
 <li>unsupported generic function value escapes</li>
+<li>bad local package ownership or missing DLL boundaries</li>
 </ul>
-<h2 id="current-important-diagnostic-families">Current Important Diagnostic Families</h2>
+<h2 id="why-downstream-verification-still-matters">Why downstream verification still matters</h2>
+<p>Even with strong compiler diagnostics, some failures only appear at:</p>
 <ul>
-<li>module/config/source-package: <code>TSN1004</code>, <code>TSN8A01</code>–<code>TSN8A05</code></li>
-<li>unsupported/runtime-shape: <code>TSN2001</code>, <code>TSN7414</code>, <code>TSN7432</code></li>
-<li>numeric proof: <code>TSN5101</code>–<code>TSN5110</code></li>
-<li>yield lowering: <code>TSN6101</code></li>
+<li>real generated project compile time</li>
+<li>runtime startup</li>
+<li>application package-graph boundaries</li>
 </ul>
-<p>See <code>../diagnostics.md</code> for user-facing guidance.</p>
+<p>That is why diagnostics architecture and downstream verification are both part
+of the quality story.</p>
 </div>
 </article>
 </main>

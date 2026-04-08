@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,51 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/backend/">Backend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/emitter/">Emitter</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/frontend/">Frontend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/ir/">IR</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/packages/">Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/architecture/runtime/">Runtime</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -141,7 +181,7 @@
   </div>
 
   <div class="content"><h1 id="runtime">Runtime</h1>
-<p>Runtime support is split across focused assemblies/packages.</p>
+<p>Runtime support is split into two layers.</p>
 <h2 id="core-runtime">Core Runtime</h2>
 <ul>
 <li><code>Tsonic.Runtime</code></li>
@@ -152,29 +192,28 @@
 <li>shared compiler support types</li>
 <li>other core emitted-runtime dependencies</li>
 </ul>
-<h2 id="js-runtime">JS Runtime</h2>
+<p>This is the only runtime DLL that the CLI/test harness syncs locally under <code>packages/cli/runtime</code>.</p>
+<h2 id="surface-runtime-overlays">Surface Runtime Overlays</h2>
+<p>Ambient/module surfaces such as <code>@tsonic/js</code> and <code>@tsonic/nodejs</code> are source packages.</p>
+<p>They contribute runtime requirements through package metadata:</p>
 <ul>
-<li><code>Tsonic.JSRuntime</code></li>
+<li><code>tsonic.package.json</code></li>
+<li><code>runtime</code></li>
+<li><code>dotnet</code></li>
 </ul>
-<p>Provides implementation for the JS surface:</p>
+<p>That metadata can add:</p>
 <ul>
-<li><code>console</code></li>
-<li><code>JSON</code></li>
-<li><code>Date</code></li>
-<li>timers</li>
-<li><code>Array</code>/<code>String</code>/<code>Map</code>/<code>Set</code> helper operations</li>
+<li>NuGet package references</li>
+<li>framework references</li>
+<li>transitive runtime package requirements</li>
 </ul>
-<h2 id="node-runtime">Node Runtime</h2>
-<ul>
-<li><code>Tsonic.Nodejs</code> / <code>nodejs.dll</code></li>
-</ul>
-<p>Provides module/runtime support for <code>node:*</code> bindings.</p>
+<p>Those requirements are resolved through normal package/restore flow. They are not copied into the CLI runtime directory as ad hoc surface DLLs.</p>
 <h2 id="surface-projection">Surface Projection</h2>
 <p>Runtime implementation and surface projection must remain coherent:</p>
 <ul>
-<li>runtime code lives in runtime repos</li>
-<li>surface package manifests/projection configs describe the ambient/module shape</li>
-<li>published packages must include the nested bindings/internal declaration trees that member binding lookup needs</li>
+<li>core emitted runtime support lives in <code>Tsonic.Runtime</code></li>
+<li>source package manifests describe surface/runtime overlays</li>
+<li>bindings manifests remain only for CLR / tsbindgen interop packages</li>
 </ul>
 </div>
 </article>

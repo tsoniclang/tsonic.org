@@ -1,0 +1,325 @@
+﻿<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Testing and Releases | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+    <script defer src="/nav.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="/highlight-init.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <div class="top-inner">
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-controls="sidebar"
+      aria-expanded="false"
+    >
+      <span class="menu-bars" aria-hidden="true"></span>
+      <span class="sr-only">Menu</span>
+    </button>
+
+    <a class="brand" href="/">Tsonic</a>
+
+    <nav class="mount-nav">
+      
+        
+      
+        
+          <a class="mount-link " href="/tsonic/">Tsonic</a>
+        
+      
+        
+          <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+        
+      
+        
+          <a class="mount-link " href="/nodejs/">nodejs</a>
+        
+      
+        
+          <a class="mount-link " href="/js/">js</a>
+        
+      
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
+    </nav>
+
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
+      <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+        />
+      </svg>
+      <span class="gh-text">GitHub</span>
+    </a>
+
+    <div class="search">
+      <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+      <div id="searchResults" class="search-results"></div>
+    </div>
+  </div>
+</header>
+
+    <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+    <div class="layout">
+      <aside id="sidebar" class="sidebar" aria-label="Site navigation">
+        <div class="sidebar-mobile-top">
+          <button class="menu-close" id="menuClose" type="button" aria-label="Close navigation menu">
+            Close
+          </button>
+        </div>
+        <div class="sidebar-inner">
+
+
+  
+
+
+
+  
+  
+  
+
+  
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+
+  
+
+
+
+  <div class="sidebar-home">
+    <div class="sidebar-title">Docs</div>
+    <div class="home-mounts">
+      
+        
+      
+        
+          <section class="home-mount">
+            <h3 class="home-mount-title">
+              <a href="/tsonic/">Tsonic</a>
+            </h3>
+            
+              <p class="home-mount-desc">Compiler, CLI, language features, configuration, and architecture docs.</p>
+            
+          </section>
+        
+      
+        
+          <section class="home-mount">
+            <h3 class="home-mount-title">
+              <a href="/tsbindgen/">tsbindgen</a>
+            </h3>
+            
+              <p class="home-mount-desc">Generate CLR bindings from assemblies and NuGet packages.</p>
+            
+          </section>
+        
+      
+        
+          <section class="home-mount">
+            <h3 class="home-mount-title">
+              <a href="/nodejs/">nodejs</a>
+            </h3>
+            
+              <p class="home-mount-desc">First-party Node-style modules for JS-surface Tsonic projects.</p>
+            
+          </section>
+        
+      
+        
+          <section class="home-mount">
+            <h3 class="home-mount-title">
+              <a href="/js/">js</a>
+            </h3>
+            
+              <p class="home-mount-desc">The active JavaScript ambient surface and source package.</p>
+            
+          </section>
+        
+      
+        
+          <section class="home-mount">
+            <h3 class="home-mount-title">
+              <a href="/express/">express</a>
+            </h3>
+            
+              <p class="home-mount-desc">Canonical Express-style routing and middleware package.</p>
+            
+          </section>
+        
+      
+    </div>
+  </div>
+
+</div>
+      </aside>
+      <main class="main">
+<article class="doc">
+  <div class="doc-top">
+    <nav class="breadcrumbs">
+      
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+      
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+      
+      <span>Testing and Releases</span>
+    </nav>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic.org/blob/main/docs/home/testing-and-releases.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="testing-and-release-discipline">Testing and Release Discipline</h1>
+<p>The current stack is validated in layers. Release work is not complete until the
+whole chain is green.</p>
+<h2 id="1-compiler-gate">1. Compiler gate</h2>
+<p>The authoritative compiler gate is:</p>
+<pre><code class="language-bash">./test/scripts/run-all.sh
+</code></pre>
+<p>This covers:</p>
+<ul>
+<li>frontend tests</li>
+<li>emitter tests and goldens</li>
+<li>CLI tests</li>
+<li>typecheck fixtures</li>
+<li>end-to-end .NET fixtures</li>
+<li>negative fixtures</li>
+</ul>
+<p>The full suite is the real gate. Faster subsets are useful while iterating, but
+they are not the final release signal.</p>
+<h2 id="2-package-selftests">2. Package selftests</h2>
+<p>First-party packages carry package-local verification where appropriate:</p>
+<ul>
+<li><code>js</code></li>
+<li><code>nodejs</code></li>
+<li><code>express</code></li>
+</ul>
+<p>Those gates matter because a package-local API matrix can fail even when no
+downstream app happens to hit the broken path.</p>
+<p>Typical commands:</p>
+<pre><code class="language-bash">bash scripts/selftest.sh
+</code></pre>
+<h2 id="3-downstream-verification">3. Downstream verification</h2>
+<p>The release bar includes real application repos:</p>
+<ul>
+<li><code>proof-is-in-the-pudding</code></li>
+<li><code>tsumo</code></li>
+<li><code>clickmeter</code></li>
+<li>Jotster</li>
+</ul>
+<p>These catch integration failures that unit tests cannot:</p>
+<ul>
+<li>startup failures</li>
+<li>request/response bugs</li>
+<li>package graph mismatches</li>
+<li>binding regressions</li>
+<li>publish/runtime issues</li>
+</ul>
+<p>Typical commands:</p>
+<pre><code class="language-bash">bash scripts/verify-all.sh
+</code></pre>
+<p>These downstream verification scripts are normally run against local sibling
+repos during a wave, not against a random mix of published npm package
+versions. That matters because a release wave often spans:</p>
+<ul>
+<li>compiler changes in <code>tsonic</code></li>
+<li>first-party source-package changes in <code>js</code>, <code>nodejs</code>, or <code>express</code></li>
+<li>regenerated CLR binding packages from <code>tsbindgen</code></li>
+<li>downstream applications that consume all of the above together</li>
+</ul>
+<h2 id="4-binding-package-regeneration">4. Binding-package regeneration</h2>
+<p><code>tsbindgen</code> is part of the release flow, not just a local codegen tool.</p>
+<p>When compiler, runtime, or CLR-shape changes affect bindings, the normal flow
+is:</p>
+<ol>
+<li>regenerate affected binding repos</li>
+<li>validate those packages locally</li>
+<li>rerun compiler and downstream gates</li>
+<li>publish only after the wave is coherent</li>
+</ol>
+<h2 id="5-version-drift-and-publish-preflight">5. Version drift and publish preflight</h2>
+<p>The stack now checks release drift explicitly:</p>
+<ul>
+<li>is local content ahead of the published version?</li>
+<li>did content change without a version bump?</li>
+<li>is the whole wave internally consistent before publish?</li>
+</ul>
+<p>This avoids silent republish at the same version and makes release waves
+explicit.</p>
+<h2 id="6-wave-publish">6. Wave publish</h2>
+<p>The current wave process is:</p>
+<ol>
+<li>get <code>tsonic</code> green</li>
+<li>get first-party source packages green</li>
+<li>rerun downstream applications</li>
+<li>regenerate binding packages if needed</li>
+<li>bump versions where content drift requires it</li>
+<li>publish the coherent wave</li>
+</ol>
+<h2 id="why-the-process-is-strict">Why the process is strict</h2>
+<p>This stack is tightly coupled:</p>
+<ul>
+<li>compiler changes can alter emitted package boundaries</li>
+<li>source-package changes can affect runtime behavior and manifests</li>
+<li>binding-package changes can affect overload resolution and CLR interop</li>
+<li>downstream apps expose the combined behavior of all of the above</li>
+</ul>
+<p>That is why the current documentation treats release work as an ecosystem-level
+decision instead of a set of isolated repo actions.</p>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>

@@ -58,9 +58,13 @@
           <a class="mount-link active" href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -107,82 +111,37 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/js/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/imports/">Importing APIs</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">APIs</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/js/modules/console/">console</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/json/">JSON</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/math/">Math</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/timers/">Timers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/globals/">Globals</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/jsarray/">JSArray</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/collections/">Map/Set/WeakMap/WeakSet</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/typed-arrays/">ArrayBuffer + Typed Arrays</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/date/">Date</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/regexp/">RegExp</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/number/">Number</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/js/modules/string/">String</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">js</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/js/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/js/modules/">Modules</a></li>
+        
+          <li><a class="nav-link active" href="/js/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/js/imports/">Imports</a></li>
+        
+          <li><a class="nav-link " href="/js/runtime-model/">Runtime Model</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
 
@@ -196,42 +155,60 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-        <a href="/js/">js</a>
+        <a href="/js/">JavaScript Surface</a>
         <span class="sep">/</span>
       
       <span>Getting Started</span>
     </nav>
-    <a class="edit" href="https://github.com/tsoniclang/js-runtime/blob/main/docs/getting-started.md">Edit on GitHub</a>
+    <a class="edit" href="https://github.com/tsoniclang/js/blob/main/docs/getting-started.md">Edit on GitHub</a>
   </div>
 
   <div class="content"><h1 id="getting-started">Getting Started</h1>
-<h2 id="enable-js-runtime-apis-in-a-tsonic-project">Enable JS Runtime APIs in a Tsonic Project</h2>
-<h3 id="new-project">New project</h3>
-<pre><code class="language-bash">npx --yes tsonic@latest init --surface @tsonic/js
+<p>Use the JS surface when you want ambient JavaScript-style authoring.</p>
+<pre><code class="language-bash">tsonic init --surface @tsonic/js
 </code></pre>
-<h3 id="existing-project">Existing project</h3>
-<pre><code class="language-bash">npx --yes tsonic@latest add npm @tsonic/js
-</code></pre>
-<p>If you have <code>tsonic</code> installed globally, you can drop the <code>npx --yes tsonic@latest</code> prefix.</p>
-<p>For a new project, <code>init --surface @tsonic/js</code> already installs and wires the
-JS package. For an existing project, <code>add npm @tsonic/js</code> will:</p>
-<ul>
-<li>Install the <code>@tsonic/js</code> bindings package in your workspace (<code>package.json</code>) for <code>tsc</code> typechecking</li>
-<li>Apply the package’s <code>.NET</code> dependency manifest (<code>tsonic.bindings.json</code>) to <code>tsonic.workspace.json</code>
-<ul>
-<li>Adds the required <code>dotnet.frameworkReferences</code> / <code>dotnet.packageReferences</code></li>
-<li>Installs any additional <code>types</code> packages referenced by the manifest</li>
-</ul>
-</li>
-</ul>
-<p>Then run <code>npx --yes tsonic@latest restore</code> (or <code>npx --yes tsonic@latest build</code>) to materialize .NET dependencies.</p>
-<h2 id="minimal-example">Minimal Example</h2>
 <pre><code class="language-ts">export function main(): void {
-  const obj = JSON.parse&lt;{ ok: boolean }&gt;('{&quot;ok&quot;: true}');
-  console.log(obj.ok);
+  console.log(&quot;hello&quot;.toUpperCase());
 }
 </code></pre>
-<p>Direct imports from <code>@tsonic/js/index.js</code> remain supported when you want explicit symbols.</p>
+<p>Then build or run normally:</p>
+<pre><code class="language-bash">tsonic run
+</code></pre>
+<h2 id="what-init---surface-tsonicjs-changes">What <code>init --surface @tsonic/js</code> changes</h2>
+<p>It sets the workspace surface and bootstraps the required type roots so the
+ambient JS world is available immediately.</p>
+<p>In practice that means:</p>
+<ul>
+<li>the workspace selects <code>surface: &quot;@tsonic/js&quot;</code></li>
+<li><code>@tsonic/js</code> is installed if needed</li>
+<li>the starter project is still authored as a normal source package</li>
+</ul>
+<h2 id="existing-workspace">Existing workspace</h2>
+<p>If you already have a workspace and want to switch it:</p>
+<pre><code class="language-bash">tsonic add npm @tsonic/js
+</code></pre>
+<p>Then set:</p>
+<pre><code class="language-json">{
+  &quot;surface&quot;: &quot;@tsonic/js&quot;
+}
+</code></pre>
+<p>in <code>tsonic.workspace.json</code>.</p>
+<h2 id="what-you-get-immediately">What you get immediately</h2>
+<ul>
+<li><code>console</code></li>
+<li><code>JSON</code></li>
+<li><code>Date</code></li>
+<li><code>Map</code>, <code>Set</code></li>
+<li>typed arrays</li>
+<li>receiver-style string and array methods</li>
+<li>timers</li>
+</ul>
+<p>You usually do not import those directly; the surface makes them ambient.</p>
+<h2 id="when-to-add-more-packages">When to add more packages</h2>
+<ul>
+<li>add <code>@tsonic/nodejs</code> when you want Node-style modules</li>
+<li>add <code>@tsonic/express</code> when you want Express-style routing</li>
+</ul>
 </div>
 </article>
 </main>

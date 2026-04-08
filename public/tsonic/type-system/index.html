@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,75 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/bindings/">Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-modes/">Build Modes</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-output/">Build Output</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-bindings/">CLR Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/callbacks/">Callbacks</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/configuration/">Configuration</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/generators/">Generators</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/language/">Language</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/limitations/">Limitations</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/surfaces-and-packages/">Surfaces And Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/testing-and-quality/">Testing and Quality</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/type-system/">Type System</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/workspace-and-projects/">Workspace and Projects</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -137,139 +201,58 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/type-system.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="type-system">Type System</h1>
-<p>Tsonic is strict-AOT and deterministic. The type system is built to answer one question:</p>
-<blockquote>
-<p>can this TypeScript program be lowered to one stable CLR/runtime shape?</p>
-</blockquote>
-<p>If yes, it compiles. If not, it fails early.</p>
-<h2 id="main-principles">Main Principles</h2>
-<h3 id="1-no-any">1. No <code>any</code></h3>
-<p>Explicit <code>any</code> remains out of scope.</p>
-<pre><code class="language-ts">const value: any = 1; // rejected
+  <div class="content"><h1 id="type-system-rules">Type System Rules</h1>
+<p>Tsonic is intentionally strict.</p>
+<h2 id="core-rule">Core rule</h2>
+<p>If a construct cannot be lowered deterministically, it is rejected.</p>
+<p>That applies to:</p>
+<ul>
+<li>unsupported dynamic behavior</li>
+<li>unresolved <code>any</code>-like escapes</li>
+<li>unsupported open-ended runtime typing paths</li>
+<li>ambiguous lowering cases</li>
+</ul>
+<h2 id="what-strict-means-here">What “strict” means here</h2>
+<p>Strictness is not just about TypeScript flags. In Tsonic it also means:</p>
+<ul>
+<li>no silent runtime bridge for unsupported shapes</li>
+<li>no best-effort lowering when overload selection is ambiguous</li>
+<li>no hidden weakening of types to make emission “just work”</li>
+</ul>
+<h2 id="numeric-intent">Numeric intent</h2>
+<p>Use <code>@tsonic/core/types.js</code> for CLR-specific numeric/value intent:</p>
+<pre><code class="language-ts">import type { int, long, bool, double } from &quot;@tsonic/core/types.js&quot;;
 </code></pre>
-<h3 id="2-declared-unknown-is-allowed">2. Declared <code>unknown</code> Is Allowed</h3>
-<p>Explicit <code>unknown</code> from library contracts is valid.</p>
-<pre><code class="language-ts">const root = JSON.parse(text); // unknown by declaration
-
-if (typeof root === &quot;object&quot; &amp;&amp; root !== null) {
-  console.log(Object.entries(root).length.toString());
-}
+<p><code>number</code> is still available, but explicit CLR numeric types are important when
+precision and overload selection matter.</p>
+<p>Typical cases where explicit numeric intent matters:</p>
+<ul>
+<li>CLR overload selection</li>
+<li>interop with <code>Span&lt;T&gt;</code> and other typed CLR APIs</li>
+<li>APIs that distinguish <code>int</code>, <code>long</code>, <code>byte</code>, and floating-point values</li>
+</ul>
+<h2 id="language-intrinsics">Language intrinsics</h2>
+<p>Use <code>@tsonic/core/lang.js</code> for language-facing helpers:</p>
+<pre><code class="language-ts">import {
+  asinterface,
+  defaultof,
+  nameof,
+  out,
+  sizeof,
+  stackalloc,
+  trycast,
+} from &quot;@tsonic/core/lang.js&quot;;
 </code></pre>
-<p>Tsonic distinguishes:</p>
+<h2 id="generics-and-strictness">Generics and strictness</h2>
+<p>The current compiler favors deterministic generic behavior over permissive
+fallbacks. That means:</p>
 <ul>
-<li>deliberate declared <code>unknown</code></li>
-<li>failed/poisoned inference</li>
+<li>no silent <code>any</code> escapes</li>
+<li>no hidden runtime retyping bridge</li>
+<li>explicit rejection where lowering is not supported</li>
 </ul>
-<h3 id="3-expected-type-threading">3. Expected-Type Threading</h3>
-<p>Tsonic aggressively threads expected types through:</p>
-<ul>
-<li>array literals and spreads</li>
-<li>ternaries</li>
-<li>nullish coalescing</li>
-<li>control-flow returns</li>
-<li>object literal members</li>
-</ul>
-<p>That keeps C# lowering deterministic and avoids fallback to weak shapes.</p>
-<h3 id="4-deterministic-generic-function-values">4. Deterministic Generic Function Values</h3>
-<p>Supported when a concrete callable shape exists:</p>
-<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
-
-const f: (x: number) =&gt; number = id;
-const arr: Array&lt;(x: number) =&gt; number&gt; = [id];
-const obj: { run: (x: number) =&gt; number } = { run: id };
-</code></pre>
-<p>Still rejected when the value remains polymorphic with no runtime shape:</p>
-<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
-const copy = id; // rejected
-</code></pre>
-<h3 id="5-union-member-access-must-be-coherent">5. Union Member Access Must Be Coherent</h3>
-<p>This is allowed:</p>
-<pre><code class="language-ts">type A = { x: number };
-type B = { x: number };
-declare const value: A | B;
-const y = value.x;
-</code></pre>
-<p>This is rejected:</p>
-<pre><code class="language-ts">type A = { x: number };
-type B = { x: string };
-declare const value: A | B;
-const y = value.x;
-</code></pre>
-<h3 id="6-numeric-proof-is-separate-from-ts-typing">6. Numeric Proof Is Separate From TS Typing</h3>
-<p>TypeScript cannot distinguish <code>int</code> from <code>double</code>. Tsonic proves numeric intent later.</p>
-<p>See <code>numeric-types.md</code>.</p>
-<h2 id="source-packages">Source Packages</h2>
-<p>Installed packages with:</p>
-<pre><code class="language-text">node_modules/&lt;pkg&gt;/tsonic/package-manifest.json
-</code></pre>
-<p>and:</p>
-<pre><code class="language-json">{
-  &quot;kind&quot;: &quot;tsonic-source-package&quot;
-}
-</code></pre>
-<p>are compiled as part of the same TS program and dependency graph, subject to surface compatibility.</p>
-<p>Surface compatibility is based on resolved surface chains, not only exact string equality.</p>
-<p>Example:</p>
-<ul>
-<li>active surface: <code>@acme/surface-node</code></li>
-<li>resolved modes: <code>[&quot;@tsonic/js&quot;, &quot;@acme/surface-node&quot;]</code></li>
-<li>package manifest declaring <code>[&quot;@tsonic/js&quot;]</code> is accepted</li>
-</ul>
-<h2 id="object-literal-typing">Object Literal Typing</h2>
-<p>Current supported deterministic cases:</p>
-<ul>
-<li>finite spreads</li>
-<li>method shorthand</li>
-<li>computed constant keys</li>
-<li>accessors</li>
-<li>behavioral selection across coherent union targets</li>
-</ul>
-<p>Tsonic can synthesize nominal helper types where needed, but only when the result shape is finite and stable.</p>
-<h2 id="dynamic-import-typing">Dynamic Import Typing</h2>
-<p>Supported:</p>
-<ul>
-<li>local closed-world dynamic imports</li>
-<li>side-effect imports</li>
-<li>namespace values when runtime export shape is representable</li>
-</ul>
-<p>Rejected:</p>
-<ul>
-<li>non-literal specifiers</li>
-<li>package/open-world dynamic imports</li>
-<li>namespace shapes the runtime cannot represent deterministically</li>
-</ul>
-<h2 id="importmeta"><code>import.meta</code></h2>
-<p>Supported:</p>
-<ul>
-<li><code>import.meta</code></li>
-<li><code>import.meta.url</code></li>
-<li><code>import.meta.filename</code></li>
-<li><code>import.meta.dirname</code></li>
-</ul>
-<p>Rejected:</p>
-<ul>
-<li>environment/tooling-specific fields like <code>import.meta.env</code></li>
-</ul>
-<h2 id="conditional--mapped--utility-types">Conditional / Mapped / Utility Types</h2>
-<p>The compiler now lowers a useful deterministic subset directly instead of blanket rejection.</p>
-<p>Supported examples include:</p>
-<ul>
-<li><code>Partial&lt;T&gt;</code></li>
-<li><code>Pick&lt;T, K&gt;</code></li>
-<li><code>Omit&lt;T, K&gt;</code></li>
-<li>finite mapped types</li>
-<li>deterministic conditional aliases</li>
-<li><code>keyof</code>/template-literal/indexed-access combinations that normalize to concrete shapes</li>
-</ul>
-<p>The guiding rule is still representability, not “accept all TS syntax”.</p>
-<h2 id="practical-guidance">Practical Guidance</h2>
-<ul>
-<li>prefer explicit imported numeric types when CLR width matters</li>
-<li>keep generics monomorphic at value boundaries</li>
-<li>keep object-literal shapes finite</li>
-<li>use JS surface for JS ambient APIs, not CLR fallback</li>
-</ul>
+<p>This strictness is why downstream verification is necessary: many regressions
+show up only when real package graphs and emitted programs are exercised.</p>
 </div>
 </article>
 </main>

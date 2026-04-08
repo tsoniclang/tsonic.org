@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -105,126 +109,37 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/imports/">Importing Modules</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Modules</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/console/">console</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/path/">path</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/fs/">fs</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/buffer/">Buffer</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/events/">events</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/timers/">timers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/process/">process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/os/">os</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/util/">util</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/assert/">assert</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/performance/">performance</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/stream/">stream</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/readline/">readline</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/querystring/">querystring</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/zlib/">zlib</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/crypto/">crypto</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/tls/">tls</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/x509/">X509 / Certificate</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dns/">dns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/net/">net</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dgram/">dgram</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/child_process/">child_process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/http/">http</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">nodejs</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/nodejs/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/nodejs/modules/">Modules</a></li>
+        
+          <li><a class="nav-link active" href="/nodejs/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/imports/">Imports</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules-and-runtime/">Modules And Runtime</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -240,49 +155,50 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-        <a href="/nodejs/">nodejs</a>
+        <a href="/nodejs/">Node.js Package</a>
         <span class="sep">/</span>
       
       <span>Getting Started</span>
     </nav>
-    <a class="edit" href="https://github.com/tsoniclang/nodejs-clr/blob/main/docs/getting-started.md">Edit on GitHub</a>
+    <a class="edit" href="https://github.com/tsoniclang/nodejs/blob/main/docs/getting-started.md">Edit on GitHub</a>
   </div>
 
   <div class="content"><h1 id="getting-started">Getting Started</h1>
-<h2 id="enable-nodejs-apis-in-a-tsonic-project">Enable Node.js APIs in a Tsonic Project</h2>
-<h3 id="new-project">New project</h3>
-<pre><code class="language-bash">npx --yes tsonic@latest init --surface @tsonic/js
-npx --yes tsonic@latest add npm @tsonic/nodejs
+<h2 id="enable-the-package">Enable the package</h2>
+<pre><code class="language-bash">tsonic init --surface @tsonic/js
+tsonic add npm @tsonic/nodejs
+tsonic restore
 </code></pre>
-<h3 id="existing-project">Existing project</h3>
-<pre><code class="language-bash">npx --yes tsonic@latest add npm @tsonic/nodejs
+<p>If the workspace is still CLR-first, switch <code>surface</code> to <code>@tsonic/js</code> first.</p>
+<h2 id="start-with-normal-node-style-imports">Start with normal Node-style imports</h2>
+<pre><code class="language-ts">import * as fs from &quot;node:fs&quot;;
+import * as path from &quot;node:path&quot;;
 </code></pre>
-<p>That will:</p>
-<ul>
-<li>Install the <code>@tsonic/nodejs</code> bindings package in your workspace (<code>package.json</code>) for <code>tsc</code> typechecking</li>
-<li>Apply the package’s <code>.NET</code> dependency manifest (<code>tsonic.bindings.json</code>) to <code>tsonic.workspace.json</code>
-<ul>
-<li>Adds the required <code>dotnet.frameworkReferences</code> / <code>dotnet.packageReferences</code></li>
-<li>Installs any additional <code>types</code> packages referenced by the manifest</li>
-</ul>
-</li>
-</ul>
-<p>Then run <code>npx --yes tsonic@latest restore</code> (or <code>npx --yes tsonic@latest build</code>) to materialize .NET dependencies.</p>
-<h2 id="minimal-example">Minimal Example</h2>
-<pre><code class="language-ts">import { readFileSync } from &quot;node:fs&quot;;
-import { join } from &quot;node:path&quot;;
+<p>Example:</p>
+<pre><code class="language-ts">import * as fs from &quot;node:fs&quot;;
+import * as path from &quot;node:path&quot;;
 
 export function main(): void {
-  const fullPath = join(&quot;src&quot;, &quot;App.ts&quot;);
-  console.log(fullPath);
-  console.log(readFileSync(fullPath, &quot;utf-8&quot;));
+  const file = path.join(&quot;src&quot;, &quot;App.ts&quot;);
+  console.log(file, fs.existsSync(file));
 }
 </code></pre>
-<h2 id="notes">Notes</h2>
+<h2 id="remember-the-model">Remember the model</h2>
 <ul>
-<li>With <code>surface: &quot;@tsonic/js&quot;</code> and <code>@tsonic/nodejs</code> installed, prefer Node-style imports (<code>node:fs</code>, <code>node:path</code>, ...).</li>
-<li>Tsonic is ESM-first. Import submodules with <code>.js</code> for subpaths (example: <code>@tsonic/nodejs/nodejs.Http.js</code>).</li>
-<li>This library is Node-inspired, but many APIs intentionally follow .NET behavior where it improves ergonomics.</li>
+<li><code>@tsonic/js</code> is still the ambient surface</li>
+<li><code>@tsonic/nodejs</code> is the package that adds <code>node:*</code> modules</li>
+<li>package metadata can add CLR framework/runtime requirements during restore</li>
+</ul>
+<p>That last point is important: <code>@tsonic/nodejs</code> is not just a bag of <code>.d.ts</code>
+files. Its package manifest actively contributes module aliases, runtime
+packages, and framework requirements to the workspace.</p>
+<h2 id="typical-next-steps">Typical next steps</h2>
+<ul>
+<li><code>node:fs</code> and <code>node:path</code> for file/process work</li>
+<li><code>node:http</code> for servers</li>
+<li><code>node:crypto</code> for hashes and signatures</li>
+<li><code>node:events</code> for emitter-style flows</li>
+<li><code>node:process</code> for process-level information and environment access</li>
 </ul>
 </div>
 </article>

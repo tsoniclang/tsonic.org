@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,75 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/bindings/">Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-modes/">Build Modes</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-output/">Build Output</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-bindings/">CLR Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/callbacks/">Callbacks</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/configuration/">Configuration</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/generators/">Generators</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/language/">Language</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/limitations/">Limitations</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/surfaces-and-packages/">Surfaces And Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/testing-and-quality/">Testing and Quality</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/type-system/">Type System</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/workspace-and-projects/">Workspace and Projects</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -137,219 +201,39 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/language.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="language-guide">Language Guide</h1>
-<p>Tsonic supports a strict, deterministic subset of TypeScript aimed at CLR and NativeAOT emission.</p>
-<p>The practical rule is:</p>
+  <div class="content"><h1 id="language-model">Language Model</h1>
+<p>Tsonic is not “all TypeScript plus best effort.” It is a strict subset designed
+for deterministic lowering to C#.</p>
+<h2 id="the-model">The model</h2>
 <ul>
-<li>if Tsonic can recover one stable runtime shape, it compiles</li>
-<li>if multiple runtime interpretations remain, it fails during compilation</li>
+<li>one compiler-owned noLib baseline</li>
+<li>one ambient surface per workspace</li>
+<li>explicit package imports for CLR and Node/Express usage</li>
+<li>no hidden permissive runtime bridges</li>
 </ul>
-<h2 id="surfaces-and-authoring-style">Surfaces and Authoring Style</h2>
-<p>The active workspace <code>surface</code> controls the ambient world.</p>
+<h2 id="consequences-of-that-model">Consequences of that model</h2>
+<p>This affects how you should read and write Tsonic code:</p>
 <ul>
-<li><code>clr</code> (default): CLR-first ambient APIs</li>
-<li><code>@tsonic/js</code>: JS-style globals and receiver methods</li>
+<li>ambient behavior comes from the selected surface, not from whichever package
+happens to be installed</li>
+<li>authored source packages are compiled as part of the same program</li>
+<li>unsupported dynamic behavior is rejected instead of being preserved</li>
+<li>generated output is treated as a closed world</li>
 </ul>
-<p>Examples:</p>
-<pre><code class="language-ts">// clr
-import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-Console.WriteLine(&quot;hello&quot;);
-</code></pre>
-<pre><code class="language-ts">// @tsonic/js
-const s = &quot;  hello  &quot;.trim();
-const xs = [1, 2, 3].map((x) =&gt; x + 1);
-console.log(s, xs.length);
-</code></pre>
-<p>Node modules are package-based, not ambient:</p>
-<pre><code class="language-ts">import * as fs from &quot;node:fs&quot;;
-import * as path from &quot;node:path&quot;;
-</code></pre>
-<h2 id="modules">Modules</h2>
-<p>Supported:</p>
+<h2 id="what-that-means-in-practice">What that means in practice</h2>
 <ul>
-<li>local relative imports with explicit extensions</li>
-<li>package imports backed by CLR bindings</li>
-<li>installed Tsonic source packages with <code>tsonic/package-manifest.json</code></li>
-<li>deterministic closed-world <code>import()</code></li>
-<li><code>import type</code></li>
+<li>unsupported dynamic constructs are rejected</li>
+<li>explicit numeric intent matters</li>
+<li>package graphs are compiled deterministically</li>
+<li>emitted output is treated as a closed world</li>
 </ul>
-<p>Supported <code>import()</code> forms:</p>
-<pre><code class="language-ts">const mod = await import(&quot;./module.js&quot;);
-await import(&quot;./side-effect.js&quot;);
-</code></pre>
-<p>Still rejected:</p>
+<h2 id="use-the-right-docs">Use the right docs</h2>
 <ul>
-<li>non-literal <code>import(specifier)</code></li>
-<li>open-world package dynamic imports</li>
-<li>dynamic imports whose runtime namespace shape is not representable deterministically</li>
+<li><a href="/tsonic/surfaces-and-packages/">Surfaces and Packages</a> for ambient world vs package
+boundaries</li>
+<li><a href="/tsonic/type-system/">Type System Rules</a> for strictness expectations</li>
+<li><a href="/tsonic/limitations/">Limitations</a> for what is still out of scope</li>
 </ul>
-<p>Supported <code>import.meta</code>:</p>
-<pre><code class="language-ts">const meta = import.meta;
-const url = import.meta.url;
-const file = import.meta.filename;
-const dir = import.meta.dirname;
-</code></pre>
-<p>Still rejected:</p>
-<pre><code class="language-ts">const env = import.meta.env;
-</code></pre>
-<h2 id="functions">Functions</h2>
-<p>Supported:</p>
-<ul>
-<li>function declarations</li>
-<li>arrow functions</li>
-<li>async functions</li>
-<li>higher-order functions</li>
-<li>contextual lambda inference</li>
-<li>generic functions in deterministic contexts</li>
-</ul>
-<p>Examples:</p>
-<pre><code class="language-ts">export function greet(name: string): string {
-  return `Hello, ${name}!`;
-}
-
-const double = (n: number): number =&gt; n * 2;
-
-export async function load(): Promise&lt;number&gt; {
-  return 42;
-}
-</code></pre>
-<p>Generic function values work when the callable shape is fixed by usage:</p>
-<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
-
-const f: (x: number) =&gt; number = id;
-const value = f(1);
-</code></pre>
-<p>Also supported:</p>
-<pre><code class="language-ts">const box: { run: (x: number) =&gt; number } = { run: id };
-const handlers: Array&lt;(x: number) =&gt; number&gt; = [id];
-</code></pre>
-<p>Still rejected:</p>
-<pre><code class="language-ts">const id = &lt;T&gt;(x: T): T =&gt; x;
-const copy = id; // no monomorphic callable shape
-</code></pre>
-<h2 id="promise--async-support">Promise / Async Support</h2>
-<p>Supported:</p>
-<ul>
-<li><code>async</code> / <code>await</code></li>
-<li>Promise constructor</li>
-<li><code>Promise.resolve</code>, <code>Promise.reject</code>, <code>Promise.all</code></li>
-<li><code>then</code>, <code>catch</code>, <code>finally</code> chains</li>
-</ul>
-<p>Example:</p>
-<pre><code class="language-ts">async function load(): Promise&lt;number&gt; {
-  return 1;
-}
-
-export async function main(): Promise&lt;void&gt; {
-  const result = await load()
-    .then((x) =&gt; x + 1)
-    .catch(() =&gt; 0)
-    .finally(() =&gt; console.log(&quot;done&quot;));
-
-  console.log(result);
-}
-</code></pre>
-<h2 id="classes-interfaces-type-aliases">Classes, Interfaces, Type Aliases</h2>
-<p>Supported:</p>
-<ul>
-<li>classes</li>
-<li>interfaces</li>
-<li>structural type aliases</li>
-<li>generic classes and interfaces</li>
-<li>inheritance</li>
-<li>interface implementation</li>
-<li>mapped/conditional/utility-type lowering where the compiler can normalize them deterministically</li>
-</ul>
-<h2 id="objects">Objects</h2>
-<p>Supported:</p>
-<ul>
-<li>ordinary object literals</li>
-<li>simple spreads over finite object shapes</li>
-<li>computed constant keys</li>
-<li>getters/setters</li>
-<li>shorthand methods</li>
-<li>shorthand methods with <code>this</code></li>
-<li>supported <code>arguments.length</code> and <code>arguments[index]</code> usage inside object-literal methods</li>
-</ul>
-<p>Examples:</p>
-<pre><code class="language-ts">const key = &quot;value&quot;;
-
-const point = {
-  [key]: 21,
-  get doubled(): number {
-    return this.value * 2;
-  },
-  scale(factor: number): number {
-    return this.value * factor;
-  },
-};
-</code></pre>
-<p>Still rejected:</p>
-<ul>
-<li>open-ended/dynamic object bag cases that need JS runtime object semantics Tsonic cannot prove</li>
-<li>object-literal <code>super</code></li>
-<li>unsupported <code>arguments</code> usage patterns that need full JS function-object behavior</li>
-</ul>
-<h2 id="arrays-tuples-collections">Arrays, Tuples, Collections</h2>
-<p>Supported:</p>
-<ul>
-<li>native arrays</li>
-<li>tuple lowering</li>
-<li>array spread/destructuring</li>
-<li>JS-surface array methods (<code>map</code>, <code>filter</code>, <code>reduce</code>, <code>find</code>, <code>Array.from</code>, ...)</li>
-<li>symbol-key dictionaries</li>
-</ul>
-<p>Examples:</p>
-<pre><code class="language-ts">const xs = [1, 2, 3];
-const ys = xs.filter((x) =&gt; x &gt; 1).map((x) =&gt; x * 2);
-
-const entry: [string, number] = [&quot;a&quot;, 1];
-</code></pre>
-<h2 id="generators">Generators</h2>
-<p>Supported:</p>
-<ul>
-<li>generators</li>
-<li>async generators</li>
-<li>bidirectional generator protocols</li>
-<li>broad yield lowering in supported expressions/statements</li>
-</ul>
-<p>See <code>generators.md</code>.</p>
-<h2 id="numeric-types">Numeric Types</h2>
-<p>Important rule:</p>
-<ul>
-<li>plain TypeScript <code>number</code> means Tsonic <code>double</code></li>
-<li>integer CLR types come from <code>@tsonic/core/types.js</code></li>
-</ul>
-<p>Example:</p>
-<pre><code class="language-ts">import type { int } from &quot;@tsonic/core/types.js&quot;;
-
-const a: number = 1; // double-space
-const b: int = 1 as int;
-</code></pre>
-<p>See <code>numeric-types.md</code>.</p>
-<h2 id="intrinsics">Intrinsics</h2>
-<p>Supported core intrinsics:</p>
-<ul>
-<li><code>stackalloc</code></li>
-<li><code>sizeof</code></li>
-<li><code>defaultof</code></li>
-<li><code>nameof</code></li>
-<li><code>trycast</code></li>
-<li><code>asinterface</code></li>
-<li><code>istype</code></li>
-<li><code>out</code> / <code>ref</code> / <code>inref</code></li>
-<li>attributes DSL</li>
-</ul>
-<p>See <code>lang-intrinsics.md</code>.</p>
-<h2 id="current-explicit-non-goals">Current Explicit Non-Goals</h2>
-<ul>
-<li>arbitrary <code>any</code></li>
-<li>open-world JS execution</li>
-<li>generic function values with no monomorphic runtime shape</li>
-<li>unrestricted <code>import.meta</code></li>
-<li>unrestricted dynamic <code>import()</code></li>
-</ul>
-<p>See <code>limitations.md</code>.</p>
 </div>
 </article>
 </main>

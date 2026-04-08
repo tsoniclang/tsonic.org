@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,37 @@
   
     
       
+
+
+
+  
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link active" href="/tsonic/examples/">Examples</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/examples/arrays/">Arrays and Collections</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/basic/">Basic Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/dotnet/">CLR and .NET Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/imports/">Import Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/workspace-packages/">Workspace Package Graphs</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -138,24 +164,47 @@
   </div>
 
   <div class="content"><h1 id="examples">Examples</h1>
+<p>These examples reflect the current source-first package model and the way the
+ecosystem is actually exercised in <code>proof-is-in-the-pudding</code>.</p>
+<h2 id="pages">Pages</h2>
 <ul>
-<li><code>basic.md</code> — default CLR, JS surface, Node package examples</li>
-<li><code>arrays.md</code> — arrays, tuples, JS array methods, LINQ contrast</li>
-<li><code>imports.md</code> — local imports, CLR imports, source packages, Node modules</li>
-<li><code>dotnet.md</code> — explicit CLR/BCL interop</li>
+<li><a href="/tsonic/examples/basic/">Basic Examples</a></li>
+<li><a href="/tsonic/examples/arrays/">Arrays and Collections</a></li>
+<li><a href="/tsonic/examples/imports/">Import Patterns</a></li>
+<li><a href="/tsonic/examples/dotnet/">CLR / .NET Examples</a></li>
+<li><a href="/tsonic/examples/workspace-packages/">Workspace Package Graphs</a></li>
 </ul>
+<h2 id="what-these-examples-assume">What these examples assume</h2>
+<ul>
+<li><code>clr</code> or <code>@tsonic/js</code> is selected explicitly at the workspace level</li>
+<li><code>@tsonic/nodejs</code> is added when Node-style modules are needed</li>
+<li>generated CLR binding packages are imported explicitly</li>
+<li>package graphs are deterministic and closed-world</li>
+</ul>
+<h2 id="real-example-repos">Real example repos</h2>
+<p>When you want larger examples, look at:</p>
+<ul>
+<li><code>proof-is-in-the-pudding/bcl</code></li>
+<li><code>proof-is-in-the-pudding/js</code></li>
+<li><code>proof-is-in-the-pudding/nodejs</code></li>
+<li><code>proof-is-in-the-pudding/aspnetcore</code></li>
+<li><code>proof-is-in-the-pudding</code> workspace overlays and verify scripts</li>
+</ul>
+<p>Those are not toy snippets; they are part of the downstream verification bar.</p>
 </div>
 
   
     <ul class="page-list">
       
-        <li><a href="/tsonic/examples/arrays/">Arrays</a></li>
+        <li><a href="/tsonic/examples/arrays/">Arrays and Collections</a></li>
       
-        <li><a href="/tsonic/examples/basic/">Basic</a></li>
+        <li><a href="/tsonic/examples/basic/">Basic Examples</a></li>
       
-        <li><a href="/tsonic/examples/dotnet/">Dotnet</a></li>
+        <li><a href="/tsonic/examples/dotnet/">CLR and .NET Examples</a></li>
       
-        <li><a href="/tsonic/examples/imports/">Imports</a></li>
+        <li><a href="/tsonic/examples/imports/">Import Patterns</a></li>
+      
+        <li><a href="/tsonic/examples/workspace-packages/">Workspace Package Graphs</a></li>
       
     </ul>
   

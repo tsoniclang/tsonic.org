@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,51 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/backend/">Backend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/emitter/">Emitter</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/frontend/">Frontend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/ir/">IR</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/packages/">Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/runtime/">Runtime</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -141,7 +181,7 @@
   </div>
 
   <div class="content"><h1 id="type-mappings">Type Mappings</h1>
-<h2 id="core-numeric-mapping">Core Numeric Mapping</h2>
+<h2 id="core-numeric-mapping">Core numeric mapping</h2>
 <ul>
 <li><code>number</code> -&gt; <code>double</code></li>
 <li><code>int</code> -&gt; <code>System.Int32</code></li>
@@ -151,29 +191,52 @@
 <li><code>bool</code> -&gt; <code>bool</code></li>
 <li><code>char</code> -&gt; <code>char</code></li>
 </ul>
+<p>Explicit branded numeric types from <code>@tsonic/core/types.js</code> exist so callers
+can force CLR intent where <code>number</code> would be too vague.</p>
+<h2 id="nullability-and-option-like-shapes">Nullability and option-like shapes</h2>
+<ul>
+<li><code>undefined</code> / <code>null</code> are preserved according to the active surface and target
+shape</li>
+<li>optional properties are not treated as permission for arbitrary dynamic
+object use</li>
+<li>nullish coalescing still has to lower to a stable target type</li>
+</ul>
+<h2 id="strings-arrays-tuples-and-objects">Strings, arrays, tuples, and objects</h2>
+<ul>
+<li><code>string</code> -&gt; CLR <code>string</code> with surface-dependent API exposure</li>
+<li>arrays -&gt; native arrays or deterministic helper-backed shapes depending on
+context</li>
+<li>tuples -&gt; <code>ValueTuple</code>-style lowered shapes</li>
+<li>object literals -&gt; emitted only when the runtime shape can be represented
+deterministically</li>
+</ul>
+<p>The important point is that lowering is contextual. Tsonic does not promise one
+single universal CLR representation for every TS construct regardless of usage.</p>
 <h2 id="collections">Collections</h2>
 <ul>
-<li>TS arrays -&gt; native C# arrays or surface/runtime helpers depending on context</li>
+<li>TypeScript arrays -&gt; native C# arrays or surface/runtime helpers depending on
+context</li>
 <li>tuples -&gt; <code>ValueTuple</code></li>
-<li>dictionaries/sets -&gt; explicit CLR or JS/runtime-backed shapes depending on the authoring surface and target type</li>
+<li>dictionaries and sets -&gt; explicit CLR or JS-backed shapes depending on the
+authoring surface and contextual target</li>
 </ul>
-<h2 id="surface-effect">Surface Effect</h2>
+<h2 id="imported-clr-types-stay-explicit">Imported CLR types stay explicit</h2>
+<p>Explicit CLR imports do not become “more JavaScript” just because the workspace
+surface is <code>@tsonic/js</code>.</p>
+<p>Example:</p>
+<pre><code class="language-ts">import { Dictionary } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+
+const map = new Dictionary&lt;string, number&gt;();
+</code></pre>
+<p>That is still a CLR binding package call surface.</p>
+<h2 id="surface-effect">Surface effect</h2>
 <p>Surface changes the ambient API, not the meaning of explicit CLR imports.</p>
 <p>Example:</p>
-<pre><code class="language-ts">// @tsonic/js surface
-const xs = [1, 2, 3];
+<pre><code class="language-ts">const xs = [1, 2, 3];
 xs.map((x) =&gt; x + 1);
 </code></pre>
-<p>still lowers through deterministic runtime/binding machinery, not by pretending CLR APIs were authored directly.</p>
-<h2 id="object-literals">Object Literals</h2>
-<p>Finite structural object literals can lower to:</p>
-<ul>
-<li>synthesized nominal helper types</li>
-<li>dictionaries / object bags</li>
-</ul>
-<p>depending on contextual target and representability.</p>
-<h2 id="promise-types">Promise Types</h2>
-<p>Promise-like TS shapes map to task-like CLR shapes after normalization. Promise chain callbacks normalize to the inner result type before backend generic selection.</p>
+<p>still lowers through deterministic runtime machinery, not by pretending CLR APIs
+were authored directly.</p>
 </div>
 </article>
 </main>

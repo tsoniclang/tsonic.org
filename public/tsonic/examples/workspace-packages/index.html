@@ -1,0 +1,265 @@
+﻿<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Workspace Package Graphs | Tsonic</title>
+    <meta name="description" content="Tsonic" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/docs.css" />
+    <script defer src="/search.js"></script>
+    <script defer src="/nav.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js" referrerpolicy="no-referrer"></script>
+    <script defer src="/highlight-init.js"></script>
+  </head>
+  <body>
+    <header class="top">
+  <div class="top-inner">
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-controls="sidebar"
+      aria-expanded="false"
+    >
+      <span class="menu-bars" aria-hidden="true"></span>
+      <span class="sr-only">Menu</span>
+    </button>
+
+    <a class="brand" href="/">Tsonic</a>
+
+    <nav class="mount-nav">
+      
+        
+      
+        
+          <a class="mount-link active" href="/tsonic/">Tsonic</a>
+        
+      
+        
+          <a class="mount-link " href="/tsbindgen/">tsbindgen</a>
+        
+      
+        
+          <a class="mount-link " href="/nodejs/">nodejs</a>
+        
+      
+        
+          <a class="mount-link " href="/js/">js</a>
+        
+      
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
+    </nav>
+
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
+      <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+        />
+      </svg>
+      <span class="gh-text">GitHub</span>
+    </a>
+
+    <div class="search">
+      <input id="searchBox" type="search" placeholder="Search docs…" autocomplete="off" />
+      <div id="searchResults" class="search-results"></div>
+    </div>
+  </div>
+</header>
+
+    <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+    <div class="layout">
+      <aside id="sidebar" class="sidebar" aria-label="Site navigation">
+        <div class="sidebar-mobile-top">
+          <button class="menu-close" id="menuClose" type="button" aria-label="Close navigation menu">
+            Close
+          </button>
+        </div>
+        <div class="sidebar-inner">
+
+
+  
+    
+  
+
+
+
+
+
+  
+    
+  
+    
+      
+
+
+
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">Tsonic</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/examples/arrays/">Arrays and Collections</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/basic/">Basic Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/dotnet/">CLR and .NET Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/imports/">Import Patterns</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/examples/workspace-packages/">Workspace Package Graphs</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+</div>
+      </aside>
+      <main class="main">
+<article class="doc">
+  <div class="doc-top">
+    <nav class="breadcrumbs">
+      
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+      
+        <a href="/tsonic/">Tsonic</a>
+        <span class="sep">/</span>
+      
+        <a href="/tsonic/examples/">Examples</a>
+        <span class="sep">/</span>
+      
+      <span>Workspace Package Graphs</span>
+    </nav>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/examples/workspace-packages.md">Edit on GitHub</a>
+  </div>
+
+  <div class="content"><h1 id="workspace-package-graphs">Workspace Package Graphs</h1>
+<p>The current default model is source-package-first, even inside a single local
+workspace.</p>
+<h2 id="example-layout">Example layout</h2>
+<pre><code class="language-text">my-workspace/
+  tsonic.workspace.json
+  packages/
+    domain/
+      package.json
+      tsonic.json
+      tsonic.package.json
+      src/index.ts
+    api/
+      package.json
+      tsonic.json
+      tsonic.package.json
+      src/App.ts
+</code></pre>
+<p><code>packages/domain/src/index.ts</code>:</p>
+<pre><code class="language-ts">export function clamp(value: number, min: number, max: number): number {
+  if (value &lt; min) return min;
+  if (value &gt; max) return max;
+  return value;
+}
+</code></pre>
+<p><code>packages/api/src/App.ts</code>:</p>
+<pre><code class="language-ts">import { clamp } from &quot;@acme/domain&quot;;
+
+export function main(): void {
+  console.log(clamp(10, 0, 5));
+}
+</code></pre>
+<h2 id="source-mode-ownership">Source-mode ownership</h2>
+<p>In <code>packages/api/tsonic.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;rootNamespace&quot;: &quot;Acme.Api&quot;,
+  &quot;entryPoint&quot;: &quot;src/App.ts&quot;,
+  &quot;references&quot;: {
+    &quot;packages&quot;: [
+      {
+        &quot;id&quot;: &quot;@acme/domain&quot;,
+        &quot;project&quot;: &quot;../domain&quot;
+      }
+    ]
+  }
+}
+</code></pre>
+<p>This is the default <code>source</code> mode.</p>
+<p>Result:</p>
+<ul>
+<li><code>@acme/domain</code> is emitted into the generated <code>node_modules</code> tree</li>
+<li><code>api</code> and <code>domain</code> compile as one generated closure</li>
+</ul>
+<h2 id="dll-mode-ownership">DLL-mode ownership</h2>
+<p>If you want a real assembly boundary instead:</p>
+<pre><code class="language-json">{
+  &quot;references&quot;: {
+    &quot;packages&quot;: [
+      {
+        &quot;id&quot;: &quot;@acme/domain&quot;,
+        &quot;project&quot;: &quot;../domain&quot;,
+        &quot;mode&quot;: &quot;dll&quot;
+      }
+    ]
+  }
+}
+</code></pre>
+<p>Result:</p>
+<ul>
+<li>Tsonic builds <code>domain</code> first</li>
+<li>the current project references its DLL</li>
+<li>generated output does not duplicate source ownership for that package</li>
+</ul>
+<h2 id="practical-rule">Practical rule</h2>
+<p>Use <code>source</code> unless you have a deliberate reason to keep a DLL boundary:</p>
+<ul>
+<li>NuGet packaging</li>
+<li>independent library versioning</li>
+<li>assembly-level separation for a large workspace</li>
+</ul>
+<p>For most first-party local packages, the current default and recommended mode is
+still <code>source</code>.</p>
+</div>
+</article>
+</main>
+    </div>
+    <footer class="footer">
+  <span>Generated by tsumo</span>
+</footer>
+
+
+  </body>
+</html>

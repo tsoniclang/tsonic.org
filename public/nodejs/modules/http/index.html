@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Http | Tsonic</title>
+    <title>http | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -105,126 +109,43 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/imports/">Importing Modules</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Modules</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/console/">console</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/path/">path</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/fs/">fs</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/buffer/">Buffer</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/events/">events</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/timers/">timers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/process/">process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/os/">os</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/util/">util</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/assert/">assert</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/performance/">performance</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/stream/">stream</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/readline/">readline</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/querystring/">querystring</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/zlib/">zlib</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/crypto/">crypto</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/tls/">tls</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/x509/">X509 / Certificate</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dns/">dns</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/net/">net</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/dgram/">dgram</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/child_process/">child_process</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/nodejs/modules/http/">http</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">nodejs</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/nodejs/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/nodejs/modules/">Modules</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/nodejs/modules/crypto/">crypto</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/events/">events</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/fs/">fs</a></li>
+        
+          <li><a class="nav-link active" href="/nodejs/modules/http/">http</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/path/">path</a></li>
+        
+          <li><a class="nav-link " href="/nodejs/modules/process/">process</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -240,29 +161,27 @@
         <a href="/">Home</a>
         <span class="sep">/</span>
       
-        <a href="/nodejs/">nodejs</a>
+        <a href="/nodejs/">Node.js Package</a>
         <span class="sep">/</span>
       
         <a href="/nodejs/modules/">Modules</a>
         <span class="sep">/</span>
       
-      <span>Http</span>
+      <span>http</span>
     </nav>
-    <a class="edit" href="https://github.com/tsoniclang/nodejs-clr/blob/main/docs/modules/http.md">Edit on GitHub</a>
+    <a class="edit" href="https://github.com/tsoniclang/nodejs/blob/main/docs/modules/http.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="http-nodejshttp"><code>http</code> (<code>nodejs.Http</code>)</h1>
-<p>The HTTP API lives in the <code>nodejs.Http</code> namespace and is imported as a submodule.</p>
+  <div class="content"><h1 id="http"><code>http</code></h1>
+<p>Prefer importing HTTP APIs through the standard Node module name.</p>
 <p>Import:</p>
-<pre><code class="language-ts">import { http, IncomingMessage, ServerResponse } from &quot;@tsonic/nodejs/nodejs.Http.js&quot;;
+<pre><code class="language-ts">import { createServer, type IncomingMessage, type ServerResponse } from &quot;node:http&quot;;
 </code></pre>
 <p>Example:</p>
-<pre><code class="language-ts">import { console } from &quot;@tsonic/nodejs/index.js&quot;;
-import { http, IncomingMessage, ServerResponse } from &quot;@tsonic/nodejs/nodejs.Http.js&quot;;
-import { Thread, Timeout } from &quot;@tsonic/dotnet/System.Threading.js&quot;;
+<pre><code class="language-ts">import { createServer, type IncomingMessage, type ServerResponse } from &quot;node:http&quot;;
 
 export function main(): void {
-  const server = http.createServer((req: IncomingMessage, res: ServerResponse) =&gt; {
+  const server = createServer((req: IncomingMessage, res: ServerResponse) =&gt; {
     console.log(`${req.method} ${req.url}`);
     res.setHeader(&quot;Content-Type&quot;, &quot;text/plain&quot;);
     res.writeHead(200, &quot;OK&quot;);
@@ -272,152 +191,10 @@ export function main(): void {
   server.listen(3000, () =&gt; {
     console.log(&quot;Listening on http://localhost:3000/&quot;);
   });
-
-  Thread.sleep(Timeout.infinite);
 }
 </code></pre>
-<h2 id="api-reference">API Reference</h2>
-<!-- API:START -->
-<h3 id="addressinfo"><code>AddressInfo</code></h3>
-<pre><code class="language-ts">export interface AddressInfo {
-    address: string;
-    family: string;
-    port: int;
-}
-
-export const AddressInfo: {
-    new(): AddressInfo;
-};
-</code></pre>
-<h3 id="clientrequest"><code>ClientRequest</code></h3>
-<pre><code class="language-ts">export interface ClientRequest extends EventEmitter {
-    readonly aborted: boolean;
-    readonly host: string;
-    readonly method: string;
-    readonly path: string;
-    readonly protocol: string;
-    abort(): void;
-    end(chunk?: string, encoding?: string, callback?: Action): Task;
-    getHeader(name: string): string | undefined;
-    getHeaderNames(): string[];
-    removeHeader(name: string): void;
-    setHeader(name: string, value: string): void;
-    setTimeout(msecs: int, callback?: Action): ClientRequest;
-    write(chunk: string, encoding?: string, callback?: Action): boolean;
-}
-
-export const ClientRequest: {
-    new(): ClientRequest;
-};
-</code></pre>
-<h3 id="http"><code>http</code></h3>
-<pre><code class="language-ts">export declare const http: {
-  globalAgent_maxSockets: Nullable&lt;System_Internal.Int32&gt;;
-  globalAgent_maxFreeSockets: int;
-  globalAgent_timeout: int;
-  maxHeaderSize: int;
-  createServer(requestListener?: Action&lt;IncomingMessage, ServerResponse&gt;): Server;
-  get(options: RequestOptions, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
-  get(url: string, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
-  request(options: RequestOptions, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
-  request(url: string, callback?: Action&lt;IncomingMessage&gt;): ClientRequest;
-  validateHeaderName(name: string): void;
-  validateHeaderValue(name: string, value: unknown): void;
-};
-</code></pre>
-<h3 id="incomingmessage"><code>IncomingMessage</code></h3>
-<pre><code class="language-ts">export interface IncomingMessage extends EventEmitter {
-    readonly complete: boolean;
-    readonly headers: Dictionary&lt;System_Internal.String, System_Internal.String&gt;;
-    readonly httpVersion: string;
-    readonly method: string;
-    readonly statusCode: Nullable&lt;System_Internal.Int32&gt;;
-    readonly statusMessage: string;
-    readonly url: string | undefined;
-    destroy(): void;
-    onClose(callback: Action): void;
-    onData(callback: Action&lt;System_Internal.String&gt;): void;
-    onEnd(callback: Action): void;
-    readAll(): Task&lt;System_Internal.String&gt;;
-    setTimeout(msecs: int, callback?: Action): IncomingMessage;
-}
-
-export const IncomingMessage: {
-    new(): IncomingMessage;
-};
-</code></pre>
-<h3 id="requestoptions"><code>RequestOptions</code></h3>
-<pre><code class="language-ts">export interface RequestOptions {
-    get agent(): unknown | undefined;
-    set agent(value: unknown);
-    get auth(): string | undefined;
-    set auth(value: string);
-    headers: Dictionary&lt;System_Internal.String, System_Internal.String&gt;;
-    host: string;
-    hostname: string;
-    method: string;
-    path: string;
-    port: int;
-    protocol: string;
-    timeout: Nullable&lt;System_Internal.Int32&gt;;
-}
-
-export const RequestOptions: {
-    new(): RequestOptions;
-};
-</code></pre>
-<h3 id="server"><code>Server</code></h3>
-<pre><code class="language-ts">export interface Server extends EventEmitter {
-    headersTimeout: int;
-    keepAliveTimeout: int;
-    readonly listening: boolean;
-    maxHeadersCount: int;
-    requestTimeout: int;
-    timeout: int;
-    address(): AddressInfo;
-    close(callback?: Action): Server;
-    listen(port: int, hostname?: string, backlog?: Nullable&lt;System_Internal.Int32&gt;, callback?: Action): Server;
-    listen(port: int, callback: Action): Server;
-    setTimeout(msecs: int, callback?: Action): Server;
-}
-
-export const Server: {
-    new(requestListener: Action&lt;IncomingMessage, ServerResponse&gt;): Server;
-};
-</code></pre>
-<h3 id="serverresponse"><code>ServerResponse</code></h3>
-<pre><code class="language-ts">export interface ServerResponse extends EventEmitter {
-    readonly finished: boolean;
-    readonly headersSent: boolean;
-    statusCode: int;
-    statusMessage: string;
-    end(chunk?: string, encoding?: string, callback?: Action): ServerResponse;
-    flushHeaders(): void;
-    getHeader(name: string): string | undefined;
-    getHeaderNames(): string[];
-    getHeaders(): Dictionary&lt;System_Internal.String, System_Internal.String&gt;;
-    hasHeader(name: string): boolean;
-    removeHeader(name: string): void;
-    setHeader(name: string, value: string): ServerResponse;
-    setTimeout(msecs: int, callback?: Action): ServerResponse;
-    write(chunk: string, encoding?: string, callback?: Action): boolean;
-    writeHead(statusCode: int, statusMessage?: string, headers?: Dictionary&lt;System_Internal.String, System_Internal.String&gt;): ServerResponse;
-    writeHead(statusCode: int, headers: Dictionary&lt;System_Internal.String, System_Internal.String&gt;): ServerResponse;
-}
-
-export const ServerResponse: {
-    new(): ServerResponse;
-};
-</code></pre>
-<h3 id="typeerror"><code>TypeError</code></h3>
-<pre><code class="language-ts">export interface TypeError extends Exception {
-}
-
-export const TypeError: {
-    new(message: string): TypeError;
-};
-</code></pre>
-<!-- API:END -->
+<p>This module is part of what downstream apps like proof examples and Jotster use
+to prove the Node-style package layer works in real programs.</p>
 </div>
 </article>
 </main>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Lang Intrinsics | Tsonic</title>
+    <title>Language Intrinsics | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,75 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/bindings/">Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-modes/">Build Modes</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-output/">Build Output</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-bindings/">CLR Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/callbacks/">Callbacks</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/configuration/">Configuration</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/generators/">Generators</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/language/">Language</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/lang-intrinsics/">Language Intrinsics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/limitations/">Limitations</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/surfaces-and-packages/">Surfaces And Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/testing-and-quality/">Testing and Quality</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/type-system/">Type System</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/workspace-and-projects/">Workspace and Projects</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -132,108 +196,51 @@
         <a href="/tsonic/">Tsonic</a>
         <span class="sep">/</span>
       
-      <span>Lang Intrinsics</span>
+      <span>Language Intrinsics</span>
     </nav>
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/lang-intrinsics.md">Edit on GitHub</a>
   </div>
 
   <div class="content"><h1 id="language-intrinsics">Language Intrinsics</h1>
-<p>These come from <code>@tsonic/core/lang.js</code> unless noted otherwise.</p>
-<h2 id="stackalloc"><code>stackalloc</code></h2>
-<pre><code class="language-ts">import { stackalloc } from &quot;@tsonic/core/lang.js&quot;;
-import type { Span, int } from &quot;@tsonic/core/types.js&quot;;
-
-const buffer: Span&lt;int&gt; = stackalloc&lt;int&gt;(16 as int);
-buffer[0] = 42 as int;
+<p>Tsonic language intrinsics live in <code>@tsonic/core/lang.js</code>.</p>
+<h2 id="common-intrinsics">Common intrinsics</h2>
+<pre><code class="language-ts">import {
+  asinterface,
+  defaultof,
+  nameof,
+  out,
+  sizeof,
+  stackalloc,
+  trycast,
+} from &quot;@tsonic/core/lang.js&quot;;
 </code></pre>
-<p>Lowers to C# <code>stackalloc</code>.</p>
-<h2 id="sizeof"><code>sizeof</code></h2>
-<pre><code class="language-ts">import { sizeof } from &quot;@tsonic/core/lang.js&quot;;
-import type { int, long } from &quot;@tsonic/core/types.js&quot;;
-
-const a: int = sizeof&lt;int&gt;();
-const b: int = sizeof&lt;long&gt;();
-</code></pre>
-<p>Current rule:</p>
+<h2 id="why-they-exist">Why they exist</h2>
+<p>These intrinsics expose CLR/lowering-aware operations that TypeScript itself
+does not model directly.</p>
+<p>Examples:</p>
 <ul>
-<li><code>sizeof&lt;T&gt;()</code> requires a known value-compatible type</li>
-<li>primitives and known CLR structs are supported</li>
+<li><code>nameof</code> for CLR-friendly name extraction</li>
+<li><code>sizeof</code> for deterministic size queries</li>
+<li><code>stackalloc</code> and <code>out</code> for CLR interop cases</li>
+<li><code>asinterface</code> and <code>trycast</code> for explicit interface/cast intent</li>
 </ul>
-<h2 id="defaultof"><code>defaultof</code></h2>
-<pre><code class="language-ts">import { defaultof } from &quot;@tsonic/core/lang.js&quot;;
-import type { int } from &quot;@tsonic/core/types.js&quot;;
-
-const zero: int = defaultof&lt;int&gt;();
-</code></pre>
-<h2 id="nameof"><code>nameof</code></h2>
-<pre><code class="language-ts">import { nameof } from &quot;@tsonic/core/lang.js&quot;;
-
-const field = nameof(user.name); // &quot;name&quot;
-const local = nameof(user);      // &quot;user&quot;
-</code></pre>
-<p>Current supported forms:</p>
+<h2 id="typical-usage-categories">Typical usage categories</h2>
+<h3 id="name-and-shape-helpers">Name and shape helpers</h3>
 <ul>
-<li>identifier</li>
-<li><code>this</code></li>
-<li>dotted member access</li>
+<li><code>nameof</code></li>
+<li><code>sizeof</code></li>
+<li><code>defaultof</code></li>
 </ul>
-<p>The intrinsic is recognized by provenance from <code>@tsonic/core/lang.js</code>, not just by identifier spelling.</p>
-<h2 id="trycast"><code>trycast</code></h2>
-<pre><code class="language-ts">import { trycast } from &quot;@tsonic/core/lang.js&quot;;
-
-const person = trycast&lt;Person&gt;(value);
-if (person !== null) {
-  console.log(person.name);
-}
-</code></pre>
-<h2 id="asinterface"><code>asinterface</code></h2>
-<p>Compile-time-only interface view. Use when you need CLR interface typing without forcing a runtime cast.</p>
-<pre><code class="language-ts">import { asinterface } from &quot;@tsonic/core/lang.js&quot;;
-import type { IQueryable } from &quot;@tsonic/dotnet/System.Linq.js&quot;;
-
-const q = asinterface&lt;IQueryable&lt;User&gt;&gt;(db.Users);
-</code></pre>
-<h2 id="interfacet"><code>Interface&lt;T&gt;</code></h2>
-<p>Use only in <code>implements</code> clauses when implementing CLR interface bindings from TypeScript.</p>
-<pre><code class="language-ts">import type { Interface } from &quot;@tsonic/core/lang.js&quot;;
-import type { IDisposable } from &quot;@tsonic/dotnet/System.js&quot;;
-
-export class Resource implements Interface&lt;IDisposable&gt; {
-  Dispose(): void {}
-}
-</code></pre>
-<h2 id="fieldt"><code>field&lt;T&gt;</code></h2>
-<p>Forces class member emission as a C# field instead of an auto-property.</p>
-<pre><code class="language-ts">import type { field } from &quot;@tsonic/core/lang.js&quot;;
-
-export class User {
-  private _name: field&lt;string&gt; = &quot;&quot;;
-}
-</code></pre>
-<h2 id="out-ref-inref"><code>out</code>, <code>ref</code>, <code>inref</code></h2>
-<p>Call-site parameter modifier intrinsics:</p>
-<pre><code class="language-ts">import { defaultof, out, ref, inref } from &quot;@tsonic/core/lang.js&quot;;
-import type { int } from &quot;@tsonic/core/types.js&quot;;
-
-let value = defaultof&lt;int&gt;();
-dict.TryGetValue(&quot;key&quot;, out(value));
-mutate(ref(value));
-inspect(inref(value));
-</code></pre>
-<p>Use the function forms from <code>@tsonic/core/lang.js</code>. The type aliases in <code>@tsonic/core/types.js</code> remain available for declaration typing.</p>
-<h2 id="istypet"><code>istype&lt;T&gt;</code></h2>
-<p>Overload/nominal specialization predicate:</p>
-<pre><code class="language-ts">import { istype } from &quot;@tsonic/core/lang.js&quot;;
-
-if (istype&lt;string&gt;(value)) {
-  console.log(value.toUpperCase());
-}
-</code></pre>
-<h2 id="thisargt"><code>thisarg&lt;T&gt;</code></h2>
-<p>Type marker for extension-method receiver positions in declaration surfaces.</p>
-<h2 id="attributes-dsl">Attributes DSL</h2>
-<p>Current attribute authoring lives in <code>@tsonic/core/lang.js</code> and supports explicit targets/builders rather than ad hoc decorator lowering.</p>
-<p>Use it when you need CLR attributes in authored TypeScript. See <code>dotnet-interop.md</code>.</p>
+<h3 id="clr-interop-helpers">CLR interop helpers</h3>
+<ul>
+<li><code>out</code></li>
+<li><code>stackalloc</code></li>
+<li><code>asinterface</code></li>
+<li><code>trycast</code></li>
+</ul>
+<h3 id="attribute-and-overload-metadata">Attribute and overload metadata</h3>
+<p>The same module also carries language-facing marker DSL pieces used in CLR-heavy
+codebases for attributes and overload families.</p>
 </div>
 </article>
 </main>

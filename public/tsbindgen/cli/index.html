@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cli | Tsonic</title>
+    <title>CLI | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -103,61 +107,51 @@
   
     
       
-  <nav class="nav">
-    
-      
-        <div class="nav-group">Getting Started</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/cli/">CLI Reference</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Type Generation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/naming/">Naming &amp; Identifiers</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a>
-            </li>
-          
-        </ul>
-      
-    
-      
-        <div class="nav-group">Validation</div>
-        <ul class="nav-items">
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/testing/">Testing</a>
-            </li>
-          
-            <li>
-              <a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a>
-            </li>
-          
-        </ul>
-      
-    
-  </nav>
 
 
 
+  
+  
+    
+      
+    
+  
+  <div class="sidebar-home">
+    <div class="sidebar-title">tsbindgen</div>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsbindgen/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsbindgen/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link active" href="/tsbindgen/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/library-mode/">Library Mode</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/naming/">Naming</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/testing/">Testing</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/type-mappings/">Type Mappings</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/what-tsbindgen-generates/">What tsbindgen Generates</a></li>
+        
+          <li><a class="nav-link " href="/tsbindgen/workflow/">Workflow</a></li>
+        
+      
+    </ul>
+  </div>
+
+
+    
+  
     
   
     
@@ -178,297 +172,49 @@
         <a href="/tsbindgen/">tsbindgen</a>
         <span class="sep">/</span>
       
-      <span>Cli</span>
+      <span>CLI</span>
     </nav>
     <a class="edit" href="https://github.com/tsoniclang/tsbindgen/blob/main/docs/cli.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="cli-reference">CLI Reference</h1>
-<p>Complete reference for the tsbindgen command-line interface.</p>
-<h2 id="installation">Installation</h2>
-<pre><code class="language-bash"># Via npm (wrapper, recommended)
-npm install tsbindgen
-
-# Or install globally
-npm install -g tsbindgen
-
-# Or install the scoped package directly
-npm install @tsonic/tsbindgen
-</code></pre>
-<p>Requires .NET 10 runtime installed.</p>
-<h2 id="commands">Commands</h2>
-<h3 id="generate">generate</h3>
-<p>Generate TypeScript declarations from .NET assemblies.</p>
-<pre><code class="language-bash"># Via npm
-npx tsbindgen generate [options]
-
-# Via dotnet (from source)
-dotnet run --project src/tsbindgen/tsbindgen.csproj -- generate [options]
-</code></pre>
-<h3 id="resolve-closure">resolve-closure</h3>
-<p>Resolve the transitive closure of assembly references and emit machine-readable JSON.</p>
-<pre><code class="language-bash"># Standard SDK/runtime installs usually work with no extra ref dirs
-npx tsbindgen resolve-closure -a ./MyLibrary.dll
-
-# Add extra ref dirs only for non-runtime dependencies
-npx tsbindgen resolve-closure -a ./MyLibrary.dll \
-  --ref-dir ./libs
-</code></pre>
-<p><code>resolve-closure</code> options:</p>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--strict-versions &lt;bool&gt;</code></td>
-<td>Error on major version drift for the same assembly name. Default: <code>true</code>.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="options">Options</h2>
-<h3 id="assembly-input">Assembly Input</h3>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Short</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--assembly &lt;path&gt;</code></td>
-<td><code>-a</code></td>
-<td>Path to assembly file. Can be specified multiple times.</td>
-</tr>
-<tr>
-<td><code>--assembly-dir &lt;path&gt;</code></td>
-<td><code>-d</code></td>
-<td>Directory containing assemblies to process.</td>
-</tr>
-<tr>
-<td><code>--ref-dir &lt;path&gt;</code></td>
-<td>-</td>
-<td>Additional directory to search for referenced assemblies (repeatable).</td>
-</tr>
-</tbody>
-</table>
-<p>At least one of <code>--assembly</code> or <code>--assembly-dir</code> is required.</p>
-<p><strong>Examples:</strong></p>
-<pre><code class="language-bash"># Generate from runtime directory (BCL)
-npx tsbindgen generate -d ~/.dotnet/shared/Microsoft.NETCore.App/10.0.0
-
-# Generate from specific assembly
-npx tsbindgen generate -a ./MyLibrary.dll -d $DOTNET_RUNTIME
-
-# Multiple assemblies
-npx tsbindgen generate -a ./Lib1.dll -a ./Lib2.dll -d $DOTNET_RUNTIME
-</code></pre>
-<h3 id="output">Output</h3>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Short</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--out-dir &lt;path&gt;</code></td>
-<td><code>-o</code></td>
-<td><code>out</code></td>
-<td>Output directory for generated files.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./declarations
-</code></pre>
-<h3 id="filtering">Filtering</h3>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Short</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--namespaces &lt;list&gt;</code></td>
-<td><code>-n</code></td>
-<td>Comma-separated list of namespaces to include.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out -n System,System.Linq
-</code></pre>
-<h3 id="naming">Naming</h3>
-<p>tsbindgen emits <strong>CLR-faithful names</strong>. There are no casing transforms and no <code>--naming</code> flag.</p>
-<h3 id="library-mode">Library Mode</h3>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--lib &lt;path&gt;</code></td>
-<td>Path to pre-existing tsbindgen package. Can be specified multiple times.</td>
-</tr>
-</tbody>
-</table>
-<p>See <a href="/tsbindgen/library-mode/">Library Mode</a> for details.</p>
-<p><strong>Examples:</strong></p>
-<pre><code class="language-bash"># Single library reference
-npx tsbindgen generate -a ./MyLib.dll -d $DOTNET_RUNTIME -o ./out \
-  --lib node_modules/@tsonic/dotnet
-
-# Multiple library references
-npx tsbindgen generate -a ./MyLib.dll -d $DOTNET_RUNTIME -o ./out \
-  --lib node_modules/@tsonic/dotnet \
-  --lib node_modules/@tsonic/microsoft-extensions
-</code></pre>
-<h3 id="namespace-mapping">Namespace Mapping</h3>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--namespace-map &lt;mapping&gt;</code></td>
-<td>Maps CLR namespace to different output name. Format: <code>CLRNamespace=outputName</code>. Can be specified multiple times.</td>
-</tr>
-</tbody>
-</table>
-<p>Use this to customize output directory names without changing the actual namespace in generated code.</p>
-<p><strong>Examples:</strong></p>
-<pre><code class="language-bash"># Map System.Runtime.InteropServices to &quot;interop&quot;
-npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out \
-  --namespace-map &quot;System.Runtime.InteropServices=interop&quot;
-
-# Multiple mappings
-npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out \
-  --namespace-map &quot;System.Collections.Generic=collections&quot; \
-  --namespace-map &quot;System.Threading.Tasks=async&quot;
-</code></pre>
-<h3 id="class-flattening">Class Flattening</h3>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--flatten-class &lt;fullname&gt;</code></td>
-<td>Flattens a static class to top-level function exports. Format: <code>Namespace.ClassName</code>. Can be specified multiple times.</td>
-</tr>
-</tbody>
-</table>
-<p>Static classes like <code>System.Console</code> or <code>System.Math</code> can be flattened so their methods become top-level exports instead of being accessed through a class.</p>
-<p><strong>Examples:</strong></p>
-<pre><code class="language-bash"># Flatten Console class
-npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out \
-  --flatten-class &quot;System.Console&quot;
-
-# Result: export function WriteLine(...) instead of Console.WriteLine(...)
-
-# Flatten multiple classes
-npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out \
-  --flatten-class &quot;System.Console&quot; \
-  --flatten-class &quot;System.Math&quot;
-</code></pre>
-<h3 id="diagnostics">Diagnostics</h3>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Short</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--verbose</code></td>
-<td><code>-v</code></td>
-<td>Enable detailed progress output.</td>
-</tr>
-<tr>
-<td><code>--logs &lt;categories&gt;</code></td>
-<td>-</td>
-<td>Enable specific log categories.</td>
-</tr>
-<tr>
-<td><code>--strict</code></td>
-<td>-</td>
-<td>Enable strict mode validation.</td>
-</tr>
-<tr>
-<td><code>--allow-constructor-constraint-loss</code></td>
-<td>-</td>
-<td>Allow generic <code>new()</code> constraint loss (downgrade to warning).</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Log categories:</strong></p>
+  <div class="content"><h1 id="cli">CLI</h1>
+<p>The <code>tsbindgen</code> CLI is used to generate binding packages from CLR inputs.</p>
+<h2 id="main-commands">Main commands</h2>
 <ul>
-<li><code>ImportPlanner</code> - Import statement planning</li>
-<li><code>FacadeEmitter</code> - Facade file generation</li>
-<li><code>InternalIndexEmitter</code> - Internal declaration generation</li>
-<li><code>ViewPlanner</code> - Explicit interface view planning</li>
-<li><code>StructuralConformance</code> - Interface conformance analysis</li>
-<li><code>SafeToExtendAnalyzer</code> - LINQ assignability analysis</li>
+<li><code>generate</code> — generate TypeScript bindings</li>
+<li><code>resolve-closure</code> — inspect transitive assembly closure</li>
 </ul>
-<p><strong>Examples:</strong></p>
-<pre><code class="language-bash"># Verbose output
-npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out -v
-
-# Specific log categories
-npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out --logs ImportPlanner FacadeEmitter
-
-# Strict mode
-npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out --strict
+<h2 id="typical-usage">Typical usage</h2>
+<pre><code class="language-bash">dotnet run --project src/tsbindgen/tsbindgen.csproj -- \
+  generate -d /path/to/assemblies -o ./output
 </code></pre>
-<h2 id="full-example">Full Example</h2>
-<pre><code class="language-bash"># Complete example with all common options
-npx tsbindgen generate \
-  -d ~/.dotnet/shared/Microsoft.NETCore.App/10.0.0 \
-  -o ./output \
-  -v
+<h2 id="common-options">Common options</h2>
+<ul>
+<li><code>--assembly &lt;path&gt;</code></li>
+<li><code>--assembly-dir &lt;path&gt;</code></li>
+<li><code>--ref-dir &lt;path&gt;</code></li>
+<li><code>--out-dir &lt;path&gt;</code></li>
+<li><code>--namespaces &lt;list&gt;</code></li>
+<li><code>--lib &lt;path&gt;</code></li>
+<li><code>--lib-type-override &lt;ClrType=package&gt;</code></li>
+<li><code>--namespace-map &lt;mapping&gt;</code></li>
+<li><code>--flatten-class &lt;fullname&gt;</code></li>
+<li><code>--strict</code></li>
+<li><code>--verbose</code></li>
+</ul>
+<h2 id="resolve-closure"><code>resolve-closure</code></h2>
+<pre><code class="language-bash">npx tsbindgen resolve-closure -a ./MyLibrary.dll
 </code></pre>
-<h2 id="environment-variables">Environment Variables</h2>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>DOTNET_RUNTIME</code></td>
-<td>Default runtime directory path</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">export DOTNET_RUNTIME=~/.dotnet/shared/Microsoft.NETCore.App/10.0.0
-npx tsbindgen generate -d $DOTNET_RUNTIME -o ./out
-</code></pre>
+<p>Use this to inspect the resolved assembly closure without generating output.</p>
+<h2 id="when---lib-matters">When <code>--lib</code> matters</h2>
+<p>Use <code>--lib</code> when you are generating a library package that should import
+existing BCL or framework types from a pre-existing generated package instead of
+re-emitting them.</p>
+<p>That is how the stack keeps repos like <code>aspnetcore</code>, <code>efcore</code>, and
+<code>microsoft-extensions</code> composable instead of duplicating the entire BCL surface.</p>
+<h2 id="when-to-use-repo-scripts-instead">When to use repo scripts instead</h2>
+<p>For the first-party binding repos, prefer the repo-local generation and wave
+publish scripts so versioning and package layout stay consistent.</p>
 </div>
 </article>
 </main>

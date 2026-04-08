@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,75 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/bindings/">Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-modes/">Build Modes</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-output/">Build Output</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-bindings/">CLR Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/callbacks/">Callbacks</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/configuration/">Configuration</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/generators/">Generators</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/language/">Language</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/limitations/">Limitations</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/numeric-types/">Numeric Types</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/surfaces-and-packages/">Surfaces And Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/testing-and-quality/">Testing and Quality</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/type-system/">Type System</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/workspace-and-projects/">Workspace and Projects</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -138,97 +202,53 @@
   </div>
 
   <div class="content"><h1 id="numeric-types">Numeric Types</h1>
-<p>Tsonic treats numeric intent explicitly.</p>
-<h2 id="core-rule">Core Rule</h2>
-<ul>
-<li>TypeScript <code>number</code> means Tsonic <code>double</code></li>
-<li>CLR integer/decimal types come from <code>@tsonic/core/types.js</code></li>
-</ul>
-<p>Examples:</p>
-<pre><code class="language-ts">const a: number = 1; // double-space
+<p>Use <code>@tsonic/core/types.js</code> when CLR numeric intent matters.</p>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-ts">import type { int, long, double, bool } from &quot;@tsonic/core/types.js&quot;;
 </code></pre>
-<pre><code class="language-ts">import type { int, long, float, decimal } from &quot;@tsonic/core/types.js&quot;;
-
-const i: int = 1 as int;
-const l: long = 1 as long;
-const f: float = 1 as float;
-const d: decimal = 1 as decimal;
-</code></pre>
-<h2 id="supported-numeric-types">Supported Numeric Types</h2>
-<p>From <code>@tsonic/core/types.js</code>:</p>
+<p>Common current types include:</p>
 <ul>
-<li>signed integers: <code>sbyte</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>nint</code>, <code>int128</code></li>
-<li>unsigned integers: <code>byte</code>, <code>ushort</code>, <code>uint</code>, <code>ulong</code>, <code>nuint</code>, <code>uint128</code></li>
-<li>floating/decimal: <code>half</code>, <code>float</code>, <code>double</code>, <code>decimal</code></li>
-<li>non-numeric primitives: <code>bool</code>, <code>char</code></li>
-</ul>
-<h2 id="why-this-exists">Why This Exists</h2>
-<p>TypeScript itself cannot distinguish:</p>
-<ul>
+<li><code>byte</code></li>
+<li><code>sbyte</code></li>
+<li><code>short</code></li>
+<li><code>ushort</code></li>
 <li><code>int</code></li>
+<li><code>uint</code></li>
 <li><code>long</code></li>
+<li><code>ulong</code></li>
+<li><code>float</code></li>
 <li><code>double</code></li>
+<li><code>decimal</code></li>
+<li><code>bool</code></li>
+<li><code>char</code></li>
 </ul>
-<p>They all erase to <code>number</code> at TS type-check time. Tsonic’s proof passes enforce the real CLR semantics later.</p>
-<h2 id="integer-space-vs-double-space">Integer Space vs Double Space</h2>
-<p>This stays in integer space:</p>
-<pre><code class="language-ts">import type { int } from &quot;@tsonic/core/types.js&quot;;
-
-function increment(x: int): int {
-  return x + 1;
-}
-</code></pre>
-<p>This stays in double space:</p>
-<pre><code class="language-ts">function increment(x: number): number {
-  return x + 1;
-}
-</code></pre>
-<h2 id="narrowing">Narrowing</h2>
-<p>Tsonic rejects unprovable narrows.</p>
-<p>Rejected examples:</p>
-<pre><code class="language-ts">import type { int } from &quot;@tsonic/core/types.js&quot;;
-
-const parsed = parseInt(text, 10);
-const value = parsed as int; // rejected unless proven
-</code></pre>
-<pre><code class="language-ts">import type { int } from &quot;@tsonic/core/types.js&quot;;
-
-if (typeof value === &quot;number&quot; &amp;&amp; Number.isFinite(value)) {
-  const x = value as int; // still rejected: finite double is not proven int
-}
-</code></pre>
-<p>Reason:</p>
+<h2 id="why-not-just-number">Why not just <code>number</code></h2>
+<p><code>number</code> still exists, but it is not enough for every CLR-facing case.</p>
+<p>You should use explicit numeric types when:</p>
 <ul>
-<li><code>parseInt(...)</code> on JS surface returns <code>number</code></li>
-<li><code>Number.isFinite(...)</code> proves finite double, not 32-bit integer</li>
+<li>overload resolution depends on numeric width or signedness</li>
+<li>emitted CLR APIs require exact types</li>
+<li>precision or storage intent should be explicit</li>
 </ul>
-<h2 id="when-integer-proof-is-accepted">When Integer Proof Is Accepted</h2>
-<p>Tsonic accepts narrows when the proof is deterministic.</p>
 <p>Examples:</p>
 <pre><code class="language-ts">import type { int } from &quot;@tsonic/core/types.js&quot;;
 
-const zero: int = 0 as int;
-const value: int = (flag ? 1 : 2) as int;
+const count: int = 1 as int;
 </code></pre>
-<p>Branch-sensitive numeric proof also works for deterministic <code>int</code> branch results.</p>
-<h2 id="js-surface-interop">JS Surface Interop</h2>
-<p>On <code>@tsonic/js</code>:</p>
-<ul>
-<li><code>length</code>, array indexes, tuple indexes, and similar index-like values are modeled as integer-space values</li>
-<li>plain JS arithmetic on <code>number</code> remains double-space</li>
-</ul>
-<p>Example:</p>
-<pre><code class="language-ts">const xs = [1, 2, 3];
-const len = xs.length; // int-like
-const first = xs[0];
-const sum = first + 1; // still depends on element type, not on length/index rules
+<pre><code class="language-ts">import type { byte } from &quot;@tsonic/core/types.js&quot;;
+
+const bytes = new Uint8Array([1 as byte, 2 as byte]);
 </code></pre>
-<h2 id="guidance">Guidance</h2>
+<h2 id="practical-guidance">Practical guidance</h2>
 <ul>
-<li>use <code>number</code> when you mean JS-style floating numeric semantics</li>
-<li>use <code>int</code> / <code>long</code> / <code>decimal</code> when CLR precision and range matter</li>
-<li>do not rely on C# compile failures to sort numeric intent out later; Tsonic is expected to reject unproven narrows itself</li>
+<li>use plain <code>number</code> for ordinary JS-surface arithmetic</li>
+<li>use branded numeric types when CLR APIs, storage shape, or overload selection
+depend on the exact numeric kind</li>
+<li>annotate public boundaries and sensitive overload calls first; you usually do
+not need to brand every local intermediate expression</li>
 </ul>
+<h2 id="rule">Rule</h2>
+<p>Tsonic prefers explicit numeric intent over permissive conversion.</p>
 </div>
 </article>
 </main>

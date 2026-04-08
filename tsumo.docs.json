@@ -7,16 +7,16 @@
   "mounts": [
     {
       "name": "Home",
-      "source": ".tmp/mounts/home",
+      "source": "docs/home",
       "prefix": "/",
-      "repoUrl": "https://github.com/tsoniclang/tsonic",
+      "repoUrl": "https://github.com/tsoniclang/tsonic.org",
       "repoBranch": "main",
-      "repoPath": "",
+      "repoPath": "docs/home",
       "navPath": "README.md"
     },
     {
       "name": "Tsonic",
-      "source": ".tmp/mounts/tsonic",
+      "source": "../tsonic/docs",
       "prefix": "/tsonic/",
       "repoUrl": "https://github.com/tsoniclang/tsonic",
       "repoBranch": "main",
@@ -25,7 +25,7 @@
     },
     {
       "name": "tsbindgen",
-      "source": ".tmp/mounts/tsbindgen",
+      "source": "../tsbindgen/docs",
       "prefix": "/tsbindgen/",
       "repoUrl": "https://github.com/tsoniclang/tsbindgen",
       "repoBranch": "main",
@@ -34,18 +34,27 @@
     },
     {
       "name": "nodejs",
-      "source": ".tmp/mounts/nodejs",
+      "source": "../nodejs/docs",
       "prefix": "/nodejs/",
-      "repoUrl": "https://github.com/tsoniclang/nodejs-clr",
+      "repoUrl": "https://github.com/tsoniclang/nodejs",
       "repoBranch": "main",
       "repoPath": "docs",
       "navPath": "README.md"
     },
     {
       "name": "js",
-      "source": ".tmp/mounts/js",
+      "source": "../js/docs",
       "prefix": "/js/",
-      "repoUrl": "https://github.com/tsoniclang/js-runtime",
+      "repoUrl": "https://github.com/tsoniclang/js",
+      "repoBranch": "main",
+      "repoPath": "docs",
+      "navPath": "README.md"
+    },
+    {
+      "name": "express",
+      "source": "../express/docs",
+      "prefix": "/express/",
+      "repoUrl": "https://github.com/tsoniclang/express",
       "repoBranch": "main",
       "repoPath": "docs",
       "navPath": "README.md"

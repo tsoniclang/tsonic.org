@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,51 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+        <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/backend/">Backend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/emitter/">Emitter</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/frontend/">Frontend</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/ir/">IR</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/overview/">Overview</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/packages/">Packages</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/architecture/pipeline/">Pipeline</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/runtime/">Runtime</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/architecture/type-mappings/">Type Mappings</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -140,10 +180,11 @@
     <a class="edit" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/pipeline.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="compilation-pipeline">Compilation Pipeline</h1>
-<h2 id="end-to-end">End-to-End</h2>
+  <div class="content"><h1 id="pipeline">Pipeline</h1>
+<h2 id="end-to-end">End-to-end</h2>
 <pre><code class="language-text">TypeScript sources
-  -&gt; TS Program creation
+  -&gt; config resolution
+  -&gt; TS program creation
   -&gt; surface/core/global setup
   -&gt; module + source-package resolution
   -&gt; validation
@@ -151,16 +192,23 @@
   -&gt; CSharpAst
   -&gt; printed C#
   -&gt; generated project
-  -&gt; dotnet build/publish/test
+  -&gt; dotnet build/publish/test/pack
 </code></pre>
-<h2 id="stage-1-config-resolution">Stage 1: Config Resolution</h2>
+<h2 id="stage-1-config-resolution">Stage 1: config resolution</h2>
 <p>The CLI merges:</p>
 <ul>
 <li><code>tsonic.workspace.json</code></li>
 <li><code>packages/&lt;project&gt;/tsonic.json</code></li>
 <li>CLI flags</li>
 </ul>
-<h2 id="stage-2-program-creation">Stage 2: Program Creation</h2>
+<p>It also resolves:</p>
+<ul>
+<li>surface capabilities</li>
+<li>type roots</li>
+<li>output mode defaults</li>
+<li>local package ownership mode (<code>source</code> vs <code>dll</code>)</li>
+</ul>
+<h2 id="stage-2-program-creation">Stage 2: program creation</h2>
 <p>Frontend creates a TypeScript program with:</p>
 <ul>
 <li>compiler-owned core globals</li>
@@ -168,15 +216,16 @@
 <li>workspace type roots</li>
 <li>installed source-package roots when needed</li>
 </ul>
-<h2 id="stage-3-resolution">Stage 3: Resolution</h2>
+<h2 id="stage-3-resolution">Stage 3: resolution</h2>
 <p>The resolver handles:</p>
 <ul>
 <li>local imports</li>
-<li>CLR bindings packages</li>
+<li>CLR binding packages</li>
 <li>source-package imports</li>
+<li>package-manifest overlays</li>
 <li>deterministic closed-world dynamic imports</li>
 </ul>
-<h2 id="stage-4-validation">Stage 4: Validation</h2>
+<h2 id="stage-4-validation">Stage 4: validation</h2>
 <p>Validation enforces:</p>
 <ul>
 <li>strict-AOT feature boundaries</li>
@@ -184,24 +233,37 @@
 <li>numeric proof constraints</li>
 <li>generic/runtime-shape determinism</li>
 <li>object-literal runtime constraints</li>
+<li>package-manifest correctness</li>
 </ul>
 <h2 id="stage-5-ir">Stage 5: IR</h2>
-<p>Frontend produces IR modules with statements, expressions, imports, exports, and resolved type information.</p>
+<p>Frontend produces IR modules with:</p>
+<ul>
+<li>statements and expressions</li>
+<li>imports and exports</li>
+<li>resolved type information</li>
+<li>generic substitutions</li>
+<li>backend-relevant semantic decisions</li>
+</ul>
 <h2 id="stage-6-csharpast">Stage 6: CSharpAst</h2>
 <p>Emitter turns IR into typed backend AST.</p>
-<p>This is where:</p>
+<p>This is the layer where:</p>
 <ul>
-<li>overload and expected-type decisions are reflected in concrete backend nodes</li>
-<li>classes, functions, variables, patterns, conditionals, loops, and types are materialized as AST nodes</li>
+<li>expression lowering</li>
+<li>statement lowering</li>
+<li>type emission</li>
+<li>helper synthesis</li>
+<li>specialization fixes</li>
 </ul>
-<h2 id="stage-7-printing">Stage 7: Printing</h2>
-<p>The backend printer turns <code>CSharpAst</code> into text once, at the top of the backend pipeline.</p>
-<h2 id="stage-8-backend-build">Stage 8: Backend Build</h2>
+<p>are assembled without dropping back into ad-hoc text generation.</p>
+<h2 id="stage-7-printing">Stage 7: printing</h2>
+<p>The printer turns <code>CSharpAst</code> into C# text.</p>
+<h2 id="stage-8-backend-build">Stage 8: backend build</h2>
 <p>Backend writes:</p>
 <ul>
-<li>emitted C#</li>
+<li>emitted <code>.cs</code> files</li>
 <li><code>Program.cs</code></li>
 <li><code>tsonic.csproj</code></li>
+<li>package-shaped generated source tree where needed</li>
 </ul>
 <p>Then drives:</p>
 <ul>

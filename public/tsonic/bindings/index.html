@@ -58,9 +58,13 @@
           <a class="mount-link " href="/js/">js</a>
         
       
+        
+          <a class="mount-link " href="/express/">express</a>
+        
+      
     </nav>
 
-    <a class="gh-link" href="https://github.com/tsoniclang/tsonic" aria-label="GitHub: tsoniclang/tsonic">
+    <a class="gh-link" href="https://github.com/tsoniclang/tsonic.org" aria-label="GitHub: tsoniclang/tsonic.org">
       <svg class="gh-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
         <path
           fill="currentColor"
@@ -101,15 +105,75 @@
   
     
       
+
+
+
+  
+  
+    
+      
+    
+  
   <div class="sidebar-home">
     <div class="sidebar-title">Tsonic</div>
-    <ul>
-      <li><a href="/tsonic/">Overview</a></li>
+    <ul class="nav-items">
+      <li><a class="nav-link " href="/tsonic/">Overview</a></li>
+      
+      
+        
+          <li><a class="nav-link " href="/tsonic/architecture/">Architecture</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/examples/">Examples</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-interop/">.NET Interop</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/async-patterns/">Async Patterns</a></li>
+        
+          <li><a class="nav-link active" href="/tsonic/bindings/">Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-modes/">Build Modes</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/build-output/">Build Output</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/cli/">CLI</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/dotnet-bindings/">CLR Bindings</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/callbacks/">Callbacks</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/configuration/">Configuration</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/diagnostics/">Diagnostics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/generators/">Generators</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/getting-started/">Getting Started</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/language/">Language</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/lang-intrinsics/">Language Intrinsics</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/limitations/">Limitations</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/numeric-types/">Numeric Types</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/surfaces-and-packages/">Surfaces And Packages</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/testing-and-quality/">Testing and Quality</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/troubleshooting/">Troubleshooting</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/type-system/">Type System</a></li>
+        
+          <li><a class="nav-link " href="/tsonic/workspace-and-projects/">Workspace and Projects</a></li>
+        
+      
     </ul>
   </div>
 
 
-
+    
+  
     
   
     
@@ -138,90 +202,66 @@
   </div>
 
   <div class="content"><h1 id="bindings">Bindings</h1>
-<p>Tsonic has two different dependency stories:</p>
+<p>Tsonic uses explicit packages for both authored source-package interop and CLR
+interop.</p>
+<h2 id="the-four-binding-families">The four binding families</h2>
+<h3 id="1-authored-first-party-source-packages">1. Authored first-party source packages</h3>
 <ul>
-<li>CLR/runtime bindings packages</li>
-<li>first-party Tsonic source packages</li>
+<li><code>@tsonic/js</code></li>
+<li><code>@tsonic/nodejs</code></li>
+<li><code>@tsonic/express</code></li>
 </ul>
-<h2 id="1-clr--runtime-bindings">1. CLR / Runtime Bindings</h2>
-<p>These describe CLR assemblies, runtime helpers, or module surfaces.</p>
-<p>Examples:</p>
+<p>These:</p>
+<ul>
+<li>carry <code>tsonic.package.json</code></li>
+<li>expose TypeScript source directly</li>
+<li>are compiled transitively into the same program</li>
+</ul>
+<h3 id="2-generated-clr-binding-packages">2. Generated CLR binding packages</h3>
 <ul>
 <li><code>@tsonic/dotnet</code></li>
 <li><code>@tsonic/aspnetcore</code></li>
-<li><code>@tsonic/js</code></li>
-<li><code>@tsonic/nodejs</code></li>
+<li><code>@tsonic/microsoft-extensions</code></li>
+<li><code>@tsonic/efcore*</code></li>
 </ul>
-<p>Add/install them through:</p>
-<pre><code class="language-bash">tsonic add npm @tsonic/nodejs
-tsonic add nuget Microsoft.Extensions.Logging 10.0.0
-tsonic add package ./libs/MyLib.dll
-tsonic restore
+<p>These:</p>
+<ul>
+<li>come from <code>tsbindgen</code></li>
+<li>project CLR namespaces and members into declaration packages</li>
+<li>are imported explicitly for CLR interop</li>
+</ul>
+<h3 id="3-local-dll-references">3. Local DLL references</h3>
+<p>Added with:</p>
+<pre><code class="language-bash">tsonic add package ./libs/MyLib.dll
 </code></pre>
-<p>Tsonic uses:</p>
+<p>These can either:</p>
 <ul>
-<li>declaration surfaces (<code>.d.ts</code>)</li>
-<li>bindings metadata</li>
-<li>runtime/NuGet/package references from manifests</li>
+<li>use an explicit types package</li>
+<li>or have a bindings package generated automatically through <code>tsbindgen</code></li>
 </ul>
-<h2 id="2-first-party-source-packages-aikya">2. First-Party Source Packages (Aikya)</h2>
-<p>Tsonic-authored libraries can be published as source packages and consumed directly from npm.</p>
-<p>Manifest path:</p>
-<pre><code class="language-text">tsonic/package-manifest.json
+<h3 id="4-workspace-frameworknuget-references">4. Workspace framework/NuGet references</h3>
+<p>Added with:</p>
+<pre><code class="language-bash">tsonic add framework Microsoft.AspNetCore.App @tsonic/aspnetcore
+tsonic add nuget Microsoft.EntityFrameworkCore 10.0.0
 </code></pre>
-<p>Example:</p>
-<pre><code class="language-json">{
-  &quot;schemaVersion&quot;: 1,
-  &quot;kind&quot;: &quot;tsonic-source-package&quot;,
-  &quot;surfaces&quot;: [&quot;@tsonic/js&quot;],
-  &quot;source&quot;: {
-    &quot;exports&quot;: {
-      &quot;.&quot;: &quot;./src/index.ts&quot;
-    }
-  }
-}
-</code></pre>
-<p>When installed, Tsonic:</p>
+<p>These are workspace-scoped CLR dependencies.</p>
+<h2 id="runtime-metadata-from-source-packages">Runtime metadata from source packages</h2>
+<p>Some first-party source packages also contribute runtime metadata.</p>
+<p>For example, <code>@tsonic/nodejs</code> can add:</p>
 <ul>
-<li>resolves the package entrypoint</li>
-<li>validates surface compatibility</li>
-<li>adds the package TS files to the same TypeScript program</li>
-<li>walks the package’s local relative imports</li>
+<li>framework references</li>
+<li>runtime package requirements</li>
 </ul>
-<p>This is different from opaque external npm module handling.</p>
-<h2 id="surface-compatibility">Surface Compatibility</h2>
-<p>Workspaces still compile with one active ambient surface.</p>
-<p>Source packages may declare one or more compatible surfaces. Compatibility is checked against the resolved surface chain, not just exact string equality.</p>
-<h2 id="generatednormalized-manifest-data">Generated/Normalized Manifest Data</h2>
-<p>The CLI normalizes bindings metadata and runtime package requirements so that:</p>
+<p>through its manifest. The workspace then resolves those through the normal
+restore/build flow.</p>
+<h2 id="the-key-distinction">The key distinction</h2>
+<p>Authored source packages and generated CLR binding packages both look like npm
+packages to a user, but they are not owned or validated the same way.</p>
+<p>That is why the current docs keep them separate.</p>
+<h2 id="read-next">Read next</h2>
 <ul>
-<li>runtime code and declaration surfaces stay coherent</li>
-<li>value exports and type exports are co-produced from the same source graph</li>
-<li>first-party consumers get deterministic <code>.d.ts</code> surfaces from the compiler</li>
-</ul>
-<h2 id="local-vs-published-packages">Local vs Published Packages</h2>
-<p>Airplane-grade rule:</p>
-<ul>
-<li>repo-local sibling trees are useful during development</li>
-<li>packed/published shape must still be verified</li>
-</ul>
-<p>If a package works locally but fails when installed, inspect:</p>
-<ul>
-<li>nested <code>bindings.json</code></li>
-<li>internal declaration trees</li>
-<li><code>npm pack --dry-run</code></li>
-</ul>
-<h2 id="what-gets-committed">What Gets Committed</h2>
-<p>For normal projects:</p>
-<ul>
-<li>source</li>
-<li>configs</li>
-<li>source package manifest</li>
-</ul>
-<p>For generated local bindings caches:</p>
-<ul>
-<li>follow your workspace policy</li>
-<li>many repos keep generated publishable packages in their own package repos, not in app repos</li>
+<li><a href="/tsonic/surfaces-and-packages/">Surfaces and Packages</a></li>
+<li><a href="/tsonic/dotnet-bindings/">CLR Bindings and Interop</a></li>
 </ul>
 </div>
 </article>

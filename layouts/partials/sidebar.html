@@ -30,7 +30,7 @@
 {{ if ne $currentMountName "" }}
   {{ range .Site.Mounts }}
     {{ if eq .Name $currentMountName }}
-      {{ partial "sidebar-mount.html" . }}
+      {{ partial "sidebar-mount.html" (dict "Mount" . "Page" $) }}
     {{ end }}
   {{ end }}
 {{ else }}
@@ -48,9 +48,11 @@
             {{ else if eq .Name "tsbindgen" }}
               <p class="home-mount-desc">Generate CLR bindings from assemblies and NuGet packages.</p>
             {{ else if eq .Name "nodejs" }}
-              <p class="home-mount-desc">Node-style APIs (fs, path, http, crypto) implemented for Tsonic.</p>
-            {{ else if eq .Name "js compat" }}
-              <p class="home-mount-desc">JavaScript runtime APIs (JSON, Math, Date, timers) for Tsonic.</p>
+              <p class="home-mount-desc">First-party Node-style modules for JS-surface Tsonic projects.</p>
+            {{ else if eq .Name "js" }}
+              <p class="home-mount-desc">The active JavaScript ambient surface and source package.</p>
+            {{ else if eq .Name "express" }}
+              <p class="home-mount-desc">Canonical Express-style routing and middleware package.</p>
             {{ else }}
               <p class="home-mount-desc">Documentation.</p>
             {{ end }}
