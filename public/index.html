@@ -305,11 +305,29 @@ export function main(): void {
   app.Run(&quot;http://localhost:8080&quot;);
 }
 </code></pre>
+<h3 id="ef-core--sqlite-workspace">EF Core + SQLite workspace</h3>
+<pre><code class="language-bash">tsonic init
+tsonic add nuget Microsoft.EntityFrameworkCore.Sqlite 10.0.0
+tsonic add npm @tsonic/efcore
+tsonic add npm @tsonic/efcore-sqlite
+tsonic restore
+</code></pre>
+<pre><code class="language-ts">import { DbContext } from &quot;@tsonic/efcore/Microsoft.EntityFrameworkCore.js&quot;;
+import { SqliteDbContextOptionsBuilderExtensions } from &quot;@tsonic/efcore-sqlite/Microsoft.EntityFrameworkCore.js&quot;;
+
+export class AppDbContext extends DbContext {
+}
+
+export function configure(builder: any): void {
+  SqliteDbContextOptionsBuilderExtensions.UseSqlite(builder, &quot;Data Source=app.db&quot;);
+}
+</code></pre>
 <h2 id="rule-of-thumb">Rule of thumb</h2>
 <ul>
 <li>use <code>/tsonic/</code> for compiler and project model docs</li>
 <li>use <code>/js/</code>, <code>/nodejs/</code>, and <code>/express/</code> for authored first-party packages</li>
-<li>use <code>/tsbindgen/</code> for generated CLR binding packages</li>
+<li>use <code>/tsbindgen/</code> for generated CLR binding packages such as <code>@tsonic/aspnetcore</code>
+and <code>@tsonic/efcore*</code></li>
 </ul>
 </div>
 </article>

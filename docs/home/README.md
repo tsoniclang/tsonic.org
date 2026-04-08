@@ -130,8 +130,31 @@ export function main(): void {
 }
 ```
 
+### EF Core + SQLite workspace
+
+```bash
+tsonic init
+tsonic add nuget Microsoft.EntityFrameworkCore.Sqlite 10.0.0
+tsonic add npm @tsonic/efcore
+tsonic add npm @tsonic/efcore-sqlite
+tsonic restore
+```
+
+```ts
+import { DbContext } from "@tsonic/efcore/Microsoft.EntityFrameworkCore.js";
+import { SqliteDbContextOptionsBuilderExtensions } from "@tsonic/efcore-sqlite/Microsoft.EntityFrameworkCore.js";
+
+export class AppDbContext extends DbContext {
+}
+
+export function configure(builder: any): void {
+  SqliteDbContextOptionsBuilderExtensions.UseSqlite(builder, "Data Source=app.db");
+}
+```
+
 ## Rule of thumb
 
 - use `/tsonic/` for compiler and project model docs
 - use `/js/`, `/nodejs/`, and `/express/` for authored first-party packages
-- use `/tsbindgen/` for generated CLR binding packages
+- use `/tsbindgen/` for generated CLR binding packages such as `@tsonic/aspnetcore`
+  and `@tsonic/efcore*`
