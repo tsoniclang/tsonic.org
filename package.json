@@ -1,0 +1,14 @@
+{
+  "name": "tsonic.org",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsonic build",
+    "dev": "tsonic run"
+  },
+  "devDependencies": {}
+}
