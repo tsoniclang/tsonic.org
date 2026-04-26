@@ -4,8 +4,8 @@ title: Testing and Releases
 
 # Testing and Release Discipline
 
-The current stack is validated in layers. Release work is not complete until the
-whole chain is green.
+The stack is validated in layers. Release work is not complete until the whole
+chain is green.
 
 ## 1. Compiler gate
 
@@ -67,12 +67,12 @@ Typical commands:
 bash scripts/verify-all.sh
 ```
 
-These downstream verification scripts are normally run against local sibling
-repos during a wave, not against a random mix of published npm package
-versions. That matters because a release wave often spans:
+These downstream verification scripts run against local sibling repos during a
+wave, not against an arbitrary mix of published npm package versions. A release
+wave can include:
 
-- compiler changes in `tsonic`
-- first-party source-package changes in `js`, `nodejs`, or `express`
+- compiler work in `tsonic`
+- first-party source-package work in `js`, `nodejs`, or `express`
 - regenerated CLR binding packages from `tsbindgen`
 - downstream applications that consume all of the above together
 
@@ -80,8 +80,7 @@ versions. That matters because a release wave often spans:
 
 `tsbindgen` is part of the release flow, not just a local codegen tool.
 
-When compiler, runtime, or CLR-shape changes affect bindings, the normal flow
-is:
+When compiler, runtime, or CLR-shape work affects bindings, the normal flow is:
 
 1. regenerate affected binding repos
 2. validate those packages locally
@@ -90,10 +89,10 @@ is:
 
 ## 5. Version drift and publish preflight
 
-The stack now checks release drift explicitly:
+Release preflight checks drift explicitly:
 
 - is local content ahead of the published version?
-- did content change without a version bump?
+- does package content require a version bump?
 - is the whole wave internally consistent before publish?
 
 This avoids silent republish at the same version and makes release waves
@@ -101,7 +100,7 @@ explicit.
 
 ## 6. Wave publish
 
-The current wave process is:
+The wave process is:
 
 1. get `tsonic` green
 2. get first-party source packages green
@@ -114,10 +113,10 @@ The current wave process is:
 
 This stack is tightly coupled:
 
-- compiler changes can alter emitted package boundaries
-- source-package changes can affect runtime behavior and manifests
-- binding-package changes can affect overload resolution and CLR interop
+- compiler work can alter emitted package boundaries
+- source-package work can affect runtime behavior and manifests
+- binding-package work can affect overload resolution and CLR interop
 - downstream apps expose the combined behavior of all of the above
 
-That is why the current documentation treats release work as an ecosystem-level
-decision instead of a set of isolated repo actions.
+Release work is an ecosystem-level decision instead of a set of isolated repo
+actions.

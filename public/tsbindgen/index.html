@@ -129,8 +129,6 @@
         
           <li><a class="nav-link " href="/tsbindgen/naming/">Naming</a></li>
         
-          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
-        
           <li><a class="nav-link " href="/tsbindgen/testing/">Testing</a></li>
         
           <li><a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
@@ -173,7 +171,7 @@
   <div class="content"><h1 id="tsbindgen">tsbindgen</h1>
 <p><code>tsbindgen</code> generates TypeScript declaration packages from .NET assemblies and
 frameworks.</p>
-<h2 id="current-role-in-the-stack">Current role in the stack</h2>
+<h2 id="role-in-the-stack">Role in the stack</h2>
 <p><code>tsbindgen</code> is the generator for CLR binding packages. It is <strong>not</strong> the
 source-of-truth for first-party authored packages like <code>@tsonic/js</code>,
 <code>@tsonic/nodejs</code>, or <code>@tsonic/express</code>.</p>
@@ -191,7 +189,7 @@ source-of-truth for first-party authored packages like <code>@tsonic/js</code>,
 <li><a href="/tsbindgen/workflow/">Workflow and Publish Discipline</a></li>
 </ul>
 <h2 id="output-families">Output families</h2>
-<p>The current generated package families include:</p>
+<p>Generated package families include:</p>
 <ul>
 <li><code>@tsonic/dotnet</code></li>
 <li><code>@tsonic/aspnetcore</code></li>
@@ -201,6 +199,42 @@ source-of-truth for first-party authored packages like <code>@tsonic/js</code>,
 <li><code>@tsonic/efcore-sqlserver</code></li>
 <li><code>@tsonic/efcore-npgsql</code></li>
 </ul>
+<h2 id="how-to-use-generated-binding-packages">How to use generated binding packages</h2>
+<p>Use generated packages when you need CLR libraries that are not part of the
+ambient surface or first-party authored source packages.</p>
+<h3 id="aspnet-core">ASP.NET Core</h3>
+<pre><code class="language-bash">tsonic add framework Microsoft.AspNetCore.App @tsonic/aspnetcore
+tsonic restore
+</code></pre>
+<pre><code class="language-ts">import { WebApplication } from &quot;@tsonic/aspnetcore/Microsoft.AspNetCore.Builder.js&quot;;
+import type { ExtensionMethods } from &quot;@tsonic/aspnetcore/Microsoft.AspNetCore.Builder.js&quot;;
+
+export function main(): void {
+  const builder = WebApplication.CreateBuilder();
+  const app = builder.Build() as ExtensionMethods&lt;WebApplication&gt;;
+  app.MapGet(&quot;/&quot;, () =&gt; &quot;Hello&quot;);
+  app.Run(&quot;http://localhost:8080&quot;);
+}
+</code></pre>
+<h3 id="ef-core">EF Core</h3>
+<pre><code class="language-bash">tsonic add nuget Microsoft.EntityFrameworkCore.Sqlite 10.0.0
+tsonic add npm @tsonic/efcore
+tsonic add npm @tsonic/efcore-sqlite
+tsonic restore
+</code></pre>
+<pre><code class="language-ts">import { DbContext } from &quot;@tsonic/efcore/Microsoft.EntityFrameworkCore.js&quot;;
+import { SqliteDbContextOptionsBuilderExtensions } from &quot;@tsonic/efcore-sqlite/Microsoft.EntityFrameworkCore.js&quot;;
+
+export class AppDbContext extends DbContext {
+}
+
+export function configure(builder: any): void {
+  SqliteDbContextOptionsBuilderExtensions.UseSqlite(builder, &quot;Data Source=app.db&quot;);
+}
+</code></pre>
+<p>These repos are generated binding packages, not first-party authored source
+packages, so the docs focus on installation, import shape, and usage patterns
+rather than package-by-package API narration.</p>
 <h2 id="what-makes-it-important">What makes it important</h2>
 <p><code>tsbindgen</code> sits at the boundary between CLR ecosystems and Tsonic authoring.
 It is responsible for:</p>
@@ -210,10 +244,10 @@ It is responsible for:</p>
 <li>maintaining publishable package structure for binding repos</li>
 <li>participating in release-wave preflight and publish discipline</li>
 </ul>
-<h2 id="why-this-section-exists">Why this section exists</h2>
-<p>The older site blurred authored packages and generated binding packages
-together. That is now a source of confusion. This section keeps the distinction
-explicit.</p>
+<h2 id="ownership-boundary">Ownership boundary</h2>
+<p>Authored first-party source packages and generated CLR binding packages have
+different owners, inputs, package metadata, and validation gates. This section
+keeps that distinction explicit.</p>
 </div>
 
   
@@ -228,8 +262,6 @@ explicit.</p>
         <li><a href="/tsbindgen/library-mode/">Library Mode</a></li>
       
         <li><a href="/tsbindgen/naming/">Naming</a></li>
-      
-        <li><a href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
       
         <li><a href="/tsbindgen/testing/">Testing</a></li>
       

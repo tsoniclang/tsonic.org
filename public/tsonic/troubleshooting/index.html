@@ -225,6 +225,41 @@ promise to accept every TypeScript pattern.</p>
 <li>authored source packages</li>
 <li>generated CLR binding packages</li>
 </ul>
+<h2 id="npm-ci-fails-in-a-fresh-checkout"><code>npm ci</code> fails in a fresh checkout</h2>
+<p>Check that the root workspace is using the real wrapper package:</p>
+<ul>
+<li><code>npm/tsonic/package.json</code> should be the only workspace package named
+<code>tsonic</code></li>
+<li>root <code>package.json</code> and <code>package-lock.json</code> should pin the same package
+versions</li>
+<li><code>node_modules/.bin/tsonic</code> should resolve into <code>packages/cli/dist/index.js</code>
+through the local workspace, not a global install</li>
+</ul>
+<p>A generated sample project named <code>packages/tsonic</code> is a repository hygiene bug,
+not a valid compiler package.</p>
+<h2 id="runtime-dll-is-missing">Runtime DLL is missing</h2>
+<p>For compiler development, build the sibling runtime first:</p>
+<pre><code class="language-bash">cd ../runtime
+dotnet build -c Release
+cd ../tsonic
+./test/scripts/run-all.sh
+</code></pre>
+<p>The compiler repo intentionally consumes <code>../runtime</code> for runtime DLL sync. If
+that sibling does not exist, runtime-dependent tests should fail clearly rather
+than search arbitrary machine paths.</p>
+<h2 id="source-package-graph-test-cannot-find-js-or-nodejs">Source-package graph test cannot find <code>../js</code> or <code>../nodejs</code></h2>
+<p>The full compiler gate includes frontend tests that validate authored
+source-package traversal using the sibling <code>js</code> and <code>nodejs</code> repos. This is
+intentional: the published <code>@tsonic/js</code> and <code>@tsonic/nodejs</code> binding packages
+contain declarations and binding metadata, not the authored
+<code>tsonic.package.json</code> source package closure those tests are proving.</p>
+<p>Use the standard developer layout:</p>
+<pre><code class="language-text">~/repos/tsoniclang/
+  tsonic/
+  js/
+  nodejs/
+  runtime/
+</code></pre>
 <h2 id="a-downstream-app-fails-but-compiler-tests-are-green">A downstream app fails but compiler tests are green</h2>
 <p>That can happen. Real package graphs and published programs expose integration
 boundaries that unit tests do not. Use the downstream verifier for the affected
@@ -232,6 +267,10 @@ repo.</p>
 <h2 id="a-binding-package-looks-wrong">A binding package looks wrong</h2>
 <p>That is usually a <code>tsbindgen</code> regen issue, not a first-party source-package
 issue. Recheck the generated binding repo and publish-wave state.</p>
+<h2 id="a-duplicate-binding-metadata-error-appears">A duplicate binding metadata error appears</h2>
+<p>The compiler merges binding metadata by proven CLR identity. If two packages
+claim the same CLR type with incompatible metadata, treat that as a package
+ownership problem rather than a TypeScript import problem.</p>
 <h2 id="a-local-multi-project-workspace-behaves-strangely">A local multi-project workspace behaves strangely</h2>
 <p>Check the local package ownership mode in <code>references.packages</code>:</p>
 <ul>

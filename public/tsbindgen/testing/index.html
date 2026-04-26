@@ -133,8 +133,6 @@
         
           <li><a class="nav-link " href="/tsbindgen/naming/">Naming</a></li>
         
-          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
-        
           <li><a class="nav-link active" href="/tsbindgen/testing/">Testing</a></li>
         
           <li><a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
@@ -184,15 +182,16 @@ completed.</p>
 <ul>
 <li>verify repo-local generation results</li>
 <li>run compiler gates where the new bindings are used</li>
-<li>rerun downstreams when the changes affect real application graphs</li>
-<li>rerun publish preflight when versions or package contents changed</li>
+<li>rerun downstreams when generated package contents affect real application
+graphs</li>
+<li>rerun publish preflight when package contents require version decisions</li>
 </ul>
 <p>Typical real gate sequence:</p>
 <ol>
 <li>regenerate bindings</li>
 <li>run relevant repo-local tests</li>
-<li>rerun <code>tsonic</code> compiler gates when call surfaces changed</li>
-<li>rerun downstream applications when package graphs changed</li>
+<li>rerun <code>tsonic</code> compiler gates for affected call surfaces</li>
+<li>rerun downstream applications for affected package graphs</li>
 <li>run wave preflight before publishing</li>
 </ol>
 <h2 id="what-counts-as-repo-local-testing">What counts as repo-local testing</h2>
@@ -212,6 +211,10 @@ completed.</p>
 <li>downstream builds that only fail after full graph resolution</li>
 </ul>
 <p>A green generator run is not enough by itself.</p>
+<h2 id="runtime-sensitive-baselines">Runtime-sensitive baselines</h2>
+<p>Surface-manifest baselines are runtime-versioned. The validator compares the
+installed runtime version against the baseline metadata and reports a direct
+version mismatch when they diverge.</p>
 </div>
 </article>
 </main>

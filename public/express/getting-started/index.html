@@ -131,7 +131,7 @@
         
           <li><a class="nav-link active" href="/express/getting-started/">Getting Started</a></li>
         
-          <li><a class="nav-link " href="/express/migration-plan/">Migration Plan</a></li>
+          <li><a class="nav-link " href="/express/implementation-scope/">Implementation Scope</a></li>
         
           <li><a class="nav-link " href="/express/runtime-model/">Runtime Model</a></li>
         
@@ -195,13 +195,8 @@ application semantics</li>
 </ul>
 <h2 id="practical-expectation">Practical expectation</h2>
 <p>Think of Express as one package you install and author against.</p>
-<p>You should not plan your application around a separate public split between:</p>
-<ul>
-<li>routing code in one repo</li>
-<li>transport/runtime in another repo</li>
-<li>generated companion packages elsewhere</li>
-</ul>
-<p>The current public model is one first-party source package.</p>
+<p>Application code imports the public Express surface from
+<code>@tsonic/express/index.js</code>; host details remain package implementation details.</p>
 </div>
 </article>
 </main>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Home | Tsonic</title>
+    <title>Architecture | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -91,6 +91,8 @@
         </div>
         <div class="sidebar-inner">
 
+
+  
 
 
 
@@ -200,117 +202,91 @@
       <main class="main">
 <article class="doc">
   <div class="doc-top">
-    
+    <nav class="breadcrumbs">
+      
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+      
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+      
+      <span>Architecture</span>
+    </nav>
+    <a class="edit" href="https://github.com/tsoniclang/tsonic.org/blob/main/docs/home/architecture.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="tsonic">Tsonic</h1>
-<p>Tsonic compiles a strict, deterministic subset of TypeScript into C#, then
-builds native binaries or .NET outputs from that generated project.</p>
-<h2 id="stack">Stack</h2>
+  <div class="content"><h1 id="architecture">Architecture</h1>
+<p>This page summarizes the Tsonic architecture.</p>
+<h2 id="compiler-model">Compiler model</h2>
+<p>Tsonic compiles a deterministic TypeScript subset into generated C# and then
+uses the .NET toolchain for managed or NativeAOT outputs.</p>
+<p>The compiler model is:</p>
 <ul>
-<li><code>tsonic</code> is the compiler and CLI.</li>
-<li><code>@tsonic/core</code> provides primitive intent types and compiler intrinsics.</li>
+<li>compiler-owned noLib language prelude</li>
+<li>exactly one ambient surface per workspace</li>
+<li>explicit package-based CLR and module interop</li>
+<li>source-package manifests for authored TypeScript packages</li>
+<li>generated binding metadata for CLR packages</li>
+<li>hard diagnostics for unsupported or unprovable constructs</li>
+</ul>
+<h2 id="ambient-surfaces">Ambient surfaces</h2>
+<p>The workspace surface chooses the ambient world:</p>
+<ul>
+<li><code>clr</code> is the default CLR-first surface.</li>
 <li><code>@tsonic/js</code> is the JavaScript ambient surface.</li>
-<li><code>@tsonic/nodejs</code> is a first-party TypeScript source package for Node-style
-modules.</li>
-<li><code>@tsonic/express</code> is a first-party TypeScript source package for
-Express-style routing and middleware.</li>
-<li><code>tsbindgen</code> generates CLR binding packages such as <code>@tsonic/dotnet</code>,
-<code>@tsonic/aspnetcore</code>, <code>@tsonic/microsoft-extensions</code>, and <code>@tsonic/efcore*</code>.</li>
-<li>Release quality is verified across compiler tests, package selftests,
-generated binding packages, and downstream applications.</li>
 </ul>
-<h2 id="documentation-model">Documentation model</h2>
-<p>This site mounts product documentation from the owning repositories instead of
-duplicating it locally.</p>
+<p><code>@tsonic/nodejs</code> and <code>@tsonic/express</code> are packages layered onto the JS surface;
+they are not separate surfaces.</p>
+<h2 id="package-families">Package families</h2>
+<h3 id="compiler-and-core-packages">Compiler and core packages</h3>
 <ul>
-<li><code>tsonic.org</code> owns cross-repo synthesis pages.</li>
-<li><code>tsonic/docs</code> owns compiler, CLI, workspace, and architecture docs.</li>
-<li><code>tsbindgen/docs</code> owns generated binding pipeline docs.</li>
-<li><code>js/docs</code> owns <code>@tsonic/js</code> docs.</li>
-<li><code>nodejs/docs</code> owns <code>@tsonic/nodejs</code> docs.</li>
-<li><code>express/docs</code> owns <code>@tsonic/express</code> docs.</li>
+<li><code>tsonic</code> — compiler and CLI</li>
+<li><code>@tsonic/core</code> — primitive intent types and compiler intrinsics</li>
+<li><code>@tsonic/globals</code> — shared ambient declarations used by surface packages</li>
 </ul>
-<h2 id="start-here">Start here</h2>
+<h3 id="first-party-typescript-source-packages">First-party TypeScript source packages</h3>
 <ul>
-<li><a href="/architecture/">/architecture/</a> — architecture and package model</li>
-<li><a href="/ecosystem/">/ecosystem/</a> — repo, package, and ownership map</li>
-<li><a href="/testing-and-releases/">/testing-and-releases/</a> — release gates and wave flow</li>
-<li><a href="/tsonic/">/tsonic/</a> — compiler, CLI, workspaces, build modes, examples</li>
-<li><a href="/js/">/js/</a> — <code>@tsonic/js</code></li>
-<li><a href="/nodejs/">/nodejs/</a> — <code>@tsonic/nodejs</code></li>
-<li><a href="/express/">/express/</a> — <code>@tsonic/express</code></li>
-<li><a href="/tsbindgen/">/tsbindgen/</a> — generated CLR binding packages</li>
+<li><code>@tsonic/js</code></li>
+<li><code>@tsonic/nodejs</code></li>
+<li><code>@tsonic/express</code></li>
 </ul>
-<h2 id="quick-starts">Quick starts</h2>
-<h3 id="clr-first-workspace">CLR-first workspace</h3>
-<pre><code class="language-bash">mkdir hello-clr
-cd hello-clr
-tsonic init
-tsonic run
-</code></pre>
-<pre><code class="language-ts">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
-
-export function main(): void {
-  Console.WriteLine(&quot;Hello from Tsonic.&quot;);
-}
-</code></pre>
-<h3 id="js-surface-workspace">JS-surface workspace</h3>
-<pre><code class="language-bash">mkdir hello-js
-cd hello-js
-tsonic init --surface @tsonic/js
-tsonic run
-</code></pre>
-<pre><code class="language-ts">export function main(): void {
-  const message = &quot;  hello from tsonic  &quot;.trim().toUpperCase();
-  console.log(message);
-}
-</code></pre>
-<h3 id="js--node-modules">JS + Node modules</h3>
-<pre><code class="language-bash">mkdir hello-node
-cd hello-node
-tsonic init --surface @tsonic/js
-tsonic add npm @tsonic/nodejs
-tsonic run
-</code></pre>
-<pre><code class="language-ts">import * as fs from &quot;node:fs&quot;;
-import * as path from &quot;node:path&quot;;
-
-export function main(): void {
-  const file = path.join(&quot;src&quot;, &quot;App.ts&quot;);
-  console.log(file, fs.existsSync(file));
-}
-</code></pre>
-<h3 id="aspnet-core-workspace">ASP.NET Core workspace</h3>
-<pre><code class="language-bash">tsonic init
-tsonic add framework Microsoft.AspNetCore.App @tsonic/aspnetcore
-tsonic restore
-</code></pre>
-<pre><code class="language-ts">import { WebApplication } from &quot;@tsonic/aspnetcore/Microsoft.AspNetCore.Builder.js&quot;;
-import type { ExtensionMethods } from &quot;@tsonic/aspnetcore/Microsoft.AspNetCore.Builder.js&quot;;
-
-export function main(): void {
-  const builder = WebApplication.CreateBuilder();
-  const app = builder.Build() as ExtensionMethods&lt;WebApplication&gt;;
-  app.MapGet(&quot;/&quot;, () =&gt; &quot;Hello from ASP.NET Core&quot;);
-  app.Run(&quot;http://localhost:8080&quot;);
-}
-</code></pre>
-<h3 id="ef-core--sqlite-workspace">EF Core + SQLite workspace</h3>
-<pre><code class="language-bash">tsonic init
-tsonic add nuget Microsoft.EntityFrameworkCore.Sqlite 10.0.0 @tsonic/efcore-sqlite
-tsonic restore
-</code></pre>
-<pre><code class="language-ts">import { DbContext, DbContextOptionsBuilder } from &quot;@tsonic/efcore/Microsoft.EntityFrameworkCore.js&quot;;
-import { SqliteDbContextOptionsBuilderExtensions } from &quot;@tsonic/efcore-sqlite/Microsoft.EntityFrameworkCore.js&quot;;
-
-export class AppDbContext extends DbContext {
-}
-
-export function configure(builder: DbContextOptionsBuilder): void {
-  SqliteDbContextOptionsBuilderExtensions.UseSqlite(builder, &quot;Data Source=app.db&quot;);
-}
-</code></pre>
+<p>These packages are authored in TypeScript and described by
+<code>tsonic.package.json</code>.</p>
+<h3 id="generated-clr-binding-packages">Generated CLR binding packages</h3>
+<ul>
+<li><code>@tsonic/dotnet</code></li>
+<li><code>@tsonic/aspnetcore</code></li>
+<li><code>@tsonic/microsoft-extensions</code></li>
+<li><code>@tsonic/efcore</code></li>
+<li><code>@tsonic/efcore-sqlite</code></li>
+<li><code>@tsonic/efcore-sqlserver</code></li>
+<li><code>@tsonic/efcore-npgsql</code></li>
+</ul>
+<p>These packages are generated by <code>tsbindgen</code> and contain <code>.d.ts</code> facades plus
+<code>bindings.json</code> compiler metadata.</p>
+<h2 id="workspace-model">Workspace model</h2>
+<p>The root <code>tsonic.workspace.json</code> owns shared workspace configuration:</p>
+<ul>
+<li><code>surface</code></li>
+<li>target framework</li>
+<li>CLR framework references</li>
+<li>CLR NuGet package references</li>
+<li>type roots</li>
+<li>local DLL references</li>
+</ul>
+<p>Each package under <code>packages/&lt;name&gt;</code> owns its project configuration in
+<code>tsonic.json</code> and, when published or imported as source, its
+<code>tsonic.package.json</code> source-package manifest.</p>
+<h2 id="release-quality-model">Release quality model</h2>
+<p>Release readiness is ecosystem-level:</p>
+<ul>
+<li>compiler gate in <code>tsonic</code></li>
+<li>package selftests in first-party source packages</li>
+<li>generator tests in <code>tsbindgen</code></li>
+<li>generated binding package validation</li>
+<li>downstream verification across real applications</li>
+</ul>
+<p>The publish wave is treated as one coherent ship decision.</p>
 </div>
 </article>
 </main>

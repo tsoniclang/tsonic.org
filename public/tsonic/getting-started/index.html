@@ -207,6 +207,37 @@
 <li>Node.js 22+</li>
 <li>.NET 10 SDK</li>
 </ul>
+<h2 id="source-checkout-for-contributors">Source checkout for contributors</h2>
+<p>For Tsonic compiler work, the supported developer layout is a sibling checkout
+under one parent directory:</p>
+<pre><code class="language-text">~/repos/tsoniclang/
+  tsonic/
+  runtime/
+  core/
+  dotnet/
+  globals/
+  js/
+  nodejs/
+  aspnetcore/
+  efcore/
+  efcore-sqlite/
+  microsoft-extensions/
+</code></pre>
+<p><code>runtime</code> is the only required sibling for the compiler's runtime DLL sync:</p>
+<pre><code class="language-bash">cd ~/repos/tsoniclang/runtime
+dotnet build -c Release
+
+cd ../tsonic
+npm ci
+npm run build
+./test/scripts/run-all.sh
+</code></pre>
+<p>The other siblings are used by tests and local package-wave development when
+present. Resolution is deterministic: a sibling package is used only if its
+expected <code>package.json</code> exists; otherwise installed npm packages are used.</p>
+<p>The repo-local <code>tsonic</code> command is the workspace package in <code>npm/tsonic</code>, which
+forwards to <code>@tsonic/cli</code>. There should not be another root workspace package
+named <code>tsonic</code>.</p>
 <h2 id="install">Install</h2>
 <pre><code class="language-bash">npm install -g tsonic
 </code></pre>
@@ -252,7 +283,7 @@ export function main(): void {
   console.log(file, fs.existsSync(file));
 }
 </code></pre>
-<p>This is the current package model in action:</p>
+<p>This is the package model in action:</p>
 <ul>
 <li>ambient world from <code>@tsonic/js</code></li>
 <li>Node-style modules from <code>@tsonic/nodejs</code></li>
@@ -265,7 +296,7 @@ tsonic restore
 <pre><code class="language-ts">import { ILogger_1 } from &quot;@tsonic/microsoft-extensions/Microsoft.Extensions.Logging.js&quot;;
 </code></pre>
 <h2 id="first-party-source-packages">First-party source packages</h2>
-<p><code>tsonic init</code> now produces source-package-ready projects by default. Each
+<p><code>tsonic init</code> produces source-package-ready projects by default. Each
 project gets a <code>tsonic.package.json</code> manifest.</p>
 <p>Example:</p>
 <pre><code class="language-json">{

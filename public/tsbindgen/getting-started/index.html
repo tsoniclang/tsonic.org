@@ -133,8 +133,6 @@
         
           <li><a class="nav-link " href="/tsbindgen/naming/">Naming</a></li>
         
-          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
-        
           <li><a class="nav-link " href="/tsbindgen/testing/">Testing</a></li>
         
           <li><a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
@@ -197,6 +195,10 @@ dotnet run --project src/tsbindgen/tsbindgen.csproj -- \
 </code></pre>
 <p>Or via npm:</p>
 <pre><code class="language-bash">npx tsbindgen generate -d /path/to/assemblies -o ./output
+</code></pre>
+<p>For .NET runtime assemblies, derive the runtime path from the installed SDK:</p>
+<pre><code class="language-bash">DOTNET_RUNTIME=$(dirname &quot;$(dotnet --list-runtimes | awk '/Microsoft.NETCore.App 10\\./ { print $3; exit }')&quot;)
+npx tsbindgen generate -d &quot;$DOTNET_RUNTIME&quot; -o ./output
 </code></pre>
 <h2 id="typical-output-shape">Typical output shape</h2>
 <p>Generated packages normally include:</p>

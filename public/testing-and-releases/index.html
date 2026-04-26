@@ -216,8 +216,8 @@
   </div>
 
   <div class="content"><h1 id="testing-and-release-discipline">Testing and Release Discipline</h1>
-<p>The current stack is validated in layers. Release work is not complete until the
-whole chain is green.</p>
+<p>The stack is validated in layers. Release work is not complete until the whole
+chain is green.</p>
 <h2 id="1-compiler-gate">1. Compiler gate</h2>
 <p>The authoritative compiler gate is:</p>
 <pre><code class="language-bash">./test/scripts/run-all.sh
@@ -264,19 +264,18 @@ downstream app happens to hit the broken path.</p>
 <p>Typical commands:</p>
 <pre><code class="language-bash">bash scripts/verify-all.sh
 </code></pre>
-<p>These downstream verification scripts are normally run against local sibling
-repos during a wave, not against a random mix of published npm package
-versions. That matters because a release wave often spans:</p>
+<p>These downstream verification scripts run against local sibling repos during a
+wave, not against an arbitrary mix of published npm package versions. A release
+wave can include:</p>
 <ul>
-<li>compiler changes in <code>tsonic</code></li>
-<li>first-party source-package changes in <code>js</code>, <code>nodejs</code>, or <code>express</code></li>
+<li>compiler work in <code>tsonic</code></li>
+<li>first-party source-package work in <code>js</code>, <code>nodejs</code>, or <code>express</code></li>
 <li>regenerated CLR binding packages from <code>tsbindgen</code></li>
 <li>downstream applications that consume all of the above together</li>
 </ul>
 <h2 id="4-binding-package-regeneration">4. Binding-package regeneration</h2>
 <p><code>tsbindgen</code> is part of the release flow, not just a local codegen tool.</p>
-<p>When compiler, runtime, or CLR-shape changes affect bindings, the normal flow
-is:</p>
+<p>When compiler, runtime, or CLR-shape work affects bindings, the normal flow is:</p>
 <ol>
 <li>regenerate affected binding repos</li>
 <li>validate those packages locally</li>
@@ -284,16 +283,16 @@ is:</p>
 <li>publish only after the wave is coherent</li>
 </ol>
 <h2 id="5-version-drift-and-publish-preflight">5. Version drift and publish preflight</h2>
-<p>The stack now checks release drift explicitly:</p>
+<p>Release preflight checks drift explicitly:</p>
 <ul>
 <li>is local content ahead of the published version?</li>
-<li>did content change without a version bump?</li>
+<li>does package content require a version bump?</li>
 <li>is the whole wave internally consistent before publish?</li>
 </ul>
 <p>This avoids silent republish at the same version and makes release waves
 explicit.</p>
 <h2 id="6-wave-publish">6. Wave publish</h2>
-<p>The current wave process is:</p>
+<p>The wave process is:</p>
 <ol>
 <li>get <code>tsonic</code> green</li>
 <li>get first-party source packages green</li>
@@ -305,13 +304,13 @@ explicit.</p>
 <h2 id="why-the-process-is-strict">Why the process is strict</h2>
 <p>This stack is tightly coupled:</p>
 <ul>
-<li>compiler changes can alter emitted package boundaries</li>
-<li>source-package changes can affect runtime behavior and manifests</li>
-<li>binding-package changes can affect overload resolution and CLR interop</li>
+<li>compiler work can alter emitted package boundaries</li>
+<li>source-package work can affect runtime behavior and manifests</li>
+<li>binding-package work can affect overload resolution and CLR interop</li>
 <li>downstream apps expose the combined behavior of all of the above</li>
 </ul>
-<p>That is why the current documentation treats release work as an ecosystem-level
-decision instead of a set of isolated repo actions.</p>
+<p>Release work is an ecosystem-level decision instead of a set of isolated repo
+actions.</p>
 </div>
 </article>
 </main>

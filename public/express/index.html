@@ -127,7 +127,7 @@
         
           <li><a class="nav-link " href="/express/getting-started/">Getting Started</a></li>
         
-          <li><a class="nav-link " href="/express/migration-plan/">Migration Plan</a></li>
+          <li><a class="nav-link " href="/express/implementation-scope/">Implementation Scope</a></li>
         
           <li><a class="nav-link " href="/express/runtime-model/">Runtime Model</a></li>
         
@@ -156,14 +156,13 @@
 
   <div class="content"><h1 id="tsonicexpress"><code>@tsonic/express</code></h1>
 <p><code>@tsonic/express</code> is the canonical Express-style package for Tsonic.</p>
-<h2 id="current-position">Current position</h2>
-<p>This package replaces the older public multi-repo packaging story that used to
-describe Express through more than one public layer.</p>
-<p>The active documentation model is simple:</p>
+<h2 id="package-model">Package model</h2>
 <ul>
-<li><code>@tsonic/express</code> is the package users depend on</li>
-<li>it is a first-party <code>tsonic-source-package</code></li>
-<li>it lives alongside <code>@tsonic/js</code> and <code>@tsonic/nodejs</code></li>
+<li><code>@tsonic/express</code> is the package application code depends on.</li>
+<li>The package is a first-party <code>tsonic-source-package</code>.</li>
+<li>Applications use it with the <code>@tsonic/js</code> surface and <code>@tsonic/nodejs</code>.</li>
+<li>The package owns routing, middleware, request helpers, response helpers, and
+HTTP hosting integration.</li>
 </ul>
 <h2 id="quick-start">Quick start</h2>
 <pre><code class="language-bash">tsonic init --surface @tsonic/js
@@ -192,6 +191,7 @@ export async function main(): Promise&lt;void&gt; {
 <ul>
 <li><a href="/express/getting-started/">Getting Started</a></li>
 <li><a href="/express/runtime-model/">Runtime Model</a></li>
+<li><a href="/express/implementation-scope/">Implementation Scope</a></li>
 </ul>
 <h2 id="what-it-covers">What it covers</h2>
 <p>The package owns:</p>
@@ -211,7 +211,7 @@ export async function main(): Promise&lt;void&gt; {
       
         <li><a href="/express/getting-started/">Getting Started</a></li>
       
-        <li><a href="/express/migration-plan/">Migration Plan</a></li>
+        <li><a href="/express/implementation-scope/">Implementation Scope</a></li>
       
         <li><a href="/express/runtime-model/">Runtime Model</a></li>
       

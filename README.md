@@ -8,10 +8,10 @@ repo-owned product docs from sibling repos, and commits the generated site under
 
 ## Documentation ownership model
 
-The current docs model is split deliberately:
+The documentation model is split by ownership:
 
 - `tsonic.org` owns cross-repo synthesis pages
-  - current state
+  - architecture
   - ecosystem map
   - testing and release flow
 - owning repos own their product docs
@@ -21,15 +21,12 @@ The current docs model is split deliberately:
   - `nodejs/docs`
   - `express/docs`
 
-That keeps one source of truth per topic while still letting the site present a
+This keeps one source of truth per topic while letting the site present a
 coherent public view of the ecosystem.
 
-## Why this split exists
+## Architecture covered by the site
 
-The older site mirrored sibling docs too loosely, which made the public story
-stale and inconsistent once the ecosystem changed quickly.
-
-The current architecture spans several repos:
+The architecture spans several repos:
 
 - `tsonic` owns the compiler and CLI
 - `@tsonic/js`, `@tsonic/nodejs`, and `@tsonic/express` are first-party
@@ -62,7 +59,7 @@ Then run:
 
 ## Mounted sections
 
-- `docs/home` — homepage, current-state summary, ecosystem map, release flow
+- `docs/home` — homepage, architecture summary, ecosystem map, release flow
 - `../tsonic/docs` — compiler, CLI, package model, examples, architecture
 - `../tsbindgen/docs` — CLR binding generation docs
 - `../js/docs` — `@tsonic/js`
