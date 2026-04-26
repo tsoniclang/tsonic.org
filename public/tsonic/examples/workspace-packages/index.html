@@ -171,7 +171,7 @@
   </div>
 
   <div class="content"><h1 id="workspace-package-graphs">Workspace Package Graphs</h1>
-<p>The current default model is source-package-first, even inside a single local
+<p>The default model is source-package-first, even inside a single local
 workspace.</p>
 <h2 id="example-layout">Example layout</h2>
 <pre><code class="language-text">my-workspace/
@@ -240,7 +240,7 @@ export function main(): void {
 <p>Result:</p>
 <ul>
 <li>Tsonic builds <code>domain</code> first</li>
-<li>the current project references its DLL</li>
+<li>the consuming project references its DLL</li>
 <li>generated output does not duplicate source ownership for that package</li>
 </ul>
 <h2 id="practical-rule">Practical rule</h2>
@@ -250,7 +250,7 @@ export function main(): void {
 <li>independent library versioning</li>
 <li>assembly-level separation for a large workspace</li>
 </ul>
-<p>For most first-party local packages, the current default and recommended mode is
+<p>For most first-party local packages, the default and recommended mode is
 still <code>source</code>.</p>
 </div>
 </article>

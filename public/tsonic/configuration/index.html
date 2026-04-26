@@ -202,7 +202,7 @@
   </div>
 
   <div class="content"><h1 id="configuration">Configuration</h1>
-<p>The current configuration model has three layers:</p>
+<p>The configuration model has three layers:</p>
 <ul>
 <li>workspace config: <code>tsonic.workspace.json</code></li>
 <li>project config: <code>packages/&lt;project&gt;/tsonic.json</code></li>
@@ -232,10 +232,7 @@ shape. This page focuses on decision-making.</p>
   &quot;dotnetVersion&quot;: &quot;net10.0&quot;,
   &quot;surface&quot;: &quot;@tsonic/js&quot;,
   &quot;dotnet&quot;: {
-    &quot;typeRoots&quot;: [
-      &quot;node_modules/@tsonic/js&quot;,
-      &quot;node_modules/@tsonic/nodejs&quot;
-    ],
+    &quot;typeRoots&quot;: [&quot;node_modules/@tsonic/js&quot;, &quot;node_modules/@tsonic/nodejs&quot;],
     &quot;frameworkReferences&quot;: [
       {
         &quot;id&quot;: &quot;Microsoft.AspNetCore.App&quot;,
@@ -278,7 +275,7 @@ shape. This page focuses on decision-making.</p>
 <li><code>references.packages</code></li>
 </ul>
 <h2 id="4-decide-local-package-ownership-mode">4. Decide local package ownership mode</h2>
-<p>The current model supports local first-party package references with explicit
+<p>The model supports local first-party package references with explicit
 ownership:</p>
 <pre><code class="language-json">{
   &quot;references&quot;: {

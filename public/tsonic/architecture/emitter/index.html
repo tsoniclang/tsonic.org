@@ -182,17 +182,16 @@
 
   <div class="content"><h1 id="emitter">Emitter</h1>
 <p>The emitter converts IR into <code>CSharpAst</code>, then the printer turns that into C#.</p>
-<h2 id="current-architecture">Current architecture</h2>
+<h2 id="architecture">Architecture</h2>
 <pre><code class="language-text">IR
   -&gt; semantic helpers
   -&gt; CSharpAst builders
   -&gt; printer
   -&gt; .cs text
 </code></pre>
-<h2 id="important-current-fact">Important current fact</h2>
-<p>The emitter is AST-only now.</p>
-<p>The old mixed pipeline of AST plus mid-pipeline C# text shims is no longer the
-supported architecture.</p>
+<h2 id="important-fact">Important fact</h2>
+<p>The emitter is AST-only.</p>
+<p>Mixed AST plus mid-pipeline C# text shims are not supported architecture.</p>
 <h2 id="major-areas">Major areas</h2>
 <ul>
 <li>type emission</li>

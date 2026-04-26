@@ -227,7 +227,7 @@ not a local code workaround.</p>
 <h3 id="determinism-failure">Determinism failure</h3>
 <pre><code class="language-ts">await import(specifier);
 </code></pre>
-<p>This fails because the import graph is no longer closed-world.</p>
+<p>This fails because the import graph is not closed-world.</p>
 <h3 id="overload-or-generic-ambiguity">Overload or generic ambiguity</h3>
 <pre><code class="language-ts">Enumerable.Where(xs, (x) =&gt; x &gt; 0);
 </code></pre>

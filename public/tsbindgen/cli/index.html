@@ -133,8 +133,6 @@
         
           <li><a class="nav-link " href="/tsbindgen/naming/">Naming</a></li>
         
-          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
-        
           <li><a class="nav-link " href="/tsbindgen/testing/">Testing</a></li>
         
           <li><a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
@@ -206,6 +204,14 @@
 <pre><code class="language-bash">npx tsbindgen resolve-closure -a ./MyLibrary.dll
 </code></pre>
 <p>Use this to inspect the resolved assembly closure without generating output.</p>
+<h2 id="runtime-discovery">Runtime discovery</h2>
+<p>The CLI works with any installed .NET runtime path. For framework generation,
+use <code>dotnet --list-runtimes</code> to locate <code>Microsoft.NETCore.App</code>:</p>
+<pre><code class="language-bash">DOTNET_RUNTIME=$(dirname &quot;$(dotnet --list-runtimes | awk '/Microsoft.NETCore.App 10\\./ { print $3; exit }')&quot;)
+npx tsbindgen generate -d &quot;$DOTNET_RUNTIME&quot; -o ./output
+</code></pre>
+<p>Repo-local test scripts perform the same discovery and accept <code>DOTNET_RUNTIME</code>
+as an explicit override.</p>
 <h2 id="when---lib-matters">When <code>--lib</code> matters</h2>
 <p>Use <code>--lib</code> when you are generating a library package that should import
 existing BCL or framework types from a pre-existing generated package instead of

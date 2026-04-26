@@ -288,7 +288,8 @@ public static (string Sanitized, bool WasSanitized) Sanitize(string name)
 }
 </code></pre>
 <h2 id="style-transforms">Style Transforms</h2>
-<p>tsbindgen emits CLR-faithful names. Member style transforms are identity transforms (no casing changes).</p>
+<p>tsbindgen emits CLR-faithful names. Member style transforms are identity
+transforms; the generator does not rewrite casing.</p>
 <pre><code class="language-csharp">Renamer.AdoptMemberStyleTransform(name =&gt; name);
 
 // GetEnumerator -&gt; GetEnumerator

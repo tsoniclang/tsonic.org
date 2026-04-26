@@ -133,8 +133,6 @@
         
           <li><a class="nav-link " href="/tsbindgen/naming/">Naming</a></li>
         
-          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
-        
           <li><a class="nav-link " href="/tsbindgen/testing/">Testing</a></li>
         
           <li><a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
@@ -226,8 +224,32 @@ concepts such as:</p>
 <li>generic constraints</li>
 <li>namespace/module ownership</li>
 </ul>
+<h2 id="how-generated-repos-are-meant-to-be-consumed">How generated repos are meant to be consumed</h2>
+<p>Generated repos such as <code>aspnetcore</code> and <code>efcore*</code> are not documented like
+first-party source packages. The important user-facing questions are:</p>
+<ul>
+<li>which CLR dependency to add</li>
+<li>which npm binding package to install</li>
+<li>which namespace module to import</li>
+<li>what a minimal working example looks like</li>
+</ul>
+<h3 id="example-aspnet-core">Example: ASP.NET Core</h3>
+<pre><code class="language-bash">tsonic add framework Microsoft.AspNetCore.App @tsonic/aspnetcore
+tsonic restore
+</code></pre>
+<pre><code class="language-ts">import { WebApplication } from &quot;@tsonic/aspnetcore/Microsoft.AspNetCore.Builder.js&quot;;
+</code></pre>
+<h3 id="example-ef-core--sqlite">Example: EF Core + SQLite</h3>
+<pre><code class="language-bash">tsonic add nuget Microsoft.EntityFrameworkCore.Sqlite 10.0.0
+tsonic add npm @tsonic/efcore
+tsonic add npm @tsonic/efcore-sqlite
+tsonic restore
+</code></pre>
+<pre><code class="language-ts">import { DbContext } from &quot;@tsonic/efcore/Microsoft.EntityFrameworkCore.js&quot;;
+import { SqliteDbContextOptionsBuilderExtensions } from &quot;@tsonic/efcore-sqlite/Microsoft.EntityFrameworkCore.js&quot;;
+</code></pre>
 <h2 id="what-it-does-not-generate">What it does not generate</h2>
-<p>The current stack does <strong>not</strong> treat <code>tsbindgen</code> as the source generator for:</p>
+<p>The stack does <strong>not</strong> treat <code>tsbindgen</code> as the source generator for:</p>
 <ul>
 <li><code>@tsonic/js</code></li>
 <li><code>@tsonic/nodejs</code></li>

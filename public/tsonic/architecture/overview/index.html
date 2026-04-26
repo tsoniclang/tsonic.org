@@ -221,8 +221,8 @@ Backend
 compiled as authored source packages, and they are not explained by the same
 manifest model.</p>
 <h3 id="4-the-emitter-is-ast-only">4. The emitter is AST-only</h3>
-<p>The emitter no longer assembles C# through mixed string shims.</p>
-<p>Current path:</p>
+<p>The emitter assembles C# through AST nodes instead of mixed string shims.</p>
+<p>Emitter path:</p>
 <pre><code class="language-text">IR -&gt; CSharpAst -&gt; printer -&gt; C# text
 </code></pre>
 <h3 id="5-the-compiler-rejects-ambiguity-early">5. The compiler rejects ambiguity early</h3>

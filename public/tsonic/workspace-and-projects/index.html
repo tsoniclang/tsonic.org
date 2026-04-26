@@ -211,9 +211,7 @@ for the whole workspace.</p>
   &quot;dotnetVersion&quot;: &quot;net10.0&quot;,
   &quot;surface&quot;: &quot;@tsonic/js&quot;,
   &quot;dotnet&quot;: {
-    &quot;typeRoots&quot;: [
-      &quot;node_modules/@tsonic/nodejs&quot;
-    ],
+    &quot;typeRoots&quot;: [&quot;node_modules/@tsonic/nodejs&quot;],
     &quot;frameworkReferences&quot;: [
       {
         &quot;id&quot;: &quot;Microsoft.AspNetCore.App&quot;,
@@ -285,8 +283,12 @@ hidden in arbitrary project folders.</p>
 <ul>
 <li>npm workspaces</li>
 <li>devDependency on <code>tsonic</code></li>
-<li>top-level scripts such as <code>build</code> and <code>dev</code></li>
+<li>top-level scripts such as <code>build</code>, <code>format</code>, and <code>test</code></li>
 </ul>
+<p>In this compiler repo, the public <code>tsonic</code> npm wrapper lives under
+<code>npm/tsonic</code>. It is a workspace package that forwards to <code>@tsonic/cli</code>.
+Generated sample projects must not be checked in as another workspace package
+named <code>tsonic</code>, because that shadows the real wrapper and breaks <code>npm ci</code>.</p>
 <p>At project root (<code>packages/&lt;project&gt;/package.json</code>), the package name is the
 npm identity that other source packages import.</p>
 <h2 id="tsonicpackagejson"><code>tsonic.package.json</code></h2>
@@ -315,6 +317,20 @@ npm identity that other source packages import.</p>
 <li>module alias maps</li>
 <li>runtime metadata such as framework references and runtime packages</li>
 </ul>
+<p>The compiler preserves source-backed metadata through constructor metadata,
+call metadata, and narrowed aliases. That means an imported source-package type
+is still compared by its canonical identity after it flows through helpers,
+generic returns, or branch narrowing.</p>
+<p>Example:</p>
+<pre><code class="language-ts">import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
+import type { RequestHandler } from &quot;@tsonic/express/index.js&quot;;
+
+const handlers = new List&lt;RequestHandler&gt;();
+</code></pre>
+<p>The <code>RequestHandler</code> identity comes from the Express source package. The <code>List</code>
+constructor metadata must carry that lowered identity to emission; if raw
+anonymous or unresolved alias metadata leaks through, the emitter must fail
+rather than guess a CLR type.</p>
 <h2 id="local-first-party-package-references">Local first-party package references</h2>
 <p>Projects can reference sibling local packages explicitly:</p>
 <pre><code class="language-json">{
@@ -383,7 +399,7 @@ not just exports.</p>
 </ul>
 <p>Generated binding packages use <code>tsonic.bindings.json</code>, not
 <code>tsonic.package.json</code>.</p>
-<p>That difference is one of the most important distinctions in the current stack:</p>
+<p>That difference is one of the most important distinctions in the stack:</p>
 <ul>
 <li>authored packages -&gt; source manifest, package graph, transitive compilation</li>
 <li>generated bindings -&gt; declarations plus CLR metadata consumed by the compiler</li>
@@ -403,7 +419,7 @@ not just exports.</p>
 ship generated declaration and metadata trees. They are not authored source
 packages with <code>tsonic.package.json</code>.</p>
 <h2 id="init-generated-layout">Init-generated layout</h2>
-<p><code>tsonic init</code> now creates a workspace shaped like this:</p>
+<p><code>tsonic init</code> creates a workspace shaped like this:</p>
 <pre><code class="language-text">my-workspace/
   package.json
   tsonic.workspace.json

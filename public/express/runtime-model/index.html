@@ -131,7 +131,7 @@
         
           <li><a class="nav-link " href="/express/getting-started/">Getting Started</a></li>
         
-          <li><a class="nav-link " href="/express/migration-plan/">Migration Plan</a></li>
+          <li><a class="nav-link " href="/express/implementation-scope/">Implementation Scope</a></li>
         
           <li><a class="nav-link active" href="/express/runtime-model/">Runtime Model</a></li>
         
@@ -184,10 +184,8 @@ including:</p>
 <li>typed handler interfaces such as <code>RequestHandler</code>, <code>NextFunction</code>, and
 <code>ParamHandler</code></li>
 </ul>
-<h2 id="why-this-page-exists">Why this page exists</h2>
-<p>Older docs and older mental models split Express across generated and CLR
-companions. That is not how the active stack should be explained anymore.</p>
-<p>The current package owns both:</p>
+<h2 id="ownership">Ownership</h2>
+<p>The package owns:</p>
 <ul>
 <li>host-independent routing and middleware behavior</li>
 <li>host-bound request/response substrate</li>
@@ -204,7 +202,7 @@ companions. That is not how the active stack should be explained anymore.</p>
 </code></pre>
 <p>This is the normal application path for HTTP services.</p>
 <h2 id="what-users-should-expect-from-the-package">What users should expect from the package</h2>
-<p>The current package owns the following behavior directly:</p>
+<p>The package implements:</p>
 <ul>
 <li>route registration and matching</li>
 <li>middleware chaining</li>
@@ -222,7 +220,6 @@ companions. That is not how the active stack should be explained anymore.</p>
 <li>one authored TypeScript source package</li>
 <li>one runtime model expressed through package code and package metadata</li>
 </ul>
-<p>not a layered public story involving separate companion packages.</p>
 </div>
 </article>
 </main>

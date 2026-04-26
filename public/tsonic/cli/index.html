@@ -299,7 +299,7 @@ downgrade them for you.</p>
 framework from installed shared-framework assemblies.</p>
 <h3 id="tsonic-remove-nuget-packageid"><code>tsonic remove nuget &lt;PackageId&gt;</code></h3>
 <p>Removes a NuGet package reference from <code>tsonic.workspace.json</code>.</p>
-<p>Use this when the workspace no longer needs a CLR package or when you want to
+<p>Use this when the workspace does not need a CLR package or when you want to
 replace it with a different package family.</p>
 <h3 id="tsonic-update-nuget-packageid-version"><code>tsonic update nuget &lt;PackageId&gt; &lt;Version&gt;</code></h3>
 <p>Updates a pinned NuGet package version in <code>tsonic.workspace.json</code>.</p>
@@ -371,7 +371,7 @@ That means test-only framework references and NuGet packages live in
 <li><code>output.type</code> is <code>&quot;library&quot;</code></li>
 <li><code>output.packable</code> is <code>true</code></li>
 </ul>
-<p>The current pack flow is:</p>
+<p>The pack flow is:</p>
 <ol>
 <li>generate the library project</li>
 <li>run <code>dotnet pack</code> on the generated <code>tsonic.csproj</code></li>
@@ -388,7 +388,7 @@ That means test-only framework references and NuGet packages live in
 <li><code>--no-generate</code> — build or run from an existing generated directory</li>
 <li><code>--keep-temp</code> — keep build artifacts</li>
 </ul>
-<p>Other useful current flags:</p>
+<p>Other useful flags:</p>
 <ul>
 <li>positional <code>&lt;entry&gt;</code> for <code>generate</code>, <code>build</code>, and <code>run</code></li>
 <li><code>-c, --config &lt;file&gt;</code> to select a workspace file explicitly</li>
@@ -396,7 +396,7 @@ That means test-only framework references and NuGet packages live in
 <li><code>--types-version &lt;ver&gt;</code> and <code>--skip-types</code> for init bootstrapping</li>
 <li><code>-L, --lib &lt;path&gt;</code> for explicit DLL references during build flows</li>
 </ul>
-<h2 id="important-current-rules">Important current rules</h2>
+<h2 id="important-rules">Important rules</h2>
 <ul>
 <li>surfaces are ambient-world selection, not normal packages</li>
 <li><code>@tsonic/nodejs</code> is a package, not a surface</li>
@@ -412,7 +412,7 @@ binding packages</li>
 <li>use <code>init</code> once per workspace root</li>
 <li>use <code>add npm</code> for authored source packages and prebuilt binding packages</li>
 <li>use <code>add nuget</code>, <code>add framework</code>, and <code>add package</code> for CLR inputs</li>
-<li>use <code>restore</code> after dependency-graph changes</li>
+<li>use <code>restore</code> after dependency-graph edits</li>
 <li>use <code>generate</code> when debugging or when a downstream tool needs the generated
 project</li>
 <li>use <code>build</code>, <code>run</code>, <code>test</code>, and <code>pack</code> for normal day-to-day workflows</li>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Migration Plan | Tsonic</title>
+    <title>Implementation Scope | Tsonic</title>
     <meta name="description" content="Tsonic" />
     <link
       rel="stylesheet"
@@ -131,7 +131,7 @@
         
           <li><a class="nav-link " href="/express/getting-started/">Getting Started</a></li>
         
-          <li><a class="nav-link active" href="/express/migration-plan/">Migration Plan</a></li>
+          <li><a class="nav-link active" href="/express/implementation-scope/">Implementation Scope</a></li>
         
           <li><a class="nav-link " href="/express/runtime-model/">Runtime Model</a></li>
         
@@ -156,57 +156,42 @@
         <a href="/express/">Express Package</a>
         <span class="sep">/</span>
       
-      <span>Migration Plan</span>
+      <span>Implementation Scope</span>
     </nav>
-    <a class="edit" href="https://github.com/tsoniclang/express/blob/main/docs/migration-plan.md">Edit on GitHub</a>
+    <a class="edit" href="https://github.com/tsoniclang/express/blob/main/docs/implementation-scope.md">Edit on GitHub</a>
   </div>
 
-  <div class="content"><h1 id="express-migration-plan">express migration plan</h1>
-<p>This repo becomes the native source of truth for <code>@tsonic/express</code>.</p>
-<h2 id="principles">Principles</h2>
+  <div class="content"><h1 id="implementation-scope">Implementation Scope</h1>
+<p>This repo is the native source of truth for <code>@tsonic/express</code>.</p>
+<h2 id="design-principles">Design principles</h2>
 <ul>
 <li>Keep host substrate thin.</li>
-<li>Move library behavior into native source.</li>
-<li>Port the current <code>earlier C# baseline</code> tests as the baseline.</li>
-<li>Add broader tests for any current best-effort or simplified behavior.</li>
+<li>Keep runtime coverage comprehensive.</li>
+<li>Express semantics live in authored TypeScript package code.</li>
+<li>Host-bound work is isolated to request, response, and listen integration.</li>
+<li>Tests cover routing, middleware, helpers, and live HTTP behavior.</li>
 </ul>
-<h2 id="initial-migration-slices">Initial migration slices</h2>
-<ol>
-<li>Router / route / middleware pipeline</li>
-<li>Application settings, mount behavior, template engine hooks</li>
-<li>Request / response shaping that does not depend on host transport internals</li>
-<li>Built-in middleware and multipart</li>
-<li>Host substrate adapters (<code>listen</code>, transport request/response, file send)</li>
-</ol>
-<h2 id="current-port-status">Current port status</h2>
+<h2 id="package-areas">Package areas</h2>
 <ul>
-<li>Started:
-<ul>
-<li>router</li>
-<li>route chaining</li>
-<li>param handling</li>
-<li>application settings and mount events</li>
-<li>core response helpers (<code>status</code>, <code>set</code>, <code>send</code>, <code>cookie</code>, <code>render</code>, <code>jsonp</code>)</li>
+<li>Router, route, and middleware pipeline</li>
+<li>Application settings, mounted apps, mounted routers, and template render hooks</li>
+<li>Request and response shaping</li>
+<li>Built-in JSON, URL-encoded, cookie, CORS, static-file, and multipart
+middleware</li>
+<li>Host adapters for <code>listen</code>, transport request/response objects, and file send</li>
 </ul>
-</li>
-<li>Not started:
+<h2 id="public-surface">Public surface</h2>
 <ul>
-<li>host listen/runtime substrate</li>
-<li>built-in body parsers</li>
-<li>static files</li>
-<li>multipart</li>
-<li>full request API surface</li>
-</ul>
-</li>
-</ul>
-<h2 id="existing-baseline-test-sources">Existing baseline test sources</h2>
-<ul>
-<li><code>earlier C# baseline/tests/express.Tests/runtime/application.runtime.tests.cs</code></li>
-<li><code>earlier C# baseline/tests/express.Tests/runtime/router.runtime.tests.cs</code></li>
-<li><code>earlier C# baseline/tests/express.Tests/runtime/params.runtime.tests.cs</code></li>
-<li><code>earlier C# baseline/tests/express.Tests/runtime/middleware.runtime.tests.cs</code></li>
-<li><code>earlier C# baseline/tests/express.Tests/runtime/request.response.runtime.tests.cs</code></li>
-<li><code>earlier C# baseline/tests/express.Tests/runtime/coverage.matrix.*.cs</code></li>
+<li><code>express.create()</code> constructs an application.</li>
+<li><code>Router()</code> constructs routers.</li>
+<li><code>app.use(...)</code>, route helpers, and chained route registration build the
+middleware graph.</li>
+<li><code>express.dispatch(...)</code> executes an in-process request context.</li>
+<li><code>app.listen(...)</code> hosts an HTTP service through the Node-style package stack.</li>
+<li>Request helpers expose params, query, cookies, files, headers, body data, and
+transport metadata.</li>
+<li>Response helpers expose status, headers, cookies, body writing, JSON/JSONP,
+redirects, rendering, and file responses.</li>
 </ul>
 </div>
 </article>

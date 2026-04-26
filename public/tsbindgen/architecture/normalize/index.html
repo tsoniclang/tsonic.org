@@ -237,7 +237,8 @@ View Scope: &quot;view:System.Collections.Generic.List`1:IEnumerable`1#instance&
 &quot;Add&quot; -&gt; &quot;Add3&quot;
 </code></pre>
 <h2 id="naming-style">Naming Style</h2>
-<p>tsbindgen emits <strong>CLR-faithful names</strong>. The renamer’s style transforms are identity transforms (no casing changes), and there is no <code>--naming</code> option.</p>
+<p>tsbindgen emits <strong>CLR-faithful names</strong>. The renamer’s style transforms are
+identity transforms, and there is no <code>--naming</code> option.</p>
 <h2 id="reserved-word-handling">Reserved Word Handling</h2>
 <p>TypeScript reserved words are sanitized <strong>only</strong> when they appear in <strong>Identifier</strong> contexts (for example: parameters, locals, or other places where the token must parse as an identifier).</p>
 <p>Member names (methods/properties/enum members) are emitted in <strong>IdentifierName</strong> positions, so keywords are allowed and are emitted as-is (no <code>_</code> suffix).</p>

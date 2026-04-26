@@ -157,7 +157,7 @@
   </div>
 
   <div class="content"><h1 id="tsonicjs"><code>@tsonic/js</code></h1>
-<p><code>@tsonic/js</code> is the active JavaScript ambient surface for Tsonic.</p>
+<p><code>@tsonic/js</code> is the JavaScript ambient surface for Tsonic.</p>
 <h2 id="what-it-is">What it is</h2>
 <ul>
 <li>a first-party <code>tsonic-source-package</code></li>
@@ -171,7 +171,7 @@ arrays, timers, and related JS APIs</li>
 <li>the selected ambient surface for JS-style authoring</li>
 <li>a real package with exports, ambient files, and package metadata</li>
 </ul>
-<p>That dual role is intentional and is part of the current source-first model.</p>
+<p>That dual role is intentional and is part of the source-package model.</p>
 <h2 id="quick-start">Quick start</h2>
 <pre><code class="language-bash">tsonic init --surface @tsonic/js
 </code></pre>
@@ -198,9 +198,9 @@ import { Math } from &quot;@tsonic/js/index.js&quot;;
 <li><a href="modules/">Modules</a></li>
 <li><a href="/js/runtime-model/">Runtime Model</a></li>
 </ul>
-<h2 id="current-mental-model">Current mental model</h2>
+<h2 id="package-model">Package model</h2>
 <p>Treat <code>@tsonic/js</code> as the canonical package users author against. The site does
-not explain the JS surface through an older multi-repo companion story.</p>
+not present the JS surface as a separate CLR companion package.</p>
 </div>
 
   

@@ -231,6 +231,75 @@ precision and overload selection matter.</p>
 <li>interop with <code>Span&lt;T&gt;</code> and other typed CLR APIs</li>
 <li>APIs that distinguish <code>int</code>, <code>long</code>, <code>byte</code>, and floating-point values</li>
 </ul>
+<p>Numeric adaptation is contextual. A TypeScript integer literal can still lower
+to the CLR carrier required by the expected type.</p>
+<p>Example:</p>
+<pre><code class="language-ts">type ParsedRange = { type: string; from: number; to: number };
+
+export function range(size: number): number | ParsedRange {
+  if (size &lt; 0) return -2;
+  return { type: &quot;bytes&quot;, from: 0, to: size };
+}
+</code></pre>
+<p>The <code>-2</code> literal is syntactically an integer, but the union arm is TypeScript
+<code>number</code>, whose CLR carrier is <code>double</code>. The emitter must therefore select the
+numeric union arm and emit the equivalent of:</p>
+<pre><code class="language-cs">return Union&lt;double, ParsedRange&gt;.From1(-2);
+</code></pre>
+<p>It must not treat the value literal as compatible with the object arm, and it
+must not leave the value unwrapped when the method returns a runtime union.</p>
+<h2 id="canonical-type-identity">Canonical type identity</h2>
+<p>Compiler type comparison is identity-based, not raw display-string based.</p>
+<p>Bad comparison shape:</p>
+<pre><code class="language-text">System.Span`1
+global::System.Span&lt;int&gt;
+</code></pre>
+<p>Those strings are different spellings of the same CLR generic type shape. The
+compiler canonicalizes identity before comparing assignability, overload
+equivalence, structural membership, and runtime-union arms.</p>
+<p>Source example:</p>
+<pre><code class="language-ts">export function copy(numbers: int[], destination: int[]): void {
+  const source = new Span&lt;int&gt;(numbers);
+  const target = new Span&lt;int&gt;(destination);
+  source.CopyTo(target);
+}
+</code></pre>
+<p>Correct lowering keeps the <code>Span&lt;int&gt;</code> value direct:</p>
+<pre><code class="language-cs">source.CopyTo(target);
+</code></pre>
+<p>It must not insert an <code>(object)</code> bridge just because metadata and emitted C#
+spelled the generic type differently. Ref-like CLR types such as <code>Span&lt;T&gt;</code>
+cannot be boxed, so string-based identity comparison is a correctness bug.</p>
+<h2 id="runtime-union-carriers">Runtime union carriers</h2>
+<p>Runtime unions preserve their carrier family until a deterministic projection is
+required.</p>
+<p>Example:</p>
+<pre><code class="language-ts">type Ok&lt;T&gt; = { success: true; value: T };
+type Err&lt;E&gt; = { success: false; error: E };
+type Result&lt;T, E&gt; = Ok&lt;T&gt; | Err&lt;E&gt;;
+
+export function keepError(
+  result: Result&lt;boolean, string&gt;
+): Result&lt;boolean, string&gt; {
+  if (!result.success) {
+    return result;
+  }
+
+  return { success: true, value: true };
+}
+</code></pre>
+<p>After the guard, the local value is narrowed to the <code>Err&lt;string&gt;</code> arm. Returning
+that arm from a function whose declared return is the full <code>Result&lt;boolean, string&gt;</code> carrier must re-wrap it:</p>
+<pre><code class="language-cs">return Result&lt;bool, string&gt;.From2(result_AsErr);
+</code></pre>
+<p>The narrowed arm is not the same value as the full union carrier. The compiler
+tracks that distinction by identity; it does not reverse-map narrowed temporary
+names back to the original source variable and assume they are already the full
+carrier.</p>
+<p>Broad sinks such as <code>object?</code> do not force a runtime-union projection when the
+actual emitted value has a direct CLR carrier. For example, a conditional whose
+branches both emit <code>string[]</code> remains a direct array even if one semantic branch
+was originally written as <code>string[] | undefined</code>.</p>
 <h2 id="language-intrinsics">Language intrinsics</h2>
 <p>Use <code>@tsonic/core/lang.js</code> for language-facing helpers:</p>
 <pre><code class="language-ts">import {
@@ -244,7 +313,7 @@ precision and overload selection matter.</p>
 } from &quot;@tsonic/core/lang.js&quot;;
 </code></pre>
 <h2 id="generics-and-strictness">Generics and strictness</h2>
-<p>The current compiler favors deterministic generic behavior over permissive
+<p>The compiler favors deterministic generic behavior over permissive
 fallbacks. That means:</p>
 <ul>
 <li>no silent <code>any</code> escapes</li>

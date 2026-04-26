@@ -7,31 +7,35 @@ title: Home
 Tsonic compiles a strict, deterministic subset of TypeScript into C#, then
 builds native binaries or .NET outputs from that generated project.
 
-This site documents the **current April 2026 architecture**. The last major
-site refresh landed on **2026-03-10**; enough changed after that point that the
-older site no longer described the real stack.
+## Stack
 
-## The current stack in one page
-
-- `tsonic` is the compiler and CLI
-- `@tsonic/js` is the active JavaScript ambient surface
+- `tsonic` is the compiler and CLI.
+- `@tsonic/core` provides primitive intent types and compiler intrinsics.
+- `@tsonic/js` is the JavaScript ambient surface.
 - `@tsonic/nodejs` is a first-party TypeScript source package for Node-style
-  modules
+  modules.
 - `@tsonic/express` is a first-party TypeScript source package for
-  Express-style routing and middleware
+  Express-style routing and middleware.
 - `tsbindgen` generates CLR binding packages such as `@tsonic/dotnet`,
-  `@tsonic/aspnetcore`, `@tsonic/microsoft-extensions`, and `@tsonic/efcore*`
-- the release bar now includes downstream verification, not just compiler tests
+  `@tsonic/aspnetcore`, `@tsonic/microsoft-extensions`, and `@tsonic/efcore*`.
+- Release quality is verified across compiler tests, package selftests,
+  generated binding packages, and downstream applications.
 
-The public documentation model is now source-first:
+## Documentation model
 
-- authored packages are first-party TypeScript source packages
-- generated packages are CLR bindings from `tsbindgen`
-- release quality is proven across real downstream applications
+This site mounts product documentation from the owning repositories instead of
+duplicating it locally.
+
+- `tsonic.org` owns cross-repo synthesis pages.
+- `tsonic/docs` owns compiler, CLI, workspace, and architecture docs.
+- `tsbindgen/docs` owns generated binding pipeline docs.
+- `js/docs` owns `@tsonic/js` docs.
+- `nodejs/docs` owns `@tsonic/nodejs` docs.
+- `express/docs` owns `@tsonic/express` docs.
 
 ## Start here
 
-- [/current-state/](/current-state/) — what changed since the last refresh
+- [/architecture/](/architecture/) — architecture and package model
 - [/ecosystem/](/ecosystem/) — repo, package, and ownership map
 - [/testing-and-releases/](/testing-and-releases/) — release gates and wave flow
 - [/tsonic/](/tsonic/) — compiler, CLI, workspaces, build modes, examples
@@ -39,21 +43,6 @@ The public documentation model is now source-first:
 - [/nodejs/](/nodejs/) — `@tsonic/nodejs`
 - [/express/](/express/) — `@tsonic/express`
 - [/tsbindgen/](/tsbindgen/) — generated CLR binding packages
-
-## What changed after 2026-03-10
-
-The biggest shifts since the previous docs refresh were:
-
-- `tsonic` completed a strict typing and emitter cleanup wave and stabilized the
-  current package model
-- first-party packages (`js`, `nodejs`, `express`) converged on canonical
-  `tsonic-source-package` manifests
-- binding repos (`dotnet`, `aspnetcore`, `microsoft-extensions`, `efcore*`)
-  were regenerated and re-versioned as part of the same wave
-- downstream verification against `proof-is-in-the-pudding`, `tsumo`,
-  `clickmeter`, and Jotster became part of the normal release discipline
-
-See [/current-state/](/current-state/) for the detailed repo-by-repo summary.
 
 ## Quick starts
 
@@ -115,7 +104,7 @@ export function main(): void {
 ```bash
 tsonic init
 tsonic add framework Microsoft.AspNetCore.App @tsonic/aspnetcore
-tsonic run --project myapp
+tsonic restore
 ```
 
 ```ts
@@ -134,27 +123,18 @@ export function main(): void {
 
 ```bash
 tsonic init
-tsonic add nuget Microsoft.EntityFrameworkCore.Sqlite 10.0.0
-tsonic add npm @tsonic/efcore
-tsonic add npm @tsonic/efcore-sqlite
+tsonic add nuget Microsoft.EntityFrameworkCore.Sqlite 10.0.0 @tsonic/efcore-sqlite
 tsonic restore
 ```
 
 ```ts
-import { DbContext } from "@tsonic/efcore/Microsoft.EntityFrameworkCore.js";
+import { DbContext, DbContextOptionsBuilder } from "@tsonic/efcore/Microsoft.EntityFrameworkCore.js";
 import { SqliteDbContextOptionsBuilderExtensions } from "@tsonic/efcore-sqlite/Microsoft.EntityFrameworkCore.js";
 
 export class AppDbContext extends DbContext {
 }
 
-export function configure(builder: any): void {
+export function configure(builder: DbContextOptionsBuilder): void {
   SqliteDbContextOptionsBuilderExtensions.UseSqlite(builder, "Data Source=app.db");
 }
 ```
-
-## Rule of thumb
-
-- use `/tsonic/` for compiler and project model docs
-- use `/js/`, `/nodejs/`, and `/express/` for authored first-party packages
-- use `/tsbindgen/` for generated CLR binding packages such as `@tsonic/aspnetcore`
-  and `@tsonic/efcore*`

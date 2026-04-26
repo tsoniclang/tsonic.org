@@ -187,7 +187,7 @@ binding package.</p>
 <li>explicit package subpaths when you want the import boundary to be obvious</li>
 </ul>
 <h2 id="package-metadata">Package metadata</h2>
-<p>The current manifest defines:</p>
+<p>The manifest defines:</p>
 <ul>
 <li>ambient declarations</li>
 <li>module alias map</li>
@@ -200,8 +200,8 @@ binding package.</p>
 decoration.</p>
 <p>That is why adding <code>@tsonic/nodejs</code> can update effective workspace runtime
 requirements without making Node a separate ambient surface.</p>
-<p>That is why the site now describes <code>@tsonic/nodejs</code> as a real first-party
-source package, not a generated companion.</p>
+<p>That is why the site describes <code>@tsonic/nodejs</code> as a real first-party source
+package, not a generated CLR binding package.</p>
 <h2 id="relationship-to-aspnet-core-bindings">Relationship to ASP.NET Core bindings</h2>
 <p>Some Node-like capabilities rely on CLR frameworks underneath. The important
 thing for users is still the package boundary:</p>
@@ -209,9 +209,8 @@ thing for users is still the package boundary:</p>
 <li>author against <code>@tsonic/nodejs</code></li>
 <li>let package metadata pull in the CLR binding/runtime requirements</li>
 </ul>
-<p>In the current repo, that includes a framework reference on
-<code>Microsoft.AspNetCore.App</code> plus the required type package
-<code>@tsonic/aspnetcore</code>.</p>
+<p>The package metadata includes a framework reference on <code>Microsoft.AspNetCore.App</code>
+plus the required type package <code>@tsonic/aspnetcore</code>.</p>
 <p>That keeps the authoring model source-first even when CLR frameworks are part of
 the implementation underneath.</p>
 <h2 id="scope">Scope</h2>

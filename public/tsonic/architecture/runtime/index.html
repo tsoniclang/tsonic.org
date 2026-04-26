@@ -193,6 +193,19 @@
 <li>other core emitted-runtime dependencies</li>
 </ul>
 <p>This is the only runtime DLL that the CLI/test harness syncs locally under <code>packages/cli/runtime</code>.</p>
+<p>For compiler development, this repo intentionally depends on a sibling runtime
+checkout:</p>
+<pre><code class="language-text">~/repos/tsoniclang/
+  runtime/
+  tsonic/
+</code></pre>
+<p>The sync path is:</p>
+<pre><code class="language-text">../runtime/artifacts/bin/Tsonic.Runtime/Release/net10.0/Tsonic.Runtime.dll
+</code></pre>
+<p>That dependency is explicit and source-controlled in scripts. It is acceptable
+because the runtime is a separate first-party repo in the same development
+wave. It should not be replaced by an implicit global lookup or a best-effort
+fallback.</p>
 <h2 id="surface-runtime-overlays">Surface Runtime Overlays</h2>
 <p>Ambient/module surfaces such as <code>@tsonic/js</code> and <code>@tsonic/nodejs</code> are source packages.</p>
 <p>They contribute runtime requirements through package metadata:</p>
@@ -215,6 +228,10 @@
 <li>source package manifests describe surface/runtime overlays</li>
 <li>bindings manifests remain only for CLR / tsbindgen interop packages</li>
 </ul>
+<p>Runtime-union support also belongs to this boundary. The emitter may preserve a
+runtime union carrier or project it only when the expected target proves that a
+projection is required. Lowering a source value to <code>object</code> just to make an
+assignment compile is not a valid runtime strategy.</p>
 </div>
 </article>
 </main>

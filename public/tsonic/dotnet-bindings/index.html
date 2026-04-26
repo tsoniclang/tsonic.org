@@ -248,19 +248,70 @@ tsonic restore
 import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 </code></pre>
 <h3 id="aspnet-core-usage">ASP.NET Core usage</h3>
+<p>Install the framework binding package explicitly:</p>
+<pre><code class="language-bash">tsonic add framework Microsoft.AspNetCore.App @tsonic/aspnetcore
+tsonic restore
+</code></pre>
 <pre><code class="language-ts">import { WebApplication } from &quot;@tsonic/aspnetcore/Microsoft.AspNetCore.Builder.js&quot;;
+import type { ExtensionMethods } from &quot;@tsonic/aspnetcore/Microsoft.AspNetCore.Builder.js&quot;;
+
+export function main(): void {
+  const builder = WebApplication.CreateBuilder();
+  const app = builder.Build() as ExtensionMethods&lt;WebApplication&gt;;
+  app.MapGet(&quot;/&quot;, () =&gt; &quot;Hello from ASP.NET Core&quot;);
+  app.Run(&quot;http://localhost:8080&quot;);
+}
 </code></pre>
 <h3 id="ef-core-usage">EF Core usage</h3>
-<pre><code class="language-ts">import { DbContext } from &quot;@tsonic/efcore/Microsoft.EntityFrameworkCore.js&quot;;
+<p>Add the CLR package you need, then use the matching generated binding package:</p>
+<pre><code class="language-bash">tsonic add nuget Microsoft.EntityFrameworkCore.Sqlite 10.0.0
+tsonic add npm @tsonic/efcore
+tsonic add npm @tsonic/efcore-sqlite
+tsonic restore
 </code></pre>
+<pre><code class="language-ts">import {
+  DbContext,
+  DbSet,
+} from &quot;@tsonic/efcore/Microsoft.EntityFrameworkCore.js&quot;;
+import { SqliteDbContextOptionsBuilderExtensions } from &quot;@tsonic/efcore-sqlite/Microsoft.EntityFrameworkCore.js&quot;;
+
+export class TodoItem {
+  public id: number = 0;
+  public title: string = &quot;&quot;;
+}
+
+export class AppDbContext extends DbContext {
+  public todos!: DbSet&lt;TodoItem&gt;;
+}
+
+export function createContext(): AppDbContext {
+  const builder = AppDbContext.CreateOptionsBuilder();
+  SqliteDbContextOptionsBuilderExtensions.UseSqlite(
+    builder,
+    &quot;Data Source=app.db&quot;
+  );
+  return new AppDbContext(builder.Options);
+}
+</code></pre>
+<h2 id="what-the-generated-package-docs-should-cover">What the generated package docs should cover</h2>
+<p>Generated binding packages like <code>@tsonic/aspnetcore</code> and <code>@tsonic/efcore*</code>
+should be documented in terms of:</p>
+<ul>
+<li>how to add the framework or NuGet dependency</li>
+<li>which generated npm package to install</li>
+<li>how to import the resulting CLR namespaces</li>
+<li>minimal working examples</li>
+</ul>
+<p>They are not first-party authored source packages, so the docs do not try to
+restate every API member in those repos individually.</p>
 <h2 id="why-the-docs-separate-this-from-first-party-packages">Why the docs separate this from first-party packages</h2>
-<p>The current architecture has two distinct kinds of packages:</p>
+<p>The architecture has two distinct kinds of packages:</p>
 <ul>
 <li>authored first-party source packages like <code>@tsonic/js</code>, <code>@tsonic/nodejs</code>, and
 <code>@tsonic/express</code></li>
 <li>generated CLR binding packages produced by <code>tsbindgen</code></li>
 </ul>
-<p>The site now keeps those categories separate because they have different build,
+<p>The site keeps those categories separate because they have different build,
 ownership, and release flows.</p>
 </div>
 </article>

@@ -192,6 +192,10 @@ you keep those families separate.</p>
 <li><code>tsonic</code></li>
 </ul>
 <p>These implement the compiler and CLI itself.</p>
+<p>The <code>tsonic</code> package is the npm wrapper under <code>npm/tsonic</code>. It forwards the
+binary to <code>@tsonic/cli</code>. It should stay on the same patch version line as the
+compiler packages until a deliberate major release; <code>1.0.0</code> is not the package
+release track.</p>
 <h2 id="core-authoring-packages">Core authoring packages</h2>
 <ul>
 <li><code>@tsonic/core</code></li>
@@ -237,6 +241,29 @@ through <code>tsonic.package.json</code>.</p>
 </ul>
 <p>That is why <code>@tsonic/js</code> can be a surface while <code>@tsonic/nodejs</code> is still a
 normal package.</p>
+<h2 id="version-and-workspace-hygiene">Version and workspace hygiene</h2>
+<p>The compiler repo must keep the root package graph coherent:</p>
+<ul>
+<li>root <code>package.json</code> and <code>package-lock.json</code> must agree so <code>npm ci</code> works</li>
+<li>the root workspace must include <code>packages/*</code> and <code>npm/*</code></li>
+<li><code>node_modules/.bin/tsonic</code> must resolve to the repo-local wrapper, not a
+globally installed binary</li>
+<li>first-party package pins must refer to published versions unless a sibling
+source checkout is intentionally used by a test or wave script</li>
+</ul>
+<p>Concrete failure shape:</p>
+<pre><code class="language-json">{
+  &quot;workspaces&quot;: [&quot;packages/*&quot;],
+  &quot;devDependencies&quot;: {
+    &quot;tsonic&quot;: &quot;^0.0.75&quot;
+  }
+}
+</code></pre>
+<p>If a generated sample under <code>packages/tsonic</code> declares <code>&quot;name&quot;: &quot;tsonic&quot;</code> and
+<code>&quot;version&quot;: &quot;1.0.0&quot;</code>, npm treats it as the workspace package named <code>tsonic</code>.
+That conflicts with the real wrapper and makes a fresh <code>npm ci</code> fail. The fix
+is not a compatibility shim; the generated sample must not be checked in as a
+compiler workspace package.</p>
 </div>
 </article>
 </main>

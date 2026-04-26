@@ -193,7 +193,7 @@
 <li>IR construction</li>
 </ul>
 <h2 id="program-creation">Program creation</h2>
-<p>Important current behavior:</p>
+<p>Important behavior:</p>
 <ul>
 <li>compiler core globals are injected virtually</li>
 <li><code>surface</code> selects the ambient runtime personality</li>
@@ -202,7 +202,7 @@
 program when resolved</li>
 </ul>
 <h2 id="surface-profiles">Surface profiles</h2>
-<p>Current model:</p>
+<p>Surface model:</p>
 <ul>
 <li>builtin <code>clr</code></li>
 <li>package surfaces via <code>tsonic.surface.json</code></li>
@@ -228,12 +228,12 @@ tsonic.package.json
 <li>runtime metadata overlays</li>
 </ul>
 <h2 id="why-this-matters">Why this matters</h2>
-<p>This is the point where the current stack differs most from a normal TypeScript
+<p>This is the point where the stack differs most from a normal TypeScript
 toolchain:</p>
 <ul>
 <li>authored source packages are part of the same program</li>
 <li>generated CLR binding packages are not</li>
-<li>the active surface changes ambient semantics without changing package imports</li>
+<li>the active surface selects ambient semantics without altering package imports</li>
 </ul>
 </div>
 </article>

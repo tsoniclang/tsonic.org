@@ -207,7 +207,7 @@
 <li><strong>surface</strong> = ambient world</li>
 <li><strong>package</strong> = imported library or source package</li>
 </ul>
-<p>Confusing those two is the fastest way to misunderstand the current stack.</p>
+<p>Confusing those two is the fastest way to misunderstand the stack.</p>
 <h2 id="surfaces">Surfaces</h2>
 <p>Tsonic separates the language prelude from the ambient runtime personality.</p>
 <ul>
@@ -258,6 +258,29 @@ const value = JSON.parse&lt;{ ok: boolean }&gt;('{&quot;ok&quot;: true}');
 <li>surface compatibility</li>
 <li>runtime metadata where needed</li>
 </ul>
+<p>The compiler treats these manifests as the package authority. It does not infer
+source-package semantics from naming conventions or from the presence of a
+<code>node_modules</code> directory.</p>
+<p>Example:</p>
+<pre><code class="language-json">{
+  &quot;schemaVersion&quot;: 1,
+  &quot;kind&quot;: &quot;tsonic-source-package&quot;,
+  &quot;surfaces&quot;: [&quot;@tsonic/js&quot;],
+  &quot;source&quot;: {
+    &quot;exports&quot;: {
+      &quot;.&quot;: &quot;./src/index.ts&quot;,
+      &quot;./path.js&quot;: &quot;./src/path.ts&quot;
+    },
+    &quot;moduleAliases&quot;: {
+      &quot;node:path&quot;: &quot;./path.js&quot;
+    }
+  }
+}
+</code></pre>
+<p>When an app imports <code>node:path</code>, package metadata proves that the alias belongs
+to <code>@tsonic/nodejs</code> and resolves it to the concrete source file. If that
+metadata is missing or incompatible with the active surface, the compiler must
+diagnose the import rather than guess.</p>
 <h3 id="example-tsonicnodejs">Example: <code>@tsonic/nodejs</code></h3>
 <p>The Node package is not a surface. Instead it is a package that:</p>
 <ul>
@@ -285,6 +308,9 @@ const value = JSON.parse&lt;{ ok: boolean }&gt;('{&quot;ok&quot;: true}');
 <li>generated, not authored source packages</li>
 <li>owned by <code>tsbindgen</code>, not by the source-package repos</li>
 </ul>
+<p>Generated bindings carry CLR identity metadata. Authored source packages carry
+source ownership metadata. The compiler keeps those separate even when both
+describe the same public API shape.</p>
 <h2 id="four-package-families-you-should-keep-separate">Four package families you should keep separate</h2>
 <ol>
 <li><strong>surface packages</strong>
@@ -350,6 +376,27 @@ const value = JSON.parse&lt;{ ok: boolean }&gt;('{&quot;ok&quot;: true}');
 </tr>
 </tbody>
 </table>
+<h2 id="source-owned-and-source-backed-values">Source-owned and source-backed values</h2>
+<p>In compiler reports, <strong>source-owned</strong> means the package or type is authored by a
+Tsonic source package and owned by its <code>tsonic.package.json</code>. <strong>Source-backed</strong>
+means a value, call result, constructor, or alias carries metadata that came
+from such a source package even after it flows through another expression.</p>
+<p>Example:</p>
+<pre><code class="language-ts">import { join } from &quot;node:path&quot;;
+
+export function main(): void {
+  const file = join(&quot;src&quot;, &quot;App.ts&quot;);
+  console.log(file);
+}
+</code></pre>
+<p>Flow:</p>
+<ol>
+<li><code>node:path</code> is resolved through <code>@tsonic/nodejs</code> source metadata.</li>
+<li><code>join</code> is a source-backed import, not a guessed CLR or JS global.</li>
+<li>The call return keeps the package's declared string carrier.</li>
+<li>Later overload, union, and storage checks compare the canonical type identity
+for that carrier rather than the text <code>string</code> or a package-relative name.</li>
+</ol>
 </div>
 </article>
 </main>

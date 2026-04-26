@@ -184,6 +184,19 @@ export function main(): void {
   console.log(hash);
 }
 </code></pre>
+<h2 id="keys">Keys</h2>
+<p>Key creation and signing helpers use <code>KeyObject</code> for parsed key material:</p>
+<pre><code class="language-ts">import { createPrivateKey, createPublicKey, sign, verify } from &quot;node:crypto&quot;;
+
+export function verifyMessage(privatePem: string, message: byte[]): boolean {
+  const privateKey = createPrivateKey(privatePem);
+  const publicKey = createPublicKey(privateKey);
+  const signature = sign(&quot;sha256&quot;, message, privateKey);
+  return verify(&quot;sha256&quot;, message, publicKey, signature);
+}
+</code></pre>
+<p>This keeps repeated signing and verification paths typed around key objects
+instead of untyped <code>unknown</code> values.</p>
 <p>This is a package import, not ambient behavior. Keep the model explicit:</p>
 <ul>
 <li><code>@tsonic/js</code> gives you the JS world</li>

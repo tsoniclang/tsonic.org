@@ -133,8 +133,6 @@
         
           <li><a class="nav-link " href="/tsbindgen/naming/">Naming</a></li>
         
-          <li><a class="nav-link " href="/tsbindgen/nodejs-typescript-errors-analysis/">Nodejs Typescript Errors Analysis</a></li>
-        
           <li><a class="nav-link " href="/tsbindgen/testing/">Testing</a></li>
         
           <li><a class="nav-link " href="/tsbindgen/troubleshooting/">Troubleshooting</a></li>
@@ -183,13 +181,13 @@
 <ol>
 <li>regenerate the affected binding repos</li>
 <li>run the relevant repo-local checks</li>
-<li>rerun compiler gates when call surfaces or bindings metadata changed</li>
-<li>rerun downstream applications when the change can affect real programs</li>
+<li>rerun compiler gates for affected call surfaces or bindings metadata</li>
+<li>rerun downstream applications for affected real programs</li>
 <li>check version drift</li>
 <li>publish the coherent wave</li>
 </ol>
 <h2 id="why-the-workflow-is-strict">Why the workflow is strict</h2>
-<p>A generated binding change can break:</p>
+<p>Generated binding work can break:</p>
 <ul>
 <li>overload selection</li>
 <li>nullable and generic projection</li>
@@ -203,16 +201,16 @@
 <li>publish-time version checks</li>
 <li>cross-package import ownership checks</li>
 </ul>
-<p>That is why the stack now treats regen and publish as part of a verified wave.</p>
+<p>That is why regen and publish are part of a verified wave.</p>
 <h2 id="repo-local-scripts-matter">Repo-local scripts matter</h2>
 <p>In the generated binding repos, prefer the repo-local scripts over ad hoc manual
-publishing. In the current stack that usually means:</p>
+publishing. The stack uses:</p>
 <ul>
 <li>repo-local generation scripts for each binding family</li>
-<li><code>tsbindgen</code> test suites for generator changes</li>
+<li><code>tsbindgen</code> test suites for generator work</li>
 <li><code>tsbindgen/scripts/wave-publish.sh</code> for release-wave preflight and publish</li>
 </ul>
-<p>Those scripts enforce the current release rules:</p>
+<p>Those scripts enforce the release rules:</p>
 <ul>
 <li>clean <code>main</code></li>
 <li>latest <code>origin/main</code></li>
