@@ -211,6 +211,11 @@ credible.</p>
 <li>unsupported generic/runtime shape combinations are rejected rather than
 guessed</li>
 <li>unsupported package graph shapes fail explicitly</li>
+<li><code>unknown</code> is a broad boundary type that can be stored and narrowed only
+through deterministic closed-carrier guards</li>
+<li>source-level <code>JsValue</code> is rejected; use <code>unknown</code> at user-facing JS/JSON
+boundaries</li>
+<li>JSON parse/stringify requires a closed compile-time type</li>
 </ul>
 <h2 id="read-this-as-a-design-boundary-not-a-temporary-apology">Read this as a design boundary, not a temporary apology</h2>
 <p>The compiler rejects constructs instead of accepting them under a

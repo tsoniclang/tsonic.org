@@ -208,7 +208,8 @@ publishing. The stack uses:</p>
 <ul>
 <li>repo-local generation scripts for each binding family</li>
 <li><code>tsbindgen</code> test suites for generator work</li>
-<li><code>tsbindgen/scripts/wave-publish.sh</code> for release-wave preflight and publish</li>
+<li><code>tsbindgen/scripts/wave-publish.sh</code> for release-wave preflight and publish of
+npm packages and NuGet runtime packages</li>
 </ul>
 <p>Those scripts enforce the release rules:</p>
 <ul>
@@ -216,6 +217,8 @@ publishing. The stack uses:</p>
 <li>latest <code>origin/main</code></li>
 <li>no same-version silent republish</li>
 <li>preflight across the whole wave before publishing any package</li>
+<li>content-drift checks since the last version-bump commit</li>
+<li>NuGet runtime publishing before npm packages that depend on runtime behavior</li>
 </ul>
 <h2 id="relationship-to-first-party-source-packages">Relationship to first-party source packages</h2>
 <p>Generated CLR bindings and first-party source packages live side by side, but
@@ -231,6 +234,17 @@ they are not owned the same way:</p>
 <li>a first-party authored package issue -&gt; start in <code>js</code>, <code>nodejs</code>, or <code>express</code></li>
 <li>a mixed wave failure -&gt; verify the generated packages and downstreams together</li>
 </ul>
+<h2 id="wave-publish-scope">Wave publish scope</h2>
+<p>The release wave includes:</p>
+<ul>
+<li>npm packages: <code>tsbindgen</code>, <code>tsonic</code>, <code>core</code>, <code>dotnet</code>, <code>globals</code>, <code>js</code>,
+<code>nodejs</code>, <code>express</code>, <code>aspnetcore</code>, <code>microsoft-extensions</code>, <code>efcore</code>,
+<code>efcore-sqlite</code>, <code>efcore-sqlserver</code>, and <code>efcore-npgsql</code></li>
+<li>NuGet packages: <code>runtime</code></li>
+</ul>
+<p><code>--push</code> pushes non-main wave branches and prints PR URLs. <code>--publish</code> requires
+clean, latest <code>main</code> in every wave repo and validates the entire wave before any
+registry write.</p>
 </div>
 </article>
 </main>

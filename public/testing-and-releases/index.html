@@ -311,6 +311,31 @@ explicit.</p>
 </ul>
 <p>Release work is an ecosystem-level decision instead of a set of isolated repo
 actions.</p>
+<h2 id="wave-package-set">Wave package set</h2>
+<p>The publish wave covers npm packages and NuGet runtime packages together.</p>
+<p>Npm packages:</p>
+<ul>
+<li><code>tsbindgen</code></li>
+<li><code>tsonic</code></li>
+<li><code>@tsonic/core</code></li>
+<li><code>@tsonic/dotnet</code></li>
+<li><code>@tsonic/globals</code></li>
+<li><code>@tsonic/js</code></li>
+<li><code>@tsonic/nodejs</code></li>
+<li><code>@tsonic/express</code></li>
+<li><code>@tsonic/aspnetcore</code></li>
+<li><code>@tsonic/microsoft-extensions</code></li>
+<li><code>@tsonic/efcore</code></li>
+<li><code>@tsonic/efcore-sqlite</code></li>
+<li><code>@tsonic/efcore-sqlserver</code></li>
+<li><code>@tsonic/efcore-npgsql</code></li>
+</ul>
+<p>NuGet packages:</p>
+<ul>
+<li><code>Tsonic.Runtime</code></li>
+</ul>
+<p>Every publish decision starts from clean, latest <code>main</code> in each wave repo.
+Version checks and content-drift checks run before any registry write.</p>
 </div>
 </article>
 </main>

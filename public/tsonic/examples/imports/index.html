@@ -200,16 +200,17 @@ import * as path from &quot;node:path&quot;;
 import { Date } from &quot;@tsonic/js/index.js&quot;;
 </code></pre>
 <h2 id="dynamic-import">Dynamic import</h2>
-<p>Supported deterministic forms:</p>
-<pre><code class="language-ts">const mod = await import(&quot;./module.js&quot;);
-await import(&quot;./side-effect.js&quot;);
+<p>Dynamic <code>import()</code> is not part of emitted Tsonic code.</p>
+<p>Use static ESM imports instead:</p>
+<pre><code class="language-ts">import * as mod from &quot;./module.js&quot;;
+import &quot;./side-effect.js&quot;;
 </code></pre>
 <p>Rejected:</p>
 <pre><code class="language-ts">await import(specifier);
 await import(&quot;some-package&quot;);
+await import(&quot;./module.js&quot;);
 </code></pre>
-<p>The rule is simple: the import graph must stay closed-world and resolvable at
-compile time.</p>
+<p>The import graph must be closed-world and resolvable before IR lowering.</p>
 </div>
 </article>
 </main>

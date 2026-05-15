@@ -223,7 +223,7 @@
 <li>CLR binding packages</li>
 <li>source-package imports</li>
 <li>package-manifest overlays</li>
-<li>deterministic closed-world dynamic imports</li>
+<li>static ESM import graphs</li>
 </ul>
 <h2 id="stage-4-validation">Stage 4: validation</h2>
 <p>Validation enforces:</p>
@@ -231,9 +231,15 @@
 <li>strict-AOT feature boundaries</li>
 <li>surface compatibility</li>
 <li>numeric proof constraints</li>
+<li>numeric coercion constraints</li>
 <li>generic/runtime-shape determinism</li>
 <li>object-literal runtime constraints</li>
 <li>package-manifest correctness</li>
+<li>rejection of runtime dynamic constructs such as dynamic <code>import()</code>,
+<code>import.meta</code>, <code>globalThis</code>, <code>delete</code>, and <code>for...in</code></li>
+<li>guarded use of <code>typeof</code> and <code>Array.isArray</code> only when the frontend has a
+TypeScript flow fact and Tsonic has closed-carrier proof</li>
+<li>JavaScript <code>in</code> only for statically proven string-key carriers</li>
 </ul>
 <h2 id="stage-5-ir">Stage 5: IR</h2>
 <p>Frontend produces IR modules with:</p>

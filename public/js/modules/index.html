@@ -165,6 +165,15 @@ JS-surface projects expect.</p>
 <li>timers</li>
 <li>error types such as <code>RangeError</code></li>
 </ul>
+<h2 id="json">JSON</h2>
+<p>The public JSON API is typed:</p>
+<pre><code class="language-ts">type Message = { text: string };
+
+const message = JSON.parse&lt;Message&gt;('{&quot;text&quot;:&quot;hello&quot;}');
+console.log(JSON.stringify(message));
+</code></pre>
+<p>Open-ended JSON object traversal is not the authoring model. Use concrete
+payload types, or receive broad values as <code>unknown</code> and narrow them explicitly.</p>
 <h2 id="important-framing">Important framing</h2>
 <p>This section is not trying to be a full browser or Node reference manual. The
 package is documented here as a curated first-party JS surface for Tsonic.</p>

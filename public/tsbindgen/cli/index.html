@@ -200,6 +200,14 @@
 <li><code>--strict</code></li>
 <li><code>--verbose</code></li>
 </ul>
+<h2 id="generated-type-boundaries">Generated type boundaries</h2>
+<p>The CLI emits strict TypeScript declarations:</p>
+<ul>
+<li>CLR <code>System.Object</code> positions become <code>unknown</code></li>
+<li>value-type constraints become <code>NonNullable&lt;unknown&gt;</code></li>
+<li>generic parameters carry explicit <code>extends ...</code> constraints</li>
+<li>output is ESM-only with namespace facades and per-namespace metadata</li>
+</ul>
 <h2 id="resolve-closure"><code>resolve-closure</code></h2>
 <pre><code class="language-bash">npx tsbindgen resolve-closure -a ./MyLibrary.dll
 </code></pre>

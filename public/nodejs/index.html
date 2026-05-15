@@ -165,6 +165,7 @@ Tsonic.</p>
 <li>used alongside <code>@tsonic/js</code></li>
 <li>provides <code>node:*</code> module aliases and package-root entry points</li>
 <li>carries manifest metadata that can add CLR framework/runtime requirements</li>
+<li>uses package-owned runtime value carriers for broad Node slots</li>
 </ul>
 <h2 id="what-it-is-not">What it is not</h2>
 <ul>
@@ -200,6 +201,12 @@ export function main(): void {
 </code></pre>
 <p>After installation, run <code>tsonic restore</code> or <code>tsonic build</code> so the workspace
 materializes the CLR dependencies declared by the package manifest.</p>
+<h2 id="runtime-value-model">Runtime value model</h2>
+<p>Node APIs contain intentionally broad slots: event arguments, stream chunks, DNS
+records, URL formatting inputs, assertion values, and utility formatting
+arguments. <code>@tsonic/nodejs</code> models those through a package-owned <code>RuntimeValue</code>
+union. Use concrete module types where they exist, and narrow broad values
+explicitly before member access.</p>
 <h2 id="pages">Pages</h2>
 <ul>
 <li><a href="/nodejs/getting-started/">Getting Started</a></li>

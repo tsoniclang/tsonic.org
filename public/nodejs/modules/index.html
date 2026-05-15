@@ -189,6 +189,9 @@
 </ul>
 <p>The package is not documented here as a byte-for-byte clone of Node. It is a
 curated first-party source package for Tsonic.</p>
+<p>Broad module slots use <code>RuntimeValue</code> and concrete module types instead of
+unbounded <code>any</code>. Examples include event arguments, stream chunks, DNS
+<code>resolveAny</code> results, assertion values, and URL formatter inputs.</p>
 <h2 id="pages">Pages</h2>
 <ul>
 <li><a href="/nodejs/modules/fs/"><code>fs</code></a></li>

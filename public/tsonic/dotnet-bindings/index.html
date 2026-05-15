@@ -247,6 +247,12 @@ tsonic restore
 <pre><code class="language-ts">import { Console } from &quot;@tsonic/dotnet/System.js&quot;;
 import { List } from &quot;@tsonic/dotnet/System.Collections.Generic.js&quot;;
 </code></pre>
+<h3 id="broad-clr-object-values">Broad CLR object values</h3>
+<p>Generated CLR binding packages represent <code>System.Object</code> as TypeScript
+<code>unknown</code>. A broad object value can be passed to another broad CLR slot, stored,
+or narrowed through a proven API. It cannot be used for arbitrary member access.</p>
+<p>Value-type constraints are represented as <code>NonNullable&lt;unknown&gt;</code>, which keeps
+struct-like generic constraints distinct from unconstrained object slots.</p>
 <h3 id="aspnet-core-usage">ASP.NET Core usage</h3>
 <p>Install the framework binding package explicitly:</p>
 <pre><code class="language-bash">tsonic add framework Microsoft.AspNetCore.App @tsonic/aspnetcore
@@ -276,12 +282,12 @@ tsonic restore
 import { SqliteDbContextOptionsBuilderExtensions } from &quot;@tsonic/efcore-sqlite/Microsoft.EntityFrameworkCore.js&quot;;
 
 export class TodoItem {
-  public id: number = 0;
-  public title: string = &quot;&quot;;
+  id: number = 0;
+  title: string = &quot;&quot;;
 }
 
 export class AppDbContext extends DbContext {
-  public todos!: DbSet&lt;TodoItem&gt;;
+  todos!: DbSet&lt;TodoItem&gt;;
 }
 
 export function createContext(): AppDbContext {

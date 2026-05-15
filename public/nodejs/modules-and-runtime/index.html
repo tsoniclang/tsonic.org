@@ -213,6 +213,21 @@ thing for users is still the package boundary:</p>
 plus the required type package <code>@tsonic/aspnetcore</code>.</p>
 <p>That keeps the authoring model source-first even when CLR frameworks are part of
 the implementation underneath.</p>
+<h2 id="runtime-values">Runtime values</h2>
+<p>Node-style APIs include values whose precise shape depends on the event or
+module call. The package models those slots with <code>RuntimeValue</code> rather than
+<code>any</code>.</p>
+<p>Common examples:</p>
+<ul>
+<li><code>EventEmitter.emit(name, ...args)</code></li>
+<li>stream chunk buffers and object-mode values</li>
+<li>DNS <code>resolveAny</code> records</li>
+<li>URL formatter inputs</li>
+<li>assertion and utility formatting values</li>
+</ul>
+<p>This keeps the package source-owned and strict while still allowing Node-style
+APIs to represent broad data. Application code narrows broad values before
+member access.</p>
 <h2 id="scope">Scope</h2>
 <p>This package aims for practical Node-style APIs for Tsonic projects. It is not a
 promise of byte-for-byte parity with upstream Node.</p>

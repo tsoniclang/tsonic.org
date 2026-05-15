@@ -198,6 +198,14 @@
 <li><code>./timers.js</code></li>
 <li>typed-array subpaths</li>
 </ul>
+<h2 id="runtime-value-boundary">Runtime value boundary</h2>
+<p>The JS surface exposes natural JavaScript-style APIs, but Tsonic still lowers to
+closed NativeAOT-safe carriers. Deliberately broad values are typed as
+<code>unknown</code>; user code narrows them before property access, method calls, or
+storage into a narrower carrier.</p>
+<p><code>JSON.parse&lt;T&gt;()</code> and <code>JSON.stringify&lt;T&gt;()</code> require closed compile-time payload
+types. The compiler uses those types to generate and root serialization
+metadata.</p>
 <p>The authored manifest is the authoritative package contract. It defines:</p>
 <ul>
 <li><code>kind: &quot;tsonic-source-package&quot;</code></li>
