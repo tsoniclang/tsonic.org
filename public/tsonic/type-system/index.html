@@ -300,6 +300,70 @@ carrier.</p>
 actual emitted value has a direct CLR carrier. For example, a conditional whose
 branches both emit <code>string[]</code> remains a direct array even if one semantic branch
 was originally written as <code>string[] | undefined</code>.</p>
+<h2 id="guards-and-narrowing">Guards and narrowing</h2>
+<p>Branch narrowing is owned by the frontend and represented as a branch plan in
+IR. The emitter consumes that plan instead of rediscovering the guard from text.</p>
+<p>Supported guard families include:</p>
+<ul>
+<li><code>typeof value === &quot;string&quot;</code> and other closed primitive checks</li>
+<li><code>value instanceof SomeClass</code> when the right side is a proven constructible type</li>
+<li><code>Array.isArray(value)</code> when the narrowed carrier is an array carrier</li>
+<li>literal-discriminant checks such as <code>result.success === true</code></li>
+<li>string-literal property checks over proven dictionary carriers</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-ts">type Ok = { success: true; value: string };
+type Err = { success: false; error: string };
+
+export function message(result: Ok | Err): string {
+  if (result.success === true) {
+    return result.value;
+  }
+
+  return result.error;
+}
+</code></pre>
+<p>The frontend records that the true branch is the <code>Ok</code> arm and the false branch
+is the <code>Err</code> arm. The emitter uses those arm identities directly when accessing
+<code>value</code> and <code>error</code>.</p>
+<h2 id="calls-constructors-and-expected-types">Calls, constructors, and expected types</h2>
+<p>Call lowering is driven by the selected call target and the expected type of
+each argument. Numeric literals, object literals, callbacks, arrays, and union
+arms adapt to the selected parameter only when the compiler can prove the
+carrier.</p>
+<pre><code class="language-ts">import type { int } from &quot;@tsonic/core/types.js&quot;;
+
+declare function takeInt(value: int): void;
+
+takeInt(42);
+</code></pre>
+<p>The literal is contextually adapted to <code>int</code> because the parameter target is
+known. The same mechanism applies to constructors, extension-style calls,
+callback return values, and generic call sites.</p>
+<h2 id="loops-and-awaited-values">Loops and awaited values</h2>
+<p><code>for...of</code> requires a proven iterable, array, or source-backed collection
+carrier. <code>await</code> adapts the resolved value to the proven target type instead of
+leaving it as a broad temporary.</p>
+<pre><code class="language-ts">export async function first(values: Promise&lt;string[]&gt;): Promise&lt;string&gt; {
+  const resolved = await values;
+  for (const value of resolved) {
+    return value;
+  }
+  return &quot;&quot;;
+}
+</code></pre>
+<p>The compiler proves the awaited carrier is <code>string[]</code>, then lowers the loop over
+that array carrier.</p>
+<h2 id="json-and-broad-values">JSON and broad values</h2>
+<p><code>unknown</code> is the broad boundary type. It may be stored and narrowed only through
+deterministic carrier checks. It is not permission for reflection-style member
+discovery.</p>
+<pre><code class="language-ts">type Payload = { title: string; count: number };
+
+const payload = JSON.parse&lt;Payload&gt;('{&quot;title&quot;:&quot;docs&quot;,&quot;count&quot;:1}');
+</code></pre>
+<p><code>JSON.parse&lt;T&gt;</code> and <code>JSON.stringify&lt;T&gt;</code> require closed compile-time types so the
+compiler can root generated serialization metadata for NativeAOT.</p>
 <h2 id="language-intrinsics">Language intrinsics</h2>
 <p>Use <code>@tsonic/core/lang.js</code> for language-facing helpers:</p>
 <pre><code class="language-ts">import {

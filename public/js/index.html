@@ -191,6 +191,15 @@ surface-first:</p>
 <pre><code class="language-ts">import { Date } from &quot;@tsonic/js/index.js&quot;;
 import { Math } from &quot;@tsonic/js/index.js&quot;;
 </code></pre>
+<h2 id="json-contract">JSON contract</h2>
+<p><code>JSON.parse&lt;T&gt;()</code> and <code>JSON.stringify&lt;T&gt;()</code> are typed, compiler-lowered APIs.
+Payloads should use closed compile-time types:</p>
+<pre><code class="language-ts">type Settings = { theme: string; compact: boolean };
+
+const settings = JSON.parse&lt;Settings&gt;('{&quot;theme&quot;:&quot;dark&quot;,&quot;compact&quot;:true}');
+</code></pre>
+<p>Broad JS values use <code>unknown</code> and explicit narrowing. <code>JsValue</code> is reserved for
+first-party runtime declarations, not application-level JSON modeling.</p>
 <h2 id="pages">Pages</h2>
 <ul>
 <li><a href="/js/getting-started/">Getting Started</a></li>

@@ -225,9 +225,18 @@ or use explicit CLR APIs.</p>
 <p>If <code>@tsonic/nodejs</code> is not installed, the correct fix is package-graph setup,
 not a local code workaround.</p>
 <h3 id="determinism-failure">Determinism failure</h3>
-<pre><code class="language-ts">await import(specifier);
+<pre><code class="language-ts">const value = typeof input;
 </code></pre>
-<p>This fails because the import graph is not closed-world.</p>
+<p>This fails because runtime shape inspection is not a NativeAOT-compatible
+language operation when the result is used as an open-ended dynamic value. Use
+concrete types, explicit discriminants, or compiler-recognized guards.</p>
+<p>Guard usage is different:</p>
+<pre><code class="language-ts">if (typeof input === &quot;string&quot;) {
+  return input;
+}
+</code></pre>
+<p>That shape is accepted only when TypeScript proves the branch fact and Tsonic can
+emit a closed carrier check.</p>
 <h3 id="overload-or-generic-ambiguity">Overload or generic ambiguity</h3>
 <pre><code class="language-ts">Enumerable.Where(xs, (x) =&gt; x &gt; 0);
 </code></pre>

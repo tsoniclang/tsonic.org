@@ -186,6 +186,8 @@
 <h2 id="important-examples">Important examples</h2>
 <ul>
 <li>CLR primitives map to <code>@tsonic/core/types.js</code> aliases where appropriate</li>
+<li><code>System.Object</code> maps to TypeScript <code>unknown</code></li>
+<li>value-type constraints map to <code>NonNullable&lt;unknown&gt;</code></li>
 <li>classes and structs emit as interface-plus-value patterns</li>
 <li>interfaces remain interface-only</li>
 <li>delegates emit as callable types</li>
@@ -195,8 +197,27 @@
 <ul>
 <li><code>System.Int32</code> -&gt; <code>int</code></li>
 <li><code>System.Int64</code> -&gt; <code>long</code></li>
+<li><code>System.Object</code> -&gt; <code>unknown</code></li>
+<li><code>System.ValueType</code> constraints -&gt; <code>NonNullable&lt;unknown&gt;</code></li>
 <li><code>List&lt;T&gt;</code> -&gt; <code>List_1&lt;T&gt;</code></li>
 <li><code>Dictionary&lt;TKey, TValue&gt;</code> -&gt; <code>Dictionary_2&lt;TKey, TValue&gt;</code></li>
+</ul>
+<h2 id="broad-object-slots">Broad object slots</h2>
+<p><code>unknown</code> is the public TypeScript projection for broad CLR object positions.
+It communicates that a value exists but its useful shape is not proven at the
+declaration boundary. Consumers must narrow, cast through an explicit API, or
+pass the value to another broad slot.</p>
+<p>Generated binding packages do not use <code>JsValue</code> for CLR object slots. <code>JsValue</code>
+is a first-party JavaScript runtime declaration carrier, not the CLR-wide object
+model.</p>
+<h2 id="generic-constraints">Generic constraints</h2>
+<p>Generic parameters are emitted with explicit TypeScript constraints so the
+output remains valid under <code>tsc --strict</code>.</p>
+<p>Examples:</p>
+<ul>
+<li>unconstrained CLR generic parameter -&gt; <code>T extends unknown</code></li>
+<li>class/object-like generic parameter -&gt; <code>T extends unknown</code></li>
+<li>struct/value-type generic parameter -&gt; <code>T extends NonNullable&lt;unknown&gt;</code></li>
 </ul>
 <h2 id="why-naming-discipline-matters">Why naming discipline matters</h2>
 <p>Generated packages must stay:</p>

@@ -258,6 +258,9 @@ own. They support the compiler and the higher-level package model.</p>
 <li>typed arrays</li>
 <li>timers</li>
 </ul>
+<p>JSON APIs are typed and compiler-lowered. <code>JSON.parse&lt;T&gt;()</code> and
+<code>JSON.stringify&lt;T&gt;()</code> require closed payload types so generated serializers can
+be rooted for NativeAOT.</p>
 <p>Public docs: <a href="/js/">/js/</a></p>
 <h3 id="tsonicnodejs"><code>@tsonic/nodejs</code></h3>
 <p>Role:</p>
@@ -276,6 +279,9 @@ own. They support the compiler and the higher-level package model.</p>
 <li><code>node:net</code></li>
 <li><code>node:tls</code></li>
 </ul>
+<p>Broad event, stream, DNS, URL, assertion, and utility slots are represented by
+the package-owned <code>RuntimeValue</code> union. The package does not expose <code>any</code> as an
+unbounded runtime escape hatch.</p>
 <p>Public docs: <a href="/nodejs/">/nodejs/</a></p>
 <h3 id="tsonicexpress"><code>@tsonic/express</code></h3>
 <p>Role:</p>
@@ -301,6 +307,8 @@ own. They support the compiler and the higher-level package model.</p>
 <code>express</code>.</p>
 <p>They exist to project CLR namespaces, members, overloads, extension methods,
 and metadata into TypeScript packages that Tsonic can consume.</p>
+<p>CLR <code>System.Object</code> positions are projected as TypeScript <code>unknown</code>, and
+value-type constraints use <code>NonNullable&lt;unknown&gt;</code>.</p>
 <p>Public docs: <a href="/tsbindgen/">/tsbindgen/</a></p>
 <h2 id="repo-ownership-model">Repo ownership model</h2>
 <table>
@@ -341,6 +349,11 @@ and metadata into TypeScript packages that Tsonic can consume.</p>
 <td><code>dotnet</code> / <code>aspnetcore</code> / <code>microsoft-extensions</code> / <code>efcore*</code></td>
 <td>generated CLR binding packages</td>
 <td>regen + downstream verification</td>
+</tr>
+<tr>
+<td><code>runtime</code></td>
+<td>NuGet runtime carriers for generated C#</td>
+<td>runtime tests + wave preflight</td>
 </tr>
 <tr>
 <td><code>proof-is-in-the-pudding</code>, <code>tsumo</code>, <code>clickmeter</code>, Jotster</td>

@@ -234,12 +234,22 @@ when they are test input, not generated dependencies.</li>
 gate includes tests that prove source-package graph traversal against authored
 first-party packages, so <code>../js</code> and <code>../nodejs</code> are required source-package
 sibling repos, not replaceable by published binding packages. Build the sibling
-runtime first:</p>
+runtime first, and make sure the platform NativeAOT toolchain is installed:</p>
 <pre><code class="language-bash">cd ../runtime
 dotnet build -c Release
 cd ../tsonic
 ./test/scripts/run-all.sh
 </code></pre>
+<p>NativeAOT prerequisites:</p>
+<ul>
+<li>Linux: <code>clang</code> or <code>gcc</code> available on <code>PATH</code></li>
+<li>macOS: Xcode Command Line Tools</li>
+<li>Windows: Visual Studio C++ build tools</li>
+</ul>
+<p>NativeAOT-capable CLI tests share a cached NativeAOT probe. When the toolchain
+is unavailable, those tests skip their NativeAOT assertions and the full gate
+reports a single NativeAOT preflight failure instead of many downstream linker
+failures.</p>
 <h2 id="package-gates">Package gates</h2>
 <p>First-party packages also carry package-local selftests where appropriate:</p>
 <ul>

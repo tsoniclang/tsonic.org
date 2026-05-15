@@ -187,7 +187,13 @@ map.Add(&quot;a&quot;, 1);
 <h2 id="json">JSON</h2>
 <pre><code class="language-ts">import { JsonSerializer } from &quot;@tsonic/dotnet/System.Text.Json.js&quot;;
 
-const text = JsonSerializer.Serialize({ ok: true });
+export class Payload {
+  ok: boolean = false;
+}
+
+const payload = new Payload();
+payload.ok = true;
+const text = JsonSerializer.Serialize(payload);
 </code></pre>
 <h2 id="explicit-numeric-types">Explicit numeric types</h2>
 <pre><code class="language-ts">import type { int } from &quot;@tsonic/core/types.js&quot;;

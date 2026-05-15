@@ -206,6 +206,13 @@
 <ul>
 <li>Node.js 22+</li>
 <li>.NET 10 SDK</li>
+<li>NativeAOT platform toolchain:
+<ul>
+<li>Linux: <code>clang</code> or <code>gcc</code> on <code>PATH</code></li>
+<li>macOS: Xcode Command Line Tools</li>
+<li>Windows: Visual Studio C++ build tools</li>
+</ul>
+</li>
 </ul>
 <h2 id="source-checkout-for-contributors">Source checkout for contributors</h2>
 <p>For Tsonic compiler work, the supported developer layout is a sibling checkout
@@ -232,6 +239,9 @@ npm ci
 npm run build
 ./test/scripts/run-all.sh
 </code></pre>
+<p>The full compiler gate builds NativeAOT outputs. If the platform linker is
+missing, the gate fails the NativeAOT preflight with the linker prerequisite
+instead of reporting compiler correctness failures.</p>
 <p>The other siblings are used by tests and local package-wave development when
 present. Resolution is deterministic: a sibling package is used only if its
 expected <code>package.json</code> exists; otherwise installed npm packages are used.</p>

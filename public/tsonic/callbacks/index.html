@@ -227,7 +227,8 @@ to the compiler.</p>
 <li>overloaded CLR methods with weakly inferred callback returns</li>
 <li>callbacks crossing package or generic boundaries without enough type context</li>
 <li>JS-surface callbacks passed into CLR-heavy APIs without explicit intent</li>
-<li>callbacks that rely on dynamic <code>any</code> / <code>unknown</code> escape hatches</li>
+<li>callbacks that rely on dynamic <code>any</code> escape hatches or un-narrowed <code>unknown</code>
+values</li>
 </ul>
 <h2 id="rule-of-thumb">Rule of thumb</h2>
 <ul>

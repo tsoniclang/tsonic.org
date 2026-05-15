@@ -120,3 +120,31 @@ This stack is tightly coupled:
 
 Release work is an ecosystem-level decision instead of a set of isolated repo
 actions.
+
+## Wave package set
+
+The publish wave covers npm packages and NuGet runtime packages together.
+
+Npm packages:
+
+- `tsbindgen`
+- `tsonic`
+- `@tsonic/core`
+- `@tsonic/dotnet`
+- `@tsonic/globals`
+- `@tsonic/js`
+- `@tsonic/nodejs`
+- `@tsonic/express`
+- `@tsonic/aspnetcore`
+- `@tsonic/microsoft-extensions`
+- `@tsonic/efcore`
+- `@tsonic/efcore-sqlite`
+- `@tsonic/efcore-sqlserver`
+- `@tsonic/efcore-npgsql`
+
+NuGet packages:
+
+- `Tsonic.Runtime`
+
+Every publish decision starts from clean, latest `main` in each wave repo.
+Version checks and content-drift checks run before any registry write.

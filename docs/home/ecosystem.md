@@ -58,6 +58,10 @@ Examples of what it provides:
 - typed arrays
 - timers
 
+JSON APIs are typed and compiler-lowered. `JSON.parse<T>()` and
+`JSON.stringify<T>()` require closed payload types so generated serializers can
+be rooted for NativeAOT.
+
 Public docs: [/js/](/js/)
 
 ### `@tsonic/nodejs`
@@ -77,6 +81,10 @@ Examples of what it provides:
 - `node:stream`
 - `node:net`
 - `node:tls`
+
+Broad event, stream, DNS, URL, assertion, and utility slots are represented by
+the package-owned `RuntimeValue` union. The package does not expose `any` as an
+unbounded runtime escape hatch.
 
 Public docs: [/nodejs/](/nodejs/)
 
@@ -110,6 +118,9 @@ These are not authored source packages in the same sense as `js`, `nodejs`, and
 They exist to project CLR namespaces, members, overloads, extension methods,
 and metadata into TypeScript packages that Tsonic can consume.
 
+CLR `System.Object` positions are projected as TypeScript `unknown`, and
+value-type constraints use `NonNullable<unknown>`.
+
 Public docs: [/tsbindgen/](/tsbindgen/)
 
 ## Repo ownership model
@@ -122,6 +133,7 @@ Public docs: [/tsbindgen/](/tsbindgen/)
 | `express` | Express-style source package | package selftest + downstreams |
 | `tsbindgen` | generated CLR binding pipeline | generator tests + wave preflight |
 | `dotnet` / `aspnetcore` / `microsoft-extensions` / `efcore*` | generated CLR binding packages | regen + downstream verification |
+| `runtime` | NuGet runtime carriers for generated C# | runtime tests + wave preflight |
 | `proof-is-in-the-pudding`, `tsumo`, `clickmeter`, Jotster | ecosystem consumers | downstream verification |
 
 ## Downstream verification repos
