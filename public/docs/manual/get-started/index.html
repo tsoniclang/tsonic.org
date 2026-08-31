@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <title>Get Started | Tsonic</title>
+
+    <meta name="description" content="Compile TypeScript into native C# and Rust source projects." />
+    <meta name="theme-color" content="#0b0912" />
+    <meta property="og:site_name" content="Tsonic" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Get Started" />
+    <meta property="og:description" content="Compile TypeScript into native C# and Rust source projects." />
+    <link rel="stylesheet" href="/assets/site.css" />
+    <script defer src="/assets/nav.js"></script>
+    <script defer src="/assets/search.js"></script>
+  </head>
+  <body class="docs-page">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+  <div class="header-inner">
+
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open documentation navigation" aria-controls="sidebar" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+
+    <a class="wordmark" href="/" aria-label="Tsonic home">
+      <span class="wordmark-symbol" aria-hidden="true">T</span>
+      <span>Tsonic</span>
+    </a>
+
+    <nav class="primary-nav" aria-label="Primary navigation">
+      <a href="/docs/">Docs</a>
+      <a href="/docs/manual/targets/csharp/">C#</a>
+      <a href="/docs/manual/targets/rust/">Rust</a>
+    </nav>
+
+    <div class="header-actions">
+
+        <div class="search-wrap">
+          <label class="sr-only" for="searchBox">Search documentation</label>
+          <input id="searchBox" type="search" placeholder="Search docs" autocomplete="off" />
+          <kbd>/</kbd>
+          <div id="searchResults" class="search-results" hidden></div>
+        </div>
+
+      <a class="github-link" href="https://github.com/tsoniclang" aria-label="Tsonic on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.11.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.57-.29-5.27-1.29-5.27-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.05 0 0 .97-.31 3.16 1.18a10.93 10.93 0 0 1 5.76 0c2.19-1.49 3.15-1.18 3.15-1.18.63 1.58.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.71 5.39-5.29 5.68.42.36.79 1.06.79 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z" /></svg>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+
+
+      <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+      <div class="docs-shell">
+        <aside id="sidebar" class="sidebar" aria-label="Documentation navigation">
+          <div class="sidebar-mobile-head">
+            <span>Documentation</span>
+            <button class="menu-close" id="menuClose" type="button" aria-label="Close navigation">Close</button>
+          </div>
+          <div class="sidebar-scroll"><div class="sidebar-brand">
+  <span>Documentation</span>
+  <a href="/docs/">Overview</a>
+</div>
+
+
+
+
+
+<nav class="docs-nav">
+
+
+      <section class="nav-group">
+        <h2>Manual</h2>
+        <ul>
+
+            <li><a class="" href="/docs/manual/">Manual overview</a></li>
+
+            <li><a class="active" href="/docs/manual/get-started/">Get started</a></li>
+
+            <li><a class="" href="/docs/manual/compiler-model/">Compiler model</a></li>
+
+            <li><a class="" href="/docs/manual/projects/">Projects</a></li>
+
+            <li><a class="" href="/docs/manual/applications-and-libraries/">Applications and libraries</a></li>
+
+            <li><a class="" href="/docs/manual/packages-and-workspaces/">Packages and workspaces</a></li>
+
+            <li><a class="" href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
+
+            <li><a class="" href="/docs/manual/source-semantics/">Source semantics</a></li>
+
+            <li><a class="" href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
+
+            <li><a class="" href="/docs/manual/targets/">Targets</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/">C# manual</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/source-profile/">C# source profile</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/interop-and-safety/">C# interop and safety</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/projects-and-output/">C# projects and output</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/">Rust manual</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/source-profile/">Rust source profile</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/ownership-and-safety/">Rust ownership and safety</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/projects-and-output/">Rust projects and output</a></li>
+
+            <li><a class="" href="/docs/manual/troubleshooting/">Troubleshooting</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Reference</h2>
+        <ul>
+
+            <li><a class="" href="/docs/reference/">Reference overview</a></li>
+
+            <li><a class="" href="/docs/reference/cli/">CLI</a></li>
+
+            <li><a class="" href="/docs/reference/project-config/">`tsonic.json`</a></li>
+
+            <li><a class="" href="/docs/reference/toolchains/">Toolchains and platforms</a></li>
+
+            <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
+
+            <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
+
+            <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
+
+            <li><a class="" href="/docs/reference/node-capability/">Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/diagnostics/">Diagnostics</a></li>
+
+            <li><a class="" href="/docs/reference/package-catalog/">Package catalog</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/">C# reference</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/configuration/">C# configuration</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/source-modules/">C# source modules</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/type-mapping/">C# type mapping</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/native-apis/">C# native APIs</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/javascript-surface/">C# JavaScript surface</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/node-capability/">C# Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/provider-api/">C# provider API</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/language-support/">C# language support</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/support-inventory/">C# support inventory</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/limitations/">C# limitations</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/">Rust reference</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/configuration/">Rust configuration</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/source-modules/">Rust source modules</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/type-mapping/">Rust type mapping</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/ownership-and-lifetimes/">Rust ownership and lifetimes</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/native-apis/">Rust native APIs</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/javascript-surface/">Rust JavaScript surface</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/node-capability/">Rust Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/provider-api/">Rust provider API</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/language-support/">Rust language support</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/support-inventory/">Rust support inventory</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/limitations/">Rust limitations</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Architecture</h2>
+        <ul>
+
+            <li><a class="" href="/docs/architecture/">Architecture overview</a></li>
+
+            <li><a class="" href="/docs/architecture/compilation-lifecycle/">Compilation lifecycle</a></li>
+
+            <li><a class="" href="/docs/architecture/target-pack-contract/">Target-pack contract</a></li>
+
+            <li><a class="" href="/docs/architecture/provider-and-runtime-ownership/">Provider and runtime ownership</a></li>
+
+            <li><a class="" href="/docs/architecture/workspace-agent-policy/">Workspace policy</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Validation</h2>
+        <ul>
+
+            <li><a class="" href="/docs/validation/">Validation overview</a></li>
+
+            <li><a class="" href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
+
+        </ul>
+      </section>
+
+
+</nav>
+
+
+</div>
+        </aside>
+        <main id="main-content" class="docs-main">
+<article class="doc-article">
+  <div class="doc-toolbar">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+
+
+
+        <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
+
+        <a href="/docs/manual/">Manual</a><span aria-hidden="true">/</span>
+
+      <span>Get Started</span>
+    </nav>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/manual/get-started.md">Edit source</a>
+  </div>
+  <div class="prose"><h1 id="get-started">Get started</h1>
+<p>This guide builds one C# program and one Rust program. Each starts from an
+empty directory.</p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>Node.js 22.18 or newer</li>
+<li>npm</li>
+<li>.NET 10 SDK for C#</li>
+<li><code>cargo</code>, <code>rustc</code>, and <code>rustdoc</code> for Rust</li>
+</ul>
+<p>Tsonic generates source code. <code>dotnet</code> or Cargo performs the native build.</p>
+<h2 id="build-a-c-application">Build a C# application</h2>
+<p>Create this directory:</p>
+<pre><code class="language-text">hello-csharp/
+├── package.json
+├── tsonic.json
+└── src/
+    └── App.ts
+</code></pre>
+<p>Create <code>package.json</code>:</p>
+<pre><code class="language-json">{
+  "name": "hello-csharp",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsonic build --project tsonic.json",
+    "run": "dotnet run --project out/csharp/HelloCsharp.csproj"
+  },
+  "devDependencies": {
+    "@tsonic/cli": "0.0.1",
+    "@tsonic/target-csharp": "0.0.1"
+  }
+}
+</code></pre>
+<p>Create <code>src/App.ts</code>:</p>
+<pre><code class="language-ts">import { Console } from "@tsonic/dotnet/System.js";
+
+function message(name: string): string {
+  return `Hello, ${name}!`;
+}
+
+Console.WriteLine(message("C#"));
+</code></pre>
+<p>Create <code>tsonic.json</code>:</p>
+<pre><code class="language-json">{
+  "entryPoint": "App.ts",
+  "rootDir": "src",
+  "outDir": "out",
+  "targets": [{
+    "id": "csharp",
+    "options": {
+      "assemblyName": "HelloCsharp",
+      "namespace": "Hello.Generated",
+      "outputType": "Exe"
+    }
+  }]
+}
+</code></pre>
+<p>Install, compile, and run:</p>
+<pre><code class="language-sh">npm install
+npm run build
+npm run run
+</code></pre>
+<p>Output:</p>
+<pre><code class="language-text">Hello, C#!
+</code></pre>
+<p>The generated C# entrypoint runs the TypeScript entry module. Top-level code is
+therefore the C# application entry. An exported function named <code>main</code> has no
+special meaning unless your source calls it.</p>
+<h2 id="build-a-rust-application">Build a Rust application</h2>
+<p>Create the same three-file layout in <code>hello-rust/</code>.</p>
+<p>Create <code>package.json</code>:</p>
+<pre><code class="language-json">{
+  "name": "hello-rust",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsonic build --project tsonic.json",
+    "run": "cargo run --manifest-path out/rust/Cargo.toml"
+  },
+  "devDependencies": {
+    "@tsonic/cli": "0.0.1",
+    "@tsonic/target-rust": "0.0.1"
+  }
+}
+</code></pre>
+<p>Create <code>src/App.ts</code>:</p>
+<pre><code class="language-ts">export function main(): void {
+  const answer = 40 + 2;
+  if (answer !== 42) {
+    throw new Error("unexpected answer");
+  }
+}
+</code></pre>
+<p>Create <code>tsonic.json</code>:</p>
+<pre><code class="language-json">{
+  "entryPoint": "App.ts",
+  "rootDir": "src",
+  "outDir": "out",
+  "targets": [{
+    "id": "rust",
+    "options": {
+      "crateName": "hello_rust",
+      "edition": "2024",
+      "outputType": "bin"
+    }
+  }]
+}
+</code></pre>
+<p>Install, compile, and run:</p>
+<pre><code class="language-sh">npm install
+npm run build
+npm run run
+</code></pre>
+<p>A generated Rust binary requires the entry module to export <code>main(): void</code>.
+Tsonic creates native Rust <code>main</code> and calls that exported function after module
+initialization.</p>
+<h2 id="use-javascript-apis">Use JavaScript APIs</h2>
+<p>Add <code>"surfaces": ["js"]</code> to a target when the source uses JavaScript globals
+and built-ins:</p>
+<pre><code class="language-json">{
+  "id": "rust",
+  "surfaces": ["js"],
+  "options": {
+    "crateName": "hello_rust",
+    "outputType": "bin"
+  }
+}
+</code></pre>
+<pre><code class="language-ts">export function main(): void {
+  console.log([1, 2, 3].map((value) =&gt; value * 2).join(","));
+}
+</code></pre>
+<h2 id="use-node-apis">Use Node APIs</h2>
+<p>Node is an installed capability, not a source surface:</p>
+<pre><code class="language-sh"># Choose the package for the selected target.
+npm install --save-dev @tsonic/csharp-nodejs
+npm install --save-dev @tsonic/rust-nodejs
+</code></pre>
+<pre><code class="language-ts">import { readFileSync } from "node:fs";
+
+const text = readFileSync("message.txt", "utf8");
+</code></pre>
+<p>Installing a Node capability does not enable JavaScript globals. Select the JS
+surface separately only when the program uses it.</p>
+<h2 id="next">Next</h2>
+<ul>
+<li><a href="/docs/manual/projects/">Projects and configuration</a></li>
+<li><a href="/docs/manual/applications-and-libraries/">Applications and libraries</a></li>
+<li><a href="/docs/manual/targets/csharp/">C# target manual</a></li>
+<li><a href="/docs/manual/targets/rust/">Rust target manual</a></li>
+</ul>
+</div>
+</article>
+</main>
+      </div>
+
+
+    <footer class="site-footer">
+  <div class="footer-inner">
+    <a class="wordmark footer-wordmark" href="/"><span class="wordmark-symbol" aria-hidden="true">T</span><span>Tsonic</span></a>
+    <p>TypeScript to native source.</p>
+    <nav aria-label="Footer navigation">
+      <a href="/docs/">Docs</a>
+      <a href="https://github.com/tsoniclang">GitHub</a>
+      <span>Built with Tsumo on Rust</span>
+    </nav>
+  </div>
+</footer>
+
+  </body>
+</html>

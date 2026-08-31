@@ -1,64 +1,7 @@
-{{ $currentMountName := "" }}
-
-{{ with .Params.mount }}
-  {{ if ne . "Home" }}
-    {{ $currentMountName = . }}
-  {{ end }}
-{{ end }}
-
-{{ if eq $currentMountName "" }}
-  {{ $rel := .RelPermalink }}
-  {{ $bestName := "" }}
-  {{ $bestPrefixLen := 0 }}
-
-  {{ range .Site.Mounts }}
-    {{ if ne .Name "Home" }}
-      {{ $prefix := .UrlPrefix }}
-      {{ if and (ne $prefix "/") (strings.HasPrefix $rel $prefix) }}
-        {{ $prefixLen := len $prefix }}
-        {{ if gt $prefixLen $bestPrefixLen }}
-          {{ $bestName = .Name }}
-          {{ $bestPrefixLen = $prefixLen }}
-        {{ end }}
-      {{ end }}
-    {{ end }}
-  {{ end }}
-
-  {{ $currentMountName = $bestName }}
-{{ end }}
-
-{{ if ne $currentMountName "" }}
-  {{ range .Site.Mounts }}
-    {{ if eq .Name $currentMountName }}
-      {{ partial "sidebar-mount.html" (dict "Mount" . "Page" $) }}
-    {{ end }}
-  {{ end }}
-{{ else }}
-  <div class="sidebar-home">
-    <div class="sidebar-title">Docs</div>
-    <div class="home-mounts">
-      {{ range .Site.Mounts }}
-        {{ if ne .Name "Home" }}
-          <section class="home-mount">
-            <h3 class="home-mount-title">
-              <a href="{{ .UrlPrefix }}">{{ .Name }}</a>
-            </h3>
-            {{ if eq .Name "Tsonic" }}
-              <p class="home-mount-desc">Compiler, CLI, language features, configuration, and architecture docs.</p>
-            {{ else if eq .Name "tsbindgen" }}
-              <p class="home-mount-desc">Generate CLR bindings from assemblies and NuGet packages.</p>
-            {{ else if eq .Name "nodejs" }}
-              <p class="home-mount-desc">First-party Node-style modules for JS-surface Tsonic projects.</p>
-            {{ else if eq .Name "js" }}
-              <p class="home-mount-desc">The active JavaScript ambient surface and source package.</p>
-            {{ else if eq .Name "express" }}
-              <p class="home-mount-desc">Canonical Express-style routing and middleware package.</p>
-            {{ else }}
-              <p class="home-mount-desc">Documentation.</p>
-            {{ end }}
-          </section>
-        {{ end }}
-      {{ end }}
-    </div>
-  </div>
+<div class="sidebar-brand">
+  <span>Documentation</span>
+  <a href="{{ relURL "/docs/" }}">Overview</a>
+</div>
+{{ range .Site.Mounts }}
+  {{ if eq .Name "Docs" }}{{ partial "sidebar-mount.html" (dict "Mount" . "Page" $) }}{{ end }}
 {{ end }}

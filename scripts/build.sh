@@ -2,21 +2,17 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TSUMO="${TSUMO:-$ROOT/../tsumo/packages/cli/out/tsumo}"
+TSUMO_RUST="${TSUMO_RUST:-$ROOT/../tsumo-rust/target/release/tsumo}"
 
-if [[ ! -x "$TSUMO" ]]; then
-  echo "tsumo CLI not found at: $TSUMO" >&2
-  echo "Set TSUMO=/path/to/tsumo or build tsumo in ../tsumo first." >&2
+if [[ ! -x "$TSUMO_RUST" ]]; then
+  echo "Tsumo Rust executable not found at: $TSUMO_RUST" >&2
+  echo "Build ../tsumo-rust or set TSUMO_RUST=/path/to/tsumo." >&2
   exit 1
 fi
 
 for path in \
   "$ROOT/docs/home/README.md" \
-  "$ROOT/../tsonic/docs/README.md" \
-  "$ROOT/../tsbindgen/docs/README.md" \
-  "$ROOT/../js/docs/README.md" \
-  "$ROOT/../nodejs/docs/README.md" \
-  "$ROOT/../express/docs/README.md"; do
+  "$ROOT/../tsonic/docs/README.md"; do
   if [[ ! -f "$path" ]]; then
     echo "Missing docs file: $path" >&2
     exit 1
@@ -28,5 +24,5 @@ if [[ ! -f "$ROOT/tsumo.docs.json" ]]; then
   exit 1
 fi
 
-rm -rf "$ROOT/public"
-exec "$TSUMO" build --source "$ROOT" --destination "$ROOT/public"
+"$TSUMO_RUST" build --source "$ROOT" --destination "$ROOT/public"
+node "$ROOT/scripts/normalize-output.mjs" "$ROOT/public"

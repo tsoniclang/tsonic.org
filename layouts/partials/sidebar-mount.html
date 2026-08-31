@@ -1,46 +1,18 @@
 {{ $mount := .Mount }}
 {{ $page := .Page }}
-
-{{ if $mount.Nav }}
-  <nav class="nav">
-    {{ range $mount.Nav }}
-      {{ if .IsSection }}
-        <div class="nav-group">{{ .Title }}</div>
-        <ul class="nav-items">
+<nav class="docs-nav">
+  {{ range $mount.Nav }}
+    {{ if .IsSection }}
+      <section class="nav-group">
+        <h2>{{ .Title }}</h2>
+        <ul>
           {{ range .Children }}
-            <li>
-              <a class="nav-link {{ if eq .Url $.RelPermalink }}active{{ end }}" href="{{ .Url }}">{{ .Title }}</a>
-            </li>
+            <li><a class="{{ if eq .Url $page.RelPermalink }}active{{ end }}" href="{{ .Url }}">{{ .Title }}</a></li>
           {{ end }}
         </ul>
-      {{ else }}
-        <ul class="nav-items">
-          <li>
-            <a class="nav-link {{ if eq .Url $.RelPermalink }}active{{ end }}" href="{{ .Url }}">{{ .Title }}</a>
-          </li>
-        </ul>
-      {{ end }}
-    {{ end }}
-  </nav>
-{{ else }}
-  {{ $section := $page }}
-  {{ if not $page.IsSection }}
-    {{ with $page.Parent }}
-      {{ $section = . }}
+      </section>
+    {{ else }}
+      <a class="nav-root-link {{ if eq .Url $page.RelPermalink }}active{{ end }}" href="{{ .Url }}">{{ .Title }}</a>
     {{ end }}
   {{ end }}
-  <div class="sidebar-home">
-    <div class="sidebar-title">{{ $mount.Name }}</div>
-    <ul class="nav-items">
-      <li><a class="nav-link {{ if eq $mount.UrlPrefix $page.RelPermalink }}active{{ end }}" href="{{ $mount.UrlPrefix }}">Overview</a></li>
-      {{ if and (ne $section.RelPermalink $mount.UrlPrefix) $section.IsSection }}
-        <li><a class="nav-link {{ if eq $section.RelPermalink $page.RelPermalink }}active{{ end }}" href="{{ $section.RelPermalink }}">{{ $section.Title }}</a></li>
-      {{ end }}
-      {{ with $section.Pages }}
-        {{ range . }}
-          <li><a class="nav-link {{ if eq .RelPermalink $page.RelPermalink }}active{{ end }}" href="{{ .RelPermalink }}">{{ .Title }}</a></li>
-        {{ end }}
-      {{ end }}
-    </ul>
-  </div>
-{{ end }}
+</nav>

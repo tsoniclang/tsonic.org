@@ -1,7 +1,7 @@
 {
   "siteName": "Tsonic",
   "homeMount": "Home",
-  "strictLinks": false,
+  "strictLinks": true,
   "search": true,
   "searchFile": "search.json",
   "mounts": [
@@ -15,46 +15,10 @@
       "navPath": "README.md"
     },
     {
-      "name": "Tsonic",
+      "name": "Docs",
       "source": "../tsonic/docs",
-      "prefix": "/tsonic/",
+      "prefix": "/docs/",
       "repoUrl": "https://github.com/tsoniclang/tsonic",
-      "repoBranch": "main",
-      "repoPath": "docs",
-      "navPath": "README.md"
-    },
-    {
-      "name": "tsbindgen",
-      "source": "../tsbindgen/docs",
-      "prefix": "/tsbindgen/",
-      "repoUrl": "https://github.com/tsoniclang/tsbindgen",
-      "repoBranch": "main",
-      "repoPath": "docs",
-      "navPath": "README.md"
-    },
-    {
-      "name": "nodejs",
-      "source": "../nodejs/docs",
-      "prefix": "/nodejs/",
-      "repoUrl": "https://github.com/tsoniclang/nodejs",
-      "repoBranch": "main",
-      "repoPath": "docs",
-      "navPath": "README.md"
-    },
-    {
-      "name": "js",
-      "source": "../js/docs",
-      "prefix": "/js/",
-      "repoUrl": "https://github.com/tsoniclang/js",
-      "repoBranch": "main",
-      "repoPath": "docs",
-      "navPath": "README.md"
-    },
-    {
-      "name": "express",
-      "source": "../express/docs",
-      "prefix": "/express/",
-      "repoUrl": "https://github.com/tsoniclang/express",
       "repoBranch": "main",
       "repoPath": "docs",
       "navPath": "README.md"

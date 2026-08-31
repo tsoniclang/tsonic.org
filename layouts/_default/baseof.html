@@ -3,38 +3,41 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ .Title }} | {{ .Site.Title }}</title>
-    <meta name="description" content="{{ default .Site.Title .Description }}" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
-      referrerpolicy="no-referrer"
-    />
-    <link rel="stylesheet" href="{{ relURL "docs.css" }}" />
-    <script defer src="{{ relURL "search.js" }}"></script>
-    <script defer src="{{ relURL "nav.js" }}"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" referrerpolicy="no-referrer"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js" referrerpolicy="no-referrer"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js" referrerpolicy="no-referrer"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js" referrerpolicy="no-referrer"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js" referrerpolicy="no-referrer"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js" referrerpolicy="no-referrer"></script>
-    <script defer src="{{ relURL "highlight-init.js" }}"></script>
+    {{ if .IsHome }}
+      <title>Tsonic | TypeScript to .NET and Rust</title>
+    {{ else }}
+      <title>{{ .Title }} | Tsonic</title>
+    {{ end }}
+    <meta name="description" content="{{ default "Compile TypeScript into native C# and Rust source projects." .Description }}" />
+    <meta name="theme-color" content="#0b0912" />
+    <meta property="og:site_name" content="Tsonic" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ if .IsHome }}TypeScript to .NET and Rust{{ else }}{{ .Title }}{{ end }}" />
+    <meta property="og:description" content="{{ default "Compile TypeScript into native C# and Rust source projects." .Description }}" />
+    <link rel="stylesheet" href="{{ relURL "assets/site.css" }}" />
+    <script defer src="{{ relURL "assets/nav.js" }}"></script>
+    {{ if not .IsHome }}<script defer src="{{ relURL "assets/search.js" }}"></script>{{ end }}
   </head>
-  <body>
+  <body class="{{ if .IsHome }}home-page{{ else }}docs-page{{ end }}">
+    <a class="skip-link" href="#main-content">Skip to content</a>
     {{ partial "header.html" . }}
-    <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
-    <div class="layout">
-      <aside id="sidebar" class="sidebar" aria-label="Site navigation">
-        <div class="sidebar-mobile-top">
-          <button class="menu-close" id="menuClose" type="button" aria-label="Close navigation menu">
-            Close
-          </button>
-        </div>
-        <div class="sidebar-inner">{{ partial "sidebar.html" . }}</div>
-      </aside>
-      <main class="main">{{ block "main" . }}{{ end }}</main>
-    </div>
+
+    {{ if .IsHome }}
+      <main id="main-content">{{ block "main" . }}{{ end }}</main>
+    {{ else }}
+      <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+      <div class="docs-shell">
+        <aside id="sidebar" class="sidebar" aria-label="Documentation navigation">
+          <div class="sidebar-mobile-head">
+            <span>Documentation</span>
+            <button class="menu-close" id="menuClose" type="button" aria-label="Close navigation">Close</button>
+          </div>
+          <div class="sidebar-scroll">{{ partial "sidebar.html" . }}</div>
+        </aside>
+        <main id="main-content" class="docs-main">{{ block "main" . }}{{ end }}</main>
+      </div>
+    {{ end }}
+
     {{ partial "footer.html" . }}
   </body>
 </html>

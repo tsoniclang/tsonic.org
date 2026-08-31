@@ -3,12 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
-    "build": "tsonic build",
-    "dev": "tsonic run"
-  },
-  "devDependencies": {}
+    "build": "bash scripts/build.sh",
+    "test": "node --test \"test/**/*.test.mjs\"",
+    "check": "npm run build && npm test"
+  }
 }

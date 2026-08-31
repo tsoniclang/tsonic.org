@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <title>Configuration | Tsonic</title>
+
+    <meta name="description" content="Compile TypeScript into native C# and Rust source projects." />
+    <meta name="theme-color" content="#0b0912" />
+    <meta property="og:site_name" content="Tsonic" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Configuration" />
+    <meta property="og:description" content="Compile TypeScript into native C# and Rust source projects." />
+    <link rel="stylesheet" href="/assets/site.css" />
+    <script defer src="/assets/nav.js"></script>
+    <script defer src="/assets/search.js"></script>
+  </head>
+  <body class="docs-page">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+  <div class="header-inner">
+
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open documentation navigation" aria-controls="sidebar" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+
+    <a class="wordmark" href="/" aria-label="Tsonic home">
+      <span class="wordmark-symbol" aria-hidden="true">T</span>
+      <span>Tsonic</span>
+    </a>
+
+    <nav class="primary-nav" aria-label="Primary navigation">
+      <a href="/docs/">Docs</a>
+      <a href="/docs/manual/targets/csharp/">C#</a>
+      <a href="/docs/manual/targets/rust/">Rust</a>
+    </nav>
+
+    <div class="header-actions">
+
+        <div class="search-wrap">
+          <label class="sr-only" for="searchBox">Search documentation</label>
+          <input id="searchBox" type="search" placeholder="Search docs" autocomplete="off" />
+          <kbd>/</kbd>
+          <div id="searchResults" class="search-results" hidden></div>
+        </div>
+
+      <a class="github-link" href="https://github.com/tsoniclang" aria-label="Tsonic on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.11.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.57-.29-5.27-1.29-5.27-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.05 0 0 .97-.31 3.16 1.18a10.93 10.93 0 0 1 5.76 0c2.19-1.49 3.15-1.18 3.15-1.18.63 1.58.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.71 5.39-5.29 5.68.42.36.79 1.06.79 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z" /></svg>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+
+
+      <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+      <div class="docs-shell">
+        <aside id="sidebar" class="sidebar" aria-label="Documentation navigation">
+          <div class="sidebar-mobile-head">
+            <span>Documentation</span>
+            <button class="menu-close" id="menuClose" type="button" aria-label="Close navigation">Close</button>
+          </div>
+          <div class="sidebar-scroll"><div class="sidebar-brand">
+  <span>Documentation</span>
+  <a href="/docs/">Overview</a>
+</div>
+
+
+
+
+
+<nav class="docs-nav">
+
+
+      <section class="nav-group">
+        <h2>Manual</h2>
+        <ul>
+
+            <li><a class="" href="/docs/manual/">Manual overview</a></li>
+
+            <li><a class="" href="/docs/manual/get-started/">Get started</a></li>
+
+            <li><a class="" href="/docs/manual/compiler-model/">Compiler model</a></li>
+
+            <li><a class="" href="/docs/manual/projects/">Projects</a></li>
+
+            <li><a class="" href="/docs/manual/applications-and-libraries/">Applications and libraries</a></li>
+
+            <li><a class="" href="/docs/manual/packages-and-workspaces/">Packages and workspaces</a></li>
+
+            <li><a class="" href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
+
+            <li><a class="" href="/docs/manual/source-semantics/">Source semantics</a></li>
+
+            <li><a class="" href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
+
+            <li><a class="" href="/docs/manual/targets/">Targets</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/">C# manual</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/source-profile/">C# source profile</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/interop-and-safety/">C# interop and safety</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/projects-and-output/">C# projects and output</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/">Rust manual</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/source-profile/">Rust source profile</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/ownership-and-safety/">Rust ownership and safety</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/projects-and-output/">Rust projects and output</a></li>
+
+            <li><a class="" href="/docs/manual/troubleshooting/">Troubleshooting</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Reference</h2>
+        <ul>
+
+            <li><a class="" href="/docs/reference/">Reference overview</a></li>
+
+            <li><a class="" href="/docs/reference/cli/">CLI</a></li>
+
+            <li><a class="" href="/docs/reference/project-config/">`tsonic.json`</a></li>
+
+            <li><a class="" href="/docs/reference/toolchains/">Toolchains and platforms</a></li>
+
+            <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
+
+            <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
+
+            <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
+
+            <li><a class="" href="/docs/reference/node-capability/">Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/diagnostics/">Diagnostics</a></li>
+
+            <li><a class="" href="/docs/reference/package-catalog/">Package catalog</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/">C# reference</a></li>
+
+            <li><a class="active" href="/docs/reference/targets/csharp/configuration/">C# configuration</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/source-modules/">C# source modules</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/type-mapping/">C# type mapping</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/native-apis/">C# native APIs</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/javascript-surface/">C# JavaScript surface</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/node-capability/">C# Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/provider-api/">C# provider API</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/language-support/">C# language support</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/support-inventory/">C# support inventory</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/limitations/">C# limitations</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/">Rust reference</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/configuration/">Rust configuration</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/source-modules/">Rust source modules</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/type-mapping/">Rust type mapping</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/ownership-and-lifetimes/">Rust ownership and lifetimes</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/native-apis/">Rust native APIs</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/javascript-surface/">Rust JavaScript surface</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/node-capability/">Rust Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/provider-api/">Rust provider API</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/language-support/">Rust language support</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/support-inventory/">Rust support inventory</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/limitations/">Rust limitations</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Architecture</h2>
+        <ul>
+
+            <li><a class="" href="/docs/architecture/">Architecture overview</a></li>
+
+            <li><a class="" href="/docs/architecture/compilation-lifecycle/">Compilation lifecycle</a></li>
+
+            <li><a class="" href="/docs/architecture/target-pack-contract/">Target-pack contract</a></li>
+
+            <li><a class="" href="/docs/architecture/provider-and-runtime-ownership/">Provider and runtime ownership</a></li>
+
+            <li><a class="" href="/docs/architecture/workspace-agent-policy/">Workspace policy</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Validation</h2>
+        <ul>
+
+            <li><a class="" href="/docs/validation/">Validation overview</a></li>
+
+            <li><a class="" href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
+
+        </ul>
+      </section>
+
+
+</nav>
+
+
+</div>
+        </aside>
+        <main id="main-content" class="docs-main">
+<article class="doc-article">
+  <div class="doc-toolbar">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+
+
+
+        <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
+
+        <a href="/docs/reference/">Reference</a><span aria-hidden="true">/</span>
+
+        <a href="/docs/reference/targets/">Targets</a><span aria-hidden="true">/</span>
+
+        <a href="/docs/reference/targets/csharp/">Csharp</a><span aria-hidden="true">/</span>
+
+      <span>Configuration</span>
+    </nav>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/reference/targets/csharp/configuration.md">Edit source</a>
+  </div>
+  <div class="prose"><h1 id="c-target-configuration">C# target configuration</h1>
+<p>All fields belong under the selected target’s <code>options</code> object. Unknown fields
+are rejected.</p>
+<table><thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Contract</th></tr></thead><tbody>
+<tr><td><code>assemblyName</code></td><td>nonempty string</td><td><code>TsonicGenerated</code></td><td>File-safe .NET assembly name</td></tr>
+<tr><td><code>implicitUsings</code></td><td>boolean</td><td><code>false</code></td><td>Generated project <code>ImplicitUsings</code></td></tr>
+<tr><td><code>languageDialect</code></td><td><code>csharp14</code> or <code>csharp15-preview</code></td><td><code>csharp14</code></td><td>C# syntax/specification dialect</td></tr>
+<tr><td><code>memorySafetyRules</code></td><td><code>csharp14</code> or <code>preview</code></td><td><code>csharp14</code></td><td>Independent C# memory-safety rules</td></tr>
+<tr><td><code>namespace</code></td><td>nonempty string</td><td><code>Tsonic.Generated</code></td><td>Dot-separated C# identifier path</td></tr>
+<tr><td><code>nullable</code></td><td>boolean</td><td><code>true</code></td><td>Generated project nullable context</td></tr>
+<tr><td><code>outputType</code></td><td><code>Exe</code> or <code>Library</code></td><td><code>Library</code></td><td>Generated project output kind</td></tr>
+<tr><td><code>providerReferences</code></td><td>object</td><td>empty</td><td>Assemblies available to .NET declaration reflection</td></tr>
+<tr><td><code>projectFile</code></td><td>nonempty string</td><td>none</td><td>Existing user-owned <code>.csproj</code></td></tr>
+<tr><td><code>properties</code></td><td>scalar object</td><td>empty</td><td>Additional non-target-owned MSBuild properties</td></tr>
+<tr><td><code>publishAot</code></td><td>boolean</td><td>omitted</td><td>Generated <code>PublishAot</code> property when supplied</td></tr>
+<tr><td><code>references</code></td><td>object</td><td>empty</td><td>Generated native project references</td></tr>
+<tr><td><code>targetFramework</code></td><td>nonempty string</td><td><code>net10.0</code></td><td>Generated target framework and framework-pack lookup</td></tr>
+</tbody></table>
+<p><code>memorySafetyRules: "preview"</code> requires
+<code>languageDialect: "csharp15-preview"</code>.</p>
+<h2 id="generated-and-user-owned-projects">Generated and user-owned projects</h2>
+<table><thead><tr><th>Option</th><th>Generated project</th><th>User-owned project</th></tr></thead><tbody>
+<tr><td><code>assemblyName</code>, <code>namespace</code>, <code>outputType</code></td><td>controls emitted C# and project identity</td><td>still controls emitted C# semantics where applicable</td></tr>
+<tr><td><code>languageDialect</code>, <code>memorySafetyRules</code></td><td>controls accepted/emitted C#</td><td>same</td></tr>
+<tr><td><code>targetFramework</code></td><td>emits <code>TargetFramework</code> and selects the framework reference pack</td><td>selects the framework reference pack; the <code>.csproj</code> must agree</td></tr>
+<tr><td><code>references</code></td><td>emits project references; framework/assembly entries also feed reflection</td><td>not written to the <code>.csproj</code>; framework/assembly entries may feed reflection</td></tr>
+<tr><td><code>properties</code>, <code>implicitUsings</code>, <code>nullable</code>, <code>publishAot</code></td><td>emitted into the generated project</td><td>not written to the user project</td></tr>
+<tr><td><code>providerReferences</code></td><td>reflection input only</td><td>reflection input only</td></tr>
+<tr><td><code>projectFile</code></td><td>absent</td><td>selects the existing <code>.csproj</code></td></tr>
+</tbody></table>
+<p>Tsonic never edits a user-owned project. Configuration that belongs to that
+project—SDK selection, item inclusion, package restore, target RID, signing,
+and deployment—must be written in the <code>.csproj</code>.</p>
+<h2 id="references"><code>references</code></h2>
+<table><thead><tr><th>Field</th><th>Entry shape</th></tr></thead><tbody>
+<tr><td><code>projects</code></td><td>nonempty project path strings</td></tr>
+<tr><td><code>packages</code></td><td><code>{ include, version?, privateAssets?, includeAssets? }</code></td></tr>
+<tr><td><code>frameworks</code></td><td>framework names such as <code>Microsoft.AspNetCore.App</code></td></tr>
+<tr><td><code>assemblies</code></td><td><code>{ include, hintPath? }</code></td></tr>
+</tbody></table>
+<p>Duplicate <code>(kind, include)</code> identities are rejected.</p>
+<h2 id="providerreferences"><code>providerReferences</code></h2>
+<table><thead><tr><th>Field</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>assemblies</code></td><td>Explicit assembly paths, relative to the project directory or absolute</td></tr>
+<tr><td><code>directories</code></td><td>Existing directories whose sorted <code>.dll</code> files form reflection inputs</td></tr>
+</tbody></table>
+<p>An empty or nonexistent provider directory is rejected. Duplicate canonical
+assembly paths are rejected.</p>
+<h2 id="properties"><code>properties</code></h2>
+<p>Names must be XML element names and values must be strings, numbers, or
+booleans. These target-owned properties cannot be overridden through
+<code>properties</code>:</p>
+<p><code>AllowUnsafeBlocks</code>, <code>Features</code>, <code>ImplicitUsings</code>, <code>LangVersion</code>, <code>Nullable</code>,
+<code>OutputType</code>, <code>PublishAot</code>, and <code>TargetFramework</code>.</p>
+<p>Use the dedicated option instead. For example, set <code>publishAot</code>, not
+<code>properties.PublishAot</code>. The target may also enable <code>AllowUnsafeBlocks</code> when
+the sealed program contains an explicitly authorized unsafe requirement; a
+free-form property cannot bypass that analysis.</p>
+<h2 id="complete-generated-example">Complete generated example</h2>
+<pre><code class="language-json">{
+  "id": "csharp",
+  "surfaces": ["js"],
+  "options": {
+    "assemblyName": "Acme.Tool",
+    "namespace": "Acme.Generated",
+    "outputType": "Exe",
+    "targetFramework": "net10.0",
+    "languageDialect": "csharp14",
+    "nullable": true,
+    "references": {
+      "frameworks": ["Microsoft.AspNetCore.App"],
+      "packages": [{
+        "include": "Microsoft.Extensions.Logging.Abstractions",
+        "version": "10.0.0"
+      }]
+    },
+    "properties": {
+      "RuntimeIdentifier": "linux-x64",
+      "SelfContained": true
+    }
+  }
+}
+</code></pre>
+</div>
+</article>
+</main>
+      </div>
+
+
+    <footer class="site-footer">
+  <div class="footer-inner">
+    <a class="wordmark footer-wordmark" href="/"><span class="wordmark-symbol" aria-hidden="true">T</span><span>Tsonic</span></a>
+    <p>TypeScript to native source.</p>
+    <nav aria-label="Footer navigation">
+      <a href="/docs/">Docs</a>
+      <a href="https://github.com/tsoniclang">GitHub</a>
+      <span>Built with Tsumo on Rust</span>
+    </nav>
+  </div>
+</footer>
+
+  </body>
+</html>

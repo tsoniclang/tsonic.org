@@ -1,24 +1,23 @@
 {{ define "main" }}
-<article class="doc">
-  <div class="doc-top">
-    <nav class="breadcrumbs">
+<article class="doc-article">
+  <div class="doc-toolbar">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
       {{ range .Ancestors }}
-        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-        <span class="sep">/</span>
+        {{ if not .IsHome }}<a href="{{ .RelPermalink }}">{{ .Title }}</a><span aria-hidden="true">/</span>{{ end }}
       {{ end }}
       <span>{{ .Title }}</span>
     </nav>
-    {{ with .Params.editURL }}<a class="edit" href="{{ . }}">Edit on GitHub</a>{{ end }}
+    {{ with .Params.editURL }}<a class="edit-link" href="{{ . }}">Edit source</a>{{ end }}
   </div>
 
-  {{ with .Content }}<div class="content">{{ . }}</div>{{ else }}<h1 class="page-title">{{ .Title }}</h1>{{ end }}
+  {{ with .Content }}<div class="prose">{{ . }}</div>{{ else }}<div class="prose"><h1>{{ .Title }}</h1></div>{{ end }}
 
   {{ if .Pages }}
-    <ul class="page-list">
+    <div class="section-pages">
       {{ range .Pages }}
-        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+        <a href="{{ .RelPermalink }}"><strong>{{ .Title }}</strong><span aria-hidden="true">→</span></a>
       {{ end }}
-    </ul>
+    </div>
   {{ end }}
 </article>
 {{ end }}
