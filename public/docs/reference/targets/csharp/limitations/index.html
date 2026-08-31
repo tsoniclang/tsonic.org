@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <title>Limitations | Tsonic</title>
+
+    <meta name="description" content="Compile TypeScript into native C# and Rust source projects." />
+    <meta name="theme-color" content="#0b0912" />
+    <meta property="og:site_name" content="Tsonic" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Limitations" />
+    <meta property="og:description" content="Compile TypeScript into native C# and Rust source projects." />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/site.css" />
+    <script defer src="/assets/nav.js"></script>
+    <script defer src="/assets/search.js"></script>
+  </head>
+  <body class="docs-page">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+  <div class="header-inner">
+
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open documentation navigation" aria-controls="sidebar" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+
+    <a class="wordmark" href="/" aria-label="Tsonic home">
+      <span class="wordmark-symbol" aria-hidden="true">T</span>
+      <span>Tsonic</span>
+    </a>
+
+    <nav class="primary-nav" aria-label="Primary navigation">
+      <a href="/docs/">Docs</a>
+      <a href="/docs/manual/targets/csharp/">C#</a>
+      <a href="/docs/manual/targets/rust/">Rust</a>
+    </nav>
+
+    <div class="header-actions">
+
+        <div class="search-wrap">
+          <label class="sr-only" for="searchBox">Search documentation</label>
+          <input id="searchBox" type="search" placeholder="Search docs" autocomplete="off" />
+          <kbd>/</kbd>
+          <div id="searchResults" class="search-results" hidden></div>
+        </div>
+
+      <a class="github-link" href="https://github.com/tsoniclang" aria-label="Tsonic on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.11.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.57-.29-5.27-1.29-5.27-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.05 0 0 .97-.31 3.16 1.18a10.93 10.93 0 0 1 5.76 0c2.19-1.49 3.15-1.18 3.15-1.18.63 1.58.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.71 5.39-5.29 5.68.42.36.79 1.06.79 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z" /></svg>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+
+
+      <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+      <div class="docs-shell">
+        <aside id="sidebar" class="sidebar" aria-label="Documentation navigation">
+          <div class="sidebar-mobile-head">
+            <span>Documentation</span>
+            <button class="menu-close" id="menuClose" type="button" aria-label="Close navigation">Close</button>
+          </div>
+          <div class="sidebar-scroll"><div class="sidebar-brand">
+  <span>Documentation</span>
+  <a href="/docs/">Overview</a>
+</div>
+
+
+
+
+
+<nav class="docs-nav">
+
+
+      <section class="nav-group">
+        <h2>Manual</h2>
+        <ul>
+
+            <li><a class="" href="/docs/manual/">Manual overview</a></li>
+
+            <li><a class="" href="/docs/manual/get-started/">Get started</a></li>
+
+            <li><a class="" href="/docs/manual/compiler-model/">Compiler model</a></li>
+
+            <li><a class="" href="/docs/manual/projects/">Projects</a></li>
+
+            <li><a class="" href="/docs/manual/applications-and-libraries/">Applications and libraries</a></li>
+
+            <li><a class="" href="/docs/manual/packages-and-workspaces/">Packages and workspaces</a></li>
+
+            <li><a class="" href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
+
+            <li><a class="" href="/docs/manual/source-semantics/">Source semantics</a></li>
+
+            <li><a class="" href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
+
+            <li><a class="" href="/docs/manual/targets/">Targets</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/">C# manual</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/source-profile/">C# source profile</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/interop-and-safety/">C# interop and safety</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/projects-and-output/">C# projects and output</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/">Rust manual</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/source-profile/">Rust source profile</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/ownership-and-safety/">Rust ownership and safety</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/projects-and-output/">Rust projects and output</a></li>
+
+            <li><a class="" href="/docs/manual/troubleshooting/">Troubleshooting</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Reference</h2>
+        <ul>
+
+            <li><a class="" href="/docs/reference/">Reference overview</a></li>
+
+            <li><a class="" href="/docs/reference/cli/">CLI</a></li>
+
+            <li><a class="" href="/docs/reference/project-config/">`tsonic.json`</a></li>
+
+            <li><a class="" href="/docs/reference/toolchains/">Toolchains and platforms</a></li>
+
+            <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
+
+            <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
+
+            <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
+
+            <li><a class="" href="/docs/reference/node-capability/">Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/diagnostics/">Diagnostics</a></li>
+
+            <li><a class="" href="/docs/reference/package-catalog/">Package catalog</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/">C# reference</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/configuration/">C# configuration</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/source-modules/">C# source modules</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/type-mapping/">C# type mapping</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/native-apis/">C# native APIs</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/javascript-surface/">C# JavaScript surface</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/node-capability/">C# Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/provider-api/">C# provider API</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/language-support/">C# language support</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/support-inventory/">C# support inventory</a></li>
+
+            <li><a class="active" href="/docs/reference/targets/csharp/limitations/">C# limitations</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/">Rust reference</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/configuration/">Rust configuration</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/source-modules/">Rust source modules</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/type-mapping/">Rust type mapping</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/ownership-and-lifetimes/">Rust ownership and lifetimes</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/native-apis/">Rust native APIs</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/javascript-surface/">Rust JavaScript surface</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/node-capability/">Rust Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/provider-api/">Rust provider API</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/language-support/">Rust language support</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/support-inventory/">Rust support inventory</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/limitations/">Rust limitations</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Architecture</h2>
+        <ul>
+
+            <li><a class="" href="/docs/architecture/">Architecture overview</a></li>
+
+            <li><a class="" href="/docs/architecture/compilation-lifecycle/">Compilation lifecycle</a></li>
+
+            <li><a class="" href="/docs/architecture/target-pack-contract/">Target-pack contract</a></li>
+
+            <li><a class="" href="/docs/architecture/provider-and-runtime-ownership/">Provider and runtime ownership</a></li>
+
+            <li><a class="" href="/docs/architecture/workspace-agent-policy/">Workspace policy</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Validation</h2>
+        <ul>
+
+            <li><a class="" href="/docs/validation/">Validation overview</a></li>
+
+            <li><a class="" href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
+
+        </ul>
+      </section>
+
+
+</nav>
+
+
+</div>
+        </aside>
+        <main id="main-content" class="docs-main">
+<article class="doc-article">
+  <div class="doc-toolbar">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+
+
+
+        <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
+
+        <a href="/docs/reference/">Reference</a><span aria-hidden="true">/</span>
+
+        <a href="/docs/reference/targets/">Targets</a><span aria-hidden="true">/</span>
+
+        <a href="/docs/reference/targets/csharp/">Csharp</a><span aria-hidden="true">/</span>
+
+      <span>Limitations</span>
+    </nav>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/reference/targets/csharp/limitations.md">Edit source</a>
+  </div>
+  <div class="prose"><h1 id="c-target-limitations">C# target limitations</h1>
+<p>The target rejects source semantics that cannot be represented without
+guessing or forbidden runtime machinery.</p>
+<h2 id="general-boundaries">General boundaries</h2>
+<ul>
+<li>runtime <code>eval</code>, source generation, and arbitrary dynamic member lookup;</li>
+<li>reflection-based fallback over arbitrary target objects;</li>
+<li>unproved overload, conversion, storage, pointer, attribute, or provider
+identity;</li>
+<li>runtime module cycles that cannot preserve ESM initialization semantics;</li>
+<li>open value graphs whose required operations are not finite and closed;</li>
+<li>native metadata shapes the .NET provider cannot express legally in its
+TypeScript declaration model.</li>
+</ul>
+<h2 id="application-and-library-boundaries">Application and library boundaries</h2>
+<p>An exported function named <code>main</code> is not a C# entrypoint by convention:</p>
+<pre><code class="language-ts">export function main(): void {}
+</code></pre>
+<p>For executable output, call it from top-level code. The generated
+<code>TsonicEntrypoint.Main</code> runs the entry module.</p>
+<p>C# library module initialization must be synchronous. Top-level <code>await</code> in a
+library entry graph is rejected because a CLR module initializer cannot await.</p>
+<p>Runtime ESM cycles are accepted only when the closed module plan preserves
+ordering and initialization state. A cycle that needs JavaScript temporal dead
+zones or unresolved live bindings is rejected.</p>
+<h2 id="storage-and-pointer-boundaries">Storage and pointer boundaries</h2>
+<p>Address formation requires exact stable storage identity. Provider/project
+indexers require an explicit location-equivalence policy. Unsupported escaping
+loop-binding storage and overlapping/unreconcilable location projections reject
+instead of copying values silently.</p>
+<p>Native pointer access requires the exact pointer carrier, lexical safety
+context, declaration safety contract where applicable, and generated/user
+project permission. One control never implies another.</p>
+<h2 id="generator-boundaries">Generator boundaries</h2>
+<p>The target uses native C# iterator syntax when it preserves TypeScript
+behavior. C# placements that forbid <code>yield</code>, or generator contracts that cannot
+be represented by the approved native/runtime protocol, reject. Tsonic does not
+reimplement the C# compiler’s general state-machine transformation.</p>
+<p>For example, C# does not permit <code>yield return</code> in <code>catch</code>, <code>finally</code>, or a
+<code>try</code> that has a <code>catch</code>. Tsonic reports the unsupported placement rather than
+emitting a hand-written state machine with different behavior.</p>
+<h2 id="generated-project-boundary">Generated project boundary</h2>
+<p>Generated projects use <code>Microsoft.NET.Sdk</code>. Web, desktop, test, MAUI, and
+custom SDK projects must be user-owned. Tsonic emits source for them but does
+not synthesize or rewrite their native project graph.</p>
+<h2 id="provider-boundaries">Provider boundaries</h2>
+<p>Ambiguous provider relations, contradictory metadata, missing referenced
+assemblies, unsupported defaults, unresolved type families, and invalid
+heritage fail at provider closure. The target does not broaden imports or omit
+declarations to make checking pass.</p>
+<h2 id="deliberate-source-to-source-boundaries">Deliberate source-to-source boundaries</h2>
+<p>Tsonic does not provide a general runtime JavaScript engine inside a C#
+program. A JavaScript operation is available only when the selected source
+surface has one closed, tested C# implementation. Likewise, a legal
+TypeScript construct may still reject when preserving its initialization,
+aliasing, exception, or reflection behavior would require open runtime
+machinery. The diagnostic identifies the missing target contract; it is not a
+request to approximate the behavior.</p>
+</div>
+</article>
+</main>
+      </div>
+
+
+    <footer class="site-footer">
+  <div class="footer-inner">
+    <a class="wordmark footer-wordmark" href="/"><span class="wordmark-symbol" aria-hidden="true">T</span><span>Tsonic</span></a>
+    <p>TypeScript to native source.</p>
+    <nav aria-label="Footer navigation">
+      <a href="/docs/">Docs</a>
+      <a href="https://github.com/tsoniclang">GitHub</a>
+      <span>Built with Tsumo on Rust</span>
+    </nav>
+  </div>
+</footer>
+
+  </body>
+</html>

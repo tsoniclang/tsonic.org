@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <title>Workspace Agent Policy | Tsonic</title>
+
+    <meta name="description" content="Compile TypeScript into native C# and Rust source projects." />
+    <meta name="theme-color" content="#0b0912" />
+    <meta property="og:site_name" content="Tsonic" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Workspace Agent Policy" />
+    <meta property="og:description" content="Compile TypeScript into native C# and Rust source projects." />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/site.css" />
+    <script defer src="/assets/nav.js"></script>
+    <script defer src="/assets/search.js"></script>
+  </head>
+  <body class="docs-page">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+  <div class="header-inner">
+
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open documentation navigation" aria-controls="sidebar" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+
+    <a class="wordmark" href="/" aria-label="Tsonic home">
+      <span class="wordmark-symbol" aria-hidden="true">T</span>
+      <span>Tsonic</span>
+    </a>
+
+    <nav class="primary-nav" aria-label="Primary navigation">
+      <a href="/docs/">Docs</a>
+      <a href="/docs/manual/targets/csharp/">C#</a>
+      <a href="/docs/manual/targets/rust/">Rust</a>
+    </nav>
+
+    <div class="header-actions">
+
+        <div class="search-wrap">
+          <label class="sr-only" for="searchBox">Search documentation</label>
+          <input id="searchBox" type="search" placeholder="Search docs" autocomplete="off" />
+          <kbd>/</kbd>
+          <div id="searchResults" class="search-results" hidden></div>
+        </div>
+
+      <a class="github-link" href="https://github.com/tsoniclang" aria-label="Tsonic on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.11.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.57-.29-5.27-1.29-5.27-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.05 0 0 .97-.31 3.16 1.18a10.93 10.93 0 0 1 5.76 0c2.19-1.49 3.15-1.18 3.15-1.18.63 1.58.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.71 5.39-5.29 5.68.42.36.79 1.06.79 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z" /></svg>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+
+
+      <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+      <div class="docs-shell">
+        <aside id="sidebar" class="sidebar" aria-label="Documentation navigation">
+          <div class="sidebar-mobile-head">
+            <span>Documentation</span>
+            <button class="menu-close" id="menuClose" type="button" aria-label="Close navigation">Close</button>
+          </div>
+          <div class="sidebar-scroll"><div class="sidebar-brand">
+  <span>Documentation</span>
+  <a href="/docs/">Overview</a>
+</div>
+
+
+
+
+
+<nav class="docs-nav">
+
+
+      <section class="nav-group">
+        <h2>Manual</h2>
+        <ul>
+
+            <li><a class="" href="/docs/manual/">Manual overview</a></li>
+
+            <li><a class="" href="/docs/manual/get-started/">Get started</a></li>
+
+            <li><a class="" href="/docs/manual/compiler-model/">Compiler model</a></li>
+
+            <li><a class="" href="/docs/manual/projects/">Projects</a></li>
+
+            <li><a class="" href="/docs/manual/applications-and-libraries/">Applications and libraries</a></li>
+
+            <li><a class="" href="/docs/manual/packages-and-workspaces/">Packages and workspaces</a></li>
+
+            <li><a class="" href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
+
+            <li><a class="" href="/docs/manual/source-semantics/">Source semantics</a></li>
+
+            <li><a class="" href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
+
+            <li><a class="" href="/docs/manual/targets/">Targets</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/">C# manual</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/source-profile/">C# source profile</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/interop-and-safety/">C# interop and safety</a></li>
+
+            <li><a class="" href="/docs/manual/targets/csharp/projects-and-output/">C# projects and output</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/">Rust manual</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/source-profile/">Rust source profile</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/ownership-and-safety/">Rust ownership and safety</a></li>
+
+            <li><a class="" href="/docs/manual/targets/rust/projects-and-output/">Rust projects and output</a></li>
+
+            <li><a class="" href="/docs/manual/troubleshooting/">Troubleshooting</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Reference</h2>
+        <ul>
+
+            <li><a class="" href="/docs/reference/">Reference overview</a></li>
+
+            <li><a class="" href="/docs/reference/cli/">CLI</a></li>
+
+            <li><a class="" href="/docs/reference/project-config/">`tsonic.json`</a></li>
+
+            <li><a class="" href="/docs/reference/toolchains/">Toolchains and platforms</a></li>
+
+            <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
+
+            <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
+
+            <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
+
+            <li><a class="" href="/docs/reference/node-capability/">Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/diagnostics/">Diagnostics</a></li>
+
+            <li><a class="" href="/docs/reference/package-catalog/">Package catalog</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/">C# reference</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/configuration/">C# configuration</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/source-modules/">C# source modules</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/type-mapping/">C# type mapping</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/native-apis/">C# native APIs</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/javascript-surface/">C# JavaScript surface</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/node-capability/">C# Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/provider-api/">C# provider API</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/language-support/">C# language support</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/support-inventory/">C# support inventory</a></li>
+
+            <li><a class="" href="/docs/reference/targets/csharp/limitations/">C# limitations</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/">Rust reference</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/configuration/">Rust configuration</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/source-modules/">Rust source modules</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/type-mapping/">Rust type mapping</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/ownership-and-lifetimes/">Rust ownership and lifetimes</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/native-apis/">Rust native APIs</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/javascript-surface/">Rust JavaScript surface</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/node-capability/">Rust Node capability</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/provider-api/">Rust provider API</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/language-support/">Rust language support</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/support-inventory/">Rust support inventory</a></li>
+
+            <li><a class="" href="/docs/reference/targets/rust/limitations/">Rust limitations</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Architecture</h2>
+        <ul>
+
+            <li><a class="" href="/docs/architecture/">Architecture overview</a></li>
+
+            <li><a class="" href="/docs/architecture/compilation-lifecycle/">Compilation lifecycle</a></li>
+
+            <li><a class="" href="/docs/architecture/target-pack-contract/">Target-pack contract</a></li>
+
+            <li><a class="" href="/docs/architecture/provider-and-runtime-ownership/">Provider and runtime ownership</a></li>
+
+            <li><a class="active" href="/docs/architecture/workspace-agent-policy/">Workspace policy</a></li>
+
+        </ul>
+      </section>
+
+
+
+      <section class="nav-group">
+        <h2>Validation</h2>
+        <ul>
+
+            <li><a class="" href="/docs/validation/">Validation overview</a></li>
+
+            <li><a class="" href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
+
+        </ul>
+      </section>
+
+
+</nav>
+
+
+</div>
+        </aside>
+        <main id="main-content" class="docs-main">
+<article class="doc-article">
+  <div class="doc-toolbar">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+
+
+
+        <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
+
+        <a href="/docs/architecture/">Architecture</a><span aria-hidden="true">/</span>
+
+      <span>Workspace Agent Policy</span>
+    </nav>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/workspace-agent-policy.md">Edit source</a>
+  </div>
+  <div class="prose"><h1 id="tsoniclang-workspace-agent-policy">Tsoniclang Workspace Agent Policy</h1>
+<p>This file owns policy shared by every repository under this <code>tsoniclang</code>
+workspace. Repository-level <code>AGENTS.md</code> files may add only genuine local
+commands, ownership boundaries, or target semantics; they must not restate this
+policy.</p>
+<h2 id="engineering-standard">Engineering Standard</h2>
+<ul>
+<li>This workspace is airplane-grade: correctness and sound architecture take
+precedence over speed, while iteration should remain deliberate and bounded.</li>
+<li>WCBUBWHB means “What Can Be, Unburdened By What Has Been.” Design the final
+from-scratch architecture directly. Do not preserve stale shapes merely
+because they already exist.</li>
+<li>Fix root causes at the highest correct owner. Do not add one-off downstream
+workarounds for missing shared facts, provider contracts, or compiler
+semantics.</li>
+<li>Keep changes focused. Do not repair unrelated failures, but report them
+precisely.</li>
+<li>Modify only repositories and product scopes the maintainer assigned to the
+task. Read-only inspection may establish a contract; it does not grant change
+ownership.</li>
+</ul>
+<h2 id="repository-safety">Repository Safety</h2>
+<ul>
+<li>Never force-push or delete remote branches or tags. Push branches and let the
+maintainer merge and clean up remotely.</li>
+<li>Never use <code>git stash</code>, <code>git add -f</code>, or <code>git add --force</code>.</li>
+<li><code>.gitignore</code> is authoritative. If ignored content must become product input,
+change <code>.gitignore</code> in its own reviewed commit; never bypass it per file.</li>
+<li>Keep meaningful work committed and pushed on the one active branch before
+changing repositories or tasks. Never leave hidden or dangling work.</li>
+<li>Do not create a branch before the maintainer approves the task. Approval to
+start a task includes permission to create the necessary task branches in
+every assigned repository; do not ask again for branch permission during that
+task. Before branching, run the repository’s branch-hygiene check when one
+exists and resolve every branch ahead of <code>main</code> except the one active PR
+branch.</li>
+<li>Never announce a PR from a dirty worktree. Verify <code>git status --porcelain</code> is
+empty and the branch is synchronized with its upstream.</li>
+<li>Once a PR is opened, keep its commits intentional; do not add unrelated work
+to that branch.</li>
+<li>Use each repository’s <code>.temp/</code> for scratch work; never use <code>/tmp</code> for
+workspace-specific state and never create scratch workspaces under product
+package directories.</li>
+<li>Treat <code>.temp/</code> as maintainer-owned state. Do not delete it, or recursively
+delete another directory, unless the maintainer explicitly requests that
+exact cleanup.</li>
+<li>Keep ignored analysis, logs, generated output, build products, and local test
+state untracked.</li>
+</ul>
+<h2 id="development-and-verification">Development and Verification</h2>
+<ul>
+<li>The repository’s documented language rules and tests are canonical.
+Downstream projects can reveal defects but cannot redefine the contract.</li>
+<li>A language, surface, schema, or semantic change requires explicit maintainer
+approval. Fix invalid downstream assumptions downstream instead of weakening
+the compiler.</li>
+<li>Use focused tests while iterating. Before merge or publication, run the
+repository’s documented complete gate unless the exact exception below
+applies.</li>
+<li>Never change product code, fixtures, tests, or expected output merely to make
+a test pass. Determine and fix the owning root cause.</li>
+<li>Temporary instrumentation belongs under <code>.temp/</code>, never in a final product
+path.</li>
+<li>Do not run a complete suite repeatedly after each small implementation. Batch
+coherent edits, collect all diagnostics from a run, fix the complete class,
+then rerun at the appropriate scope.</li>
+</ul>
+<h3 id="expectation-only-rerun-exception">Expectation-Only Rerun Exception</h3>
+<ul>
+<li>If a completed full run has exactly one failure, inspection proves only its
+expectation is stale, and the sole subsequent edit changes that expectation
+without changing product code, build/configuration, fixture input, semantics,
+or generated behavior, rerun only the owning focused test.</li>
+<li>Certify this as the preceding full run plus the corrected focused test; do not
+repeat the expensive full suite.</li>
+<li>A changed expectation that accepts different behavior, semantics, output,
+fixtures, or toolchain policy is not expectation-only and still requires the
+normal complete gate.</li>
+</ul>
+<h2 id="architecture">Architecture</h2>
+<h3 id="source-to-source-and-static-closure">Source-To-Source and Static Closure</h3>
+<ul>
+<li>Tsonic compilers emit target source projects and let the target ecosystem own
+build, publish, deployment, and platform configuration.</li>
+<li>Generated programs must remain compatible with pure native output whenever
+the selected target supports it.</li>
+<li>Runtime reflection, dynamic member discovery/invocation, arbitrary-object
+projection, and best-effort runtime fallback are forbidden language
+semantics. Build-time tooling may inspect explicit metadata inputs.</li>
+<li>Broad carriers such as <code>unknown</code>, <code>object</code>, <code>JsValue</code>, dictionaries, or
+dynamic JSON may expose only deterministic closed-carrier operations; they
+must not reflect over arbitrary target objects.</li>
+<li>Prove operations statically and emit closed generated code, source-generated
+metadata, or closed runtime carriers. If proof is unavailable, emit a
+deterministic diagnostic.</li>
+<li>Open-ended target toolchain settings belong in native target configuration,
+not generic Tsonic configuration. Tsonic configuration is limited to compiler
+semantic input, source/profile/provider selection, and deterministic codegen
+policy.</li>
+<li>Native project configuration may declare a build capability, but it must not
+become hidden semantic evidence or a target-code fallback.</li>
+</ul>
+<h3 id="one-current-architecture">One Current Architecture</h3>
+<ul>
+<li>Backward compatibility is absent unless the maintainer explicitly requests a
+specific compatibility contract.</li>
+<li>Never land bridge architecture, temporary product paths, dual readers,
+old-or-new schema handling, compatibility aliases, legacy fallback, or
+“clean it later” code.</li>
+<li>When a canonical shape changes, break stale assumptions and repair every
+first-party producer and consumer against the final shape.</li>
+</ul>
+<h3 id="truth-over-heuristics">Truth Over Heuristics</h3>
+<ul>
+<li>Never guess semantic identity from names, spelling, source text, raw object
+shape, target output, partial metadata, or fallback checker queries.</li>
+<li>Consume exact selected compiler evidence, provider identities, finalized
+facts, and declared policy. Missing evidence fails closed with a precise
+diagnostic.</li>
+<li>Optional discovery must prove existence before reading; do not probe and then
+silently recover.</li>
+</ul>
+<h3 id="generic-policy-first">Generic Policy First</h3>
+<ul>
+<li>Implement a mechanism at the most generic policy, fact, provider, or shared
+semantic layer that owns it.</li>
+<li>Concrete names such as <code>Map</code>, <code>Set</code>, <code>Date</code>, <code>Array</code>, <code>fs</code>, <code>C#</code>, or <code>Rust</code>
+are declarative data, not branches in generic resolution algorithms.</li>
+<li>When one case exposes a family, design the reusable contract first and encode
+the case as policy data.</li>
+<li>A hardcoded exception requires explicit source and target identity, rationale,
+required evidence, diagnostic behavior, positive and negative tests, and
+ledger evidence.</li>
+</ul>
+<h3 id="explicit-target-semantics">Explicit Target Semantics</h3>
+<ul>
+<li>Preserve every independently controllable target behavior as an independent
+fact, marker, policy choice, dialect rule, or project setting.</li>
+<li>Never infer one target control from another unless the pinned target-language
+specification defines that implication. Compiler convention or current
+acceptance is not specification evidence.</li>
+<li>Absence means the behavior was not selected. Emit exactly the target
+language’s documented coupling for the selected version, or reject an
+unrepresentable combination precisely.</li>
+</ul>
+<h3 id="typescript-source-discipline">TypeScript Source Discipline</h3>
+<ul>
+<li>Product TypeScript is a type-annotation layer over standard modern
+JavaScript. Do not use TypeScript-only runtime-shape features as compiler
+signals or implementation mechanisms.</li>
+<li>In particular, do not use explicit <code>public</code>, parameter properties,
+namespaces, decorators, or non-ECMAScript class modifiers as compiler
+signals, test aids, or source-package workarounds.</li>
+<li>Type-only annotations, interfaces, imports, and deterministic assertions may
+erase normally; runtime-facing syntax must retain ECMAScript meaning.</li>
+<li>Omitted class accessibility is public. Normalize equivalent syntax in the
+compiler instead of requiring spelling changes in source.</li>
+<li>All TypeScript/JavaScript module wiring is ESM. Do not introduce <code>require</code>,
+<code>module.exports</code>, <code>export =</code>, namespaces, triple-slash references, or ambient
+bootstrap shims. Prefer explicit exported subpaths with extensions.</li>
+</ul>
+<h2 id="reports-and-reviews">Reports and Reviews</h2>
+<ul>
+<li>Technical reports must include concrete source-level examples and the causal
+chain from user TypeScript through semantic evidence and carrier selection to
+emitted target code and observed behavior.</li>
+<li>Examples must identify expected and actual behavior and explain why the
+difference matters; labels and TODO lists alone are not analysis.</li>
+<li>Group symptoms by root cause and distinguish fallout from independent defects.</li>
+<li>State verified facts and remaining unknowns exactly; avoid hedging where
+inspection can decide the answer.</li>
+<li>Review an in-progress checkpoint against the scope it claims complete, not the
+eventual project endpoint. Report checkpoint quality separately from total
+remaining work.</li>
+</ul>
+<h2 id="policy-placement">Policy Placement</h2>
+<ul>
+<li>This file is the sole owner of workspace-wide policy.</li>
+<li>Top-level child <code>AGENTS.md</code> files contain only repository-specific deltas and
+reference this policy explicitly.</li>
+<li><code>CLAUDE.md</code> imports this policy and its same-scope <code>AGENTS.md</code>; it does not
+duplicate policy prose.</li>
+<li>Vendored and submodule policy files remain owned by their upstream projects;
+do not rewrite them as workspace policy copies.</li>
+</ul>
+</div>
+</article>
+</main>
+      </div>
+
+
+    <footer class="site-footer">
+  <div class="footer-inner">
+    <a class="wordmark footer-wordmark" href="/"><span class="wordmark-symbol" aria-hidden="true">T</span><span>Tsonic</span></a>
+    <p>TypeScript to native source.</p>
+    <nav aria-label="Footer navigation">
+      <a href="/docs/">Docs</a>
+      <a href="https://github.com/tsoniclang">GitHub</a>
+      <span>Built with Tsumo on Rust</span>
+    </nav>
+  </div>
+</footer>
+
+  </body>
+</html>
