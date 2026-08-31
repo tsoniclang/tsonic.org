@@ -14,6 +14,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ if .IsHome }}TypeScript to .NET and Rust{{ else }}{{ .Title }}{{ end }}" />
     <meta property="og:description" content="{{ default "Compile TypeScript into native C# and Rust source projects." .Description }}" />
+    <link rel="icon" href="{{ relURL "assets/favicon.svg" }}" type="image/svg+xml" />
     <link rel="stylesheet" href="{{ relURL "assets/site.css" }}" />
     <script defer src="{{ relURL "assets/nav.js" }}"></script>
     {{ if not .IsHome }}<script defer src="{{ relURL "assets/search.js" }}"></script>{{ end }}
