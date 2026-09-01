@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "bash scripts/build.sh",
+    "examples:sync": "node scripts/sync-proof-examples.mjs",
+    "examples:check": "node scripts/sync-proof-examples.mjs --check",
     "test": "node --test \"test/**/*.test.mjs\"",
     "check": "npm run build && npm test"
   }
