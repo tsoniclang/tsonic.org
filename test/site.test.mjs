@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { basename, dirname, extname, join, relative, resolve, sep } from "node:path";
 import test from "node:test";
@@ -38,7 +39,49 @@ test("the landing page states the current target contract directly", () => {
   assert.match(html, /TypeScript to <strong class="gradient-rust">Rust\.<\/strong>/u);
   assert.match(html, /Coming soon<\/span> Mojo, Python, and Triton/u);
   assert.match(html, /Tsonic checks TypeScript, writes native source projects/u);
+  assert.match(html, /data-proof-browser/u);
+  assert.match(html, /assets\/proof-browser\.js/u);
+  assert.match(html, /Read the TypeScript\. Inspect the output\./u);
   assert.doesNotMatch(html, /tsbindgen|@tsonic\/express|strict, deterministic subset/u);
+});
+
+test("the proof browser publishes complete verified projects for both targets", () => {
+  const catalogPath = join(publicDir, "assets/proof-examples.json");
+  const catalogText = readFileSync(catalogPath, "utf8");
+  const catalog = JSON.parse(catalogText);
+  assert.doesNotMatch(catalogText, /\/(?:home|Users)\/|\\Users\\|\.tests\//u);
+  assert.equal(catalog.schemaVersion, 1);
+  assert.deepEqual(catalog.targets.map((target) => target.id), ["csharp", "rust"]);
+  assert.equal(catalog.targets[0].projects.length, 6);
+  assert.equal(catalog.targets[1].projects.length, 7);
+
+  const csharpProjects = new Set(catalog.targets[0].projects.map((project) => project.id));
+  const rustProjects = new Set(catalog.targets[1].projects.map((project) => project.id));
+  assert.ok(csharpProjects.has("http-server"));
+  assert.ok(csharpProjects.has("parallel-workers"));
+  assert.ok(csharpProjects.has("aspnet-blog"));
+  assert.ok(rustProjects.has("borrows-and-lifetimes"));
+  assert.ok(rustProjects.has("native-crate-api"));
+  assert.ok(rustProjects.has("crypto-and-buffers"));
+
+  for (const target of catalog.targets) {
+    const ids = target.projects.map((project) => project.id);
+    assert.equal(new Set(ids).size, ids.length, `${target.id} project ids must be unique`);
+    for (const project of target.projects) {
+      assert.ok(project.summary.length > 20);
+      assert.ok(project.capabilities.length >= 4);
+      assert.match(project.provenance.revision, /^[0-9a-f]{40}$/u);
+      assert.ok(project.sourceFiles.some((file) => file.path.endsWith(".ts")));
+      assert.ok(project.outputFiles.length > 0);
+      for (const file of [...project.sourceFiles, ...project.outputFiles]) {
+        assert.equal(file.path.startsWith("/") || file.path.includes(".."), false);
+        const digest = createHash("sha256").update(file.content).digest("hex");
+        assert.equal(file.sha256, digest, `${target.id}/${project.id}/${file.path}`);
+        assert.ok(file.content.length > 0, `${file.path} must not be empty`);
+      }
+    }
+  }
+  assert.ok(statSync(catalogPath).size < 2 * 1024 * 1024);
 });
 
 test("every canonical Tsonic documentation page is published", () => {

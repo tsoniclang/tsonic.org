@@ -15,7 +15,7 @@
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/site.css" />
     <script defer src="/assets/nav.js"></script>
-
+    <script defer src="/assets/proof-browser.js"></script>
   </head>
   <body class="home-page">
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -92,6 +92,80 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="examples" class="proof-section section-wrap" aria-labelledby="proof-title">
+  <div class="section-heading proof-heading">
+    <p class="eyebrow">Working projects</p>
+    <h2 id="proof-title">Read the TypeScript. Inspect the output.</h2>
+    <p>
+      Choose a target and a passing proof project. Every file shown here comes
+      from the authored project or its generated native output.
+    </p>
+  </div>
+
+  <div
+    class="proof-browser"
+    data-proof-browser
+    data-catalog-url="/assets/proof-examples.json"
+    data-active-target="dotnet"
+  >
+    <div class="proof-toolbar">
+      <div>
+        <span class="proof-control-label">Target</span>
+        <div class="proof-targets" data-proof-targets role="group" aria-label="Compilation target"></div>
+      </div>
+      <p class="proof-verification">Source and output from executable proof projects</p>
+    </div>
+
+    <p class="proof-status" data-proof-status>Loading verified projects…</p>
+
+    <div class="proof-workbench">
+      <aside class="proof-project-rail" aria-label="Example projects">
+        <span class="proof-control-label">Project</span>
+        <div class="proof-projects" data-proof-projects></div>
+      </aside>
+
+      <div class="proof-project-view">
+        <header class="proof-project-header">
+          <div>
+            <h3 data-proof-title></h3>
+            <p data-proof-summary></p>
+          </div>
+          <span class="proof-provenance" data-proof-provenance></span>
+        </header>
+        <ul class="proof-capabilities" data-proof-capabilities aria-label="Capabilities shown"></ul>
+
+        <div class="proof-code-grid">
+          <section class="proof-code-panel" aria-labelledby="proof-source-label">
+            <div class="proof-code-toolbar">
+              <div>
+                <span id="proof-source-label">TypeScript</span>
+                <select data-proof-source-select aria-label="TypeScript source file"></select>
+              </div>
+              <button type="button" data-proof-copy="source">Copy</button>
+            </div>
+            <pre tabindex="0"><code data-proof-source-code></code></pre>
+          </section>
+
+          <section class="proof-code-panel" aria-labelledby="proof-output-label">
+            <div class="proof-code-toolbar">
+              <div>
+                <span id="proof-output-label" data-proof-output-label>Generated C#</span>
+                <select data-proof-output-select aria-label="Generated target file"></select>
+              </div>
+              <button type="button" data-proof-copy="output">Copy</button>
+            </div>
+            <pre tabindex="0"><code data-proof-output-code></code></pre>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <noscript>
+      <p class="proof-noscript">JavaScript is required for the file browser. The same examples are documented in the target manuals.</p>
+    </noscript>
   </div>
 </section>
 

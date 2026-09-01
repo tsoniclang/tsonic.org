@@ -17,7 +17,7 @@
     <link rel="icon" href="{{ relURL "assets/favicon.svg" }}" type="image/svg+xml" />
     <link rel="stylesheet" href="{{ relURL "assets/site.css" }}" />
     <script defer src="{{ relURL "assets/nav.js" }}"></script>
-    {{ if not .IsHome }}<script defer src="{{ relURL "assets/search.js" }}"></script>{{ end }}
+    {{ if .IsHome }}<script defer src="{{ relURL "assets/proof-browser.js" }}"></script>{{ else }}<script defer src="{{ relURL "assets/search.js" }}"></script>{{ end }}
   </head>
   <body class="{{ if .IsHome }}home-page{{ else }}docs-page{{ end }}">
     <a class="skip-link" href="#main-content">Skip to content</a>
