@@ -10,28 +10,25 @@
         <span>TypeScript to <strong class="gradient-dotnet">.NET.</strong></span>
         <span>TypeScript to <strong class="gradient-rust">Rust.</strong></span>
       </h1>
-      <p class="hero-summary">
-        Tsonic checks TypeScript, writes native source projects, and hands them to
-        <code>dotnet</code> or Cargo.
-      </p>
-      <div class="hero-actions">
-        <a class="button button-primary" href="{{ relURL "/docs/manual/get-started/" }}">Get started</a>
-        <a class="button button-secondary" href="{{ relURL "/docs/" }}">Read the docs</a>
+      <div class="hero-details">
+        <p class="hero-summary">
+          Tsonic checks TypeScript, writes native source projects, and hands them to
+          <code>dotnet</code> or Cargo.
+        </p>
+        <div class="hero-links">
+          <div class="hero-actions">
+            <a class="button button-primary" href="{{ relURL "/docs/manual/get-started/" }}">Get started</a>
+            <a class="button button-secondary" href="{{ relURL "/docs/" }}">Read the docs</a>
+          </div>
+          <p class="coming-line"><span>Coming soon</span> Mojo, Python, and Triton</p>
+        </div>
       </div>
-      <p class="coming-line"><span>Coming soon</span> Mojo, Python, and Triton</p>
     </div>
   </div>
 </section>
 
 <section id="examples" class="proof-section section-wrap" aria-labelledby="proof-title">
-  <div class="section-heading proof-heading">
-    <p class="eyebrow">Examples</p>
-    <h2 id="proof-title">TypeScript and generated source</h2>
-    <p>
-      Choose a target and project. Each example contains the authored
-      TypeScript and the generated native files.
-    </p>
-  </div>
+  <h2 id="proof-title" class="sr-only">Examples</h2>
 
   <div
     class="proof-browser"
@@ -44,7 +41,6 @@
         <span class="proof-control-label">Target</span>
         <div class="proof-targets" data-proof-targets role="group" aria-label="Compilation target"></div>
       </div>
-      <p class="proof-verification">Examples</p>
     </div>
 
     <div class="proof-status" data-proof-status role="status" aria-live="polite">
@@ -123,63 +119,45 @@
   </div>
 </section>
 
-<section class="target-section section-wrap" aria-labelledby="targets-title">
-  <div class="section-heading">
-    <p class="eyebrow">Targets</p>
-    <h2 id="targets-title">C# and Rust</h2>
-    <p>Tsonic emits target source and project files. The native toolchain performs the final build.</p>
-  </div>
-
-  <div class="target-grid">
-    <a class="target-card target-card-dotnet" href="{{ relURL "/docs/manual/targets/csharp/" }}">
-      <div class="target-card-top"><span class="target-mark">.NET</span><span class="status">Available</span></div>
-      <h3>C# target</h3>
-      <p>Native C# source, <code>.csproj</code> output, .NET APIs, ASP.NET Core, and NativeAOT.</p>
-      <span class="card-link">Open the C# manual <b aria-hidden="true">→</b></span>
-    </a>
-    <a class="target-card target-card-rust" href="{{ relURL "/docs/manual/targets/rust/" }}">
-      <div class="target-card-top"><span class="target-mark">Rust</span><span class="status">Available</span></div>
-      <h3>Rust target</h3>
-      <p>Native Rust source, Cargo projects, ownership controls, lifetimes, traits, and native crates.</p>
-      <span class="card-link">Open the Rust manual <b aria-hidden="true">→</b></span>
-    </a>
-  </div>
-
-  <div class="future-targets" aria-label="Targets coming soon">
-    <span>Coming soon</span>
-    <strong>Mojo</strong>
-    <strong>Python</strong>
-    <strong>Triton</strong>
-  </div>
-</section>
-
 <section class="model-section section-wrap" aria-labelledby="model-title">
   <div class="model-copy">
-    <p class="eyebrow">Compiler model</p>
     <h2 id="model-title">Compilation flow</h2>
     <p>
-      Parsing, binding, checking, narrowing, and overload selection happen before a target plans output.
-      Compilation stops when required semantic evidence is unavailable.
+      One checked TypeScript program becomes a native source project. The native toolchain performs the final build.
     </p>
     <a class="text-link" href="{{ relURL "/docs/manual/compiler-model/" }}">Read the compiler model <span aria-hidden="true">→</span></a>
   </div>
-  <div class="model-facts">
-    <div><span>01</span><strong>Write TypeScript</strong><p>Use ordinary modules and explicit target APIs where the program needs them.</p></div>
-    <div><span>02</span><strong>Generate source</strong><p>The selected target plans and prints C# or Rust plus native project files.</p></div>
-    <div><span>03</span><strong>Build natively</strong><p>Use <code>dotnet</code> or Cargo for compilation, linking, testing, and deployment.</p></div>
-  </div>
+  <ol class="model-steps">
+    <li>
+      <div class="model-step-title"><span>01</span><strong>Write TypeScript</strong></div>
+      <code class="model-file">src/App.ts</code>
+      <pre><code>export function add(left: number, right: number): number {
+  return left + right;
+}</code></pre>
+    </li>
+    <li>
+      <div class="model-step-title"><span>02</span><strong>Generate source</strong></div>
+      <div class="model-output"><span>C#</span><code>double add(double left, double right)</code></div>
+      <div class="model-output"><span>Rust</span><code>fn add(left: f64, right: f64) -&gt; f64</code></div>
+    </li>
+    <li>
+      <div class="model-step-title"><span>03</span><strong>Build natively</strong></div>
+      <code class="model-command">dotnet build out/csharp</code>
+      <code class="model-command">cargo build --manifest-path out/rust/Cargo.toml</code>
+    </li>
+  </ol>
 </section>
 
 <section class="docs-section section-wrap" aria-labelledby="docs-title">
-  <div class="section-heading">
+  <div class="docs-heading">
     <p class="eyebrow">Documentation</p>
     <h2 id="docs-title">Guides and reference</h2>
   </div>
-  <div class="docs-grid">
-    <a href="{{ relURL "/docs/manual/get-started/" }}"><span>01</span><strong>Get started</strong><p>Build one C# program and one Rust program.</p></a>
-    <a href="{{ relURL "/docs/manual/projects/" }}"><span>02</span><strong>Configure a project</strong><p>Set source roots, output, targets, profiles, and providers.</p></a>
-    <a href="{{ relURL "/docs/manual/source-semantics/" }}"><span>03</span><strong>Write source</strong><p>Use neutral types and explicit target semantics.</p></a>
-    <a href="{{ relURL "/docs/reference/limitations/" }}"><span>04</span><strong>Know the limits</strong><p>Read the boundaries before choosing an implementation.</p></a>
-  </div>
+  <nav class="docs-links" aria-label="Documentation shortcuts">
+    <a href="{{ relURL "/docs/manual/get-started/" }}"><span><strong>Get started</strong><small>Build C# and Rust programs</small></span><b aria-hidden="true">→</b></a>
+    <a href="{{ relURL "/docs/manual/projects/" }}"><span><strong>Configure a project</strong><small>Source, targets, and providers</small></span><b aria-hidden="true">→</b></a>
+    <a href="{{ relURL "/docs/manual/source-semantics/" }}"><span><strong>Write source</strong><small>Types and target semantics</small></span><b aria-hidden="true">→</b></a>
+    <a href="{{ relURL "/docs/reference/limitations/" }}"><span><strong>Limitations</strong><small>Supported language boundaries</small></span><b aria-hidden="true">→</b></a>
+  </nav>
 </section>
 {{ end }}

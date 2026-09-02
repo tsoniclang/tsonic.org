@@ -40,23 +40,28 @@ test("the landing page states the current target contract directly", () => {
   assert.match(html, /Coming soon<\/span> Mojo, Python, and Triton/u);
   assert.match(html, /Tsonic checks TypeScript, writes native source projects/u);
   assert.match(html, /data-proof-browser/u);
-  assert.match(html, /assets\/proof-browser\.js/u);
-  assert.match(html, /TypeScript and generated source/u);
+  assert.match(html, /assets\/examples\.js/u);
   assert.match(html, /Loading examples/u);
   assert.match(html, /data-proof-progress/u);
   assert.match(html, /class="proof-select-shell"/u);
+  assert.match(html, /export function add\(left: number, right: number\): number/u);
+  assert.match(html, /double add\(double left, double right\)/u);
+  assert.match(html, /fn add\(left: f64, right: f64\) -&gt; f64/u);
+  assert.match(html, /cargo build --manifest-path out\/rust\/Cargo\.toml/u);
+  assert.match(html, /class="docs-links"/u);
   assert.doesNotMatch(
     html,
-    /data-proof-capabilities|Read the TypeScript\. Inspect the output\.|Native source compiler|compiler-card/u,
+    /TypeScript and generated source|Choose a target and project|class="target-section|class="target-card|data-proof-capabilities|Read the TypeScript\. Inspect the output\.|Native source compiler|compiler-card/u,
   );
   assert.doesNotMatch(html, /tsbindgen|@tsonic\/express|strict, deterministic subset/u);
 });
 
 test("the proof browser formats code and reports loading progress", () => {
-  const browserScript = readFileSync(join(publicDir, "assets/proof-browser.js"), "utf8");
-  const stylesheet = readFileSync(join(publicDir, "assets/site.css"), "utf8");
+  const browserScript = readFileSync(join(publicDir, "assets/examples.js"), "utf8");
+  const stylesheet = readFileSync(join(publicDir, "assets/styles.css"), "utf8");
   assert.match(browserScript, /tokenizeCode/u);
   assert.match(browserScript, /response\.body\.getReader\(\)/u);
+  assert.match(browserScript, /cache: "no-cache"/u);
   assert.match(browserScript, /aria-valuenow/u);
   assert.match(stylesheet, /\.proof-token-keyword/u);
   assert.match(stylesheet, /\.proof-progress-track/u);
@@ -164,5 +169,11 @@ test("the repository uses the Rust Tsumo build and contains no old application p
   assert.equal(existsSync(join(root, "tsonic.workspace.json")), false);
   assert.equal(existsSync(join(publicDir, "tsonic")), false);
   assert.equal(existsSync(join(publicDir, "docs.css")), false);
-  assert.ok(statSync(join(publicDir, "assets/site.css")).size > 10_000);
+  assert.ok(statSync(join(publicDir, "assets/styles.css")).size > 10_000);
+});
+
+test("mutable site assets are revalidated between deployments", () => {
+  const netlify = readFileSync(join(root, "netlify.toml"), "utf8");
+  assert.match(netlify, /for = "\/assets\/\*"[\s\S]*max-age=0, must-revalidate/u);
+  assert.doesNotMatch(netlify, /max-age=31536000|immutable/u);
 });

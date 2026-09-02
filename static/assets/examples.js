@@ -212,7 +212,7 @@ const setCode = (container, file) => {
 
 const loadCatalog = async (url, updateProgress) => {
   updateProgress(4, "Connecting to the example catalog");
-  const response = await fetch(url);
+  const response = await fetch(url, { cache: "no-cache" });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
   const totalBytes = Number(response.headers.get("content-length"));
