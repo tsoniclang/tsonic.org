@@ -137,6 +137,8 @@
 
             <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
 
+            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
+
             <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
             <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
@@ -290,6 +292,21 @@ model. Source code does not add a C#- or Rust-specific override marker.</p>
 is accepted only when that provider exposes an exact legal base contract.</p>
 <p>Tsonic source modules add types and operations only where JavaScript and
 TypeScript do not express a required native distinction.</p>
+<h2 id="type-transformations">Type transformations</h2>
+<p>Standard utility types are checked as TypeScript and then erase:</p>
+<pre><code class="language-ts">interface User {
+  id: string;
+  name: string;
+  active?: boolean;
+}
+
+type Patch = Partial&lt;User&gt;;
+type NameOnly = Pick&lt;User, "name"&gt;;
+</code></pre>
+<p>The target receives the resolved shape, not a request to implement a native
+type named <code>Partial</code> or <code>Pick</code>. The complete pinned inventory and the distinct
+<code>any</code> and <code>unknown</code> target contracts are in
+<a href="/docs/reference/typescript-types/">TypeScript types and utilities</a>.</p>
 <h2 id="exact-primitives">Exact primitives</h2>
 <pre><code class="language-ts">import type { int32, uint8, float64 } from "@tsonic/core/types.js";
 

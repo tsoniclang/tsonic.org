@@ -137,6 +137,8 @@
 
             <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
 
+            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
+
             <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
             <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
@@ -259,14 +261,14 @@ represented faithfully by the approved static Rust architecture.</p>
 <table><thead><tr><th>Area</th><th>Supported contracts</th></tr></thead><tbody>
 <tr><td>Modules</td><td>ESM imports/exports, side-effect imports, source packages, source-ordered module initialization, default exports</td></tr>
 <tr><td>Declarations</td><td>Functions, classes, interfaces, enums, aliases, generics, overload implementations, inheritance, constructors, statics, static blocks</td></tr>
-<tr><td>Values</td><td>Primitives, arrays, fixed arrays, tuples, structural records, string-literal enums, discriminated unions, nullable values, finite broad values</td></tr>
+<tr><td>Values</td><td>Primitives, arrays, fixed arrays, tuples, structural records, string-literal enums, discriminated unions, nullable values, and producer-owned finite broad values</td></tr>
 <tr><td>Calls</td><td>Source/provider overloads, generics, optional/rest parameters, callbacks, constructors, parameter modes, conversions</td></tr>
 <tr><td>Expressions</td><td>Arithmetic, comparisons, boolean logic, optional chains, nullish coalescing, properties, elements, assignments, spreads, assertions</td></tr>
 <tr><td>Control flow</td><td>Blocks, branches, switch/fallthrough, loops, labels where representable, exceptions, <code>finally</code>, async/await</td></tr>
 <tr><td>Iteration</td><td>Arrays, strings, provider iterables, <code>for...of</code>, <code>for await...of</code></td></tr>
 <tr><td>Generators</td><td>Sync, async, bidirectional <code>next(value)</code>, completion, throw/return, <code>yield*</code>, retained-borrow protocols</td></tr>
 <tr><td>Resources</td><td><code>using</code>, <code>await using</code>, lexical and exceptional cleanup</td></tr>
-<tr><td>TypeScript types</td><td>Closed mapped/utility types including <code>Partial</code>, <code>Required</code>, <code>Readonly</code>, <code>Pick</code>, <code>Omit</code>, <code>Record</code>, <code>Exclude</code>, <code>Extract</code>, <code>NonNullable</code>, callable utilities, and <code>Awaited</code></td></tr>
+<tr><td>TypeScript types</td><td>The complete pinned utility family when its resolved result has a closed Rust representation</td></tr>
 <tr><td>Rust ownership</td><td>Inferred ordinary ownership plus explicit references, lifetimes, bounds, higher-ranked callables, trait objects, and opaque captures</td></tr>
 <tr><td>Native interop</td><td>rustdoc virtual declarations, direct Cargo dependencies, references, raw pointers, ABIs, safety, fallibility, associated types</td></tr>
 <tr><td>JS surface</td><td>Closed implemented JavaScript operation families</td></tr>

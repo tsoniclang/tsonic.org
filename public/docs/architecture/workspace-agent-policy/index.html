@@ -137,6 +137,8 @@
 
             <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
 
+            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
+
             <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
             <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
@@ -269,6 +271,21 @@ precisely.</li>
 <li>Modify only repositories and product scopes the maintainer assigned to the
 task. Read-only inspection may establish a contract; it does not grant change
 ownership.</li>
+</ul>
+<h3 id="necessity-ledger">Necessity Ledger</h3>
+<ul>
+<li>Every product change set must maintain a task-local necessity ledger under
+<code>.analysis/</code> from design through certification.</li>
+<li>Each independent change class records the concrete user-visible need, the
+owning architectural layer, why the existing contract is insufficient, the
+smallest complete mechanism, explicit exclusions, affected product paths,
+and its proof gate. An accepted entry ends with: “So yes, really, really
+needed.”</li>
+<li>Every product-code, schema, configuration, fixture, and behavioral-test
+change must map to an accepted ledger entry. Remove changes that cannot be
+mapped; passing tests do not establish necessity.</li>
+<li>Final certification includes a complete diff-to-ledger reconciliation and
+reports both necessity and verification independently.</li>
 </ul>
 <h2 id="repository-safety">Repository Safety</h2>
 <ul>

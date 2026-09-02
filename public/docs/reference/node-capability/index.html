@@ -137,6 +137,8 @@
 
             <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
 
+            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
+
             <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
             <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
@@ -258,6 +260,7 @@
 <p>Authored source uses standard module specifiers:</p>
 <pre><code class="language-ts">import { mkdirSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
+import process from "node:process";
 
 const root = join(process.cwd(), ".generated");
 mkdirSync(root, { recursive: true });

@@ -137,6 +137,8 @@
 
             <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
 
+            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
+
             <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
             <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
@@ -282,6 +284,94 @@ identity and resolved carrier;</li>
 <li>platform startup, allocator, panic, linker, and target policy inferred from
 a <code>core</code> or <code>alloc</code> output request.</li>
 </ul>
+<h2 id="generators-and-retained-lifetimes">Generators and retained lifetimes</h2>
+<p>A generator can retain one authored lifetime or an ordered outlives chain. It
+cannot collapse unrelated borrows into one storage lifetime:</p>
+<pre><code class="language-ts">import type { Life, Ref } from "@tsonic/rust/types.js";
+
+function* alternate&lt;Left extends Life, Right extends Life&gt;(
+  left: Ref&lt;string, Left&gt;,
+  right: Ref&lt;string, Right&gt;,
+) {
+  yield left;
+  yield right; // rejected when neither lifetime outlives the other
+}
+</code></pre>
+<p>The same boundary applies when an async carrier must retain unrelated borrowed
+results. Tsonic does not claim that either borrow lives as long as the other.</p>
+<p>A generator that throws also needs one explicit fallible generator protocol:</p>
+<pre><code class="language-ts">function* rows() {
+  yield readRow();
+  throw new Error("invalid row");
+}
+</code></pre>
+<p>Ordinary generators, async generators, <code>next(value)</code>, <code>return</code>, <code>throw</code>
+commands, and <code>yield*</code> are supported when their selected protocol is closed.</p>
+<h2 id="places-conversions-and-callable-values">Places, conversions, and callable values</h2>
+<p>Locations over locals, parameters, fields, array elements, and proven disjoint
+subfields work. An owned-root receiver location and the neutral
+<code>hashPointer</code>, <code>bindPointer</code>, and <code>projectPointer</code> operations do not yet have a
+Rust target contract.</p>
+<p>A TypeScript assertion cannot manufacture a native conversion:</p>
+<pre><code class="language-ts">interface Animal { name: string }
+interface Dog extends Animal { breed: string }
+declare const animal: Animal;
+const dog = animal as Dog; // no proved Rust representation or conversion
+</code></pre>
+<p>Constant tuple indexes and dynamic indexes with an exact Rust integer carrier
+work. A source-only literal union such as <code>0 | 1</code> is not reinterpreted by
+spelling as a native index.</p>
+<p>Direct methods work. Detached structural, static, or open generic method values
+reject until one exact callable identity, receiver, ABI, and lifetime exist:</p>
+<pre><code class="language-ts">const read = counter.read;
+const make = Factory.make;
+</code></pre>
+<p>An arrow such as <code>() =&gt; counter.read()</code> is valid when creating a new closure
+has the intended identity and allocation behavior. Tsonic does not make that
+rewrite automatically because callback comparison and event removal can
+observe the difference.</p>
+<h2 id="construction-and-member-identity">Construction and member identity</h2>
+<p>A Rust value must be fully initialized before an instance method can receive
+<code>this</code>:</p>
+<pre><code class="language-ts">class Example {
+  first = 1;
+  second = this.read(); // target diagnostic
+  read(): number { return this.first; }
+}
+</code></pre>
+<p>Complete getter/setter pairs have one storage contract. Setter-only and
+optional accessor shapes reject when no exact storage representation exists.
+Static fields require explicit initializers, and static access must retain the
+exact class identity; constructor aliases and static <code>this</code> are not guessed.</p>
+<p><code>delete</code> is supported for selected JavaScript-array hole semantics. It cannot
+remove a field from a static Rust record. <code>for...in</code> and <code>switch</code> similarly
+require an exact own-key or equality policy for the selected carrier.</p>
+<h2 id="native-traits-threads-and-object-graphs">Native traits, threads, and object graphs</h2>
+<p>Project inheritance and interface dispatch are supported. A project-authored
+type cannot yet implement an imported native Rust trait:</p>
+<pre><code class="language-ts">import type { Display } from "@tsonic/rust/std/fmt.js";
+
+class Label implements Display {
+  // No native `impl Display for Label` contract exists yet.
+}
+</code></pre>
+<p>This affects APIs requiring a project type to implement <code>Display</code>, <code>Iterator</code>,
+<code>Drop</code>, <code>Send</code>, <code>Sync</code>, or a provider trait. External inheritance is limited to
+the explicitly supported direct JavaScript <code>Error</code> model; transitive external
+heritage is not general Rust inheritance.</p>
+<p>Ordinary project objects and closures use single-threaded ownership. Tsonic
+does not silently replace them with <code>Arc</code>, a lock, or a sendable closure to
+satisfy a threaded API. Node workers use their separate structured-clone
+contract and do not share arbitrary project objects.</p>
+<p>Strong <code>Rc</code> graphs are memory-safe but do not reclaim an unreachable strong
+cycle:</p>
+<pre><code class="language-ts">class Link { next?: Link }
+const left = new Link();
+const right = new Link();
+left.next = right;
+right.next = left;
+</code></pre>
+<p>No tracing collector is inserted behind ordinary Rust values.</p>
 <h3 id="borrow-examples">Borrow examples</h3>
 <p>Returning a borrow requires one exact source lifetime. This is valid only when
 the authored contract identifies it:</p>
@@ -297,6 +387,18 @@ clone or box the value merely to satisfy the borrow checker.</p>
 <p>Rust macros are syntax expansion, not callable metadata. They are not exposed
 as ordinary provider functions. Put a small native Rust function around a
 macro when TypeScript must call it, then expose that function through rustdoc.</p>
+<p>Provider-authored macro operations with an exact declared row are a separate,
+supported contract.</p>
+<h3 id="abi-and-provider-shapes">ABI and provider shapes</h3>
+<p>C variadic calls are supported only after the caller supplies the exact
+promoted tail carriers. Tsonic does not silently apply C default promotions,
+such as <code>float32</code> to <code>float64</code>.</p>
+<p>The rustdoc provider rejects published signatures that cannot be named by
+value, including inferred <code>_</code> types, unstable pattern types, unsupported bound
+modifiers, and unsized by-value results. Custom receivers, generic associated
+type projections, associated constraints, opaque captures, raw pointers,
+function pointers, ABIs, and supported variadics remain available when rustdoc
+provides a complete contract.</p>
 <h3 id="core-and-alloc-applications"><code>core</code> and <code>alloc</code> applications</h3>
 <p>Generated <code>core</code> and <code>alloc</code> outputs are libraries. A user-owned native
 project must provide executable startup, panic behavior, an allocator when
@@ -308,6 +410,16 @@ data contract; host-default locale/timezone behavior is not compiler
 semantics. Open object inspection, dynamic field addition that changes a
 closed Rust layout, arbitrary cyclic graph projection, and Node stream/event
 schedulers outside the capability’s closed contracts remain rejected.</p>
+<p>The JavaScript surface does not currently expose <code>String.raw</code>, wrapper-object
+construction, or the general object prototype/descriptor/extensibility
+families. Native Rust strings remain the default; explicit <code>JsString</code> is used
+only when exact UTF-16 behavior is selected. A neutral UTF-16 <code>char</code> cannot be
+silently used as a Rust Unicode scalar when it may contain a lone surrogate.</p>
+<p>The Rust Node inventory keeps each maintained row implemented, deferred, or
+hard-rejected. The principal deferred families are worker resource limits,
+extended and promise-based readline state, and Zstandard operations. Dynamic
+runtime/debugging families such as <code>vm</code>, <code>repl</code>, <code>inspector</code>, and <code>v8</code>, plus
+platform contracts without one portable native meaning, remain hard-rejected.</p>
 <h2 id="native-compiler-boundary">Native compiler boundary</h2>
 <p>Tsonic generates the exact authored and selected Rust contract. <code>rustc</code> may
 still reject source that violates native borrow checking, coherence, target,

@@ -87,7 +87,7 @@ test("the proof browser publishes complete verified projects for both targets", 
     assert.equal(new Set(ids).size, ids.length, `${target.id} project ids must be unique`);
     for (const project of target.projects) {
       assert.ok(project.summary.length > 20);
-      assert.ok(project.capabilities.length >= 4);
+      assert.equal("capabilities" in project, false);
       assert.match(project.provenance.revision, /^[0-9a-f]{40}$/u);
       assert.ok(project.sourceFiles.some((file) => file.path.endsWith(".ts")));
       assert.ok(project.outputFiles.length > 0);
@@ -114,6 +114,7 @@ test("every canonical Tsonic documentation page is published", () => {
 test("search contains canonical docs and no retired mounts", () => {
   const search = JSON.parse(readFileSync(join(publicDir, "search.json"), "utf8"));
   assert.ok(search.some((item) => item.url === "/docs/manual/get-started/" && item.title === "Get Started"));
+  assert.ok(search.some((item) => item.url === "/docs/reference/typescript-types/" && item.title === "TypeScript types and utilities"));
   assert.ok(search.some((item) => item.url === "/docs/manual/targets/rust/ownership-and-safety/"));
   assert.ok(search.some((item) => item.url === "/docs/reference/targets/csharp/provider-api/"));
   assert.ok(search.every((item) => item.mount === "Home" || item.mount === "Docs"));
