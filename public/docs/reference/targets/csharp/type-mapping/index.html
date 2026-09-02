@@ -137,6 +137,8 @@
 
             <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
 
+            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
+
             <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
             <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
@@ -269,11 +271,29 @@
 <tr><td><code>FunctionPointer&lt;A, R&gt;</code> / <code>fnptr&lt;A, R&gt;</code></td><td>native function pointer or exact callable carrier</td></tr>
 <tr><td><code>FixedArray&lt;T, N&gt;</code></td><td>exact target fixed-storage representation selected by context</td></tr>
 <tr><td>closed structural object</td><td>generated immutable/mutable object-shape type as required</td></tr>
-<tr><td><code>any</code> / <code>unknown</code></td><td>closed <code>TsValue</code> carrier; never CLR reflection over arbitrary objects</td></tr>
+<tr><td>passive <code>any</code> / <code>unknown</code></td><td>closed <code>Tsonic.CSharp.Runtime.TsValue</code> carrier</td></tr>
 </tbody></table>
 <p>Provider-backed types retain their provider-selected CLR identity, generic
 arguments, nullability, render shape, and assembly relation. A source type that
 cannot be reconciled with one exact target carrier is rejected before planning.</p>
+<h2 id="broad-values">Broad values</h2>
+<p><code>TsValue</code> is a finite runtime sum, not C# <code>dynamic</code> and not reflection over an
+arbitrary object:</p>
+<pre><code class="language-ts">export function keep(value: unknown): unknown {
+  return value;
+}
+</code></pre>
+<p>The parameter and result use <code>TsValue</code>. TypeScript still requires narrowing
+before an <code>unknown</code> member can be read:</p>
+<pre><code class="language-ts">export function text(value: unknown): string {
+  return typeof value === "string" ? value : "not text";
+}
+</code></pre>
+<p><code>any</code> removes that source check, but it only compiles when the selected member,
+call, conversion, operator, or iteration has an implemented <code>TsValue</code>
+operation. It never authorizes a late-bound CLR call by name.</p>
+<p>See <a href="/docs/reference/typescript-types/">TypeScript types and utilities</a> for the pinned
+utility inventory and the target-neutral <code>any</code> and <code>unknown</code> rules.</p>
 </div>
 </article>
 </main>

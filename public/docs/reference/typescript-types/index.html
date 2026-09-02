@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>Support Inventory | Tsonic</title>
+      <title>TypeScript types and utilities | Tsonic</title>
 
     <meta name="description" content="Compile TypeScript into native C# and Rust source projects." />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Support Inventory" />
+    <meta property="og:title" content="TypeScript types and utilities" />
     <meta property="og:description" content="Compile TypeScript into native C# and Rust source projects." />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/site.css" />
@@ -137,7 +137,7 @@
 
             <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
 
-            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
+            <li><a class="active" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
 
             <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
@@ -191,7 +191,7 @@
 
             <li><a class="" href="/docs/reference/targets/rust/language-support/">Rust language support</a></li>
 
-            <li><a class="active" href="/docs/reference/targets/rust/support-inventory/">Rust support inventory</a></li>
+            <li><a class="" href="/docs/reference/targets/rust/support-inventory/">Rust support inventory</a></li>
 
             <li><a class="" href="/docs/reference/targets/rust/limitations/">Rust limitations</a></li>
 
@@ -247,98 +247,88 @@
 
         <a href="/docs/reference/">Reference</a><span aria-hidden="true">/</span>
 
-        <a href="/docs/reference/targets/">Targets</a><span aria-hidden="true">/</span>
-
-        <a href="/docs/reference/targets/rust/">Rust</a><span aria-hidden="true">/</span>
-
-      <span>Support Inventory</span>
+      <span>TypeScript types and utilities</span>
     </nav>
-    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/reference/targets/rust/support-inventory.md">Edit source</a>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/reference/typescript-types.md">Edit source</a>
   </div>
-  <div class="prose"><h1 id="rust-support-inventory">Rust support inventory</h1>
-<p>This inventory describes the closed operation families proved by the Rust
-target. Individual overloads remain governed by the active source-profile and
-provider declarations.</p>
-<h2 id="javascript-families">JavaScript families</h2>
-<ul>
-<li><strong>Array:</strong> literals, indexed access, <code>at</code>, length, push/pop, shift/unshift,
-splice, slice, concat, join, includes, index searches, reverse, default sort,
-fill, copyWithin, iteration, and callback forms of forEach, map, filter,
-reduce, some, every, find, and their index/last variants. Dense and sparse
-identity use the selected array carrier.</li>
-<li><strong>String:</strong> length, case conversion, search predicates, index searches,
-slice/substring/substr/at, UTF-16 character/code-point operations, repeat,
-padding, trimming, normalization, concat, split, replace, replaceAll,
-search, match, matchAll, well-formedness, and static code-unit/code-point
-construction. Unrepresentable native-string results reject; explicit
-<code>JsString</code> preserves exact UTF-16.</li>
-<li><strong>RegExp:</strong> literal and dynamic construction, ECMAScript grammar and flags,
-test, exec, match/matchAll, replace/replaceAll, search, split, writable
-<code>lastIndex</code>, groups, indices, callbacks, and well-known protocols.</li>
-<li><strong>Number and Math:</strong> source-profile constants, conversions, formatting,
-parsing, predicates, trigonometric/hyperbolic/logarithmic functions,
-rounding, bit conversion, powers, random, and variadic min/max/hypot.</li>
-<li><strong>Collections:</strong> Map/ReadonlyMap and Set/ReadonlySet construction, mutation,
-lookup, size, iteration, callbacks, insertion order, SameValueZero, and Set
-algebra.</li>
-<li><strong>Date:</strong> constructors, now/parse/UTC, identity, ISO/UTC/JSON output, UTC
-getters, and UTC setters with JavaScript overflow and TimeClip rules.</li>
-<li><strong>Object and JSON:</strong> closed structural keys/values/entries, own-property
-tests, selected spread/assignment shapes, JSON parse/stringify over finite
-broad-value graphs, replacer callbacks, and selected <code>toJSON</code> methods.</li>
-<li><strong>Execution:</strong> console methods, promises, async/await, callbacks, errors,
-generators, resource management, timers, tuples, fixed arrays, records,
-generics, and selected typed-array families.</li>
-</ul>
-<h2 id="node-families">Node families</h2>
-<ul>
-<li>path and URL construction/manipulation;</li>
-<li>filesystem and filesystem-promise calls represented by the capability;</li>
-<li>process cwd/chdir/exit, argv/version/environment, executable identity,
-memory/timing metrics, and closed stdout/stderr sinks;</li>
-<li>Buffer allocation, sharing/copying, swaps, encoding, and the declared
-numeric read/write matrix;</li>
-<li>HTTP request/response operations with closed string and binary bodies;</li>
-<li>OS queries, crypto hashes/HMAC/random values, zlib, utilities, timers,
-assertions, and declared stream/sink operations;</li>
-<li>canonical <code>node:*</code> and supported bare aliases joined to one provider
-identity.</li>
-</ul>
-<h2 id="closed-world-rejections">Closed-world rejections</h2>
-<ul>
-<li><code>eval</code>, embedded engines, open reflection, and arbitrary dynamic member
-access;</li>
-<li>arbitrary <code>toJSON</code> dispatch when no exact selected method contract exists;</li>
-<li>projection or logging of unbounded arbitrary or cyclic object graphs.</li>
-</ul>
-<h2 id="check-one-rust-api">Check one Rust API</h2>
-<p>Import the exact native module and let rustdoc from the selected toolchain or
-Cargo dependency answer the question:</p>
-<pre><code class="language-ts">import { HashMap } from "@tsonic/rust/std/collections.js";
-import type { int32 } from "@tsonic/core/types.js";
+  <div class="prose"><h1 id="typescript-types-and-utilities">TypeScript types and utilities</h1>
+<p>TypeScript checks the authored type program before a target chooses native
+representations. Type-only constructs erase, but their checked result still
+controls the shape and operations that a target must preserve.</p>
+<pre><code class="language-ts">interface User {
+  readonly id: string;
+  name: string;
+  active?: boolean;
+}
 
-export function make(): HashMap&lt;string, int32&gt; {
-  return new HashMap&lt;string, int32&gt;();
+type UserPatch = Partial&lt;User&gt;;
+type UserName = Pick&lt;User, "name"&gt;;
+</code></pre>
+<p>No native type named <code>Partial</code> or <code>Pick</code> is emitted. The checker resolves each
+alias to a concrete TypeScript shape. C# or Rust then accepts that shape only
+when it has one closed target representation.</p>
+<h2 id="pinned-utility-types">Pinned utility types</h2>
+<p>Tsonic supplies one pinned no-library TypeScript profile. Its utility types
+are:</p>
+<table><thead><tr><th>Family</th><th>Utilities</th></tr></thead><tbody>
+<tr><td>Object transformations</td><td><code>Partial</code>, <code>Required</code>, <code>Readonly</code>, <code>Pick</code>, <code>Omit</code>, <code>Record</code></td></tr>
+<tr><td>Union filtering</td><td><code>Exclude</code>, <code>Extract</code>, <code>NonNullable</code></td></tr>
+<tr><td>Function projection</td><td><code>Parameters</code>, <code>ReturnType</code>, <code>ThisParameterType</code>, <code>OmitThisParameter</code></td></tr>
+<tr><td>Constructor projection</td><td><code>ConstructorParameters</code>, <code>InstanceType</code></td></tr>
+<tr><td>Promise projection</td><td><code>Awaited</code></td></tr>
+<tr><td>Inference and contextual typing</td><td><code>NoInfer</code>, <code>ThisType</code></td></tr>
+<tr><td>String-literal transformation</td><td><code>Uppercase</code>, <code>Lowercase</code>, <code>Capitalize</code>, <code>Uncapitalize</code></td></tr>
+</tbody></table>
+<p>These are TypeScript semantics, not target helpers. TSTS recognizes the exact
+profile declarations rather than matching an alias spelling. A local type
+with the same name keeps its local meaning.</p>
+<pre><code class="language-ts">interface Formatter {
+  (value: number): string;
+}
+
+type FormatterArgs = Parameters&lt;Formatter&gt;; // [value: number]
+type FormatterResult = ReturnType&lt;Formatter&gt;; // string
+type Loaded = Awaited&lt;Promise&lt;Promise&lt;string&gt;&gt;&gt;; // string
+type Loud = Uppercase&lt;"ready"&gt;; // "READY"
+</code></pre>
+<p>For overloaded functions and constructors, projection follows the pinned
+TypeScript declaration contract. Target code does not independently choose a
+different overload while interpreting a utility type.</p>
+<h2 id="unknown"><code>unknown</code></h2>
+<p><code>unknown</code> is a broad source type, not permission to inspect an arbitrary
+native object. TypeScript requires narrowing before member access:</p>
+<pre><code class="language-ts">export function text(value: unknown): string {
+  if (typeof value === "string") {
+    return value;
+  }
+  return "not text";
 }
 </code></pre>
-<p>For a third-party crate, replace the standard-library prefix with
-<code>@tsonic/rust/crates/&lt;direct-dependency-alias&gt;/*</code>. Missing items, unsupported
-signatures, foundation violations, and unresolved ownership reject at the
-provider or analysis boundary. The documentation therefore lists metadata and
-operation families rather than copying the evolving Rust API catalog.</p>
-<h2 id="rust-target-limits">Rust target limits</h2>
-<ul>
-<li>locale-sensitive string behavior requires one explicit ICU/data contract;</li>
-<li>local-time Date behavior requires one explicit timezone/data contract;</li>
-<li>open Node event schedulers such as unrestricted streams and <code>fs.watch</code>
-cannot be approximated without exact cancellation, ordering, backpressure,
-and resource-lifetime contracts;</li>
-<li><code>Object.assign</code> cannot change the static layout of an existing Rust value;</li>
-<li>runtime-added fields, open nominal inspection, and unproved cyclic identity
-remain outside the finite carrier model.</li>
-</ul>
-<p>For exact configuration and rejection rules, see
-<a href="/docs/reference/targets/rust/configuration/">configuration</a> and <a href="/docs/reference/targets/rust/limitations/">limitations</a>.</p>
+<p>The targets differ when an un-narrowed value must cross a native boundary:</p>
+<table><thead><tr><th>Target</th><th>Runtime contract</th></tr></thead><tbody>
+<tr><td>C#</td><td>A passive value can use the closed <code>TsValue</code> carrier. Only its finite, explicitly implemented operations are available.</td></tr>
+<tr><td>Rust</td><td>The annotation alone does not create a carrier. An exact producer such as supported <code>JSON.parse</code> may supply <code>JsValue</code>; an arbitrary native <code>unknown</code> parameter or result is rejected.</td></tr>
+</tbody></table>
+<h2 id="any"><code>any</code></h2>
+<p><code>any</code> relaxes TypeScript checking. It does not authorize reflection or
+best-effort native dispatch.</p>
+<pre><code class="language-ts">declare const value: any;
+value.name;
+value();
+</code></pre>
+<p>C# accepts only the operations implemented by its closed <code>TsValue</code> contract.
+Rust accepts broad values only when selected producer and consumer operations
+agree on one exact carrier. Otherwise the target reports an unsupported
+operation before publishing output.</p>
+<h2 id="target-closure">Target closure</h2>
+<p>A utility or broad source type is usable when both conditions hold:</p>
+<ol>
+<li>TypeScript checking resolves the source type and operation.</li>
+<li>The selected target proves one native carrier and every required operation.</li>
+</ol>
+<p>Source-only uses therefore work more broadly than values crossing a native
+ABI. See the target-specific <a href="/docs/reference/targets/csharp/type-mapping/">C# type mapping</a>,
+<a href="/docs/reference/targets/rust/type-mapping/">Rust type mapping</a>, and their limitations.</p>
 </div>
 </article>
 </main>

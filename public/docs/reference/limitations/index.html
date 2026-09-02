@@ -137,6 +137,8 @@
 
             <li><a class="active" href="/docs/reference/limitations/">Shared limitations</a></li>
 
+            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
+
             <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
             <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
@@ -256,10 +258,17 @@
 It does not add a JavaScript engine or a general dynamic-object runtime.</p>
 <p>Unsupported examples include:</p>
 <pre><code class="language-ts">eval(sourceText);
+new Function("return 1");
+new Proxy(target, handler);
 value[unknownRuntimeName]();
 </code></pre>
 <p>Use explicit functions, finite tagged unions, typed records, or provider APIs
 whose members are known during compilation.</p>
+<p>This same boundary excludes arbitrary runtime-created class identity, open
+generic <code>instanceof</code>, callable objects without a selected call contract, and
+shape-changing mutation of an unknown object. An equivalent static program is
+supported only when it preserves observable identity, evaluation order, and
+callbacks; Tsonic does not silently rewrite one program into another.</p>
 <h2 id="no-hidden-compiler-configuration">No hidden compiler configuration</h2>
 <p>Tsonic does not consume <code>tsconfig.json</code>, path mappings, ambient bootstrap
 modules, or declaration files as a fallback for missing target semantics.
@@ -277,6 +286,22 @@ target has a closed initialization plan. Runtime module cycles that require
 JavaScript live-binding or temporal-dead-zone behavior may be rejected.</p>
 <p>Break a runtime cycle by moving shared types or constants into a leaf module,
 or by passing dependencies explicitly.</p>
+<h2 id="javascript-platform-breadth">JavaScript platform breadth</h2>
+<p>The <code>js</code> surface is a closed implementation of selected JavaScript families,
+not every ECMAScript and Web platform API. Neither target currently exposes
+these families:</p>
+<pre><code class="language-ts">const weak = new WeakRef(value);
+const registry = new FinalizationRegistry(cleanup);
+const shared = new SharedArrayBuffer(16);
+Atomics.add(new Int32Array(shared), 0, 1);
+const big = new BigInt64Array(4);
+const keys = Reflect.ownKeys(value);
+const module = await WebAssembly.instantiate(bytes);
+</code></pre>
+<p>These require observable lifetime, finalization, shared-memory, atomic,
+big-integer binary, reflection, or virtual-machine contracts that are not in
+the current source profiles. Their absence does not affect ordinary native
+strings, arrays, threads, or provider APIs.</p>
 <h2 id="native-metadata-boundaries">Native metadata boundaries</h2>
 <p>.NET and Rust providers expose only metadata they can represent as legal
 TypeScript declarations and exact target operations. Unsupported metadata is a

@@ -41,8 +41,26 @@ test("the landing page states the current target contract directly", () => {
   assert.match(html, /Tsonic checks TypeScript, writes native source projects/u);
   assert.match(html, /data-proof-browser/u);
   assert.match(html, /assets\/proof-browser\.js/u);
-  assert.match(html, /Read the TypeScript\. Inspect the output\./u);
+  assert.match(html, /TypeScript and generated source/u);
+  assert.match(html, /Loading examples/u);
+  assert.match(html, /data-proof-progress/u);
+  assert.match(html, /class="proof-select-shell"/u);
+  assert.doesNotMatch(
+    html,
+    /data-proof-capabilities|Read the TypeScript\. Inspect the output\.|Native source compiler|compiler-card/u,
+  );
   assert.doesNotMatch(html, /tsbindgen|@tsonic\/express|strict, deterministic subset/u);
+});
+
+test("the proof browser formats code and reports loading progress", () => {
+  const browserScript = readFileSync(join(publicDir, "assets/proof-browser.js"), "utf8");
+  const stylesheet = readFileSync(join(publicDir, "assets/site.css"), "utf8");
+  assert.match(browserScript, /tokenizeCode/u);
+  assert.match(browserScript, /response\.body\.getReader\(\)/u);
+  assert.match(browserScript, /aria-valuenow/u);
+  assert.match(stylesheet, /\.proof-token-keyword/u);
+  assert.match(stylesheet, /\.proof-progress-track/u);
+  assert.match(stylesheet, /\.proof-select-shell/u);
 });
 
 test("the proof browser publishes complete verified projects for both targets", () => {
@@ -69,7 +87,7 @@ test("the proof browser publishes complete verified projects for both targets", 
     assert.equal(new Set(ids).size, ids.length, `${target.id} project ids must be unique`);
     for (const project of target.projects) {
       assert.ok(project.summary.length > 20);
-      assert.ok(project.capabilities.length >= 4);
+      assert.equal("capabilities" in project, false);
       assert.match(project.provenance.revision, /^[0-9a-f]{40}$/u);
       assert.ok(project.sourceFiles.some((file) => file.path.endsWith(".ts")));
       assert.ok(project.outputFiles.length > 0);
@@ -96,6 +114,7 @@ test("every canonical Tsonic documentation page is published", () => {
 test("search contains canonical docs and no retired mounts", () => {
   const search = JSON.parse(readFileSync(join(publicDir, "search.json"), "utf8"));
   assert.ok(search.some((item) => item.url === "/docs/manual/get-started/" && item.title === "Get Started"));
+  assert.ok(search.some((item) => item.url === "/docs/reference/typescript-types/" && item.title === "TypeScript types and utilities"));
   assert.ok(search.some((item) => item.url === "/docs/manual/targets/rust/ownership-and-safety/"));
   assert.ok(search.some((item) => item.url === "/docs/reference/targets/csharp/provider-api/"));
   assert.ok(search.every((item) => item.mount === "Home" || item.mount === "Docs"));

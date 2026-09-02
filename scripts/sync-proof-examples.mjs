@@ -46,7 +46,6 @@ const projects = [
     id: "http-server",
     title: "HTTP server",
     summary: "A Node HTTP server compiled into a native .NET application.",
-    capabilities: ["node:http", "callbacks", "HTTP", "native runtime"],
     path: "nodejs/packages/webserver",
   },
   {
@@ -54,7 +53,6 @@ const projects = [
     id: "parallel-workers",
     title: "Parallel workers",
     summary: "Three CPU-bound workers run through the .NET parallel task API.",
-    capabilities: ["multithreading", "BCL", "closures", "64-bit integers"],
     path: "bcl/packages/multithreading",
   },
   {
@@ -62,7 +60,6 @@ const projects = [
     id: "aspnet-blog",
     title: "ASP.NET blog",
     summary: "A multi-file HTTP API backed by Entity Framework Core and SQLite.",
-    capabilities: ["ASP.NET Core", "EF Core", "SQLite", "routing", "JSON"],
     path: "aspnetcore/packages/blog-ef",
   },
   {
@@ -70,7 +67,6 @@ const projects = [
     id: "spans-and-memory",
     title: "Spans and memory",
     summary: "Allocation-conscious code using native span and memory types.",
-    capabilities: ["Span<T>", "Memory<T>", "value types", "native arrays"],
     path: "bcl/packages/high-performance",
   },
   {
@@ -78,7 +74,6 @@ const projects = [
     id: "generators-and-cleanup",
     title: "Generators and cleanup",
     summary: "Generators, values sent into an iterator, and deterministic disposal.",
-    capabilities: ["generators", "yield", "iterator input", "using"],
     path: "bcl/packages/generators-resources",
   },
   {
@@ -86,7 +81,6 @@ const projects = [
     id: "native-pointers",
     title: "Native pointers",
     summary: "Explicit unsafe access, pointer loads, stores, and offsets.",
-    capabilities: ["unsafe", "native pointers", "loads and stores", "offsets"],
     path: "bcl/packages/native-pointers",
   },
   {
@@ -94,7 +88,6 @@ const projects = [
     id: "borrows-and-lifetimes",
     title: "Borrows and lifetimes",
     summary: "Shared and mutable borrows with named lifetime relationships.",
-    capabilities: ["&T", "&mut T", "lifetimes", "outlives", "no clone"],
     path: "native/packages/lifetimes",
   },
   {
@@ -102,7 +95,6 @@ const projects = [
     id: "async-functions",
     title: "Async functions",
     summary: "TypeScript promises lowered into native Rust futures and await points.",
-    capabilities: ["async", "await", "Future", "typed return"],
     path: "native/packages/async",
   },
   {
@@ -110,7 +102,6 @@ const projects = [
     id: "native-crate-api",
     title: "Native crate API",
     summary: "A direct Cargo dependency consumed through compiler-provided declarations.",
-    capabilities: ["Cargo crates", "rustdoc", "generics", "collections", "unsafe"],
     path: "native/packages/cargo-provider",
   },
   {
@@ -118,7 +109,6 @@ const projects = [
     id: "crypto-and-buffers",
     title: "Crypto and buffers",
     summary: "Node buffers, SHA-256, HMAC, and binary encoding on Rust.",
-    capabilities: ["node:crypto", "Buffer", "SHA-256", "HMAC"],
     path: "nodejs/packages/crypto-buffer",
   },
   {
@@ -126,7 +116,6 @@ const projects = [
     id: "file-system",
     title: "File system",
     summary: "Ordinary Node file APIs compiled against the Rust Node runtime.",
-    capabilities: ["node:fs", "files", "UTF-8", "native runtime"],
     path: "nodejs/packages/file-system",
   },
   {
@@ -134,7 +123,6 @@ const projects = [
     id: "generators-and-cleanup",
     title: "Generators and cleanup",
     summary: "Native iterators, sent values, and resource cleanup without a VM.",
-    capabilities: ["generators", "Iterator", "yield", "Drop"],
     path: "native/packages/generators-resources",
   },
   {
@@ -142,7 +130,6 @@ const projects = [
     id: "native-pointers",
     title: "Native pointers",
     summary: "Explicit unsafe regions with typed pointer operations.",
-    capabilities: ["unsafe", "raw pointers", "loads and stores", "offsets"],
     path: "native/packages/native-pointers",
   },
 ];
@@ -262,7 +249,6 @@ const serializedProjects = projects.map((project) => {
     id: project.id,
     title: project.title,
     summary: project.summary,
-    capabilities: project.capabilities,
     provenance: {
       repository: repository.name,
       revision: gitRevision(repository.sourceRoot),

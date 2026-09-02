@@ -137,6 +137,8 @@
 
             <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
 
+            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
+
             <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
             <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
@@ -256,9 +258,11 @@
   <div class="prose"><h1 id="c-javascript-surface">C# JavaScript surface</h1>
 <p>Select with <code>surfaces: ["js"]</code>. The target composes the shared JavaScript source
 profile and references <code>@tsonic/csharp-js</code>.</p>
-<p>Implemented families include arrays, strings, maps, sets, dates, JSON, regular
-expressions, promises, timers, typed arrays, number/math operations, and
-console APIs covered by the selected operation tables and runtime proofs.</p>
+<p>Implemented families include arrays, strings, maps, sets, dates, JSON with
+replacer callbacks and selected <code>toJSON</code>, regular expressions, promises,
+<code>Intl</code>, symbols, weak collections, timers, numeric typed arrays, number/math
+operations, and console APIs covered by the selected operation tables and
+runtime proofs.</p>
 <pre><code class="language-ts">const expression = /(?&lt;name&gt;[a-z]+)/giu;
 const match = expression.exec("Tsonic");
 console.log(match?.groups?.name);

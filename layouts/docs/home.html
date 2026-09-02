@@ -6,7 +6,6 @@
 
   <div class="hero-inner">
     <div class="hero-copy">
-      <p class="eyebrow">TypeScript source. Native output.</p>
       <h1 id="hero-title">
         <span>TypeScript to <strong class="gradient-dotnet">.NET.</strong></span>
         <span>TypeScript to <strong class="gradient-rust">Rust.</strong></span>
@@ -21,39 +20,16 @@
       </div>
       <p class="coming-line"><span>Coming soon</span> Mojo, Python, and Triton</p>
     </div>
-
-    <div class="compiler-card" aria-label="Tsonic compilation path">
-      <div class="compiler-card-head">
-        <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span>build path</span>
-      </div>
-      <div class="compiler-flow">
-        <div class="compiler-step">
-          <span class="step-number">01</span>
-          <div><strong>TypeScript</strong><small>authored source</small></div>
-        </div>
-        <span class="flow-line" aria-hidden="true"></span>
-        <div class="compiler-step">
-          <span class="step-number">02</span>
-          <div><strong>Checked program</strong><small>types and selected operations</small></div>
-        </div>
-        <span class="flow-line" aria-hidden="true"></span>
-        <div class="compiler-targets">
-          <div class="compiler-target"><span>C#</span><small>dotnet</small></div>
-          <div class="compiler-target"><span>Rust</span><small>cargo</small></div>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
 <section id="examples" class="proof-section section-wrap" aria-labelledby="proof-title">
   <div class="section-heading proof-heading">
-    <p class="eyebrow">Working projects</p>
-    <h2 id="proof-title">Read the TypeScript. Inspect the output.</h2>
+    <p class="eyebrow">Examples</p>
+    <h2 id="proof-title">TypeScript and generated source</h2>
     <p>
-      Choose a target and a passing proof project. Every file shown here comes
-      from the authored project or its generated native output.
+      Choose a target and project. Each example contains the authored
+      TypeScript and the generated native files.
     </p>
   </div>
 
@@ -68,10 +44,32 @@
         <span class="proof-control-label">Target</span>
         <div class="proof-targets" data-proof-targets role="group" aria-label="Compilation target"></div>
       </div>
-      <p class="proof-verification">Source and output from executable proof projects</p>
+      <p class="proof-verification">Examples</p>
     </div>
 
-    <p class="proof-status" data-proof-status>Loading verified projects…</p>
+    <div class="proof-status" data-proof-status role="status" aria-live="polite">
+      <div class="proof-loader">
+        <div class="proof-loader-heading">
+          <span class="proof-loader-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <div>
+            <strong>Loading examples</strong>
+            <span data-proof-progress-detail>Downloading source and generated files</span>
+          </div>
+          <output data-proof-progress>0%</output>
+        </div>
+        <div
+          class="proof-progress-track"
+          data-proof-progress-track
+          role="progressbar"
+          aria-label="Loading examples"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
+          <span data-proof-progress-bar></span>
+        </div>
+      </div>
+    </div>
 
     <div class="proof-workbench">
       <aside class="proof-project-rail" aria-label="Example projects">
@@ -87,15 +85,16 @@
           </div>
           <span class="proof-provenance" data-proof-provenance></span>
         </header>
-        <ul class="proof-capabilities" data-proof-capabilities aria-label="Capabilities shown"></ul>
-
         <div class="proof-code-grid">
           <section class="proof-code-panel" aria-labelledby="proof-source-label">
             <div class="proof-code-toolbar">
-              <div>
+              <label class="proof-file-control">
                 <span id="proof-source-label">TypeScript</span>
-                <select data-proof-source-select aria-label="TypeScript source file"></select>
-              </div>
+                <span class="proof-select-shell">
+                  <select data-proof-source-select aria-label="TypeScript source file"></select>
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>
+                </span>
+              </label>
               <button type="button" data-proof-copy="source">Copy</button>
             </div>
             <pre tabindex="0"><code data-proof-source-code></code></pre>
@@ -103,10 +102,13 @@
 
           <section class="proof-code-panel" aria-labelledby="proof-output-label">
             <div class="proof-code-toolbar">
-              <div>
+              <label class="proof-file-control">
                 <span id="proof-output-label" data-proof-output-label>Generated C#</span>
-                <select data-proof-output-select aria-label="Generated target file"></select>
-              </div>
+                <span class="proof-select-shell">
+                  <select data-proof-output-select aria-label="Generated target file"></select>
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>
+                </span>
+              </label>
               <button type="button" data-proof-copy="output">Copy</button>
             </div>
             <pre tabindex="0"><code data-proof-output-code></code></pre>
@@ -124,7 +126,7 @@
 <section class="target-section section-wrap" aria-labelledby="targets-title">
   <div class="section-heading">
     <p class="eyebrow">Targets</p>
-    <h2 id="targets-title">Native projects, not a runtime VM.</h2>
+    <h2 id="targets-title">C# and Rust</h2>
     <p>Tsonic emits target source and project files. The native toolchain performs the final build.</p>
   </div>
 
@@ -154,10 +156,10 @@
 <section class="model-section section-wrap" aria-labelledby="model-title">
   <div class="model-copy">
     <p class="eyebrow">Compiler model</p>
-    <h2 id="model-title">TypeScript in. Native source out.</h2>
+    <h2 id="model-title">Compilation flow</h2>
     <p>
       Parsing, binding, checking, narrowing, and overload selection happen before a target plans output.
-      Missing semantic proof is a compiler error. The backend does not guess.
+      Compilation stops when required semantic evidence is unavailable.
     </p>
     <a class="text-link" href="{{ relURL "/docs/manual/compiler-model/" }}">Read the compiler model <span aria-hidden="true">→</span></a>
   </div>
@@ -171,7 +173,7 @@
 <section class="docs-section section-wrap" aria-labelledby="docs-title">
   <div class="section-heading">
     <p class="eyebrow">Documentation</p>
-    <h2 id="docs-title">Start with a working project.</h2>
+    <h2 id="docs-title">Guides and reference</h2>
   </div>
   <div class="docs-grid">
     <a href="{{ relURL "/docs/manual/get-started/" }}"><span>01</span><strong>Get started</strong><p>Build one C# program and one Rust program.</p></a>

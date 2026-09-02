@@ -7,30 +7,264 @@ const element = (tagName, className, text) => {
   return node;
 };
 
+const languageKeywords = {
+  typescript: new Set(`
+    abstract as asserts async await break case catch class const constructor
+    continue debugger declare default delete do else enum export extends false
+    finally for from function get if implements import in infer instanceof
+    interface keyof let module namespace never new null of override private
+    protected public readonly return satisfies set static string super switch
+    symbol this throw true try type typeof undefined unique unknown var void
+    while with yield
+  `.trim().split(/\s+/u)),
+  csharp: new Set(`
+    abstract as async await base bool break byte case catch char checked class
+    const continue decimal default delegate do double else enum event explicit
+    extern false finally fixed float for foreach from get global goto if
+    implicit in int interface internal is lock long namespace new not null
+    object operator out override params partial private protected public readonly
+    record ref return sbyte sealed set short sizeof stackalloc static string
+    struct switch this throw true try typeof uint ulong unchecked unsafe ushort
+    using var virtual void volatile when where while yield
+  `.trim().split(/\s+/u)),
+  rust: new Set(`
+    as async await break const continue crate dyn else enum extern false fn for
+    if impl in let loop match mod move mut pub ref return self Self static struct
+    super trait true type unsafe use where while yield
+  `.trim().split(/\s+/u)),
+};
+
+const isIdentifierStart = (character) => /[A-Za-z_$]/u.test(character);
+const isIdentifierPart = (character) => /[A-Za-z0-9_$]/u.test(character);
+const isNumberPart = (character) => /[A-Za-z0-9_.]/u.test(character);
+
+const tokenizeCode = (source, language) => {
+  const tokens = [];
+  const add = (kind, start, end) => tokens.push({ kind, value: source.slice(start, end) });
+  let index = 0;
+
+  while (index < source.length) {
+    const start = index;
+    const character = source[index];
+    const next = source[index + 1];
+
+    if (/\s/u.test(character)) {
+      while (index < source.length && /\s/u.test(source[index])) index += 1;
+      add("plain", start, index);
+      continue;
+    }
+
+    if (character === "/" && next === "/") {
+      index += 2;
+      while (index < source.length && source[index] !== "\n") index += 1;
+      add("comment", start, index);
+      continue;
+    }
+
+    if (character === "/" && next === "*") {
+      index += 2;
+      while (index < source.length && !(source[index] === "*" && source[index + 1] === "/")) {
+        index += 1;
+      }
+      index = Math.min(source.length, index + 2);
+      add("comment", start, index);
+      continue;
+    }
+
+    if (language === "csharp" && character === "#" &&
+        (start === 0 || source[start - 1] === "\n")) {
+      index += 1;
+      while (index < source.length && source[index] !== "\n") index += 1;
+      add("directive", start, index);
+      continue;
+    }
+
+    if (language === "csharp" && character === "@" && next === "\"") {
+      index += 2;
+      while (index < source.length) {
+        if (source[index] === "\"" && source[index + 1] === "\"") {
+          index += 2;
+          continue;
+        }
+        if (source[index] === "\"") {
+          index += 1;
+          break;
+        }
+        index += 1;
+      }
+      add("string", start, index);
+      continue;
+    }
+
+    const rustRawPrefix = language === "rust"
+      ? source.slice(index).match(/^(?:br|r)(#*)"/u)
+      : undefined;
+    if (rustRawPrefix) {
+      const hashes = rustRawPrefix[1];
+      index += rustRawPrefix[0].length;
+      const terminator = `\"${hashes}`;
+      const end = source.indexOf(terminator, index);
+      index = end === -1 ? source.length : end + terminator.length;
+      add("string", start, index);
+      continue;
+    }
+
+    if (language === "rust" && character === "'" && isIdentifierStart(next ?? "")) {
+      index += 2;
+      while (index < source.length && isIdentifierPart(source[index])) index += 1;
+      if (source[index] !== "'") {
+        add("lifetime", start, index);
+        continue;
+      }
+      index = start;
+    }
+
+    if (character === "\"" || character === "'" || character === "`") {
+      const quote = character;
+      index += 1;
+      while (index < source.length) {
+        if (source[index] === "\\") {
+          index = Math.min(source.length, index + 2);
+          continue;
+        }
+        if (source[index] === quote) {
+          index += 1;
+          break;
+        }
+        index += 1;
+      }
+      add("string", start, index);
+      continue;
+    }
+
+    if (/[0-9]/u.test(character)) {
+      index += 1;
+      while (index < source.length && isNumberPart(source[index])) index += 1;
+      add("number", start, index);
+      continue;
+    }
+
+    if (isIdentifierStart(character)) {
+      index += 1;
+      while (index < source.length && isIdentifierPart(source[index])) index += 1;
+      const value = source.slice(start, index);
+      const keywords = languageKeywords[language] ?? languageKeywords.typescript;
+      const kind = keywords.has(value)
+        ? "keyword"
+        : /^[A-Z]/u.test(value)
+          ? "type"
+          : "plain";
+      tokens.push({ kind, value });
+      continue;
+    }
+
+    if (/[+\-*/%=!<>&|^~?:]/u.test(character)) {
+      index += 1;
+      while (index < source.length && /[+\-*/%=!<>&|^~?:]/u.test(source[index])) index += 1;
+      add("operator", start, index);
+      continue;
+    }
+
+    index += 1;
+    add("plain", start, index);
+  }
+
+  return tokens;
+};
+
 const setCode = (container, file) => {
   container.replaceChildren();
+  container.dataset.language = file.language;
   const content = file.content.endsWith("\n")
     ? file.content.slice(0, -1)
     : file.content;
   const fragment = document.createDocumentFragment();
-  for (const [index, line] of content.split("\n").entries()) {
+  let lineIndex = 0;
+  let lineSource;
+
+  const startLine = () => {
     const row = element("span", "proof-code-line");
-    const number = element("span", "proof-line-number", String(index + 1));
+    const number = element("span", "proof-line-number", String(lineIndex + 1));
     number.setAttribute("aria-hidden", "true");
-    row.append(number, element("span", "proof-line-source", line || " "));
+    lineSource = element("span", "proof-line-source");
+    row.append(number, lineSource);
     fragment.append(row);
+    lineIndex += 1;
+  };
+
+  startLine();
+  for (const token of tokenizeCode(content, file.language)) {
+    const parts = token.value.split("\n");
+    for (const [partIndex, part] of parts.entries()) {
+      if (part) {
+        if (token.kind === "plain") lineSource.append(document.createTextNode(part));
+        else lineSource.append(element("span", `proof-token-${token.kind}`, part));
+      }
+      if (partIndex < parts.length - 1) {
+        if (!lineSource.hasChildNodes()) lineSource.append(" ");
+        startLine();
+      }
+    }
   }
+  if (!lineSource.hasChildNodes()) lineSource.append(" ");
   container.append(fragment);
+};
+
+const loadCatalog = async (url, updateProgress) => {
+  updateProgress(4, "Connecting to the example catalog");
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+  const totalBytes = Number(response.headers.get("content-length"));
+  if (!response.body) {
+    updateProgress(82, "Reading source and generated files");
+    return response.json();
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let receivedBytes = 0;
+  let chunkCount = 0;
+  let text = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    receivedBytes += value.byteLength;
+    chunkCount += 1;
+    text += decoder.decode(value, { stream: true });
+    const transferProgress = Number.isFinite(totalBytes) && totalBytes > 0
+      ? Math.min(receivedBytes / totalBytes, 1)
+      : 1 - (1 / (chunkCount + 1));
+    updateProgress(
+      10 + Math.round(transferProgress * 78),
+      "Downloading source and generated files",
+    );
+  }
+
+  text += decoder.decode();
+  updateProgress(92, "Preparing examples");
+  return JSON.parse(text);
 };
 
 const initialize = async () => {
   if (!browser) return;
 
   const status = browser.querySelector("[data-proof-status]");
+  const progress = browser.querySelector("[data-proof-progress]");
+  const progressBar = browser.querySelector("[data-proof-progress-bar]");
+  const progressDetail = browser.querySelector("[data-proof-progress-detail]");
+  const progressTrack = browser.querySelector("[data-proof-progress-track]");
+  const updateProgress = (value, detail) => {
+    const percentage = Math.max(0, Math.min(100, Math.round(value)));
+    progress.textContent = `${percentage}%`;
+    progressBar.style.width = `${percentage}%`;
+    progressDetail.textContent = detail;
+    progressTrack.setAttribute("aria-valuenow", String(percentage));
+  };
+
   try {
-    const response = await fetch(browser.dataset.catalogUrl);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const catalog = await response.json();
+    const catalog = await loadCatalog(browser.dataset.catalogUrl, updateProgress);
     if (!Array.isArray(catalog.targets) || catalog.targets.length === 0) {
       throw new Error("The example catalog is empty");
     }
@@ -39,7 +273,6 @@ const initialize = async () => {
     const projectList = browser.querySelector("[data-proof-projects]");
     const projectTitle = browser.querySelector("[data-proof-title]");
     const projectSummary = browser.querySelector("[data-proof-summary]");
-    const capabilityList = browser.querySelector("[data-proof-capabilities]");
     const provenance = browser.querySelector("[data-proof-provenance]");
     const sourceSelect = browser.querySelector("[data-proof-source-select]");
     const outputSelect = browser.querySelector("[data-proof-output-select]");
@@ -86,10 +319,6 @@ const initialize = async () => {
     const renderProject = () => {
       projectTitle.textContent = activeProject.title;
       projectSummary.textContent = activeProject.summary;
-      capabilityList.replaceChildren(
-        ...activeProject.capabilities.map((capability) =>
-          element("li", "proof-capability", capability)),
-      );
       const shortRevision = activeProject.provenance.revision.slice(0, 8);
       provenance.textContent =
         `${activeProject.provenance.repository} · ${shortRevision}`;
@@ -167,10 +396,14 @@ const initialize = async () => {
     renderTargets();
     renderProjects();
     renderProject();
+    updateProgress(100, "Examples ready");
     status.hidden = true;
     browser.classList.add("proof-browser-ready");
   } catch (error) {
-    status.textContent = "Examples could not be loaded. Open the manuals for source examples.";
+    status.replaceChildren(
+      element("strong", "proof-error-title", "Examples could not be loaded"),
+      element("span", "proof-error-detail", "Open the manuals for source examples."),
+    );
     status.classList.add("proof-status-error");
     console.error("Failed to initialize proof browser", error);
   }

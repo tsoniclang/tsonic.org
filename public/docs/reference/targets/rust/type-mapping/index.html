@@ -137,6 +137,8 @@
 
             <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
 
+            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
+
             <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
             <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
@@ -271,12 +273,31 @@ TypeScript display names.</p>
 <tr><td><code>Pointer&lt;T&gt;</code></td><td><code>tsonic_rust_runtime::Location&lt;T&gt;</code></td></tr>
 <tr><td><code>NativePointer&lt;T&gt;</code>, <code>constPtr&lt;T&gt;</code>, <code>mutPtr&lt;T&gt;</code></td><td>native raw pointer with exact mutability</td></tr>
 <tr><td>closed structural object</td><td>generated Rust record/enum/trait representation selected by layout policy</td></tr>
-<tr><td>closed <code>any</code> / <code>unknown</code> use</td><td>finite broad-value carrier only for proved operations</td></tr>
+<tr><td>producer-owned broad value</td><td>finite <code>tsonic_rust_js::JsValue</code> carrier for proved operations</td></tr>
 </tbody></table>
 <p>Provider-backed values retain exact crate, module, item, generic, lifetime,
 const, associated-type, ABI, safety, fallibility, and foundation identities.
 No source type is silently boxed merely to make an unsupported operation
 compile.</p>
+<h2 id="broad-values">Broad values</h2>
+<p>An <code>any</code> or <code>unknown</code> annotation does not select a general Rust carrier:</p>
+<pre><code class="language-ts">export function keep(value: unknown): unknown {
+  return value;
+}
+</code></pre>
+<p>This is rejected when the parameter must cross the Rust ABI without a concrete
+carrier. Narrowing it first is ordinary TypeScript and produces a concrete
+target type:</p>
+<pre><code class="language-ts">export function text(value: unknown): string {
+  return typeof value === "string" ? value : "not text";
+}
+</code></pre>
+<p>An approved producer can select a finite broad carrier. Under the JavaScript
+surface, for example, <code>JSON.parse</code> produces <code>JsValue</code>; a matching JSON or JS
+operation may consume that value. This is exact producer evidence, not a
+spelling-based conversion from arbitrary <code>any</code>.</p>
+<p>See <a href="/docs/reference/typescript-types/">TypeScript types and utilities</a> for the pinned
+utility inventory and the target-neutral <code>any</code> and <code>unknown</code> rules.</p>
 </div>
 </article>
 </main>
