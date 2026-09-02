@@ -45,7 +45,10 @@ test("the landing page states the current target contract directly", () => {
   assert.match(html, /Loading examples/u);
   assert.match(html, /data-proof-progress/u);
   assert.match(html, /class="proof-select-shell"/u);
-  assert.doesNotMatch(html, /data-proof-capabilities|Read the TypeScript\. Inspect the output\./u);
+  assert.doesNotMatch(
+    html,
+    /data-proof-capabilities|Read the TypeScript\. Inspect the output\.|Native source compiler|compiler-card/u,
+  );
   assert.doesNotMatch(html, /tsbindgen|@tsonic\/express|strict, deterministic subset/u);
 });
 

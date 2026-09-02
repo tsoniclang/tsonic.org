@@ -289,7 +289,6 @@ kbd {
 
 .hero {
   position: relative;
-  min-height: min(850px, calc(100vh - var(--header-height)));
   overflow: hidden;
   border-bottom: 1px solid var(--line);
 }
@@ -331,14 +330,13 @@ kbd {
 .hero-inner {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.75fr);
-  gap: clamp(48px, 7vw, 110px);
-  align-items: center;
   width: min(calc(100% - 48px), var(--page-width));
-  min-height: min(850px, calc(100vh - var(--header-height)));
   margin: 0 auto;
-  padding: 88px 0 104px;
+  padding: 78px 0 84px;
+}
+
+.hero-copy {
+  max-width: 920px;
 }
 
 .eyebrow {
@@ -380,7 +378,7 @@ kbd {
 
 .hero-summary {
   max-width: 660px;
-  margin: 34px 0 0;
+  margin: 28px 0 0;
   color: var(--text-soft);
   font-size: clamp(1.08rem, 1.7vw, 1.3rem);
   line-height: 1.65;
@@ -395,7 +393,7 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 36px;
+  margin-top: 28px;
 }
 
 .button {
@@ -445,124 +443,6 @@ kbd {
   font-weight: 750;
 }
 
-.compiler-card {
-  overflow: hidden;
-  border: 1px solid var(--line-strong);
-  border-radius: 20px;
-  background: rgba(16, 13, 24, 0.78);
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.42);
-  backdrop-filter: blur(22px);
-}
-
-.compiler-card-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 50px;
-  padding: 0 16px;
-  border-bottom: 1px solid var(--line);
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.window-dots {
-  display: flex;
-  gap: 6px;
-}
-
-.window-dots i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #5d5766;
-}
-
-.window-dots i:first-child {
-  background: var(--pink);
-}
-
-.window-dots i:nth-child(2) {
-  background: var(--orange);
-}
-
-.window-dots i:last-child {
-  background: var(--green);
-}
-
-.compiler-flow {
-  padding: 28px;
-}
-
-.compiler-step {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  background: rgba(255, 255, 255, 0.035);
-}
-
-.step-number {
-  color: #ae9bc7;
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.compiler-step strong,
-.compiler-step small {
-  display: block;
-}
-
-.compiler-step strong {
-  font-size: 15px;
-}
-
-.compiler-step small,
-.compiler-target small {
-  margin-top: 2px;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.flow-line {
-  display: block;
-  width: 1px;
-  height: 22px;
-  margin-left: 39px;
-  background: linear-gradient(var(--violet), var(--orange));
-}
-
-.compiler-targets {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.compiler-target {
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  background: linear-gradient(145deg, rgba(156, 114, 255, 0.13), rgba(255, 92, 168, 0.04));
-}
-
-.compiler-target:last-child {
-  background: linear-gradient(145deg, rgba(255, 157, 92, 0.14), rgba(255, 92, 168, 0.04));
-}
-
-.compiler-target span,
-.compiler-target small {
-  display: block;
-}
-
-.compiler-target span {
-  font-size: 16px;
-  font-weight: 750;
-}
-
 .section-wrap {
   width: min(calc(100% - 48px), var(--page-width));
   margin: 0 auto;
@@ -591,6 +471,7 @@ kbd {
 }
 
 .proof-section {
+  padding-top: 92px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -1682,17 +1563,8 @@ kbd {
 }
 
 @media (max-width: 1100px) {
-  .hero-inner {
-    grid-template-columns: 1fr;
-    padding-top: 90px;
-  }
-
   .hero h1 {
-    font-size: clamp(4rem, 11vw, 6.8rem);
-  }
-
-  .compiler-card {
-    width: min(100%, 580px);
+    font-size: clamp(4rem, 9vw, 5.5rem);
   }
 
   .docs-grid {
@@ -1842,11 +1714,11 @@ kbd {
 
   .hero-inner {
     width: calc(100% - 32px);
-    padding: 72px 0 82px;
+    padding: 54px 0 62px;
   }
 
   .hero h1 {
-    font-size: clamp(3.3rem, 16vw, 5.3rem);
+    font-size: clamp(3rem, 14vw, 4.5rem);
     line-height: 0.95;
   }
 
@@ -1858,11 +1730,6 @@ kbd {
     font-size: 17px;
   }
 
-  .compiler-flow {
-    padding: 18px;
-  }
-
-  .compiler-targets,
   .target-grid,
   .docs-grid,
   .section-pages {
