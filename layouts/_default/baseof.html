@@ -15,9 +15,9 @@
     <meta property="og:title" content="{{ if .IsHome }}TypeScript to .NET and Rust{{ else }}{{ .Title }}{{ end }}" />
     <meta property="og:description" content="{{ default "Compile TypeScript into native C# and Rust source projects." .Description }}" />
     <link rel="icon" href="{{ relURL "assets/favicon.svg" }}" type="image/svg+xml" />
-    <link rel="stylesheet" href="{{ relURL "assets/site.css" }}" />
+    <link rel="stylesheet" href="{{ relURL "assets/styles.css" }}" />
     <script defer src="{{ relURL "assets/nav.js" }}"></script>
-    {{ if .IsHome }}<script defer src="{{ relURL "assets/proof-browser.js" }}"></script>{{ else }}<script defer src="{{ relURL "assets/search.js" }}"></script>{{ end }}
+    {{ if .IsHome }}<script defer src="{{ relURL "assets/examples.js" }}"></script>{{ else }}<script defer src="{{ relURL "assets/search.js" }}"></script>{{ end }}
   </head>
   <body class="{{ if .IsHome }}home-page{{ else }}docs-page{{ end }}">
     <a class="skip-link" href="#main-content">Skip to content</a>
