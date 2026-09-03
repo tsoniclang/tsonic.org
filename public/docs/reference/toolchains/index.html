@@ -273,8 +273,11 @@ Framework and assembly provider inputs are snapshotted for one compilation.</p>
 ASP.NET, desktop, mobile, test, or custom SDK project into a generated
 <code>Microsoft.NET.Sdk</code> project.</p>
 <h2 id="rust">Rust</h2>
-<p>The Rust target requires <code>cargo</code>, <code>rustc</code>, and <code>rustdoc</code> from one coherent
-toolchain. Native validation commonly also uses <code>rustfmt</code> and Clippy.</p>
+<p>The Rust target requires <code>cargo</code>, <code>rustc</code>, <code>rustdoc</code>, and <code>rustfmt</code> from one
+coherent toolchain. Tsonic runs <code>rustfmt</code> over every generated Rust source file
+before publishing the output. Missing or failed formatting rejects the target
+compilation; Tsonic does not publish an unformatted fallback. Clippy is used by
+the native validation gates.</p>
 <p>Tsonic records the exact <code>rustc -vV</code> identity and consumes rustdoc JSON from
 that toolchain. An unsupported rustdoc schema is rejected. The project does not
 promise that every historical or future Rust release has the same rustdoc JSON
