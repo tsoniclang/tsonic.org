@@ -255,21 +255,50 @@
 <p>This guide builds one C# program and one Rust program. Each starts from an
 empty directory.</p>
 <h2 id="requirements">Requirements</h2>
-<ul>
-<li>Node.js 22.18 or newer</li>
-<li>npm</li>
-<li>.NET 10 SDK for C#</li>
-<li><code>cargo</code>, <code>rustc</code>, and <code>rustdoc</code> for Rust</li>
-</ul>
-<p>Tsonic generates source code. <code>dotnet</code> or Cargo performs the native build.</p>
+<p>Install <a href="https://nodejs.org/en/download">Node.js 22.18 or newer</a>. The official
+Node installer includes npm. Confirm both commands resolve from the same
+terminal:</p>
+<pre><code class="language-sh">node --version
+npm --version
+</code></pre>
+<p>For C#, install the <a href="https://dotnet.microsoft.com/en-us/download/dotnet/10.0">.NET 10 SDK</a>.
+Install the SDK, not only the runtime. Microsoft also publishes
+<a href="https://learn.microsoft.com/en-us/dotnet/core/install/">platform-specific installation instructions</a>.</p>
+<pre><code class="language-sh">dotnet --version
+dotnet --list-sdks
+</code></pre>
+<p>The selected SDK must be <code>10.0.x</code>.</p>
+<p>For Rust, install Rust through <a href="https://www.rust-lang.org/tools/install">rustup</a>,
+then install the formatter from the same toolchain:</p>
+<pre><code class="language-sh">rustup toolchain install stable
+rustup default stable
+rustup component add rustfmt
+rustup show active-toolchain
+rustc --version
+cargo --version
+rustdoc --version
+rustfmt --version
+</code></pre>
+<p>Clippy is optional for the first build. Install it with
+<code>rustup component add clippy</code> before running the manual’s lint commands.</p>
+<p>Tsonic does not install or update native SDKs. It generates source code;
+<code>dotnet</code> or Cargo performs the native build.</p>
 <h2 id="build-a-c-application">Build a C# application</h2>
 <p>Create this directory:</p>
 <pre><code class="language-text">hello-csharp/
+├── .gitignore
 ├── package.json
 ├── tsonic.json
 └── src/
     └── App.ts
 </code></pre>
+<p>Create <code>.gitignore</code>:</p>
+<pre><code class="language-gitignore">node_modules/
+out/
+.tsonic/
+</code></pre>
+<p>Commit the generated <code>package-lock.json</code>; do not commit compiler output or
+cache state.</p>
 <p>Create <code>package.json</code>:</p>
 <pre><code class="language-json">{
   "name": "hello-csharp",
@@ -280,8 +309,8 @@ empty directory.</p>
     "run": "dotnet run --project out/csharp/HelloCsharp.csproj"
   },
   "devDependencies": {
-    "@tsonic/cli": "0.0.1",
-    "@tsonic/target-csharp": "0.0.1"
+    "@tsonic/cli": "^0.1.0",
+    "@tsonic/target-csharp": "^0.1.0"
   }
 }
 </code></pre>
@@ -311,6 +340,7 @@ Console.WriteLine(message("C#"));
 </code></pre>
 <p>Install, compile, and run:</p>
 <pre><code class="language-sh">npm install
+npx --no-install tsonic targets --project tsonic.json
 npm run build
 npm run run
 </code></pre>
@@ -321,7 +351,7 @@ npm run run
 therefore the C# application entry. An exported function named <code>main</code> has no
 special meaning unless your source calls it.</p>
 <h2 id="build-a-rust-application">Build a Rust application</h2>
-<p>Create the same three-file layout in <code>hello-rust/</code>.</p>
+<p>Create the same layout in <code>hello-rust/</code>.</p>
 <p>Create <code>package.json</code>:</p>
 <pre><code class="language-json">{
   "name": "hello-rust",
@@ -332,8 +362,8 @@ special meaning unless your source calls it.</p>
     "run": "cargo run --manifest-path out/rust/Cargo.toml"
   },
   "devDependencies": {
-    "@tsonic/cli": "0.0.1",
-    "@tsonic/target-rust": "0.0.1"
+    "@tsonic/cli": "^0.1.0",
+    "@tsonic/target-rust": "^0.1.0"
   }
 }
 </code></pre>
@@ -362,6 +392,7 @@ special meaning unless your source calls it.</p>
 </code></pre>
 <p>Install, compile, and run:</p>
 <pre><code class="language-sh">npm install
+npx --no-install tsonic targets --project tsonic.json
 npm run build
 npm run run
 </code></pre>
@@ -386,9 +417,11 @@ and built-ins:</p>
 </code></pre>
 <h2 id="use-node-apis">Use Node APIs</h2>
 <p>Node is an installed capability, not a source surface:</p>
-<pre><code class="language-sh"># Choose the package for the selected target.
-npm install --save-dev @tsonic/csharp-nodejs
-npm install --save-dev @tsonic/rust-nodejs
+<pre><code class="language-sh"># C# project
+npm install --save-dev @tsonic/csharp-nodejs@^0.1.0
+
+# Rust project
+npm install --save-dev @tsonic/rust-nodejs@^0.1.0
 </code></pre>
 <pre><code class="language-ts">import { readFileSync } from "node:fs";
 

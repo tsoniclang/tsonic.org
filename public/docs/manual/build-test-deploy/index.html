@@ -255,7 +255,7 @@
 <p>Tsonic has one job: produce a complete native source project. The native
 toolchain owns compilation, tests, packaging, and deployment.</p>
 <h2 id="generate-source">Generate source</h2>
-<pre><code class="language-sh">npx tsonic build --project tsonic.json
+<pre><code class="language-sh">npx --no-install tsonic build --project tsonic.json
 </code></pre>
 <p>The command checks the TypeScript program, compiles every selected target, and
 publishes <code>outDir</code> only when the whole build succeeds.</p>
@@ -289,15 +289,22 @@ use dedicated options; open deployment settings use <code>properties</code>:</p>
 <p>Use a user-owned <code>.csproj</code> for Web, desktop, test, MAUI, custom SDK, signing,
 or other project structures that are not a plain <code>Microsoft.NET.Sdk</code> project.</p>
 <h2 id="rust">Rust</h2>
-<p>The first Cargo command creates <code>Cargo.lock</code> when needed:</p>
+<p>The first Cargo command after each Tsonic generation creates <code>Cargo.lock</code> when
+needed:</p>
 <pre><code class="language-sh">cargo build --manifest-path out/rust/Cargo.toml
 cargo run --manifest-path out/rust/Cargo.toml
 </code></pre>
-<p>After the lockfile exists, reproducible commands may use <code>--locked</code>:</p>
+<p>After that lockfile exists, commands against the current generated tree may use
+<code>--locked</code>:</p>
 <pre><code class="language-sh">cargo fmt --manifest-path out/rust/Cargo.toml --all --check
 cargo clippy --manifest-path out/rust/Cargo.toml --all-targets --locked -- -D warnings
 cargo test --manifest-path out/rust/Cargo.toml --locked
 </code></pre>
+<p><code>outDir</code> is compiler-owned. Another successful <code>tsonic build</code> replaces the
+whole generated tree, including a lockfile created there by Cargo. Run one
+unlocked Cargo command again after regeneration. If a lockfile must survive
+source generation and be committed, use a user-owned <code>Cargo.toml</code>; Tsonic
+then emits source into that native project without owning its lockfile.</p>
 <p>Cross-compile a hosted Rust application with the normal Cargo target option:</p>
 <pre><code class="language-sh">rustup target add aarch64-unknown-linux-gnu
 cargo build --manifest-path out/rust/Cargo.toml \

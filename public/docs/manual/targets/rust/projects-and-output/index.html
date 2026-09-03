@@ -351,15 +351,18 @@ configured Cargo graph but does not edit it.</p>
 <p>There is no generic “Cargo overrides” object. Cargo owns Cargo configuration;
 Tsonic owns the source and target semantic contract.</p>
 <h2 id="native-build">Native build</h2>
-<pre><code class="language-sh">npx tsonic build -p tsonic.json
+<pre><code class="language-sh">npx --no-install tsonic build -p tsonic.json
 cargo build --manifest-path out/rust/Cargo.toml
 </code></pre>
 <p>Tsonic’s toolchain stage reports the formatted generated artifact set; Cargo
 performs the native compile, test, run, and publish operations.</p>
-<p>After the first build creates <code>Cargo.lock</code>, reproducible commands can add
-<code>--locked</code>:</p>
+<p>After the first Cargo command creates <code>Cargo.lock</code>, commands against that
+generated tree can add <code>--locked</code>:</p>
 <pre><code class="language-sh">cargo test --manifest-path out/rust/Cargo.toml --locked
 </code></pre>
+<p>A later <code>tsonic build</code> atomically replaces compiler-owned <code>outDir</code>, including
+that generated lockfile. Run an unlocked Cargo command after regeneration.
+Keep a durable, committed lockfile in a user-owned Cargo project.</p>
 </div>
 </article>
 </main>

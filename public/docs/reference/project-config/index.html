@@ -262,9 +262,14 @@ not a <code>tsconfig.json</code>, and fields such as <code>compilerOptions</code
 <tr><td><code>rootFiles</code></td><td>No</td><td>nonempty distinct string array</td><td><code>[entryPoint]</code></td><td>Additional final <code>.ts</code>/<code>.mts</code> roots; must include <code>entryPoint</code> after resolution</td></tr>
 <tr><td><code>rootDir</code></td><td>No</td><td>nonempty string</td><td>project-file directory</td><td>Root for source resolution</td></tr>
 <tr><td><code>outDir</code></td><td>No</td><td>nonempty string</td><td><code>dist/tsonic</code></td><td>Compiler-owned publication root</td></tr>
+<tr><td><code>cacheDir</code></td><td>No</td><td>nonempty string</td><td><code>.tsonic/cache</code></td><td>Disposable compiler and target-tool cache; must not overlap <code>outDir</code></td></tr>
 <tr><td><code>targets</code></td><td>Yes</td><td>nonempty target array</td><td>none</td><td>One entry per unique target id</td></tr>
 </tbody></table>
-<p>Every resolved root file must remain strictly inside the resolved project root.</p>
+<p>Every resolved root file must remain strictly inside the resolved project root.
+<code>cacheDir</code> is resolved from the project-file directory. Tsonic and target packs
+write cache data beneath it instead of modifying installed packages. It must be
+disjoint from <code>outDir</code> so atomic publication never includes or deletes cache
+state.</p>
 <h2 id="target-fields">Target fields</h2>
 <table><thead><tr><th>Field</th><th>Required</th><th>Type</th><th>Contract</th></tr></thead><tbody>
 <tr><td><code>id</code></td><td>Yes</td><td>string</td><td>Lowercase ASCII id with single hyphen-separated segments</td></tr>

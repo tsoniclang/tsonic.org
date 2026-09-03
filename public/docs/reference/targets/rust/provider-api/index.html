@@ -318,6 +318,18 @@ planning, or recover an item from source spelling.</p>
 opts into a closed construction policy and every authored field resolves to
 exact readable/writable native member rows. Default completion is legal only
 when the provider explicitly supplies that construction contract.</p>
+<h2 id="generic-parameter-boundaries">Generic parameter boundaries</h2>
+<p>Provider operation rows preserve whether a Rust type parameter accepts
+unsized arguments:</p>
+<pre><code class="language-ts">genericParameters: [
+  { kind: "type", sourceName: "Q", maybeSized: true },
+]
+</code></pre>
+<p><code>maybeSized: true</code> represents an exact Rust <code>Q: ?Sized</code> declaration. Omit the
+field for an ordinary type parameter, whose Rust contract includes the implicit
+<code>Sized</code> bound. This distinction lets a borrowed native string use <code>str</code> only
+when the selected Rust API permits it; it is not inferred from a method name or
+argument spelling.</p>
 <h2 id="evaluation-and-errors">Evaluation and errors</h2>
 <p>Provider operations are observable by default. <code>evaluation: "pure"</code> is legal
 only when repetition with stable inputs is observably identical and no input

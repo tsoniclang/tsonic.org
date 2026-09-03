@@ -275,8 +275,8 @@ and TypeScript source files.</p>
     "build": "tsonic build --project tsonic.json"
   },
   "devDependencies": {
-    "@tsonic/cli": "0.0.1",
-    "@tsonic/target-csharp": "0.0.1"
+    "@tsonic/cli": "^0.1.0",
+    "@tsonic/target-csharp": "^0.1.0"
   }
 }
 </code></pre>
@@ -300,6 +300,9 @@ Node ESM rules.</p>
 <li><code>rootFiles</code> defaults to the entrypoint and must include it when supplied.</li>
 <li>Imported dependencies are followed through the checked ESM graph.</li>
 <li><code>outDir</code> is resolved from the project directory, not from <code>rootDir</code>.</li>
+<li>Target tools keep disposable state under <code>cacheDir</code>, which defaults to
+<code>.tsonic/cache</code> beside <code>tsonic.json</code>. Set it when that location is not
+writable. It cannot overlap <code>outDir</code>.</li>
 </ul>
 <p>Tsonic does not read a <code>tsconfig.json</code>. Fields such as <code>compilerOptions</code>,
 <code>paths</code>, <code>baseUrl</code>, <code>extends</code>, and TypeScript project references are rejected
