@@ -252,122 +252,55 @@
     <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/manual/get-started.md">Edit source</a>
   </div>
   <div class="prose"><h1 id="get-started">Get started</h1>
-<p>This guide builds one C# program and one Rust program. Each starts from an
-empty directory.</p>
+<p>Create, compile, and run a C# or Rust application from an empty directory.</p>
 <h2 id="requirements">Requirements</h2>
 <p>Install <a href="https://nodejs.org/en/download">Node.js 22.18 or newer</a>. The official
-Node installer includes npm. Confirm both commands resolve from the same
-terminal:</p>
+installer includes npm.</p>
 <pre><code class="language-sh">node --version
 npm --version
 </code></pre>
-<p>For C#, install the <a href="https://dotnet.microsoft.com/en-us/download/dotnet/10.0">.NET 10 SDK</a>.
-Install the SDK, not only the runtime. Microsoft also publishes
-<a href="https://learn.microsoft.com/en-us/dotnet/core/install/">platform-specific installation instructions</a>.</p>
+<p>For C#, install the <a href="https://dotnet.microsoft.com/en-us/download/dotnet/10.0">.NET 10 SDK</a>,
+not only the runtime.</p>
 <pre><code class="language-sh">dotnet --version
 dotnet --list-sdks
 </code></pre>
-<p>The selected SDK must be <code>10.0.x</code>.</p>
-<p>For Rust, install Rust through <a href="https://www.rust-lang.org/tools/install">rustup</a>,
-then install the formatter from the same toolchain:</p>
+<p>For Rust, use the <a href="https://www.rust-lang.org/tools/install">official rustup installer</a>,
+then install <code>rustfmt</code> in the active toolchain.</p>
 <pre><code class="language-sh">rustup toolchain install stable
 rustup default stable
 rustup component add rustfmt
-rustup show active-toolchain
-rustc --version
-cargo --version
-rustdoc --version
-rustfmt --version
 </code></pre>
-<p>Clippy is optional for the first build. Install it with
-<code>rustup component add clippy</code> before running the manual’s lint commands.</p>
-<p>Tsonic does not install or update native SDKs. It generates source code;
-<code>dotnet</code> or Cargo performs the native build.</p>
-<h2 id="build-a-c-application">Build a C# application</h2>
-<p>Create this directory:</p>
+<p>The project creator checks the selected native toolchain before publishing the
+new project directory. If a requirement is missing, it reports the failed
+command and the official installation route. It never installs or changes a
+native SDK.</p>
+<h2 id="create-a-c-application">Create a C# application</h2>
+<pre><code class="language-sh">npm create tsonic@latest hello-csharp -- --target csharp
+cd hello-csharp
+npm start
+</code></pre>
+<p>The first command installs the project-local CLI and C# target and creates:</p>
 <pre><code class="language-text">hello-csharp/
 ├── .gitignore
 ├── package.json
+├── package-lock.json
 ├── tsonic.json
 └── src/
     └── App.ts
 </code></pre>
-<p>Create <code>.gitignore</code>:</p>
-<pre><code class="language-gitignore">node_modules/
-out/
-.tsonic/
-</code></pre>
-<p>Commit the generated <code>package-lock.json</code>; do not commit compiler output or
-cache state.</p>
-<p>Create <code>package.json</code>:</p>
-<pre><code class="language-json">{
-  "name": "hello-csharp",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "tsonic build --project tsonic.json",
-    "run": "dotnet run --project out/csharp/HelloCsharp.csproj"
-  },
-  "devDependencies": {
-    "@tsonic/cli": "^0.1.0",
-    "@tsonic/target-csharp": "^0.1.0"
-  }
-}
-</code></pre>
-<p>Create <code>src/App.ts</code>:</p>
+<p>The starter source uses the native C# profile:</p>
 <pre><code class="language-ts">import { Console } from "@tsonic/dotnet/System.js";
 
-function message(name: string): string {
-  return `Hello, ${name}!`;
-}
-
-Console.WriteLine(message("C#"));
+Console.WriteLine("Hello from hello-csharp!");
 </code></pre>
-<p>Create <code>tsonic.json</code>:</p>
-<pre><code class="language-json">{
-  "entryPoint": "App.ts",
-  "rootDir": "src",
-  "outDir": "out",
-  "targets": [{
-    "id": "csharp",
-    "options": {
-      "assemblyName": "HelloCsharp",
-      "namespace": "Hello.Generated",
-      "outputType": "Exe"
-    }
-  }]
-}
+<p><code>npm start</code> runs Tsonic and then <code>dotnet run</code>. Generated C# and its <code>.csproj</code>
+are under <code>out/csharp/</code>.</p>
+<h2 id="create-a-rust-application">Create a Rust application</h2>
+<pre><code class="language-sh">npm create tsonic@latest hello-rust -- --target rust
+cd hello-rust
+npm start
 </code></pre>
-<p>Install, compile, and run:</p>
-<pre><code class="language-sh">npm install
-npx --no-install tsonic targets --project tsonic.json
-npm run build
-npm run run
-</code></pre>
-<p>Output:</p>
-<pre><code class="language-text">Hello, C#!
-</code></pre>
-<p>The generated C# entrypoint runs the TypeScript entry module. Top-level code is
-therefore the C# application entry. An exported function named <code>main</code> has no
-special meaning unless your source calls it.</p>
-<h2 id="build-a-rust-application">Build a Rust application</h2>
-<p>Create the same layout in <code>hello-rust/</code>.</p>
-<p>Create <code>package.json</code>:</p>
-<pre><code class="language-json">{
-  "name": "hello-rust",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "tsonic build --project tsonic.json",
-    "run": "cargo run --manifest-path out/rust/Cargo.toml"
-  },
-  "devDependencies": {
-    "@tsonic/cli": "^0.1.0",
-    "@tsonic/target-rust": "^0.1.0"
-  }
-}
-</code></pre>
-<p>Create <code>src/App.ts</code>:</p>
+<p>The starter exports the Rust binary entry:</p>
 <pre><code class="language-ts">export function main(): void {
   const answer = 40 + 2;
   if (answer !== 42) {
@@ -375,67 +308,52 @@ special meaning unless your source calls it.</p>
   }
 }
 </code></pre>
-<p>Create <code>tsonic.json</code>:</p>
-<pre><code class="language-json">{
-  "entryPoint": "App.ts",
-  "rootDir": "src",
-  "outDir": "out",
-  "targets": [{
-    "id": "rust",
-    "options": {
-      "crateName": "hello_rust",
-      "edition": "2024",
-      "outputType": "bin"
-    }
-  }]
-}
+<p><code>npm start</code> runs Tsonic and then Cargo. Generated Rust and <code>Cargo.toml</code> are
+under <code>out/rust/</code>.</p>
+<h2 id="project-commands">Project commands</h2>
+<p>Every created project contains the same three scripts:</p>
+<pre><code class="language-sh">npm run build
+npm run check
+npm start
 </code></pre>
-<p>Install, compile, and run:</p>
-<pre><code class="language-sh">npm install
-npx --no-install tsonic targets --project tsonic.json
-npm run build
-npm run run
+<ul>
+<li><code>build</code> generates the target-native source project.</li>
+<li><code>check</code> generates it and runs the target’s native build check.</li>
+<li><code>start</code> generates it and runs the native application.</li>
+</ul>
+<p>Commit <code>package.json</code>, <code>package-lock.json</code>, <code>tsonic.json</code>, and authored source.
+The generated <code>.gitignore</code> excludes <code>node_modules/</code>, <code>out/</code>, and <code>.tsonic/</code>.</p>
+<h2 id="select-the-javascript-surface">Select the JavaScript surface</h2>
+<p>Select a source surface while creating the project:</p>
+<pre><code class="language-sh">npm create tsonic@latest hello-js -- --target rust --surface js
 </code></pre>
-<p>A generated Rust binary requires the entry module to export <code>main(): void</code>.
-Tsonic creates native Rust <code>main</code> and calls that exported function after module
-initialization.</p>
-<h2 id="use-javascript-apis">Use JavaScript APIs</h2>
-<p>Add <code>"surfaces": ["js"]</code> to a target when the source uses JavaScript globals
-and built-ins:</p>
-<pre><code class="language-json">{
-  "id": "rust",
-  "surfaces": ["js"],
-  "options": {
-    "crateName": "hello_rust",
-    "outputType": "bin"
-  }
-}
-</code></pre>
+<p>The resulting <code>tsonic.json</code> contains <code>"surfaces": ["js"]</code>. JavaScript globals
+and built-ins are then available:</p>
 <pre><code class="language-ts">export function main(): void {
   console.log([1, 2, 3].map((value) =&gt; value * 2).join(","));
 }
 </code></pre>
-<h2 id="use-node-apis">Use Node APIs</h2>
-<p>Node is an installed capability, not a source surface:</p>
-<pre><code class="language-sh"># C# project
+<p>The JS surface is explicit. Selecting a target does not enable it implicitly.</p>
+<h2 id="add-node-apis">Add Node APIs</h2>
+<p>Node is an installed target capability. Add the package matching the project:</p>
+<pre><code class="language-sh"># C#
 npm install --save-dev @tsonic/csharp-nodejs@^0.1.0
 
-# Rust project
+# Rust
 npm install --save-dev @tsonic/rust-nodejs@^0.1.0
 </code></pre>
+<p>Use standard Node module specifiers:</p>
 <pre><code class="language-ts">import { readFileSync } from "node:fs";
 
 const text = readFileSync("message.txt", "utf8");
 </code></pre>
-<p>Installing a Node capability does not enable JavaScript globals. Select the JS
-surface separately only when the program uses it.</p>
-<h2 id="next">Next</h2>
-<ul>
-<li><a href="/docs/manual/projects/">Projects and configuration</a></li>
-<li><a href="/docs/manual/applications-and-libraries/">Applications and libraries</a></li>
-<li><a href="/docs/manual/targets/csharp/">C# target manual</a></li>
-<li><a href="/docs/manual/targets/rust/">Rust target manual</a></li>
-</ul>
+<p>An imported <code>node:*</code> module activates only that installed capability module.
+Installing Node support does not enable the JavaScript surface.</p>
+<h2 id="existing-and-advanced-projects">Existing and advanced projects</h2>
+<p>The creator is the default path for a new application. For multiple targets,
+workspaces, libraries, or user-owned <code>.csproj</code> and <code>Cargo.toml</code> files, continue
+with <a href="/docs/manual/projects/">projects and configuration</a> and
+<a href="/docs/manual/applications-and-libraries/">applications and libraries</a>.</p>
 </div>
 </article>
 </main>

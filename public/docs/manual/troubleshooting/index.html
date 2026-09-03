@@ -255,6 +255,9 @@
 <p>Start with the first diagnostic owner and code. Tsonic does not hide an error
 by emitting partial target code.</p>
 <h2 id="a-required-command-is-missing">A required command is missing</h2>
+<p><code>create-tsonic</code> checks the selected target before publishing the project. Its
+diagnostic names the failed command and links to the official installer. If a
+toolchain was changed after creation, run the same checks manually.</p>
 <p>Check the host tools first:</p>
 <pre><code class="language-sh">node --version
 npm --version
@@ -286,6 +289,7 @@ does not install the package.</p>
 <p>Check discovery:</p>
 <pre><code class="language-sh">npx --no-install tsonic targets --project tsonic.json
 </code></pre>
+<p>For a new project, prefer <code>npm create tsonic@latest &lt;directory&gt; -- --target rust</code>; the creator installs and validates the target as one transaction.</p>
 <h2 id="cache-directory-is-not-writable">Cache directory is not writable</h2>
 <p>Targets never write inside installed packages. Their compiler-tool state goes
 under <code>.tsonic/cache</code> beside <code>tsonic.json</code> by default. Select another writable
