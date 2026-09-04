@@ -254,18 +254,51 @@
   <div class="prose"><h1 id="troubleshooting">Troubleshooting</h1>
 <p>Start with the first diagnostic owner and code. Tsonic does not hide an error
 by emitting partial target code.</p>
+<h2 id="a-required-command-is-missing">A required command is missing</h2>
+<p><code>create-tsonic</code> checks the selected target before publishing the project. Its
+diagnostic names the failed command and links to the official installer. If a
+toolchain was changed after creation, run the same checks manually.</p>
+<p>Check the host tools first:</p>
+<pre><code class="language-sh">node --version
+npm --version
+</code></pre>
+<p>For C#, <code>dotnet --list-sdks</code> must include a <code>10.0.x</code> SDK. Installing only a
+.NET runtime is insufficient. Use the
+<a href="https://dotnet.microsoft.com/en-us/download/dotnet/10.0">official .NET installer</a>
+or Microsoft’s <a href="https://learn.microsoft.com/en-us/dotnet/core/install/">platform instructions</a>.</p>
+<p>For Rust, the required commands must resolve from one rustup toolchain:</p>
+<pre><code class="language-sh">rustup show active-toolchain
+rustc --version
+cargo --version
+rustdoc --version
+rustfmt --version
+</code></pre>
+<p>Use the <a href="https://www.rust-lang.org/tools/install">official rustup installer</a>,
+then run <code>rustup component add rustfmt</code>. Tsonic does not substitute a different
+formatter, compiler, or metadata producer when one is missing. If an optional
+<code>cargo clippy</code> command is unavailable, run <code>rustup component add clippy</code>.</p>
 <h2 id="target-not-found">Target not found</h2>
 <pre><code class="language-text">Target 'rust' is not installed
 </code></pre>
 <p>Install the target in the package containing <code>tsonic.json</code>:</p>
-<pre><code class="language-sh">npm install --save-dev @tsonic/target-rust
+<pre><code class="language-sh">npm install --save-dev @tsonic/target-rust@^0.1.0
 </code></pre>
 <p>Tsonic discovers plugins from installed direct <code>dependencies</code>,
 <code>devDependencies</code>, and <code>optionalDependencies</code>. A target id in <code>tsonic.json</code>
 does not install the package.</p>
 <p>Check discovery:</p>
-<pre><code class="language-sh">npx tsonic targets --project tsonic.json
+<pre><code class="language-sh">npx --no-install tsonic targets --project tsonic.json
 </code></pre>
+<p>For a new project, prefer <code>npm create tsonic@latest &lt;directory&gt; -- --target rust</code>; the creator installs and validates the target as one transaction.</p>
+<h2 id="cache-directory-is-not-writable">Cache directory is not writable</h2>
+<p>Targets never write inside installed packages. Their compiler-tool state goes
+under <code>.tsonic/cache</code> beside <code>tsonic.json</code> by default. Select another writable
+path when needed:</p>
+<pre><code class="language-json">{
+  "cacheDir": "../cache/example-tsonic"
+}
+</code></pre>
+<p><code>cacheDir</code> cannot be equal to, inside, or contain <code>outDir</code>.</p>
 <h2 id="a-global-or-built-in-is-missing">A global or built-in is missing</h2>
 <p>If <code>console</code>, <code>Map</code>, or JavaScript string methods are missing, select the JS
 surface:</p>
@@ -289,10 +322,14 @@ function:</p>
 </code></pre>
 <p>The function must be exported and return <code>void</code>.</p>
 <h2 id="cargo-rejects---locked">Cargo rejects <code>--locked</code></h2>
-<p>Run one command without <code>--locked</code>, or create the lockfile explicitly:</p>
+<p>Generate source, then run one command without <code>--locked</code>, or create the
+lockfile explicitly:</p>
 <pre><code class="language-sh">cargo generate-lockfile --manifest-path out/rust/Cargo.toml
 cargo build --manifest-path out/rust/Cargo.toml --locked
 </code></pre>
+<p>The lockfile is inside compiler-owned <code>outDir</code>; the next successful
+<code>tsonic build</code> replaces it. Use a user-owned Cargo project when the lockfile
+must be retained in version control.</p>
 <h2 id="a-net-type-imports-but-does-not-link">A .NET type imports but does not link</h2>
 <p>Provider inputs and build references are separate. <code>providerReferences</code> makes
 an assembly available to metadata reflection. Add the corresponding project,

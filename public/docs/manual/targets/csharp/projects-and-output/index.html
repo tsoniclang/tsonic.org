@@ -363,7 +363,7 @@ keeps the checked source contract and generated project in agreement.</p>
 <h2 id="native-build">Native build</h2>
 <p>Tsonic’s toolchain stage records generated artifacts; the .NET SDK performs the
 actual compile or publish:</p>
-<pre><code class="language-sh">npx tsonic build -p tsonic.json
+<pre><code class="language-sh">npx --no-install tsonic build -p tsonic.json
 dotnet build out/csharp/Example.App.csproj
 dotnet publish out/csharp/Example.App.csproj -c Release
 </code></pre>

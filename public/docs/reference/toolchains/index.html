@@ -258,7 +258,14 @@
 <tr><td>Node.js</td><td>22.18 or newer</td></tr>
 <tr><td>npm</td><td>Installs project-local targets and capabilities</td></tr>
 </tbody></table>
-<p>The CLI does not download toolchains or install plugins.</p>
+<p>Install Node from the <a href="https://nodejs.org/en/download">official download page</a>
+and verify:</p>
+<pre><code class="language-sh">node --version
+npm --version
+</code></pre>
+<p>The project creator installs the CLI and one target locally. Neither the
+creator nor the CLI downloads native toolchains. Do not depend on a global
+Tsonic installation.</p>
 <h2 id="c">C#</h2>
 <table><thead><tr><th>Item</th><th>Contract</th></tr></thead><tbody>
 <tr><td>SDK</td><td>.NET 10 SDK</td></tr>
@@ -269,6 +276,12 @@
 </tbody></table>
 <p>The selected SDK must contain the reference pack for <code>targetFramework</code>.
 Framework and assembly provider inputs are snapshotted for one compilation.</p>
+<p>Install the <a href="https://dotnet.microsoft.com/en-us/download/dotnet/10.0">.NET 10 SDK</a>,
+using Microsoft’s <a href="https://learn.microsoft.com/en-us/dotnet/core/install/">platform instructions</a>
+when needed. Confirm that a <code>10.0.x</code> SDK is listed:</p>
+<pre><code class="language-sh">dotnet --version
+dotnet --list-sdks
+</code></pre>
 <p>Use a user-owned project for another SDK shape. Tsonic does not change an
 ASP.NET, desktop, mobile, test, or custom SDK project into a generated
 <code>Microsoft.NET.Sdk</code> project.</p>
@@ -282,8 +295,21 @@ the native validation gates.</p>
 that toolchain. An unsupported rustdoc schema is rejected. The project does not
 promise that every historical or future Rust release has the same rustdoc JSON
 contract.</p>
-<p>Install cross targets with <code>rustup</code> or the equivalent toolchain manager. Cargo
-owns target triples and linkers.</p>
+<p>Install Rust with <a href="https://www.rust-lang.org/tools/install">rustup</a>. A normal
+hosted installation can be prepared and checked with:</p>
+<pre><code class="language-sh">rustup toolchain install stable
+rustup default stable
+rustup component add rustfmt
+rustup show active-toolchain
+rustc --version
+cargo --version
+rustdoc --version
+rustfmt --version
+</code></pre>
+<p>Clippy is optional unless you run <code>cargo clippy</code>. Install it from the same
+toolchain with <code>rustup component add clippy</code>.</p>
+<p>Install cross targets with <code>rustup target add &lt;triple&gt;</code>. Cargo owns target
+triples and linkers.</p>
 <h2 id="platform-support">Platform support</h2>
 <p>Tsonic itself is platform-neutral Node software. A target is usable only where
 its native toolchain, runtime packages, framework packs, and linker inputs are

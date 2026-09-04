@@ -252,7 +252,11 @@
     <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/reference/cli.md">Edit source</a>
   </div>
   <div class="prose"><h1 id="cli-reference">CLI reference</h1>
-<p>The <code>tsonic</code> executable currently exposes two commands.</p>
+<p>The project-local <code>tsonic</code> executable exposes two commands. New-project
+creation is a separate standard npm initializer:</p>
+<pre><code class="language-sh">npm create tsonic@latest hello -- --target csharp
+</code></pre>
+<p>See the <a href="/docs/reference/project-creator/">project creator contract</a>.</p>
 <h2 id="tsonic-build"><code>tsonic build</code></h2>
 <pre><code class="language-text">tsonic build --project &lt;tsonic.json&gt;
 tsonic build -p &lt;tsonic.json&gt;
@@ -292,9 +296,10 @@ present. Treat the exit code as the build result.</p>
 publishes the complete output tree only when every selected target resolves
 without an error. A failure leaves the previous successful output in place.</p>
 <h2 id="unsupported-commands">Unsupported commands</h2>
-<p>There are no <code>init</code>, <code>run</code>, <code>add</code>, or <code>restore</code> commands. Project creation,
-native execution, package installation, and native dependency restoration
-remain owned by npm and the target-native toolchain.</p>
+<p>There are no <code>init</code>, <code>run</code>, <code>add</code>, or <code>restore</code> subcommands. <code>create-tsonic</code>
+owns new-project creation and npm installation. Created projects expose native
+execution through their <code>npm start</code> script; restoration and execution remain
+owned by npm and the target-native toolchain.</p>
 </div>
 </article>
 </main>

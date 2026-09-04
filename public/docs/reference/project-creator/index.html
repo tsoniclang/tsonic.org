@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>Documentation Drift | Tsonic</title>
+      <title>Project Creator | Tsonic</title>
 
     <meta name="description" content="Compile TypeScript into native C# and Rust source projects." />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Documentation Drift" />
+    <meta property="og:title" content="Project Creator" />
     <meta property="og:description" content="Compile TypeScript into native C# and Rust source projects." />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/styles.css" />
@@ -225,7 +225,7 @@
 
             <li><a class="" href="/docs/validation/">Validation overview</a></li>
 
-            <li><a class="active" href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
+            <li><a class="" href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
 
         </ul>
       </section>
@@ -245,50 +245,50 @@
 
         <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
 
-        <a href="/docs/validation/">Validation</a><span aria-hidden="true">/</span>
+        <a href="/docs/reference/">Reference</a><span aria-hidden="true">/</span>
 
-      <span>Documentation Drift</span>
+      <span>Project Creator</span>
     </nav>
-    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/validation/documentation-drift.md">Edit source</a>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/reference/project-creator.md">Edit source</a>
   </div>
-  <div class="prose"><h1 id="documentation-drift-policy">Documentation drift policy</h1>
-<p>The documentation tree is a checked product surface.</p>
-<h2 id="mechanical-gates">Mechanical gates</h2>
-<p>The documentation checker validates:</p>
-<ul>
-<li>required manual, reference, target, architecture, and validation pages;</li>
-<li>all relative Markdown links;</li>
-<li>balanced fenced examples and valid JSON examples;</li>
-<li>navigation entries;</li>
-<li>the pinned TypeScript utility-type inventory;</li>
-<li>shared project-config fields and defaults;</li>
-<li>neutral source primitive, type-marker, call-marker, pointer, safety, and
-attribute exports;</li>
-<li>symmetric C# and Rust target-reference structure;</li>
-<li>exact C# and Rust target option names;</li>
-<li>C# application startup and Rust binary-entry rules;</li>
-<li>C# target-owned MSBuild property names;</li>
-<li>generated-project and user-owned-project ownership boundaries;</li>
-<li>CLI exit codes and transactional publication behavior;</li>
-<li>current target virtual-module prefixes;</li>
-<li>single-command project creation and target-owned starter boundaries;</li>
-<li>prohibited retired architecture terminology;</li>
-<li>support evidence paths where a committed matrix cites a proof.</li>
-</ul>
-<h2 id="no-hand-maintained-counts">No hand-maintained counts</h2>
-<p>Documentation must not state a test, proof-project, file, or API count unless
-that count is generated in the same verification run. A proof README therefore
-says that its verifier derives the inventory; it does not hardcode a project
-count that can drift.</p>
-<h2 id="one-authority">One authority</h2>
-<p>Canonical product documentation lives here. Sibling target, runtime, and
-capability repositories retain only package summaries and local build/test
-instructions linked to this tree. Historical <code>.analysis</code> packets are not
-product documentation or current specifications.</p>
-<h2 id="change-discipline">Change discipline</h2>
-<p>A source marker, target option, source profile, provider contract, capability
-operation, output mode, or support disposition change is incomplete until its
-canonical reference and executable evidence change in the same work item.</p>
+  <div class="prose"><h1 id="project-creator">Project creator</h1>
+<p><code>create-tsonic</code> creates, installs, and validates one complete project:</p>
+<pre><code class="language-sh">npm create tsonic@latest &lt;directory&gt; -- --target &lt;target-id&gt;
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-sh">npm create tsonic@latest server -- --target csharp
+npm create tsonic@latest tool -- --target rust
+</code></pre>
+<h2 id="options">Options</h2>
+<table><thead><tr><th>Option</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>--target &lt;id&gt;</code></td><td>Required target id, such as <code>csharp</code> or <code>rust</code></td></tr>
+<tr><td><code>--surface &lt;id&gt;</code></td><td>Explicit source surface; repeat for more than one</td></tr>
+<tr><td><code>--help</code></td><td>Print command help</td></tr>
+</tbody></table>
+<p>The destination must not exist. Its final path segment must be a lowercase
+unscoped npm package name beginning with a letter.</p>
+<h2 id="transaction">Transaction</h2>
+<p>The creator:</p>
+<ol>
+<li>creates a private sibling staging directory;</li>
+<li>writes a minimal npm package selecting the same release-wave version of the
+CLI and <code>@tsonic/target-&lt;id&gt;</code>;</li>
+<li>runs <code>npm install</code>;</li>
+<li>loads the installed target’s immutable starter descriptor;</li>
+<li>validates its target selection, scripts, files, paths, and toolchain checks;</li>
+<li>verifies the native toolchain;</li>
+<li>writes <code>tsonic.json</code>, <code>.gitignore</code>, and target-owned source;</li>
+<li>atomically renames the staging directory to the requested destination.</li>
+</ol>
+<p>An error removes the private staging directory and leaves the requested
+destination absent. Existing paths are never overwritten.</p>
+<h2 id="ownership">Ownership</h2>
+<p>The creator knows only the target id and the generic starter contract. The
+selected target package owns starter source, target options, native commands,
+and SDK requirements. The creator does not contain C#, Rust, .NET, or Cargo
+branches.</p>
+<p><code>create-tsonic</code> does not install native SDKs. Missing requirements produce the
+failed command, exact remediation, and an official installation URL.</p>
 </div>
 </article>
 </main>
