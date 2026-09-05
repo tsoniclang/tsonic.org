@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>Native Apis | Tsonic</title>
+      <title>Releasing | Tsonic</title>
 
     <meta name="description" content="Compile TypeScript into native C# and Rust source projects." />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Native Apis" />
+    <meta property="og:title" content="Releasing" />
     <meta property="og:description" content="Compile TypeScript into native C# and Rust source projects." />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/styles.css" />
@@ -157,7 +157,7 @@
 
             <li><a class="" href="/docs/reference/targets/csharp/type-mapping/">C# type mapping</a></li>
 
-            <li><a class="active" href="/docs/reference/targets/csharp/native-apis/">C# native APIs</a></li>
+            <li><a class="" href="/docs/reference/targets/csharp/native-apis/">C# native APIs</a></li>
 
             <li><a class="" href="/docs/reference/targets/csharp/javascript-surface/">C# JavaScript surface</a></li>
 
@@ -227,7 +227,7 @@
 
             <li><a class="" href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
 
-            <li><a class="" href="/docs/validation/releasing/">npm release procedure</a></li>
+            <li><a class="active" href="/docs/validation/releasing/">npm release procedure</a></li>
 
         </ul>
       </section>
@@ -247,53 +247,128 @@
 
         <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
 
-        <a href="/docs/reference/">Reference</a><span aria-hidden="true">/</span>
+        <a href="/docs/validation/">Validation</a><span aria-hidden="true">/</span>
 
-        <a href="/docs/reference/targets/">Targets</a><span aria-hidden="true">/</span>
-
-        <a href="/docs/reference/targets/csharp/">Csharp</a><span aria-hidden="true">/</span>
-
-      <span>Native Apis</span>
+      <span>Releasing</span>
     </nav>
-    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/reference/targets/csharp/native-apis.md">Edit source</a>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/validation/releasing.md">Edit source</a>
   </div>
-  <div class="prose"><h1 id="net-native-apis">.NET native APIs</h1>
-<p><code>@tsonic/dotnet/&lt;namespace&gt;.js</code> modules are generated lazily from exact .NET
-metadata available to the compilation.</p>
-<pre><code class="language-ts">import { Console, DateTime } from "@tsonic/dotnet/System.js";
-import { List } from "@tsonic/dotnet/System.Collections.Generic.js";
+  <div class="prose"><h1 id="releasing-npm-packages">Releasing npm packages</h1>
+<p>Tsonic’s npm release is complete only when a new user can create and run a
+project from the public registry. The user needs Node.js, npm, and the native
+SDK for the selected target. The user does not need a Tsonic source checkout,
+a global Tsonic installation, workspace environment variables, or manual
+runtime-package wiring.</p>
+<h2 id="decide-whether-to-publish">Decide whether to publish</h2>
+<p>Run the read-only status command from the Tsonic repository:</p>
+<pre><code class="language-sh">./scripts/release-status.sh
 </code></pre>
-<h2 id="resolution">Resolution</h2>
+<p>The command compares the one release wave with public npm and reports one of
+three actions:</p>
+<table><thead><tr><th>Status</th><th>Meaning</th><th>Next action</th></tr></thead><tbody>
+<tr><td><code>current</code></td><td>Every exact artifact exists and every <code>latest</code> tag selects it</td><td>Do not publish</td></tr>
+<tr><td><code>publish</code></td><td>The local wave is newer, partially published, or not yet selected by <code>latest</code></td><td>Authenticate and run the publisher</td></tr>
+<tr><td><code>prepare-patch</code></td><td>npm is ahead, or package content changed after this version was recorded</td><td>Run the publisher to create one coordinated patch-release branch per repository</td></tr>
+</tbody></table>
+<p>Changes only to host documentation, host tests, or release tooling outside a
+published package do not by themselves require an npm package release. A
+change to package source, generated distribution, manifest, dependency,
+published README, provider, or runtime does. First-party dependency versions
+are exact, so a required package release advances the complete wave in
+<code>scripts/release/npm-wave.json</code>; maintainers never publish a guessed subset.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Use one coherent sibling workspace. The Tsonic host must be on clean <code>main</code>.
+Every package repository must be clean and identical to <code>origin/main</code>; an exact
+detached <code>origin/main</code> worktree is allowed for a non-host repository.</p>
+<p>Authenticate to the canonical public registry. Use either an interactive npm
+session with 2FA or a short-lived granular token with read/write package access
+and bypass 2FA enabled. Keep tokens outside every repository. For example,
+store <code>NPM_TOKEN</code> in a mode-<code>600</code> user secret file and reference it from the
+user npm configuration:</p>
+<pre><code class="language-ini">//registry.npmjs.org/:_authToken=${NPM_TOKEN}
+</code></pre>
+<p>Load the secret in the release shell, then confirm the identity:</p>
+<pre><code class="language-sh">set -a
+. ~/.secrets/npm.env
+set +a
+npm whoami --registry <a href="https://registry.npmjs.org/">https://registry.npmjs.org/</a>
+</code></pre>
+<p><code>npm whoami</code> proves identity, not write authorization. The first publication
+is the authoritative authorization check. A bypass-2FA token can publish but
+cannot perform package-governance operations such as changing distribution
+tags. An interrupted release that requires tag recovery therefore needs an
+interactive 2FA session.</p>
+<p>Do not publish packages by hand. Do not use local links, alternate registries,
+or global package installations as release evidence.</p>
+<h2 id="publish">Publish</h2>
+<p>Run:</p>
+<pre><code class="language-sh">./scripts/publish-npm.sh
+</code></pre>
+<p>All source and private-registry proofs pass before any public artifact is
+published. npm automatically creates <code>latest</code> for a package’s first published
+version even when another tag is requested, so a first release cannot use a
+distribution tag as a transaction boundary.</p>
+<p>The publisher performs these steps in order:</p>
 <ol>
-<li>The module specifier identifies a .NET namespace.</li>
-<li>Requested exports select exact public type families.</li>
-<li>The provider loads the required declaration closure, including base types,
-interfaces, member signatures, generic constraints, and referenced types.</li>
-<li>TSTS performs TypeScript source overload resolution.</li>
-<li>C# provider relations map the selected source identity to one target member
-or a deterministic ambiguity/rejection.</li>
+<li>verifies branch hygiene and exact <code>origin/main</code> identity;</li>
+<li>inspects exact public artifacts and <code>latest</code> tags;</li>
+<li>runs the complete source, target, provider, and runtime certification bank;</li>
+<li>packs the complete wave and runs C#, Rust, and Node-capability projects from
+a private tarball registry;</li>
+<li>publishes the already-certified tarballs directly under <code>latest</code>;</li>
+<li>waits for registry metadata convergence and verifies every public artifact
+byte-for-byte against the certified tarball;</li>
+<li>verifies every final <code>latest</code> tag;</li>
+<li>creates fresh C# and Rust projects through <code>npm create tsonic@latest</code>,
+builds and runs both, installs the matching Node capability, and runs
+ordinary <code>node:*</code> source;</li>
+<li>prints the aggregate artifact hash.</li>
 </ol>
-<p>Type families preserve arity. A public family name may represent non-generic
-and generic CLR types, while class heritage selects the exact class-backed
-arity required by metadata.</p>
-<h2 id="reference-sources">Reference sources</h2>
-<ul>
-<li>the selected .NET target framework reference pack;</li>
-<li>configured framework references;</li>
-<li><code>references.assemblies</code>;</li>
-<li>explicit <code>providerReferences.assemblies</code>;</li>
-<li>sorted <code>.dll</code> files from <code>providerReferences.directories</code>.</li>
+<p>The public-install step uses an isolated npm cache and configuration. It strips
+workspace and source-root environment variables, rejects local dependency
+specifiers and linked first-party packages, checks the complete npm dependency
+tree, and runs only project-local tools. This is the proof that the commands in
+<a href="/docs/manual/get-started/">Get started</a> work without repository source.</p>
+<h2 id="interrupted-releases">Interrupted releases</h2>
+<p>The release is resumable. Exact versions already present on npm are compared
+with the newly certified tarballs and are not published again. A successfully
+published package can take several minutes to become visible through all npm
+metadata endpoints; the publisher waits for that convergence rather than
+republishing the immutable version.</p>
+<p>If a process stops after publication but before the public-install proof,
+rerunning the publisher executes the source-free public proof even when all
+versions and <code>latest</code> tags are already current.</p>
+<p>If an existing exact artifact differs from the certified tarball, stop. Never
+overwrite or reinterpret an immutable npm version. Prepare and merge a new
+patch wave, then rerun the publisher.</p>
+<p>If the publisher creates release branches, merge every printed PR, update the
+coherent release workspace to exact <code>origin/main</code>, and rerun the same command.</p>
+<h2 id="completion-record">Completion record</h2>
+<p>Record the following values from the successful publisher and final status
+output:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input disabled="" type="checkbox"/>
+release version;</li>
+<li class="task-list-item"><input disabled="" type="checkbox"/>
+package count;</li>
+<li class="task-list-item"><input disabled="" type="checkbox"/>
+total packed file count;</li>
+<li class="task-list-item"><input disabled="" type="checkbox"/>
+aggregate SHA-256;</li>
+<li class="task-list-item"><input disabled="" type="checkbox"/>
+exact public C# starter result;</li>
+<li class="task-list-item"><input disabled="" type="checkbox"/>
+exact public Rust starter result;</li>
+<li class="task-list-item"><input disabled="" type="checkbox"/>
+exact public C# Node-capability result;</li>
+<li class="task-list-item"><input disabled="" type="checkbox"/>
+exact public Rust Node-capability result;</li>
+<li class="task-list-item"><input disabled="" type="checkbox"/>
+every <code>latest</code> tag selects the release version;</li>
+<li class="task-list-item"><input disabled="" type="checkbox"/>
+<code>./scripts/release-status.sh</code> reports <code>Status: current</code>.</li>
 </ul>
-<p>Provider reference snapshots are immutable for one compilation. Each unique
-assembly is hashed once per provider session; mutation during compilation fails
-closed.</p>
-<h2 id="supported-metadata-families">Supported metadata families</h2>
-<p>The provider models classes, structs, interfaces, enums, delegates,
-constructors, methods, properties, fields, indexers, events where representable,
-generic constraints, nullable metadata, optional/default parameters,
-parameter modes, arrays, pointers, function pointers, inheritance, attributes,
-and cross-module type references. Unsupported metadata receives a provider
-diagnostic instead of a partial declaration.</p>
+<p>Do not call a release complete while any item is unproved.</p>
 </div>
 </article>
 </main>

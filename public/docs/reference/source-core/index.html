@@ -227,6 +227,8 @@
 
             <li><a class="" href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
 
+            <li><a class="" href="/docs/validation/releasing/">npm release procedure</a></li>
+
         </ul>
       </section>
 
@@ -273,10 +275,13 @@ than silently widening them.</p>
 <h3 id="type-markers">Type markers</h3>
 <table><thead><tr><th>Export</th><th>Meaning</th></tr></thead><tbody>
 <tr><td><code>Pointer&lt;T&gt;</code></td><td>Typed mutable storage location</td></tr>
-<tr><td><code>RawPointer</code></td><td>Opaque raw-pointer identity without a pointee type</td></tr>
+<tr><td><code>RawPointer</code></td><td>Untyped address carrier; not an arbitrary object’s identity</td></tr>
 <tr><td><code>FunctionPointer&lt;TArgs, TReturn&gt;</code></td><td>Exact native function-pointer signature</td></tr>
 <tr><td><code>FixedArray&lt;T, N&gt;</code></td><td>Fixed-length array; <code>N</code> must be one non-negative safe-integer literal type</td></tr>
 <tr><td><code>NativePointer&lt;T&gt;</code></td><td>Target-native typed pointer used by explicit native-pointer operations</td></tr>
+<tr><td><code>DataLayout</code></td><td>Provider-selected ABI identity and immutable descriptor</td></tr>
+<tr><td><code>MemoryLayout&lt;T&gt;</code></td><td>Exact size, alignment, stride and selected field layout for <code>T</code></td></tr>
+<tr><td><code>MemoryFieldLayout&lt;T&gt;</code></td><td>One selected field’s offset and alignment</td></tr>
 </tbody></table>
 <p><code>Pointer&lt;T&gt;</code> and <code>NativePointer&lt;T&gt;</code> are different contracts. The first is a
 safe closed location abstraction. The second requests the target’s native
@@ -332,13 +337,58 @@ export const Point = struct({
 the exact projection contract; targets do not infer them from <code>F</code> and <code>T</code>.</p>
 <h3 id="raw-pointer-identity-operations">Raw-pointer identity operations</h3>
 <table><thead><tr><th>Export</th><th>Meaning</th></tr></thead><tbody>
-<tr><td><code>bindRawPointer(identity)</code></td><td>Bind an opaque object identity as <code>RawPointer</code></td></tr>
 <tr><td><code>equalRawPointer(left, right)</code></td><td>Compare raw-pointer identities, including <code>undefined</code></td></tr>
 <tr><td><code>hashRawPointer(pointer)</code></td><td>Hash raw-pointer identity, including <code>undefined</code></td></tr>
 </tbody></table>
 <p>Raw-pointer identity does not authorize dereference or pointer arithmetic.
-Those require a typed native-pointer conversion supplied by a target/provider
-contract.</p>
+An arbitrary object is not a memory address. Raw addresses require an exact
+provider contract or a layout-backed typed-location conversion. The shared
+memory contract describes those operations; each target must prove its storage,
+layout, lifetime and safety requirements before emitting them.</p>
+<h3 id="layout-and-raw-memory-source-contracts">Layout and raw-memory source contracts</h3>
+<p>These declarations and their immutable source facts are implemented. C# and
+Rust do <strong>not yet implement their native lowering</strong>. A checked source fact is
+not proof that a target can emit the operation. Use the existing native-pointer
+operations for supported target-native pointer APIs.</p>
+<table><thead><tr><th>Export</th><th>Source contract</th></tr></thead><tbody>
+<tr><td><code>memoryLayout&lt;T&gt;(abi, size, alignment, stride, ...fields)</code></td><td>Describe exact storage using a registered ABI token and constant dimensions</td></tr>
+<tr><td><code>memoryField&lt;T, TField&gt;(select, offset, alignment)</code></td><td>Select a non-optional declared field without executing the selector</td></tr>
+<tr><td><code>sizeOf(layout)</code></td><td>Observe the selected byte size</td></tr>
+<tr><td><code>alignOf(layout)</code></td><td>Observe the selected byte alignment</td></tr>
+<tr><td><code>strideOf(layout)</code></td><td>Observe the selected element stride</td></tr>
+<tr><td><code>fieldOffsetOf(layout, select)</code></td><td>Observe the offset of one exact selected field</td></tr>
+<tr><td><code>toRawPointer(pointer, layout)</code></td><td>Request the address of the same typed storage, retaining its required owner</td></tr>
+<tr><td><code>reinterpretRawPointer(raw, layout)</code></td><td>Interpret an address as the canonical <code>Pointer&lt;T&gt;</code>, not <code>NativePointer&lt;T&gt;</code></td></tr>
+<tr><td><code>offsetRawPointer(raw, byteOffset, abi)</code></td><td>Offset in bytes using an exact integer domain</td></tr>
+<tr><td><code>rawPointerToAddressInteger(raw, abi)</code></td><td>Convert an address to <code>nativeUint</code>, without retaining ownership</td></tr>
+<tr><td><code>addressIntegerToRawPointer(address, abi)</code></td><td>Recover an address from <code>nativeUint</code>, without manufacturing ownership</td></tr>
+<tr><td><code>keepAlive(value)</code></td><td>Require reachability through this call, not pinning</td></tr>
+</tbody></table>
+<p>For example, the source contract expresses a raw-backed location as follows.
+This is not yet a working C# or Rust application:</p>
+<pre><code class="language-ts">import { reinterpretRawPointer, storePointer, unsafeContext } from "@tsonic/core/lang.js";
+import type { MemoryLayout, RawPointer, uint32 } from "@tsonic/core/types.js";
+
+function write(raw: RawPointer | undefined, layout: MemoryLayout&lt;uint32&gt;): void {
+  unsafeContext();
+  const pointer = reinterpretRawPointer(raw, layout);
+  if (pointer !== undefined) storePointer(pointer, 7);
+}
+</code></pre>
+<p>The target must preserve writes to the original storage. Copying its value
+into a new location is not an implementation of this contract.</p>
+<p>An ABI provider supplies the token declaration and a <code>dataLayouts</code>
+contribution containing its exact provider identity, version, fingerprint,
+byte order and address width. Source-core validates the registration and owns
+the resulting facts. The build machine’s architecture is not an ABI token.
+Layout dimensions must be non-negative safe integers; alignment is a positive
+power of two. Native field extents and storage compatibility still require
+target proof.</p>
+<p>Byte offsets accept exact signed and unsigned integer markers, including
+bigint-backed widths. Unmarked in-range integer constants are also accepted.
+An arbitrary <code>number</code> or <code>bigint</code> variable is not an integer-domain proof.
+Optional pointer conversions preserve <code>undefined</code>; address conversion maps
+it to zero, and integer zero maps back to <code>undefined</code>.</p>
 <h3 id="native-pointer-operations">Native-pointer operations</h3>
 <table><thead><tr><th>Export</th><th>Meaning</th></tr></thead><tbody>
 <tr><td><code>loadNativePointer(pointer)</code></td><td>Dereference a native typed pointer</td></tr>
