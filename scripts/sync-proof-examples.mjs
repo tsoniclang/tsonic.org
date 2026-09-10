@@ -37,6 +37,7 @@ const projects = [
     title: "Native functions",
     summary: "An exact Int32 function callable from native Mojo.",
     path: "packages/native",
+    outputFile: "src/mojo_proof_native/app.mojo",
   },
   {
     target: "mojo",
@@ -44,6 +45,7 @@ const projects = [
     title: "Compile-time and copy",
     summary: "Compile-time loops, runtime materialization, and an explicit string copy.",
     path: "packages/comptime-ownership",
+    outputFile: "src/mojo_proof_comptime_ownership/app.mojo",
   },
   {
     target: "mojo",
@@ -51,6 +53,7 @@ const projects = [
     title: "Types and collections",
     summary: "Multi-file source with records, generic functions, arrays, and native types.",
     path: "packages/language",
+    outputFile: "src/mojo_proof_language/app.mojo",
   },
   {
     target: "mojo",
@@ -58,6 +61,7 @@ const projects = [
     title: "File system",
     summary: "Node filesystem and path calls backed by the Mojo runtime.",
     path: "packages/node",
+    outputFile: "src/mojo_proof_node/app.mojo",
   },
   {
     target: "csharp",
@@ -230,7 +234,7 @@ const sourceFilesFor = (repository, projectPath) => {
   return sourcePaths.map((path) => serializedFile(projectRoot, path, "typescript"));
 };
 
-const outputFilesFor = (target, repository, projectPath) => {
+const outputFilesFor = (target, repository, projectPath, selectedPath) => {
   const projectRoot = join(repository.outputRoot, projectPath);
   const outputRoot = join(projectRoot, "out", target);
   const extension = targetMetadata.find((metadata) => metadata.id === target).extension;
@@ -239,8 +243,12 @@ const outputFilesFor = (target, repository, projectPath) => {
   if (paths.length === 0) {
     throw new Error(`No generated ${target} files found for ${projectPath}`);
   }
-  return paths.map((path) =>
+  const files = paths.map((path) =>
     serializedFile(outputRoot, path, target));
+  if (selectedPath === undefined) return files;
+  const selected = files.find((file) => file.path === selectedPath);
+  if (selected === undefined) throw new Error(`Missing selected output ${projectPath}/${selectedPath}`);
+  return [selected, ...files.filter((file) => file !== selected)];
 };
 
 const serializedProjects = projects.filter((project) => selectedTarget === undefined || project.target === selectedTarget).map((project) => {
@@ -257,7 +265,7 @@ const serializedProjects = projects.filter((project) => selectedTarget === undef
       projectPath: project.path,
     },
     sourceFiles: sourceFilesFor(repository, project.path),
-    outputFiles: outputFilesFor(project.target, repository, project.path),
+    outputFiles: outputFilesFor(project.target, repository, project.path, project.outputFile),
   };
 });
 

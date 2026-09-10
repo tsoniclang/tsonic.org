@@ -61,7 +61,7 @@ npm run examples:sync
 
 `npm run examples:check` proves that the checked-in catalog matches the
 selected proof outputs. The normal site build consumes the checked-in catalog;
-it does not invoke either compiler.
+it does not invoke the compilers.
 
 ## Target navigation
 

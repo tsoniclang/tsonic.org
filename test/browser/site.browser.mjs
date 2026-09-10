@@ -74,7 +74,7 @@ test("desktop target selection, deep links, shared chapters and search", async (
     await page.waitForURL("**/docs/reference/targets/mojo/");
     await page.goto(`${origin}/docs/reference/cli/`);
     assert.equal(await selector.inputValue(), "mojo");
-    await page.screenshot({ path: resolve(screenshots, "docs-desktop.png"), fullPage: true });
+    await page.screenshot({ path: resolve(screenshots, "docs-desktop.png"), fullPage: true, animations: "disabled" });
     assert.deepEqual(errors, []);
   } finally {
     await context.close();
@@ -118,6 +118,7 @@ test("homepage loading, all target projects and formatted files", async () => {
     await page.getByRole("button", { name: "Mojo", exact: true }).click();
     await page.locator('[data-project-id="compile-time-ownership"]').click();
     assert.equal(await page.locator("[data-proof-output-label]").textContent(), "Generated Mojo");
+    assert.match(await page.locator("[data-proof-output-code]").textContent(), /def compile_time_proof/u);
     await page.screenshot({ path: resolve(screenshots, "home-desktop.png"), fullPage: true });
     assert.deepEqual(errors, []);
   } finally {
@@ -136,7 +137,8 @@ test("mobile navigation and no-JavaScript target access", async () => {
     await page.locator("[data-doc-target-select]").selectOption("rust");
     await page.waitForURL("**/docs/manual/targets/rust/");
     await page.locator("#menuToggle").click();
-    await page.screenshot({ path: resolve(screenshots, "docs-mobile.png"), fullPage: true });
+    await page.waitForFunction(() => document.querySelector("#sidebar").getBoundingClientRect().left >= 0);
+    await page.screenshot({ path: resolve(screenshots, "docs-mobile.png"), fullPage: true, animations: "disabled" });
     await page.locator("#menuClose").click();
     assert.equal(await page.locator("#menuToggle").getAttribute("aria-expanded"), "false");
     await page.goto(`${origin}/?target=mojo`);
