@@ -13,8 +13,9 @@
 
     <nav class="primary-nav" aria-label="Primary navigation">
       <a href="{{ relURL "/docs/" }}">Docs</a>
-      <a href="{{ relURL "/docs/manual/targets/csharp/" }}">C#</a>
-      <a href="{{ relURL "/docs/manual/targets/rust/" }}">Rust</a>
+      {{ range .Site.Data.targets }}
+        <a href="{{ relURL (printf "/docs/manual/targets/%s/" .id) }}">{{ .label }}</a>
+      {{ end }}
     </nav>
 
     <div class="header-actions">

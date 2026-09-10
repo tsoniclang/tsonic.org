@@ -35,15 +35,20 @@ Netlify publishes the checked-in `public/` directory directly.
 ## Homepage proof browser
 
 The homepage example browser is generated from passing projects in the sibling
-`proof-is-in-the-pudding` and `rust-pudding` repositories. It contains authored
+`pudding-csharp`, `rust-pudding` and `mojo-pudding` repositories. It contains authored
 TypeScript, generated native source, file hashes, and the proof
 repository revision.
 
-After running both proof suites, refresh the browser data with:
+After running the relevant proof suites, refresh the browser data with:
 
 ```bash
 npm run examples:sync
 ```
+
+Use `npm run examples:sync -- --target=mojo` to refresh only one target without
+replacing the other targets' snapshots. Selected proof sources must be committed;
+another team's unrelated working files are not included in a snapshot. Source
+hashes prove catalog identity, not native execution by themselves.
 
 If proof output was produced in an isolated verification workspace, point the
 sync command at those workspace roots:
@@ -57,3 +62,18 @@ npm run examples:sync
 `npm run examples:check` proves that the checked-in catalog matches the
 selected proof outputs. The normal site build consumes the checked-in catalog;
 it does not invoke either compiler.
+
+## Target navigation
+
+`data/targets.json` owns the target list used by the header, homepage, documentation
+selector and example synchronizer. Canonical manuals and references live under
+`tsonic/docs/{manual,reference}/targets/<id>/` and must be listed in its README
+and sidebars.json. The site does not keep a separate copy of the manual.
+
+Shared chapters are always visible. Target chapters and search results follow
+the selected language. A target-specific URL takes precedence over saved browser
+preferences. Switching languages keeps the equivalent chapter when available,
+otherwise opens the selected target's manual or reference overview.
+
+`npm run test:browser` exercises the built site in Chrome, on desktop and mobile.
+Set `BROWSER_EXECUTABLE` when Chrome is not at its usual Linux location.

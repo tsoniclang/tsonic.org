@@ -1,0 +1,5 @@
+[
+  { "id": "csharp", "label": "C#", "headline": ".NET", "accent": "dotnet", "outputLabel": "Generated C#", "extension": ".cs", "proofRepository": "pudding-csharp" },
+  { "id": "rust", "label": "Rust", "headline": "Rust", "accent": "rust", "outputLabel": "Generated Rust", "extension": ".rs", "proofRepository": "rust-pudding" },
+  { "id": "mojo", "label": "Mojo", "headline": "Mojo", "accent": "mojo", "outputLabel": "Generated Mojo", "extension": ".mojo", "proofRepository": "mojo-pudding" }
+]

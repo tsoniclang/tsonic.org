@@ -7,20 +7,20 @@
   <div class="hero-inner">
     <div class="hero-copy">
       <h1 id="hero-title">
-        <span>TypeScript to <strong class="gradient-dotnet">.NET.</strong></span>
-        <span>TypeScript to <strong class="gradient-rust">Rust.</strong></span>
+        <span>TypeScript to</span>
+        <span class="hero-targets">{{ range .Site.Data.targets }}<strong class="gradient-{{ .accent }}">{{ .headline }}.</strong> {{ end }}</span>
       </h1>
       <div class="hero-details">
         <p class="hero-summary">
           Tsonic checks TypeScript, writes native source projects, and hands them to
-          <code>dotnet</code> or Cargo.
+          <code>dotnet</code>, Cargo or Mojo.
         </p>
         <div class="hero-links">
           <div class="hero-actions">
             <a class="button button-primary" href="{{ relURL "/docs/manual/get-started/" }}">Get started</a>
             <a class="button button-secondary" href="{{ relURL "/docs/" }}">Read the docs</a>
           </div>
-          <p class="coming-line"><span>Coming soon</span> Mojo, Python, and Triton</p>
+          <p class="coming-line"><span>Coming soon</span> Python and Triton</p>
         </div>
       </div>
     </div>
@@ -139,11 +139,13 @@
       <div class="model-step-title"><span>02</span><strong>Generate source</strong></div>
       <div class="model-output"><span>C#</span><code>double add(double left, double right)</code></div>
       <div class="model-output"><span>Rust</span><code>fn add(left: f64, right: f64) -&gt; f64</code></div>
+      <div class="model-output"><span>Mojo</span><code>def add(left: Float64, right: Float64) -&gt; Float64</code></div>
     </li>
     <li>
       <div class="model-step-title"><span>03</span><strong>Build natively</strong></div>
       <code class="model-command">dotnet build out/csharp</code>
       <code class="model-command">cargo build --manifest-path out/rust/Cargo.toml</code>
+      <code class="model-command">pixi run --manifest-path out/mojo/pixi.toml build</code>
     </li>
   </ol>
 </section>
@@ -154,7 +156,7 @@
     <h2 id="docs-title">Guides and reference</h2>
   </div>
   <nav class="docs-links" aria-label="Documentation shortcuts">
-    <a href="{{ relURL "/docs/manual/get-started/" }}"><span><strong>Get started</strong><small>Build C# and Rust programs</small></span><b aria-hidden="true">→</b></a>
+    <a href="{{ relURL "/docs/manual/get-started/" }}"><span><strong>Get started</strong><small>Choose your target and build a program</small></span><b aria-hidden="true">→</b></a>
     <a href="{{ relURL "/docs/manual/projects/" }}"><span><strong>Configure a project</strong><small>Source, targets, and providers</small></span><b aria-hidden="true">→</b></a>
     <a href="{{ relURL "/docs/manual/source-semantics/" }}"><span><strong>Write source</strong><small>Types and target semantics</small></span><b aria-hidden="true">→</b></a>
     <a href="{{ relURL "/docs/reference/limitations/" }}"><span><strong>Limitations</strong><small>Supported language boundaries</small></span><b aria-hidden="true">→</b></a>

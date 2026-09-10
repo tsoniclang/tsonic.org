@@ -13,34 +13,52 @@ const siteRoot = resolve(import.meta.dirname, "..");
 const workspaceRoot = resolve(siteRoot, "..");
 const outputPath = join(siteRoot, "static/assets/proof-examples.json");
 const checkOnly = process.argv.includes("--check");
+const targetMetadata = JSON.parse(readFileSync(join(siteRoot, "data/targets.json"), "utf8"));
+const selectedTarget = process.argv.find((argument) => argument.startsWith("--target="))?.slice(9);
+if (selectedTarget !== undefined && !targetMetadata.some((target) => target.id === selectedTarget)) {
+  throw new Error(`Unknown target: ${selectedTarget}`);
+}
 
-const repositories = {
-  csharp: {
-    name: "proof-is-in-the-pudding",
-    sourceRoot: resolve(
-      process.env.CSHARP_PROOF_SOURCE_ROOT ??
-        join(workspaceRoot, "proof-is-in-the-pudding"),
-    ),
-    outputRoot: resolve(
-      process.env.CSHARP_PROOF_OUTPUT_ROOT ??
-        process.env.CSHARP_PROOF_SOURCE_ROOT ??
-        join(workspaceRoot, "proof-is-in-the-pudding"),
-    ),
-  },
-  rust: {
-    name: "rust-pudding",
-    sourceRoot: resolve(
-      process.env.RUST_PROOF_SOURCE_ROOT ?? join(workspaceRoot, "rust-pudding"),
-    ),
-    outputRoot: resolve(
-      process.env.RUST_PROOF_OUTPUT_ROOT ??
-        process.env.RUST_PROOF_SOURCE_ROOT ??
-        join(workspaceRoot, "rust-pudding"),
-    ),
-  },
-};
+const repositories = Object.fromEntries(targetMetadata.map((target) => {
+  const prefix = target.id.toUpperCase();
+  const sourceRoot = resolve(process.env[`${prefix}_PROOF_SOURCE_ROOT`] ??
+    join(workspaceRoot, target.proofRepository));
+  return [target.id, {
+    name: target.proofRepository,
+    sourceRoot,
+    outputRoot: resolve(process.env[`${prefix}_PROOF_OUTPUT_ROOT`] ?? sourceRoot),
+  }];
+}));
 
 const projects = [
+  {
+    target: "mojo",
+    id: "native-functions",
+    title: "Native functions",
+    summary: "An exact Int32 function callable from native Mojo.",
+    path: "packages/native",
+  },
+  {
+    target: "mojo",
+    id: "compile-time-ownership",
+    title: "Compile-time and copy",
+    summary: "Compile-time loops, runtime materialization, and an explicit string copy.",
+    path: "packages/comptime-ownership",
+  },
+  {
+    target: "mojo",
+    id: "language",
+    title: "Types and collections",
+    summary: "Multi-file source with records, generic functions, arrays, and native types.",
+    path: "packages/language",
+  },
+  {
+    target: "mojo",
+    id: "file-system",
+    title: "File system",
+    summary: "Node filesystem and path calls backed by the Mojo runtime.",
+    path: "packages/node",
+  },
   {
     target: "csharp",
     id: "http-server",
@@ -134,21 +152,6 @@ const projects = [
   },
 ];
 
-const targetMetadata = {
-  csharp: {
-    id: "csharp",
-    label: ".NET",
-    outputLabel: "Generated C#",
-    accent: "dotnet",
-  },
-  rust: {
-    id: "rust",
-    label: "Rust",
-    outputLabel: "Generated Rust",
-    accent: "rust",
-  },
-};
-
 const posixPath = (path) => path.split(sep).join("/");
 
 const hash = (content) =>
@@ -177,6 +180,13 @@ const filesUnder = (directory, predicate) => {
 };
 
 const assertSameSource = (repository, projectPath) => {
+  const changed = execFileSync("git", ["status", "--porcelain", "--", `${projectPath}/src`, `${projectPath}/tsonic.json`], {
+    cwd: repository.sourceRoot,
+    encoding: "utf8",
+  });
+  if (changed.trim() !== "") {
+    throw new Error(`Proof sources must be committed before capture: ${repository.name}/${projectPath}`);
+  }
   if (repository.sourceRoot === repository.outputRoot) return;
   const canonicalRoot = join(repository.sourceRoot, projectPath);
   const verifiedRoot = join(repository.outputRoot, projectPath);
@@ -223,25 +233,17 @@ const sourceFilesFor = (repository, projectPath) => {
 const outputFilesFor = (target, repository, projectPath) => {
   const projectRoot = join(repository.outputRoot, projectPath);
   const outputRoot = join(projectRoot, "out", target);
-  let paths;
-  if (target === "csharp") {
-    paths = [
-      ...filesUnder(join(outputRoot, "src"), (path) => path.endsWith(".cs")),
-      ...filesUnder(join(outputRoot, "generated"), (path) => path.endsWith(".cs")),
-    ];
-  } else {
-    paths = [
-      ...filesUnder(join(outputRoot, "src"), (path) => path.endsWith(".rs")),
-    ];
-  }
+  const extension = targetMetadata.find((metadata) => metadata.id === target).extension;
+  const paths = ["src", "generated"].flatMap((directory) =>
+    filesUnder(join(outputRoot, directory), (path) => path.endsWith(extension)));
   if (paths.length === 0) {
     throw new Error(`No generated ${target} files found for ${projectPath}`);
   }
   return paths.map((path) =>
-    serializedFile(outputRoot, path, target === "csharp" ? "csharp" : "rust"));
+    serializedFile(outputRoot, path, target));
 };
 
-const serializedProjects = projects.map((project) => {
+const serializedProjects = projects.filter((project) => selectedTarget === undefined || project.target === selectedTarget).map((project) => {
   const repository = repositories[project.target];
   assertSameSource(repository, project.path);
   return {
@@ -259,14 +261,25 @@ const serializedProjects = projects.map((project) => {
   };
 });
 
+const previous = selectedTarget === undefined ? undefined : JSON.parse(readFileSync(outputPath, "utf8"));
 const catalog = {
   schemaVersion: 1,
-  targets: Object.values(targetMetadata).map((target) => ({
-    ...target,
-    projects: serializedProjects
-      .filter((project) => project.target === target.id)
-      .map(({ target: _target, ...project }) => project),
-  })),
+  targets: targetMetadata.map((target) => {
+    if (selectedTarget !== undefined && selectedTarget !== target.id) {
+      const retained = previous.targets.find((entry) => entry.id === target.id);
+      if (retained === undefined) throw new Error(`No existing catalog for ${target.id}; synchronize all targets first`);
+      return retained;
+    }
+    return {
+      id: target.id,
+      label: target.label,
+      outputLabel: target.outputLabel,
+      accent: target.accent,
+      projects: serializedProjects
+        .filter((project) => project.target === target.id)
+        .map(({ target: _target, ...project }) => project),
+    };
+  }),
 };
 
 const serialized = `${JSON.stringify(catalog, null, 2)}\n`;
@@ -278,7 +291,7 @@ if (checkOnly) {
 } else {
   writeFileSync(outputPath, serialized);
   console.log(
-    `Wrote ${serializedProjects.length} verified projects to ${relative(siteRoot, outputPath)}`,
+    `Wrote ${serializedProjects.length} source-backed projects to ${relative(siteRoot, outputPath)}`,
   );
 }
 

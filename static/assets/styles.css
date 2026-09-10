@@ -390,6 +390,16 @@ kbd {
   background-image: linear-gradient(90deg, #ff7a7a, #ff9f5a 48%, #ffd36d);
 }
 
+.gradient-mojo {
+  background-image: linear-gradient(90deg, #ffcc8a, #ff819d 55%, #ee6acd);
+}
+
+.hero h1 .hero-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.3em;
+}
+
 .hero-summary {
   max-width: 660px;
   margin: 0;
@@ -1271,6 +1281,50 @@ kbd {
 
 .sidebar-brand a:hover {
   color: var(--text);
+}
+
+.docs-target-control {
+  display: grid;
+  gap: 8px;
+  margin: 0 8px 26px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.docs-target-control select {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #4a3d60;
+  border-radius: 9px;
+  background: #1c1628;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+  color-scheme: dark;
+}
+
+.docs-target-control select:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+}
+
+.docs-target-links {
+  display: flex;
+  gap: 14px;
+  margin: 0 8px 20px;
+}
+
+.target-chapters[hidden] {
+  display: none;
+}
+
+.target-chapters h3 {
+  margin: 18px 8px 6px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 650;
 }
 
 .nav-group + .nav-group {
