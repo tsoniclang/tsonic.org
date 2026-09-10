@@ -3,7 +3,7 @@
   "targets": [
     {
       "id": "csharp",
-      "label": ".NET",
+      "label": "C#",
       "outputLabel": "Generated C#",
       "accent": "dotnet",
       "projects": [
@@ -655,7 +655,7 @@
           "summary": "An exact Int32 function callable from native Mojo.",
           "provenance": {
             "repository": "mojo-pudding",
-            "revision": "0538d2ff9faf3f86fd17053967d1a3010b27aaeb",
+            "revision": "aa089d4ad286da77762b235a366e5b308908d6d4",
             "projectPath": "packages/native"
           },
           "sourceFiles": [
@@ -687,7 +687,7 @@
           "summary": "Compile-time loops, runtime materialization, and an explicit string copy.",
           "provenance": {
             "repository": "mojo-pudding",
-            "revision": "0538d2ff9faf3f86fd17053967d1a3010b27aaeb",
+            "revision": "aa089d4ad286da77762b235a366e5b308908d6d4",
             "projectPath": "packages/comptime-ownership"
           },
           "sourceFiles": [
@@ -719,7 +719,7 @@
           "summary": "Multi-file source with records, generic functions, arrays, and native types.",
           "provenance": {
             "repository": "mojo-pudding",
-            "revision": "0538d2ff9faf3f86fd17053967d1a3010b27aaeb",
+            "revision": "aa089d4ad286da77762b235a366e5b308908d6d4",
             "projectPath": "packages/language"
           },
           "sourceFiles": [
@@ -799,7 +799,7 @@
           "summary": "Node filesystem and path calls backed by the Mojo runtime.",
           "provenance": {
             "repository": "mojo-pudding",
-            "revision": "0538d2ff9faf3f86fd17053967d1a3010b27aaeb",
+            "revision": "aa089d4ad286da77762b235a366e5b308908d6d4",
             "projectPath": "packages/node"
           },
           "sourceFiles": [

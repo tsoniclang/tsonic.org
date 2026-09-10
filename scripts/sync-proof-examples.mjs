@@ -273,19 +273,22 @@ const previous = selectedTarget === undefined ? undefined : JSON.parse(readFileS
 const catalog = {
   schemaVersion: 1,
   targets: targetMetadata.map((target) => {
+    let targetProjects;
     if (selectedTarget !== undefined && selectedTarget !== target.id) {
       const retained = previous.targets.find((entry) => entry.id === target.id);
       if (retained === undefined) throw new Error(`No existing catalog for ${target.id}; synchronize all targets first`);
-      return retained;
+      targetProjects = retained.projects;
+    } else {
+      targetProjects = serializedProjects
+        .filter((project) => project.target === target.id)
+        .map(({ target: _target, ...project }) => project);
     }
     return {
       id: target.id,
       label: target.label,
       outputLabel: target.outputLabel,
       accent: target.accent,
-      projects: serializedProjects
-        .filter((project) => project.target === target.id)
-        .map(({ target: _target, ...project }) => project),
+      projects: targetProjects,
     };
   }),
 };

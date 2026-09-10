@@ -78,6 +78,10 @@ test("the proof browser publishes source-backed projects for every target", () =
   assert.equal(catalog.schemaVersion, 1);
   const targets = JSON.parse(readFileSync(join(root, "data/targets.json"), "utf8"));
   assert.deepEqual(catalog.targets.map((target) => target.id), targets.map((target) => target.id));
+  for (const target of targets) {
+    const published = catalog.targets.find((entry) => entry.id === target.id);
+    for (const key of ["label", "outputLabel", "accent"]) assert.equal(published[key], target[key]);
+  }
   assert.equal(catalog.targets[0].projects.length, 6);
   assert.equal(catalog.targets[1].projects.length, 7);
   assert.equal(catalog.targets[2].projects.length, 4);
