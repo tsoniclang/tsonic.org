@@ -2,6 +2,22 @@
   <span>Documentation</span>
   <a href="{{ relURL "/docs/" }}">Overview</a>
 </div>
+{{ $page := . }}
+{{ $selected := "csharp" }}
+{{ range .Site.Data.targets }}
+  {{ if in $page.RelPermalink (printf "/targets/%s/" .id) }}{{ $selected = .id }}{{ end }}
+{{ end }}
+<label class="docs-target-control" for="docsTarget">
+  <span>Target language</span>
+  <select id="docsTarget" data-doc-target-select>
+    {{ range .Site.Data.targets }}
+      <option value="{{ .id }}" {{ if eq .id $selected }}selected{{ end }}>{{ .label }}</option>
+    {{ end }}
+  </select>
+</label>
+<noscript><nav class="docs-target-links" aria-label="Target manuals">
+  {{ range .Site.Data.targets }}<a href="{{ relURL (printf "/docs/manual/targets/%s/" .id) }}">{{ .label }}</a>{{ end }}
+</nav></noscript>
 {{ range .Site.Mounts }}
-  {{ if eq .Name "Docs" }}{{ partial "sidebar-mount.html" (dict "Mount" . "Page" $) }}{{ end }}
+  {{ if eq .Name "Docs" }}{{ partial "sidebar-mount.html" (dict "Mount" . "Page" $page "Selected" $selected) }}{{ end }}
 {{ end }}

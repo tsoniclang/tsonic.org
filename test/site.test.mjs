@@ -35,9 +35,10 @@ const outputForMarkdown = (sourcePath) => {
 
 test("the landing page states the current target contract directly", () => {
   const html = readFileSync(join(publicDir, "index.html"), "utf8");
-  assert.match(html, /TypeScript to <strong class="gradient-dotnet">\.NET\.<\/strong>/u);
-  assert.match(html, /TypeScript to <strong class="gradient-rust">Rust\.<\/strong>/u);
-  assert.match(html, /Coming soon<\/span> Mojo, Python, and Triton/u);
+  assert.match(html, /<strong class="gradient-dotnet">\.NET\.<\/strong>/u);
+  assert.match(html, /<strong class="gradient-rust">Rust\.<\/strong>/u);
+  assert.match(html, /<strong class="gradient-mojo">Mojo\.<\/strong>/u);
+  assert.match(html, /Coming soon<\/span> Python and Triton/u);
   assert.match(html, /Tsonic checks TypeScript, writes native source projects/u);
   assert.match(html, /data-proof-browser/u);
   assert.match(html, /assets\/examples\.js/u);
@@ -47,6 +48,7 @@ test("the landing page states the current target contract directly", () => {
   assert.match(html, /export function add\(left: number, right: number\): number/u);
   assert.match(html, /double add\(double left, double right\)/u);
   assert.match(html, /fn add\(left: f64, right: f64\) -&gt; f64/u);
+  assert.match(html, /def add\(left: Float64, right: Float64\) -&gt; Float64/u);
   assert.match(html, /cargo build --manifest-path out\/rust\/Cargo\.toml/u);
   assert.match(html, /class="docs-links"/u);
   assert.doesNotMatch(
@@ -68,15 +70,22 @@ test("the proof browser formats code and reports loading progress", () => {
   assert.match(stylesheet, /\.proof-select-shell/u);
 });
 
-test("the proof browser publishes complete verified projects for both targets", () => {
+test("the proof browser publishes source-backed projects for every target", () => {
   const catalogPath = join(publicDir, "assets/proof-examples.json");
   const catalogText = readFileSync(catalogPath, "utf8");
   const catalog = JSON.parse(catalogText);
   assert.doesNotMatch(catalogText, /\/(?:home|Users)\/|\\Users\\|\.tests\//u);
   assert.equal(catalog.schemaVersion, 1);
-  assert.deepEqual(catalog.targets.map((target) => target.id), ["csharp", "rust"]);
+  const targets = JSON.parse(readFileSync(join(root, "data/targets.json"), "utf8"));
+  assert.deepEqual(catalog.targets.map((target) => target.id), targets.map((target) => target.id));
+  for (const target of targets) {
+    const published = catalog.targets.find((entry) => entry.id === target.id);
+    for (const key of ["label", "outputLabel", "accent"]) assert.equal(published[key], target[key]);
+  }
   assert.equal(catalog.targets[0].projects.length, 6);
   assert.equal(catalog.targets[1].projects.length, 7);
+  assert.equal(catalog.targets[2].projects.length, 4);
+  assert.ok(catalog.targets[2].projects.some((project) => project.id === "compile-time-ownership"));
 
   const csharpProjects = new Set(catalog.targets[0].projects.map((project) => project.id));
   const rustProjects = new Set(catalog.targets[1].projects.map((project) => project.id));
@@ -122,8 +131,26 @@ test("search contains canonical docs and no retired mounts", () => {
   assert.ok(search.some((item) => item.url === "/docs/reference/typescript-types/" && item.title === "TypeScript types and utilities"));
   assert.ok(search.some((item) => item.url === "/docs/manual/targets/rust/ownership-and-safety/"));
   assert.ok(search.some((item) => item.url === "/docs/reference/targets/csharp/provider-api/"));
+  assert.ok(search.some((item) => item.url === "/docs/manual/targets/mojo/"));
+  assert.ok(search.some((item) => item.url === "/docs/reference/targets/mojo/configuration/"));
   assert.ok(search.every((item) => item.mount === "Home" || item.mount === "Docs"));
   assert.ok(search.every((item) => !item.url.startsWith("/tsbindgen/") && !item.url.startsWith("/express/")));
+});
+
+test("target navigation has one canonical selector and preserves shared chapters", () => {
+  const targets = JSON.parse(readFileSync(join(root, "data/targets.json"), "utf8"));
+  for (const target of targets) {
+    const html = readFileSync(join(publicDir, `docs/reference/targets/${target.id}/index.html`), "utf8");
+    assert.match(html, /data-doc-target-select/u);
+    assert.match(html, new RegExp(`value="${target.id}" selected`, "u"));
+    assert.match(html, /href="\/docs\/reference\/cli\/"/u);
+    assert.match(html, new RegExp(`data-doc-target="${target.id}" >`, "u"));
+    for (const other of targets.filter((entry) => entry.id !== target.id)) {
+      assert.match(html, new RegExp(`data-doc-target="${other.id}" hidden`, "u"));
+    }
+    assert.match(html, /aria-current="page"/u);
+    assert.match(html, /<noscript><nav class="docs-target-links"/u);
+  }
 });
 
 test("generated internal links resolve inside the published site", () => {

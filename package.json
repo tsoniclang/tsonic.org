@@ -8,6 +8,10 @@
     "examples:sync": "node scripts/sync-proof-examples.mjs",
     "examples:check": "node scripts/sync-proof-examples.mjs --check",
     "test": "node --test \"test/**/*.test.mjs\"",
-    "check": "npm run build && npm test"
+    "test:browser": "node --test test/browser/site.browser.mjs",
+    "check": "npm run build && npm test && npm run test:browser"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
   }
 }

@@ -32,6 +32,12 @@ const languageKeywords = {
     if impl in let loop match mod move mut pub ref return self Self static struct
     super trait true type unsafe use where while yield
   `.trim().split(/\s+/u)),
+  mojo: new Set(`
+    alias and as async await break captured case comptime continue def del elif
+    else except False finally fn for from if import in inout is lambda let match
+    mut not or out owned pass raises raise read ref return self Self struct trait
+    True try type var while with yield
+  `.trim().split(/\s+/u)),
 };
 
 const isIdentifierStart = (character) => /[A-Za-z_$]/u.test(character);
@@ -56,6 +62,12 @@ const tokenizeCode = (source, language) => {
 
     if (character === "/" && next === "/") {
       index += 2;
+      while (index < source.length && source[index] !== "\n") index += 1;
+      add("comment", start, index);
+      continue;
+    }
+
+    if (language === "mojo" && character === "#") {
       while (index < source.length && source[index] !== "\n") index += 1;
       add("comment", start, index);
       continue;

@@ -6,15 +6,16 @@
 
       <title>Source Core | Tsonic</title>
 
-    <meta name="description" content="Compile TypeScript into native C# and Rust source projects." />
+    <meta name="description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Source Core" />
-    <meta property="og:description" content="Compile TypeScript into native C# and Rust source projects." />
+    <meta property="og:description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/styles.css" />
     <script defer src="/assets/nav.js"></script>
+    <script defer src="/assets/docs-target.js"></script>
     <script defer src="/assets/search.js"></script>
   </head>
   <body class="docs-page">
@@ -34,8 +35,13 @@
 
     <nav class="primary-nav" aria-label="Primary navigation">
       <a href="/docs/">Docs</a>
-      <a href="/docs/manual/targets/csharp/">C#</a>
-      <a href="/docs/manual/targets/rust/">Rust</a>
+
+        <a href="/docs/manual/targets/csharp/">C#</a>
+
+        <a href="/docs/manual/targets/rust/">Rust</a>
+
+        <a href="/docs/manual/targets/mojo/">Mojo</a>
+
     </nav>
 
     <div class="header-actions">
@@ -73,52 +79,274 @@
 
 
 
-<nav class="docs-nav">
+
+
+
+
+<label class="docs-target-control" for="docsTarget">
+  <span>Target language</span>
+  <select id="docsTarget" data-doc-target-select>
+
+      <option value="csharp" selected>C#</option>
+
+      <option value="rust" >Rust</option>
+
+      <option value="mojo" >Mojo</option>
+
+  </select>
+</label>
+<noscript><nav class="docs-target-links" aria-label="Target manuals">
+  <a href="/docs/manual/targets/csharp/">C#</a><a href="/docs/manual/targets/rust/">Rust</a><a href="/docs/manual/targets/mojo/">Mojo</a>
+</nav></noscript>
+
+
+
+
+
+
+<nav class="docs-nav" aria-label="Chapters">
 
 
       <section class="nav-group">
         <h2>Manual</h2>
         <ul>
 
-            <li><a class="" href="/docs/manual/">Manual overview</a></li>
+              <li><a class=""  href="/docs/manual/">Manual overview</a></li>
 
-            <li><a class="" href="/docs/manual/get-started/">Get started</a></li>
 
-            <li><a class="" href="/docs/manual/compiler-model/">Compiler model</a></li>
+              <li><a class=""  href="/docs/manual/get-started/">Get started</a></li>
 
-            <li><a class="" href="/docs/manual/projects/">Projects</a></li>
 
-            <li><a class="" href="/docs/manual/applications-and-libraries/">Applications and libraries</a></li>
+              <li><a class=""  href="/docs/manual/compiler-model/">Compiler model</a></li>
 
-            <li><a class="" href="/docs/manual/packages-and-workspaces/">Packages and workspaces</a></li>
 
-            <li><a class="" href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
+              <li><a class=""  href="/docs/manual/projects/">Projects</a></li>
 
-            <li><a class="" href="/docs/manual/source-semantics/">Source semantics</a></li>
 
-            <li><a class="" href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
+              <li><a class=""  href="/docs/manual/applications-and-libraries/">Applications and libraries</a></li>
 
-            <li><a class="" href="/docs/manual/targets/">Targets</a></li>
 
-            <li><a class="" href="/docs/manual/targets/csharp/">C# manual</a></li>
+              <li><a class=""  href="/docs/manual/packages-and-workspaces/">Packages and workspaces</a></li>
 
-            <li><a class="" href="/docs/manual/targets/csharp/source-profile/">C# source profile</a></li>
 
-            <li><a class="" href="/docs/manual/targets/csharp/interop-and-safety/">C# interop and safety</a></li>
+              <li><a class=""  href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
 
-            <li><a class="" href="/docs/manual/targets/csharp/projects-and-output/">C# projects and output</a></li>
 
-            <li><a class="" href="/docs/manual/targets/rust/">Rust manual</a></li>
+              <li><a class=""  href="/docs/manual/source-semantics/">Source semantics</a></li>
 
-            <li><a class="" href="/docs/manual/targets/rust/source-profile/">Rust source profile</a></li>
 
-            <li><a class="" href="/docs/manual/targets/rust/ownership-and-safety/">Rust ownership and safety</a></li>
+              <li><a class=""  href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
 
-            <li><a class="" href="/docs/manual/targets/rust/projects-and-output/">Rust projects and output</a></li>
 
-            <li><a class="" href="/docs/manual/troubleshooting/">Troubleshooting</a></li>
+              <li><a class=""  href="/docs/manual/targets/">Targets</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <li><a class=""  href="/docs/manual/troubleshooting/">Troubleshooting</a></li>
+
 
         </ul>
+
+
+
+
+            <div class="target-chapters" data-doc-target="csharp" >
+              <h3>C# Manual</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/csharp/">C# manual</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/csharp/source-profile/">C# source profile</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/csharp/interop-and-safety/">C# interop and safety</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/csharp/projects-and-output/">C# projects and output</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </ul>
+            </div>
+
+
+            <div class="target-chapters" data-doc-target="rust" hidden>
+              <h3>Rust Manual</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/rust/">Rust manual</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/rust/source-profile/">Rust source profile</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/rust/ownership-and-safety/">Rust ownership and safety</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/rust/projects-and-output/">Rust projects and output</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+              </ul>
+            </div>
+
+
+            <div class="target-chapters" data-doc-target="mojo" hidden>
+              <h3>Mojo Manual</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/mojo/">Mojo manual</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/mojo/source-profile/">Mojo source profile</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/mojo/ownership-and-safety/">Mojo ownership and safety</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/mojo/projects-and-output/">Mojo projects and output</a></li>
+
+
+
+
+              </ul>
+            </div>
+
+
       </section>
 
 
@@ -127,75 +355,440 @@
         <h2>Reference</h2>
         <ul>
 
-            <li><a class="" href="/docs/reference/">Reference overview</a></li>
+              <li><a class=""  href="/docs/reference/">Reference overview</a></li>
 
-            <li><a class="" href="/docs/reference/cli/">CLI</a></li>
 
-            <li><a class="" href="/docs/reference/project-config/">`tsonic.json`</a></li>
+              <li><a class=""  href="/docs/reference/cli/">CLI</a></li>
 
-            <li><a class="" href="/docs/reference/toolchains/">Toolchains and platforms</a></li>
 
-            <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
+              <li><a class=""  href="/docs/reference/project-config/">`tsonic.json`</a></li>
 
-            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
 
-            <li><a class="active" href="/docs/reference/source-core/">Neutral types and markers</a></li>
+              <li><a class=""  href="/docs/reference/toolchains/">Toolchains and platforms</a></li>
 
-            <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
 
-            <li><a class="" href="/docs/reference/node-capability/">Node capability</a></li>
+              <li><a class=""  href="/docs/reference/limitations/">Shared limitations</a></li>
 
-            <li><a class="" href="/docs/reference/diagnostics/">Diagnostics</a></li>
 
-            <li><a class="" href="/docs/reference/package-catalog/">Package catalog</a></li>
+              <li><a class=""  href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/">C# reference</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/configuration/">C# configuration</a></li>
+              <li><a class="active" aria-current="page" href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/source-modules/">C# source modules</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/type-mapping/">C# type mapping</a></li>
+              <li><a class=""  href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/native-apis/">C# native APIs</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/javascript-surface/">C# JavaScript surface</a></li>
+              <li><a class=""  href="/docs/reference/node-capability/">Node capability</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/node-capability/">C# Node capability</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/provider-api/">C# provider API</a></li>
+              <li><a class=""  href="/docs/reference/diagnostics/">Diagnostics</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/language-support/">C# language support</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/support-inventory/">C# support inventory</a></li>
+              <li><a class=""  href="/docs/reference/package-catalog/">Package catalog</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/limitations/">C# limitations</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/">Rust reference</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/configuration/">Rust configuration</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/source-modules/">Rust source modules</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/type-mapping/">Rust type mapping</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/ownership-and-lifetimes/">Rust ownership and lifetimes</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/native-apis/">Rust native APIs</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/javascript-surface/">Rust JavaScript surface</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/node-capability/">Rust Node capability</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/provider-api/">Rust provider API</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/language-support/">Rust language support</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/support-inventory/">Rust support inventory</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/limitations/">Rust limitations</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         </ul>
+
+
+
+
+            <div class="target-chapters" data-doc-target="csharp" >
+              <h3>C# Reference</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/">C# reference</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/configuration/">C# configuration</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/source-modules/">C# source modules</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/type-mapping/">C# type mapping</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/native-apis/">C# native APIs</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/javascript-surface/">C# JavaScript surface</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/node-capability/">C# Node capability</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/provider-api/">C# provider API</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/language-support/">C# language support</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/support-inventory/">C# support inventory</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/limitations/">C# limitations</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </ul>
+            </div>
+
+
+            <div class="target-chapters" data-doc-target="rust" hidden>
+              <h3>Rust Reference</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/">Rust reference</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/configuration/">Rust configuration</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/source-modules/">Rust source modules</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/type-mapping/">Rust type mapping</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/ownership-and-lifetimes/">Rust ownership and lifetimes</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/native-apis/">Rust native APIs</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/javascript-surface/">Rust JavaScript surface</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/node-capability/">Rust Node capability</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/provider-api/">Rust provider API</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/language-support/">Rust language support</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/support-inventory/">Rust support inventory</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/limitations/">Rust limitations</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </ul>
+            </div>
+
+
+            <div class="target-chapters" data-doc-target="mojo" hidden>
+              <h3>Mojo Reference</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/">Mojo reference</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/configuration/">Mojo configuration</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/source-modules/">Mojo source modules</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/type-mapping/">Mojo type mapping</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/native-apis/">Mojo native APIs</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/javascript-surface/">Mojo JavaScript surface</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/node-capability/">Mojo Node capability</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/provider-api/">Mojo provider API</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/language-support/">Mojo language support</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/support-inventory/">Mojo support inventory</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/limitations/">Mojo limitations</a></li>
+
+
+              </ul>
+            </div>
+
+
       </section>
 
 
@@ -204,17 +797,24 @@
         <h2>Architecture</h2>
         <ul>
 
-            <li><a class="" href="/docs/architecture/">Architecture overview</a></li>
+              <li><a class=""  href="/docs/architecture/">Architecture overview</a></li>
 
-            <li><a class="" href="/docs/architecture/compilation-lifecycle/">Compilation lifecycle</a></li>
 
-            <li><a class="" href="/docs/architecture/target-pack-contract/">Target-pack contract</a></li>
+              <li><a class=""  href="/docs/architecture/compilation-lifecycle/">Compilation lifecycle</a></li>
 
-            <li><a class="" href="/docs/architecture/provider-and-runtime-ownership/">Provider and runtime ownership</a></li>
 
-            <li><a class="" href="/docs/architecture/workspace-agent-policy/">Workspace policy</a></li>
+              <li><a class=""  href="/docs/architecture/target-pack-contract/">Target-pack contract</a></li>
+
+
+              <li><a class=""  href="/docs/architecture/provider-and-runtime-ownership/">Provider and runtime ownership</a></li>
+
+
+              <li><a class=""  href="/docs/architecture/workspace-agent-policy/">Workspace policy</a></li>
+
 
         </ul>
+
+
       </section>
 
 
@@ -223,13 +823,18 @@
         <h2>Validation</h2>
         <ul>
 
-            <li><a class="" href="/docs/validation/">Validation overview</a></li>
+              <li><a class=""  href="/docs/validation/">Validation overview</a></li>
 
-            <li><a class="" href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
 
-            <li><a class="" href="/docs/validation/releasing/">npm release procedure</a></li>
+              <li><a class=""  href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
+
+
+              <li><a class=""  href="/docs/validation/releasing/">npm release procedure</a></li>
+
 
         </ul>
+
+
       </section>
 
 
@@ -277,15 +882,24 @@ than silently widening them.</p>
 <tr><td><code>Pointer&lt;T&gt;</code></td><td>Typed mutable storage location</td></tr>
 <tr><td><code>RawPointer</code></td><td>Untyped address carrier; not an arbitrary object’s identity</td></tr>
 <tr><td><code>FunctionPointer&lt;TArgs, TReturn&gt;</code></td><td>Exact native function-pointer signature</td></tr>
-<tr><td><code>FixedArray&lt;T, N&gt;</code></td><td>Fixed-length array; <code>N</code> must be one non-negative safe-integer literal type</td></tr>
+<tr><td><code>FixedArray&lt;T, N&gt;</code></td><td>Fixed-length array; <code>N</code> must be one exact non-negative safe numeric or bigint literal type</td></tr>
 <tr><td><code>NativePointer&lt;T&gt;</code></td><td>Target-native typed pointer used by explicit native-pointer operations</td></tr>
 <tr><td><code>DataLayout</code></td><td>Provider-selected ABI identity and immutable descriptor</td></tr>
-<tr><td><code>MemoryLayout&lt;T&gt;</code></td><td>Exact size, alignment, stride and selected field layout for <code>T</code></td></tr>
+<tr><td><code>MemoryLayout&lt;T&gt;</code></td><td>Exact size, alignment, stride and selected physical field or array-element layouts for <code>T</code></td></tr>
 <tr><td><code>MemoryFieldLayout&lt;T&gt;</code></td><td>One selected field’s offset and alignment</td></tr>
 </tbody></table>
 <p><code>Pointer&lt;T&gt;</code> and <code>NativePointer&lt;T&gt;</code> are different contracts. The first is a
 safe closed location abstraction. The second requests the target’s native
 pointer representation and safety rules.</p>
+<p><code>FixedArray&lt;T, 2&gt;</code> has a number-based readonly <code>.length</code> of type <code>2</code>;
+<code>FixedArray&lt;T, 2n&gt;</code> has a bigint-based readonly <code>.length</code> of type <code>2n</code>. Shared
+metadata stores both counts exactly as bigint, without changing that source
+meaning. Wider <code>number</code>/<code>bigint</code> types, unions, negative or fractional extents,
+and unsafe numeric literals are rejected. Use an exact bigint literal such as
+<code>9007199254740993n</code> beyond the safe-number range. Exact source evidence does not
+guarantee a native value representation or an implemented <code>.length</code> operation;
+see the <a href="/docs/reference/targets/csharp/type-mapping/#fixed-arrays">C#</a> and
+<a href="/docs/reference/targets/rust/type-mapping/#fixed-arrays">Rust</a> limits.</p>
 <h2 id="tsoniccorelangjs"><code>@tsonic/core/lang.js</code></h2>
 <h3 id="argument-and-ownership-markers">Argument and ownership markers</h3>
 <table><thead><tr><th>Export</th><th>Meaning</th></tr></thead><tbody>
@@ -322,6 +936,40 @@ export const Point = struct({
   .add(RouteAttribute, "/items");
 </code></pre>
 <p>The selected provider owns the target attribute identity and legal values.</p>
+<h3 id="compile-time-intent">Compile-time intent</h3>
+<table><thead><tr><th>Export</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>comptime(expression)</code></td><td>Require target compile-time evaluation of the exact expression</td></tr>
+<tr><td><code>comptime&lt;T&gt;()</code></td><td>Project an exact selected compile-time parameter or literal type into value position</td></tr>
+<tr><td><code>comptimeIf(condition)</code></td><td>Require compile-time selection of the directly enclosing <code>if</code> or conditional expression</td></tr>
+<tr><td><code>unroll(iterable)</code></td><td>Require compile-time expansion of the directly enclosing <code>for...of</code> loop</td></tr>
+</tbody></table>
+<pre><code class="language-ts">import { comptime, comptimeIf, unroll } from "@tsonic/core/lang.js";
+
+const enabled = comptime(true);
+if (comptimeIf(enabled)) {
+  for (const value of unroll([1, 2, 3])) {
+    consume(value);
+  }
+}
+</code></pre>
+<p>These calls record target-neutral intent and exact selected source evidence;
+source-core does not evaluate the expression or choose target syntax. Targets
+must prove that the selected operation is representable in their compile-time
+domain. An ordinary runtime type is not automatically a valid <code>comptime&lt;T&gt;()</code>
+parameter. Compile-time intent does not imply copying, ownership transfer,
+runtime materialization, or target-independent support for arbitrary evaluation.</p>
+<p>Import aliases, namespace imports, and parentheses preserve intrinsic identity.
+Same-spelled local functions do not become intrinsics. Core intrinsics must be
+imported directly from their owning virtual module, not re-exported through a
+local barrel.</p>
+<p><code>const decision = comptimeIf(true)</code> and <code>const values = unroll([1, 2])</code> are
+invalid placements. So are <code>if (comptimeIf(true) &amp;&amp; flag)</code> and
+<code>for (const key in unroll(object))</code>: the marker must select the exact owning
+condition or for-of iterable, with parentheses permitted.</p>
+<p>Targets read <code>tsonicCompileTimeFactKey</code> through the public
+<code>@tsonic/source-core/facts</code> entrypoint. Its <code>value</code>, <code>type</code>, <code>condition</code>, and
+<code>iteration</code> variants retain the exact operand/type and result-type identities;
+targets must not rediscover the request from the callee’s spelling.</p>
 <h3 id="typed-location-operations">Typed-location operations</h3>
 <table><thead><tr><th>Export</th><th>Meaning</th></tr></thead><tbody>
 <tr><td><code>addressOf(storage)</code></td><td>Address an existing proven storage location</td></tr>
@@ -347,36 +995,178 @@ memory contract describes those operations; each target must prove its storage,
 layout, lifetime and safety requirements before emitting them.</p>
 <h3 id="layout-and-raw-memory-source-contracts">Layout and raw-memory source contracts</h3>
 <p>These declarations and their immutable source facts are implemented. C# and
-Rust do <strong>not yet implement their native lowering</strong>. A checked source fact is
-not proof that a target can emit the operation. Use the existing native-pointer
-operations for supported target-native pointer APIs.</p>
+Rust support layout observations, exact address-integer conversions, byte
+offsets, raw identity, and <code>keepAlive</code>. Typed-storage conversion with
+<code>toRawPointer</code> and <code>reinterpretRawPointer</code> also works for closed scalar layouts.
+A checked source fact alone does not prove native storage or lifetime safety.</p>
 <table><thead><tr><th>Export</th><th>Source contract</th></tr></thead><tbody>
-<tr><td><code>memoryLayout&lt;T&gt;(abi, size, alignment, stride, ...fields)</code></td><td>Describe exact storage using a registered ABI token and constant dimensions</td></tr>
-<tr><td><code>memoryField&lt;T, TField&gt;(select, offset, alignment)</code></td><td>Select a non-optional declared field without executing the selector</td></tr>
+<tr><td><code>memoryLayout&lt;T&gt;(abi, size, alignment, stride, ...fields)</code></td><td>Describe scalar or record storage using a registered ABI token and constant dimensions; not a fixed-array descriptor</td></tr>
+<tr><td><code>memoryArrayLayout&lt;T, N&gt;(abi, size, alignment, stride, elementLayout: MemoryLayout&lt;T&gt;, length: N): MemoryLayout&lt;FixedArray&lt;T, N&gt;&gt;</code></td><td>Describe a fixed array using one exact child layout and an extent matching the selected type</td></tr>
+<tr><td><code>memoryField&lt;T, TField&gt;(select, offset, alignment, fieldLayout)</code></td><td>Select a non-optional physical field and its exact child layout without executing the selector</td></tr>
 <tr><td><code>sizeOf(layout)</code></td><td>Observe the selected byte size</td></tr>
 <tr><td><code>alignOf(layout)</code></td><td>Observe the selected byte alignment</td></tr>
-<tr><td><code>strideOf(layout)</code></td><td>Observe the selected element stride</td></tr>
+<tr><td><code>strideOf(layout)</code></td><td>Observe the stride between whole values of the selected layout</td></tr>
 <tr><td><code>fieldOffsetOf(layout, select)</code></td><td>Observe the offset of one exact selected field</td></tr>
 <tr><td><code>toRawPointer(pointer, layout)</code></td><td>Request the address of the same typed storage, retaining its required owner</td></tr>
 <tr><td><code>reinterpretRawPointer(raw, layout)</code></td><td>Interpret an address as the canonical <code>Pointer&lt;T&gt;</code>, not <code>NativePointer&lt;T&gt;</code></td></tr>
 <tr><td><code>offsetRawPointer(raw, byteOffset, abi)</code></td><td>Offset in bytes using an exact integer domain</td></tr>
-<tr><td><code>rawPointerToAddressInteger(raw, abi)</code></td><td>Convert an address to <code>nativeUint</code>, without retaining ownership</td></tr>
-<tr><td><code>addressIntegerToRawPointer(address, abi)</code></td><td>Recover an address from <code>nativeUint</code>, without manufacturing ownership</td></tr>
+<tr><td><code>rawPointerToAddressInteger&lt;TAddress&gt;(raw, abi)</code></td><td>Convert to an explicitly selected <code>uint32</code> or <code>uint64</code>, without retaining ownership</td></tr>
+<tr><td><code>addressIntegerToRawPointer&lt;TAddress&gt;(address, abi)</code></td><td>Recover an address from the exact unsigned domain, without manufacturing ownership; the type argument may be inferred from the operand</td></tr>
 <tr><td><code>keepAlive(value)</code></td><td>Require reachability through this call, not pinning</td></tr>
 </tbody></table>
-<p>For example, the source contract expresses a raw-backed location as follows.
-This is not yet a working C# or Rust application:</p>
-<pre><code class="language-ts">import { reinterpretRawPointer, storePointer, unsafeContext } from "@tsonic/core/lang.js";
-import type { MemoryLayout, RawPointer, uint32 } from "@tsonic/core/types.js";
+<p><code>keepAlive(value)</code> emits <code>global::System.GC.KeepAlive(value)</code> for a C# reference
+owner. Rust borrows the value without consuming or cloning it; the owner
+retains its native drop scope. Neither operation pins storage, reconstructs an
+owner from address bits, or grants an unsafe context.</p>
+<p>Every physical field explicitly selects its own layout. For example:</p>
+<pre><code class="language-ts">interface Header { count: uint32 }
+const word = memoryLayout&lt;uint32&gt;(abi, 4, 4, 4);
+const header = memoryLayout&lt;Header&gt;(abi, 8, 4, 8,
+  memoryField((value: Header) =&gt; value.count, 4, 4, word));
+</code></pre>
+<p>The child type must match the selected field type. Parent and child layouts
+must use the same registered ABI identity and fingerprint. Complete field
+extents must fit and cannot overlap; padding is allowed. Placement alignment
+is explicit, including packed placement. Nested layouts retain their selected
+child descriptors; Tsonic does not search for a layout with a matching name or
+type. The descriptor dependency graph must be acyclic and remain within the
+supported 128-level nesting and 131,072-value snapshot limits. These source
+checks do not by themselves establish a native record representation.</p>
+<p>An array descriptor selects one child, even for nested arrays, arrays of records,
+or zero elements. Using the same <code>abi</code> and <code>word</code> as above:</p>
+<pre><code class="language-ts">const words = memoryArrayLayout&lt;uint32, 2&gt;(abi, 12, 4, 16, word, 2);
+</code></pre>
+<p>Here <code>sizeOf(words)</code> is 12 and <code>strideOf(words)</code> is 16; element spacing remains
+<code>strideOf(word)</code>, which is 4. The two elements occupy 8 bytes, with explicit
+trailing padding. Whole-array dimensions are non-negative safe-integer byte
+quantities within the selected address width. For exact count <code>N</code>, occupied
+bytes are zero when <code>N</code> is zero, otherwise
+<code>(N - 1n) * BigInt(elementLayout.stride) + BigInt(elementLayout.byteSize)</code>.
+This calculation is exact and must fit the whole-array size. Outer stride must
+contain the size and preserve alignment; a nonempty array must preserve its
+child’s alignment. A zero-count array still validates the child type, ABI and
+acyclic graph. Huge counts with zero-sized, zero-stride children can therefore
+describe zero-byte storage without expanding the count into metadata elements.</p>
+<p>The length argument must be a proven constant with the same exact value and
+number/bigint runtime base as selected <code>N</code>; a type assertion cannot excuse a
+different value. <code>memoryLayout&lt;FixedArray&lt;T, N&gt;&gt;(...)</code> is rejected because it
+omits the physical child. Neither builder allocates an array or supplies a
+native codec. C# and Rust reject raw conversion or physical backing requiring
+an inline array, including arrays nested in records; compile-time layout
+observations remain separate from that unsupported native representation.</p>
+<p>Consumers read <code>TsonicMemoryLayoutFact</code> through <code>@tsonic/source-core/facts</code>:
+<code>kind: "value"</code> has <code>fields</code>, whereas <code>kind: "array"</code> has <code>fixedArray</code>,
+<code>elementLayoutExpression</code> and <code>elementLayout</code>, with no synthetic fields. The
+canonical <code>fixedArray</code> owns the only count (<code>length: bigint</code>), its
+<code>lengthRuntimeBase</code>, resolved <code>sourceType</code> and <code>elementSourceType</code>, and optional
+authored <code>elementType</code> evidence. Selected memory-type identities preserve
+source primitive distinctions and cross-file equivalence; equal checker
+carriers alone do not establish that an element is the intended primitive.
+Snapshots, finalized observations and backing comparisons follow the one child
+edge, not one node per element. The existing graph limits still apply.</p>
+<p>For example, given a registered little-endian, 64-bit ABI token exported by
+<code>example:abi</code>, both targets preserve this local’s storage:</p>
+<pre><code class="language-ts">import { abi } from "example:abi";
+import { memoryLayout, addressOf, toRawPointer, reinterpretRawPointer,
+  storePointer, unsafeContext } from "@tsonic/core/lang.js";
+import type { uint32 } from "@tsonic/core/types.js";
 
-function write(raw: RawPointer | undefined, layout: MemoryLayout&lt;uint32&gt;): void {
+const layout = memoryLayout&lt;uint32&gt;(abi, 4, 4, 4);
+function write(): uint32 {
   unsafeContext();
+  let value: uint32 = 1;
+  const raw = toRawPointer(addressOf(value), layout);
   const pointer = reinterpretRawPointer(raw, layout);
   if (pointer !== undefined) storePointer(pointer, 7);
+  return value; // 7
 }
 </code></pre>
-<p>The target must preserve writes to the original storage. Copying its value
-into a new location is not an implementation of this contract.</p>
+<p>Analysis gives the demanded local stable native backing before emission. Every
+read and write uses that same storage. <code>allocatePointer</code> origins can receive the
+same backing. Undemanded locals and logical pointers keep their usual form.</p>
+<p>Current physical layouts support signed/unsigned 8-, 16-, 32-, 64- and 128-bit
+integers, native-width integers, and 32-/64-bit floats; C# also supports <code>float16</code>.
+Scalar size must match its selected representation and have no fields. A
+physical record requires a complete value-type contract: a source-defined C#
+<code>struct</code>, or a native provider’s explicit complete field identities and value
+carrier. Ordinary reference objects cannot be decoded as value records. Record
+codecs read and write the selected scalar leaves at their declared offsets;
+they do not copy native struct padding or assume the process uses those offsets.
+Nested field placement can be packed independently of its standalone layout.
+Expanded codecs are limited to 131,072 value occurrences.
+Physical operations check process address width, byte order, bounds of retained
+allocations, and the selected alignment. These checks do not make an external
+address valid: explicit unsafe code must ensure its storage remains initialized,
+writable and alive for every resulting alias.</p>
+<p>By-value function and method parameters can use the same backing. Returning
+their address retains the callee’s parameter slot, not the caller’s variable.
+Pointers stored in closed local arrays and data-property objects also retain
+their backing through local aliases, binding replacement, and simple element
+or property assignments. Analysis checks every possible stored pointer; a
+logical projection cannot acquire native backing by being put in a container.
+Transporting a pointer is separate from addressing the container’s own storage.</p>
+<p>Required mutable data fields of compiler-owned reference objects can also receive
+native backing. For example:</p>
+<pre><code class="language-ts">const cell: { value: uint32 } = { value: 7 };
+const alias = cell;
+const pointer = addressOf(cell.value);
+toRawPointer(pointer, layout);
+storePointer(pointer, 9);
+alias.value = 11;
+</code></pre>
+<p>Both assignments update the same physical field. Independently taking
+<code>addressOf(alias.value)</code> gives the same location. Reassigning <code>cell</code> to a new
+object does not retarget the old pointer. The retained location keeps its
+storage alive after the original local returns. This storage choice does not
+change the field’s public value type or undemanded object shapes.</p>
+<p>Dense native arrays have the same retained-location behavior when analysis can
+close all local aliases and uses:</p>
+<pre><code class="language-ts">let values: uint32[] = [7, 8];
+const alias = values;
+const pointer = addressOf(values[0]);
+toRawPointer(pointer, layout);
+alias[0] = 11;
+values = [99];
+loadPointer(pointer); // 11, from the original allocation
+</code></pre>
+<p>The selected element stride determines the distance between adjacent locations.
+Ordinary element reads and writes use that allocation too. Bounds are checked.
+The current proof admits initialized block-local bindings, dense non-spread
+literals, local aliases, standalone binding replacements and element accesses.
+It rejects collection methods, property operations, resizing, deletion, captures
+and array escapes through calls, returns or other containers. It does not change
+undemanded arrays or substitute native arrays for JS-surface collections.</p>
+<p>Optional/accessor fields, arbitrary native object fields, escaped pointer
+containers and open caller boundaries still lack complete native-backing proofs.
+Logical callback projections do not establish physical backing. C# also rejects
+passing promoted locals, fields or elements as managed <code>ref</code>/<code>out</code>.</p>
+<p>Native providers can return the canonical raw carrier with an explicit storage
+lease. C# runtime code calls <code>RawPointer.FromExternal(address, byteLength, owner)</code>;
+Rust runtime code calls the unsafe <code>RawPointer::from_external(address, byte_length, owner)</code>. These are native runtime APIs, not additional TypeScript markers. The
+provider’s selected return contract must still identify <code>RawPointer</code> exactly.</p>
+<p>The owner must actually keep initialized, writable storage at a stable address
+until all aliases are released. For example, a C# provider exposing a managed
+array must retain a real pin, not merely the array. Rust providers must obey
+native aliasing and access rules. Tsonic does not infer either obligation.
+Offset aliases and typed views retain the same owner and bounds. Extracting
+address bits drops that relationship; converting the bits back cannot recover it.
+Retaining a descriptor handle and decoding a pointer field from physical bytes
+are separate operations; the latter still requires a complete descriptor and
+backing contract.</p>
+<p>Ordinary pointer-returning functions, methods and callbacks retain their exact
+pointee representation without an added return annotation. The empty branch
+returns the target’s undefined representation, not an allocated pointer:</p>
+<pre><code class="language-ts">function maybe(flag: boolean) {
+  if (flag) return allocatePointer&lt;uint32&gt;(1);
+}
+const present = maybe(true);
+const absent = maybe(false); // undefined
+</code></pre>
+<p>Selected generic helpers that return their pointer arguments also preserve
+the arguments’ exact pointee evidence. This is not general inference through
+arbitrary generic bodies. For example, this return query does not close the
+pointee of an operation inside a generic body, such as <code>allocatePointer&lt;T&gt;(value)</code>.
+An unresolved <code>T</code> is not replaced with a guessed native scalar.</p>
 <p>An ABI provider supplies the token declaration and a <code>dataLayouts</code>
 contribution containing its exact provider identity, version, fingerprint,
 byte order and address width. Source-core validates the registration and owns
@@ -384,11 +1174,35 @@ the resulting facts. The build machine’s architecture is not an ABI token.
 Layout dimensions must be non-negative safe integers; alignment is a positive
 power of two. Native field extents and storage compatibility still require
 target proof.</p>
+<p>Layout builders and their immutable aliases are compile-time metadata, not
+runtime objects. The targets erase their declarations and replace observations
+with the selected native-unsigned constants. A descriptor cannot be returned
+from an ordinary function, put in a runtime container, or passed to an ordinary
+function. Field selectors are never executed to discover offsets.</p>
 <p>Byte offsets accept exact signed and unsigned integer markers, including
 bigint-backed widths. Unmarked in-range integer constants are also accepted.
 An arbitrary <code>number</code> or <code>bigint</code> variable is not an integer-domain proof.
 Optional pointer conversions preserve <code>undefined</code>; address conversion maps
 it to zero, and integer zero maps back to <code>undefined</code>.</p>
+<p>Address integers use <code>uint32</code> (<code>number</code>) for a 32-bit ABI and <code>uint64</code>
+(<code>bigint</code>) for a 64-bit ABI. They do not use the number-backed <code>nativeUint</code>.
+For example, with a registered 64-bit <code>abi</code> token:</p>
+<pre><code class="language-ts">const address: uint64 = 9007199254740993n;
+const raw = addressIntegerToRawPointer(address, abi);
+const exact: uint64 = rawPointerToAddressInteger&lt;uint64&gt;(raw, abi);
+</code></pre>
+<p>This round trip works on both native targets with a registered ABI matching
+the executing process. Both operations retain the exact unsigned width and
+number/bigint representation.
+Raw-to-integer requires the explicit type argument; the destination annotation
+does not select it. Integer-to-raw can infer it from an exactly annotated
+operand, or accept an explicit argument with an integral constant, such as
+<code>addressIntegerToRawPointer&lt;uint64&gt;(9007199254740993n, abi)</code>.
+Signed types, plain <code>number</code>/<code>bigint</code> variables, mismatched ABI widths and known
+out-of-range constants are rejected. Targets must range-check values that
+are not proven constant and must never convert 64-bit address bits through
+<code>number</code>. An integer contains address bits only: converting it back does not
+establish live storage, alignment, pinning or ownership.</p>
 <h3 id="native-pointer-operations">Native-pointer operations</h3>
 <table><thead><tr><th>Export</th><th>Meaning</th></tr></thead><tbody>
 <tr><td><code>loadNativePointer(pointer)</code></td><td>Dereference a native typed pointer</td></tr>

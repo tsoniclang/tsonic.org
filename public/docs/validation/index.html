@@ -6,15 +6,16 @@
 
       <title>Validation | Tsonic</title>
 
-    <meta name="description" content="Compile TypeScript into native C# and Rust source projects." />
+    <meta name="description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Validation" />
-    <meta property="og:description" content="Compile TypeScript into native C# and Rust source projects." />
+    <meta property="og:description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/styles.css" />
     <script defer src="/assets/nav.js"></script>
+    <script defer src="/assets/docs-target.js"></script>
     <script defer src="/assets/search.js"></script>
   </head>
   <body class="docs-page">
@@ -34,8 +35,13 @@
 
     <nav class="primary-nav" aria-label="Primary navigation">
       <a href="/docs/">Docs</a>
-      <a href="/docs/manual/targets/csharp/">C#</a>
-      <a href="/docs/manual/targets/rust/">Rust</a>
+
+        <a href="/docs/manual/targets/csharp/">C#</a>
+
+        <a href="/docs/manual/targets/rust/">Rust</a>
+
+        <a href="/docs/manual/targets/mojo/">Mojo</a>
+
     </nav>
 
     <div class="header-actions">
@@ -73,52 +79,274 @@
 
 
 
-<nav class="docs-nav">
+
+
+
+
+<label class="docs-target-control" for="docsTarget">
+  <span>Target language</span>
+  <select id="docsTarget" data-doc-target-select>
+
+      <option value="csharp" selected>C#</option>
+
+      <option value="rust" >Rust</option>
+
+      <option value="mojo" >Mojo</option>
+
+  </select>
+</label>
+<noscript><nav class="docs-target-links" aria-label="Target manuals">
+  <a href="/docs/manual/targets/csharp/">C#</a><a href="/docs/manual/targets/rust/">Rust</a><a href="/docs/manual/targets/mojo/">Mojo</a>
+</nav></noscript>
+
+
+
+
+
+
+<nav class="docs-nav" aria-label="Chapters">
 
 
       <section class="nav-group">
         <h2>Manual</h2>
         <ul>
 
-            <li><a class="" href="/docs/manual/">Manual overview</a></li>
+              <li><a class=""  href="/docs/manual/">Manual overview</a></li>
 
-            <li><a class="" href="/docs/manual/get-started/">Get started</a></li>
 
-            <li><a class="" href="/docs/manual/compiler-model/">Compiler model</a></li>
+              <li><a class=""  href="/docs/manual/get-started/">Get started</a></li>
 
-            <li><a class="" href="/docs/manual/projects/">Projects</a></li>
 
-            <li><a class="" href="/docs/manual/applications-and-libraries/">Applications and libraries</a></li>
+              <li><a class=""  href="/docs/manual/compiler-model/">Compiler model</a></li>
 
-            <li><a class="" href="/docs/manual/packages-and-workspaces/">Packages and workspaces</a></li>
 
-            <li><a class="" href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
+              <li><a class=""  href="/docs/manual/projects/">Projects</a></li>
 
-            <li><a class="" href="/docs/manual/source-semantics/">Source semantics</a></li>
 
-            <li><a class="" href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
+              <li><a class=""  href="/docs/manual/applications-and-libraries/">Applications and libraries</a></li>
 
-            <li><a class="" href="/docs/manual/targets/">Targets</a></li>
 
-            <li><a class="" href="/docs/manual/targets/csharp/">C# manual</a></li>
+              <li><a class=""  href="/docs/manual/packages-and-workspaces/">Packages and workspaces</a></li>
 
-            <li><a class="" href="/docs/manual/targets/csharp/source-profile/">C# source profile</a></li>
 
-            <li><a class="" href="/docs/manual/targets/csharp/interop-and-safety/">C# interop and safety</a></li>
+              <li><a class=""  href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
 
-            <li><a class="" href="/docs/manual/targets/csharp/projects-and-output/">C# projects and output</a></li>
 
-            <li><a class="" href="/docs/manual/targets/rust/">Rust manual</a></li>
+              <li><a class=""  href="/docs/manual/source-semantics/">Source semantics</a></li>
 
-            <li><a class="" href="/docs/manual/targets/rust/source-profile/">Rust source profile</a></li>
 
-            <li><a class="" href="/docs/manual/targets/rust/ownership-and-safety/">Rust ownership and safety</a></li>
+              <li><a class=""  href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
 
-            <li><a class="" href="/docs/manual/targets/rust/projects-and-output/">Rust projects and output</a></li>
 
-            <li><a class="" href="/docs/manual/troubleshooting/">Troubleshooting</a></li>
+              <li><a class=""  href="/docs/manual/targets/">Targets</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <li><a class=""  href="/docs/manual/troubleshooting/">Troubleshooting</a></li>
+
 
         </ul>
+
+
+
+
+            <div class="target-chapters" data-doc-target="csharp" >
+              <h3>C# Manual</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/csharp/">C# manual</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/csharp/source-profile/">C# source profile</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/csharp/interop-and-safety/">C# interop and safety</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/csharp/projects-and-output/">C# projects and output</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </ul>
+            </div>
+
+
+            <div class="target-chapters" data-doc-target="rust" hidden>
+              <h3>Rust Manual</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/rust/">Rust manual</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/rust/source-profile/">Rust source profile</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/rust/ownership-and-safety/">Rust ownership and safety</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/rust/projects-and-output/">Rust projects and output</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+              </ul>
+            </div>
+
+
+            <div class="target-chapters" data-doc-target="mojo" hidden>
+              <h3>Mojo Manual</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/mojo/">Mojo manual</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/mojo/source-profile/">Mojo source profile</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/mojo/ownership-and-safety/">Mojo ownership and safety</a></li>
+
+
+
+                    <li><a class=""  href="/docs/manual/targets/mojo/projects-and-output/">Mojo projects and output</a></li>
+
+
+
+
+              </ul>
+            </div>
+
+
       </section>
 
 
@@ -127,75 +355,440 @@
         <h2>Reference</h2>
         <ul>
 
-            <li><a class="" href="/docs/reference/">Reference overview</a></li>
+              <li><a class=""  href="/docs/reference/">Reference overview</a></li>
 
-            <li><a class="" href="/docs/reference/cli/">CLI</a></li>
 
-            <li><a class="" href="/docs/reference/project-config/">`tsonic.json`</a></li>
+              <li><a class=""  href="/docs/reference/cli/">CLI</a></li>
 
-            <li><a class="" href="/docs/reference/toolchains/">Toolchains and platforms</a></li>
 
-            <li><a class="" href="/docs/reference/limitations/">Shared limitations</a></li>
+              <li><a class=""  href="/docs/reference/project-config/">`tsonic.json`</a></li>
 
-            <li><a class="" href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
 
-            <li><a class="" href="/docs/reference/source-core/">Neutral types and markers</a></li>
+              <li><a class=""  href="/docs/reference/toolchains/">Toolchains and platforms</a></li>
 
-            <li><a class="" href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
 
-            <li><a class="" href="/docs/reference/node-capability/">Node capability</a></li>
+              <li><a class=""  href="/docs/reference/limitations/">Shared limitations</a></li>
 
-            <li><a class="" href="/docs/reference/diagnostics/">Diagnostics</a></li>
 
-            <li><a class="" href="/docs/reference/package-catalog/">Package catalog</a></li>
+              <li><a class=""  href="/docs/reference/typescript-types/">TypeScript types and utilities</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/">C# reference</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/configuration/">C# configuration</a></li>
+              <li><a class=""  href="/docs/reference/source-core/">Neutral types and markers</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/source-modules/">C# source modules</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/type-mapping/">C# type mapping</a></li>
+              <li><a class=""  href="/docs/reference/javascript-source-profile/">JavaScript source profile</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/native-apis/">C# native APIs</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/javascript-surface/">C# JavaScript surface</a></li>
+              <li><a class=""  href="/docs/reference/node-capability/">Node capability</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/node-capability/">C# Node capability</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/provider-api/">C# provider API</a></li>
+              <li><a class=""  href="/docs/reference/diagnostics/">Diagnostics</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/language-support/">C# language support</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/support-inventory/">C# support inventory</a></li>
+              <li><a class=""  href="/docs/reference/package-catalog/">Package catalog</a></li>
 
-            <li><a class="" href="/docs/reference/targets/csharp/limitations/">C# limitations</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/">Rust reference</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/configuration/">Rust configuration</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/source-modules/">Rust source modules</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/type-mapping/">Rust type mapping</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/ownership-and-lifetimes/">Rust ownership and lifetimes</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/native-apis/">Rust native APIs</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/javascript-surface/">Rust JavaScript surface</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/node-capability/">Rust Node capability</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/provider-api/">Rust provider API</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/language-support/">Rust language support</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/support-inventory/">Rust support inventory</a></li>
 
-            <li><a class="" href="/docs/reference/targets/rust/limitations/">Rust limitations</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         </ul>
+
+
+
+
+            <div class="target-chapters" data-doc-target="csharp" >
+              <h3>C# Reference</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/">C# reference</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/configuration/">C# configuration</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/source-modules/">C# source modules</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/type-mapping/">C# type mapping</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/native-apis/">C# native APIs</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/javascript-surface/">C# JavaScript surface</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/node-capability/">C# Node capability</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/provider-api/">C# provider API</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/language-support/">C# language support</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/support-inventory/">C# support inventory</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/csharp/limitations/">C# limitations</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </ul>
+            </div>
+
+
+            <div class="target-chapters" data-doc-target="rust" hidden>
+              <h3>Rust Reference</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/">Rust reference</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/configuration/">Rust configuration</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/source-modules/">Rust source modules</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/type-mapping/">Rust type mapping</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/ownership-and-lifetimes/">Rust ownership and lifetimes</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/native-apis/">Rust native APIs</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/javascript-surface/">Rust JavaScript surface</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/node-capability/">Rust Node capability</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/provider-api/">Rust provider API</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/language-support/">Rust language support</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/support-inventory/">Rust support inventory</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/rust/limitations/">Rust limitations</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </ul>
+            </div>
+
+
+            <div class="target-chapters" data-doc-target="mojo" hidden>
+              <h3>Mojo Reference</h3>
+              <ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/">Mojo reference</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/configuration/">Mojo configuration</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/source-modules/">Mojo source modules</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/type-mapping/">Mojo type mapping</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/native-apis/">Mojo native APIs</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/javascript-surface/">Mojo JavaScript surface</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/node-capability/">Mojo Node capability</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/provider-api/">Mojo provider API</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/language-support/">Mojo language support</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/support-inventory/">Mojo support inventory</a></li>
+
+
+
+                    <li><a class=""  href="/docs/reference/targets/mojo/limitations/">Mojo limitations</a></li>
+
+
+              </ul>
+            </div>
+
+
       </section>
 
 
@@ -204,17 +797,24 @@
         <h2>Architecture</h2>
         <ul>
 
-            <li><a class="" href="/docs/architecture/">Architecture overview</a></li>
+              <li><a class=""  href="/docs/architecture/">Architecture overview</a></li>
 
-            <li><a class="" href="/docs/architecture/compilation-lifecycle/">Compilation lifecycle</a></li>
 
-            <li><a class="" href="/docs/architecture/target-pack-contract/">Target-pack contract</a></li>
+              <li><a class=""  href="/docs/architecture/compilation-lifecycle/">Compilation lifecycle</a></li>
 
-            <li><a class="" href="/docs/architecture/provider-and-runtime-ownership/">Provider and runtime ownership</a></li>
 
-            <li><a class="" href="/docs/architecture/workspace-agent-policy/">Workspace policy</a></li>
+              <li><a class=""  href="/docs/architecture/target-pack-contract/">Target-pack contract</a></li>
+
+
+              <li><a class=""  href="/docs/architecture/provider-and-runtime-ownership/">Provider and runtime ownership</a></li>
+
+
+              <li><a class=""  href="/docs/architecture/workspace-agent-policy/">Workspace policy</a></li>
+
 
         </ul>
+
+
       </section>
 
 
@@ -223,13 +823,18 @@
         <h2>Validation</h2>
         <ul>
 
-            <li><a class="active" href="/docs/validation/">Validation overview</a></li>
+              <li><a class="active" aria-current="page" href="/docs/validation/">Validation overview</a></li>
 
-            <li><a class="" href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
 
-            <li><a class="" href="/docs/validation/releasing/">npm release procedure</a></li>
+              <li><a class=""  href="/docs/validation/documentation-drift/">Documentation drift policy</a></li>
+
+
+              <li><a class=""  href="/docs/validation/releasing/">npm release procedure</a></li>
+
 
         </ul>
+
+
       </section>
 
 

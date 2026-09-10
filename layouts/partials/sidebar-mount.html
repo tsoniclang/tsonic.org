@@ -1,15 +1,39 @@
 {{ $mount := .Mount }}
 {{ $page := .Page }}
-<nav class="docs-nav">
+{{ $selected := .Selected }}
+<nav class="docs-nav" aria-label="Chapters">
   {{ range $mount.Nav }}
     {{ if .IsSection }}
       <section class="nav-group">
         <h2>{{ .Title }}</h2>
         <ul>
           {{ range .Children }}
-            <li><a class="{{ if eq .Url $page.RelPermalink }}active{{ end }}" href="{{ .Url }}">{{ .Title }}</a></li>
+            {{- $chapter := . -}}
+            {{- $isTargetChapter := false -}}
+            {{- range $page.Site.Data.targets -}}
+              {{- if in $chapter.Url (printf "/targets/%s/" .id) -}}{{- $isTargetChapter = true -}}{{- end -}}
+            {{- end -}}
+            {{ if not $isTargetChapter }}
+              <li><a class="{{ if eq .Url $page.RelPermalink }}active{{ end }}" {{ if eq .Url $page.RelPermalink }}aria-current="page"{{ end }} href="{{ .Url }}">{{ .Title }}</a></li>
+            {{ end }}
           {{ end }}
         </ul>
+        {{ $section := . }}
+        {{ if or (eq .Title "Manual") (eq .Title "Reference") }}
+          {{ range $page.Site.Data.targets }}
+            {{ $target := . }}
+            <div class="target-chapters" data-doc-target="{{ .id }}" {{ if ne .id $selected }}hidden{{ end }}>
+              <h3>{{ .label }} {{ $section.Title }}</h3>
+              <ul>
+                {{ range $section.Children }}
+                  {{ if in .Url (printf "/targets/%s/" $target.id) }}
+                    <li><a class="{{ if eq .Url $page.RelPermalink }}active{{ end }}" {{ if eq .Url $page.RelPermalink }}aria-current="page"{{ end }} href="{{ .Url }}">{{ .Title }}</a></li>
+                  {{ end }}
+                {{ end }}
+              </ul>
+            </div>
+          {{ end }}
+        {{ end }}
       </section>
     {{ else }}
       <a class="nav-root-link {{ if eq .Url $page.RelPermalink }}active{{ end }}" href="{{ .Url }}">{{ .Title }}</a>

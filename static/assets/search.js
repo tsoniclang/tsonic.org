@@ -4,6 +4,7 @@
   if (!(input instanceof HTMLInputElement) || !(results instanceof HTMLElement)) return;
 
   let indexPromise;
+  let searchRevision = 0;
 
   const loadIndex = () => {
     if (indexPromise === undefined) {
@@ -44,6 +45,7 @@
   };
 
   const search = async () => {
+    const revision = ++searchRevision;
     const query = input.value.trim().toLocaleLowerCase();
     if (query.length < 2) {
       clearResults();
@@ -51,8 +53,12 @@
     }
 
     const documents = await loadIndex();
+    if (revision !== searchRevision) return;
     const ranked = [];
+    const target = document.documentElement.dataset.docTarget;
     for (const document of documents) {
+      const targetRoute = document.url.match(/^\/docs\/(?:manual|reference)\/targets\/([^/]+)\//u);
+      if (targetRoute && targetRoute[1] !== target) continue;
       const title = document.title.toLocaleLowerCase();
       const text = document.text.toLocaleLowerCase();
       if (!title.includes(query) && !text.includes(query)) continue;
@@ -63,6 +69,7 @@
   };
 
   input.addEventListener("input", search);
+  document.addEventListener("docs-target-change", search);
   input.addEventListener("focus", () => {
     if (input.value.trim().length >= 2) search();
   });

@@ -4,19 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {{ if .IsHome }}
-      <title>Tsonic | TypeScript to .NET and Rust</title>
+      <title>Tsonic | TypeScript to .NET, Rust and Mojo</title>
     {{ else }}
       <title>{{ .Title }} | Tsonic</title>
     {{ end }}
-    <meta name="description" content="{{ default "Compile TypeScript into native C# and Rust source projects." .Description }}" />
+    <meta name="description" content="{{ default "Compile TypeScript into native C#, Rust and Mojo source projects." .Description }}" />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="{{ if .IsHome }}TypeScript to .NET and Rust{{ else }}{{ .Title }}{{ end }}" />
-    <meta property="og:description" content="{{ default "Compile TypeScript into native C# and Rust source projects." .Description }}" />
+    <meta property="og:title" content="{{ if .IsHome }}TypeScript to .NET, Rust and Mojo{{ else }}{{ .Title }}{{ end }}" />
+    <meta property="og:description" content="{{ default "Compile TypeScript into native C#, Rust and Mojo source projects." .Description }}" />
     <link rel="icon" href="{{ relURL "assets/favicon.svg" }}" type="image/svg+xml" />
     <link rel="stylesheet" href="{{ relURL "assets/styles.css" }}" />
     <script defer src="{{ relURL "assets/nav.js" }}"></script>
+    {{ if not .IsHome }}<script defer src="{{ relURL "assets/docs-target.js" }}"></script>{{ end }}
     {{ if .IsHome }}<script defer src="{{ relURL "assets/examples.js" }}"></script>{{ else }}<script defer src="{{ relURL "assets/search.js" }}"></script>{{ end }}
   </head>
   <body class="{{ if .IsHome }}home-page{{ else }}docs-page{{ end }}">

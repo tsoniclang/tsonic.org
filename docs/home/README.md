@@ -1,4 +1,4 @@
 ---
 title: Tsonic
-description: Compile TypeScript into native C# and Rust source projects.
+description: Compile TypeScript into native C#, Rust and Mojo source projects.
 ---
