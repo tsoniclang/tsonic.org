@@ -8,7 +8,12 @@
         <h2>{{ .Title }}</h2>
         <ul>
           {{ range .Children }}
-            {{ if not (in .Url "/targets/") }}
+            {{- $chapter := . -}}
+            {{- $isTargetChapter := false -}}
+            {{- range $page.Site.Data.targets -}}
+              {{- if in $chapter.Url (printf "/targets/%s/" .id) -}}{{- $isTargetChapter = true -}}{{- end -}}
+            {{- end -}}
+            {{ if not $isTargetChapter }}
               <li><a class="{{ if eq .Url $page.RelPermalink }}active{{ end }}" {{ if eq .Url $page.RelPermalink }}aria-current="page"{{ end }} href="{{ .Url }}">{{ .Title }}</a></li>
             {{ end }}
           {{ end }}

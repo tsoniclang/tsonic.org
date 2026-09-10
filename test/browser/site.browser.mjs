@@ -56,6 +56,7 @@ test("desktop target selection, deep links, shared chapters and search", async (
       assert.equal(await page.locator(".target-chapters:visible").count(), 2);
       assert.equal(await page.locator(`.target-chapters:visible:not([data-doc-target="${target}"])`).count(), 0);
       assert.ok(await page.locator('.docs-nav a[href="/docs/reference/cli/"]').isVisible());
+      assert.ok(await page.locator('.docs-nav a[href="/docs/manual/targets/"]').isVisible());
       await page.locator("#searchBox").fill("configuration");
       await page.waitForFunction(() => !document.querySelector("#searchResults").hidden);
       const links = await page.locator("#searchResults a").evaluateAll((elements) => elements.map((element) => element.getAttribute("href")));
