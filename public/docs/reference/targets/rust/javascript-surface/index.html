@@ -882,6 +882,25 @@ only where selected; native Rust strings remain the default carrier.</p>
 Each accepted operation has one static Rust lowering or one closed runtime
 contract. Unsupported dynamic behavior rejects.</p>
 <p>See the detailed <a href="/docs/reference/targets/rust/support-inventory/">support inventory</a>.</p>
+<h2 id="number-formatting">Number formatting</h2>
+<p><code>Intl.NumberFormat</code> uses the deterministic <code>en</code>/<code>en-US</code> locale. Decimal,
+percent and currency formatting support fraction or significant precision.
+Resolved digit properties are optional: significant precision does not invent
+fraction-digit values. Resolved grouping is <code>false</code>, <code>"auto"</code>, <code>"always"</code> or
+<code>"min2"</code>, not a boolean approximation.</p>
+<pre><code class="language-ts">import type { uint64 } from "@tsonic/core/types.js";
+
+export function display(value: uint64): string {
+  return value.toLocaleString("en", { useGrouping: false });
+}
+</code></pre>
+<p>The integer stays exact, including values beyond <code>Number.MAX_SAFE_INTEGER</code>.
+<code>format</code> and <code>formatToParts</code> use the same formatter. Nonstandard notation
+(including compact), unit options, accounting signs, nondefault sign
+display, rounding priorities/modes/increments and trailing-zero strategies
+are not implemented by this runtime; selecting them fails at formatter
+construction. They are not silently ignored. The shared TypeScript declarations
+describe the source API, not universal target support.</p>
 </div>
 </article>
 </main>

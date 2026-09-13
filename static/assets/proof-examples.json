@@ -12,7 +12,7 @@
           "title": "HTTP server",
           "summary": "A Node HTTP server compiled into a native .NET application.",
           "provenance": {
-            "repository": "proof-is-in-the-pudding",
+            "repository": "csharp-pudding",
             "revision": "e86aaef542c3d0ba0afc493531f6b6602b37c608",
             "projectPath": "nodejs/packages/webserver"
           },
@@ -44,7 +44,7 @@
           "title": "Parallel workers",
           "summary": "Three CPU-bound workers run through the .NET parallel task API.",
           "provenance": {
-            "repository": "proof-is-in-the-pudding",
+            "repository": "csharp-pudding",
             "revision": "e86aaef542c3d0ba0afc493531f6b6602b37c608",
             "projectPath": "bcl/packages/multithreading"
           },
@@ -76,7 +76,7 @@
           "title": "ASP.NET blog",
           "summary": "A multi-file HTTP API backed by Entity Framework Core and SQLite.",
           "provenance": {
-            "repository": "proof-is-in-the-pudding",
+            "repository": "csharp-pudding",
             "revision": "e86aaef542c3d0ba0afc493531f6b6602b37c608",
             "projectPath": "aspnetcore/packages/blog-ef"
           },
@@ -282,7 +282,7 @@
           "title": "Spans and memory",
           "summary": "Allocation-conscious code using native span and memory types.",
           "provenance": {
-            "repository": "proof-is-in-the-pudding",
+            "repository": "csharp-pudding",
             "revision": "e86aaef542c3d0ba0afc493531f6b6602b37c608",
             "projectPath": "bcl/packages/high-performance"
           },
@@ -314,7 +314,7 @@
           "title": "Generators and cleanup",
           "summary": "Generators, values sent into an iterator, and deterministic disposal.",
           "provenance": {
-            "repository": "proof-is-in-the-pudding",
+            "repository": "csharp-pudding",
             "revision": "e86aaef542c3d0ba0afc493531f6b6602b37c608",
             "projectPath": "bcl/packages/generators-resources"
           },
@@ -346,7 +346,7 @@
           "title": "Native pointers",
           "summary": "Explicit unsafe access, pointer loads, stores, and offsets.",
           "provenance": {
-            "repository": "proof-is-in-the-pudding",
+            "repository": "csharp-pudding",
             "revision": "e86aaef542c3d0ba0afc493531f6b6602b37c608",
             "projectPath": "bcl/packages/native-pointers"
           },

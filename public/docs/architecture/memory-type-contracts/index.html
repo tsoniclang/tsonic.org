@@ -898,6 +898,14 @@ to selected memory operations; it does not recheck every expression.</p>
 if their ordinary TypeScript numeric carriers coincide. Alias substitution
 uses resolved declarations and type parameters, not names. Nullability,
 nested pointers and closed generic arguments participate in identity.</p>
+<p>Independently declared closed records can describe the same memory domain.
+For example, <code>interface First { count: int64 }</code> and
+<code>interface Second { count: int64 }</code> do not require one shared declaration.
+Source-core checks compiler type identity and the corresponding selected
+members’ marker domains. It does not equate <code>{ count: int64 }</code> with
+<code>{ count: uint64 }</code> merely because both use bigint carriers. Member optionality
+and readonly requirements remain distinct. Graph comparison is memoized and
+bounded; recursive references do not authorize omitting conflicting fields.</p>
 <p>For inferred pointer values, the same contract follows selected declarations,
 array index signatures, call arguments and returns. This recovers the static
 marker domain; it does not prove that storage is stable or that a pointer may
@@ -918,7 +926,8 @@ if the selected marker domain is unavailable. Open types cannot receive a
 closed identity, including type variables hidden in <code>typeof</code> properties,
 call signatures or index signatures.</p>
 <p>The result is an immutable <code>TsonicMemoryTypeFact</code> on each accepted layout,
-physical field and raw conversion. A field’s fact describes its field type.
+physical field, field-offset query and raw conversion. A field’s fact describes
+its field type; a field-offset query’s fact describes its selected owner type.
 Other facts describe their selected pointee type. Each fact contains:</p>
 <ul>
 <li><code>call</code>: the exact authored operation;</li>
@@ -959,8 +968,13 @@ ordering, runtime alias preservation, and any target-specific rejection.</p>
 <code>toRawPointer(pointer, localLayout)</code> and <code>toRawPointer(pointer, importedLayout)</code>
 may demand the same storage even when the layouts were authored in different
 files. Their authenticated memory domains and complete physical layouts must
-agree, including every nested field’s selected declaration and placement.
+agree, including every nested field’s exact corresponding member and placement.
 Discovery order must not decide whether those demands are compatible.</p>
+<p>Source-core retains the original selected declarations and authenticates their
+member correspondence within the memory identity. Field-offset queries and
+backing-demand reconciliation consume that correspondence without checker
+re-entry or target-side name matching. A different declaration for an equivalent
+record does not authorize swapping fields, offsets or physical child layouts.</p>
 <p>This is different from validating an individual fact’s snapshot. That check
 still requires the original checker type for its exact authored occurrence;
 sharing a memory domain does not authorize substituting another occurrence’s

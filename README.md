@@ -35,7 +35,7 @@ Netlify publishes the checked-in `public/` directory directly.
 ## Homepage proof browser
 
 The homepage example browser is generated from passing projects in the sibling
-`pudding-csharp`, `rust-pudding` and `mojo-pudding` repositories. It contains authored
+`csharp-pudding`, `rust-pudding` and `mojo-pudding` repositories. It contains authored
 TypeScript, generated native source, file hashes, and the proof
 repository revision.
 
