@@ -884,6 +884,10 @@ generic requirements, provider operations, and Cargo requirements.</li>
 </ul>
 <p>Those are different facts inside the same architectural phase, not different
 architectures.</p>
+<p>Targets obtain TypeScript structural member correspondence through the public
+<a href="/docs/architecture/structural-member-correspondence/">source member query</a>. Native option
+construction and ownership remain target decisions; targets do not match source
+property names themselves.</p>
 <h2 id="source-layout">Source layout</h2>
 <p>Both target repositories use the same outer source directories:</p>
 <pre><code class="language-text">src/
@@ -960,13 +964,13 @@ remain internally for rollback but cannot be emitted as successful output.</p>
 project. Open-ended native settings remain in <code>.csproj</code> or <code>Cargo.toml</code>; the
 generic host never grows target-specific configuration branches.</p>
 <h2 id="proof-alignment">Proof alignment</h2>
-<p><code>pudding-csharp</code> and <code>rust-pudding</code> describe their checks in
+<p><code>csharp-pudding</code> and <code>rust-pudding</code> describe their checks in
 <code>scripts/verify/scenarios.json</code>. A shared scenario ID means the same declared
 bounded contract, not identical project contents or proof strength. Native-only
 and unpaired assertions
 remain explicit. For example, both suites check calculator addition, while
 an ASP.NET server and a Rust lifetime signature have separate contracts.</p>
-<p>From <code>pudding-csharp</code>, inspect those declarations without compiling projects:</p>
+<p>From <code>csharp-pudding</code>, inspect those declarations without compiling projects:</p>
 <pre><code class="language-sh">node scripts/verify-all.mjs --scenarios --peer ../rust-pudding
 </code></pre>
 <p>This checks project coverage, source anchors and declared pairs. It does not

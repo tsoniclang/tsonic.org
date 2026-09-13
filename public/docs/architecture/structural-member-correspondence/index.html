@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>Architecture | Tsonic</title>
+      <title>Structural Member Correspondence | Tsonic</title>
 
     <meta name="description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Architecture" />
+    <meta property="og:title" content="Structural Member Correspondence" />
     <meta property="og:description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/styles.css" />
@@ -797,7 +797,7 @@
         <h2>Architecture</h2>
         <ul>
 
-              <li><a class="active" aria-current="page" href="/docs/architecture/">Architecture overview</a></li>
+              <li><a class=""  href="/docs/architecture/">Architecture overview</a></li>
 
 
               <li><a class=""  href="/docs/architecture/compilation-lifecycle/">Compilation lifecycle</a></li>
@@ -852,73 +852,53 @@
 
         <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
 
-      <span>Architecture</span>
+        <a href="/docs/architecture/">Architecture</a><span aria-hidden="true">/</span>
+
+      <span>Structural Member Correspondence</span>
     </nav>
-    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/README.md">Edit source</a>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/structural-member-correspondence.md">Edit source</a>
   </div>
-
-  <div class="prose"><h1 id="tsonic-architecture">Tsonic architecture</h1>
-<p>Tsonic has four ownership layers.</p>
-<pre><code class="language-text">L1  TSTS checked TypeScript program
-    TS-Go-shaped syntax + TypeScript semantic decisions
-                         |
-L2  Extension and target API
-    finalized facts + target-neutral source navigation
-                         |
-L3  Shared Tsonic host capabilities
-    project graph + plugins + artifacts + publication
-                         |
-L4  Target implementation
-    analysis + classification + planning + target AST + printer
+  <div class="prose"><h1 id="structural-source-members">Structural source members</h1>
+<pre><code class="language-ts">declare function open(path: string, options: { flags?: string; highWaterMark?: number }): void;
+const options = { highWaterMark: 3 };
+open("output.txt", options);
 </code></pre>
-<h2 id="layer-1-checked-source">Layer 1: checked source</h2>
-<p>TSTS owns parsing, binding, checking, flow, narrowing, contextual typing,
-generic inference, source overload selection, and retained checker evidence.
-Targets do not modify the TypeScript AST and do not redo these decisions.</p>
-<h2 id="layer-2-public-compiler-boundary">Layer 2: public compiler boundary</h2>
-<p>The extension and target APIs expose immutable checked syntax, opaque semantic
-handles, finalized facts, source navigation, target analysis contracts,
-provider declarations, and artifact contracts. This layer contains no C#,
-Rust, .NET, or Cargo policy.</p>
-<h2 id="layer-3-shared-host">Layer 3: shared host</h2>
-<p>The host owns project paths, source collection, plugin discovery, source
-profile and capability composition, target sessions, target artifact
-reconstruction, staged publication, and toolchain handoff. It does not decide
-how TypeScript types map to C# or Rust.</p>
-<h2 id="layer-4-target">Layer 4: target</h2>
-<p>Each target owns its complete native semantic pipeline:</p>
-<pre><code class="language-text">analyze -&gt; classify -&gt; seal target program -&gt; plan -&gt; print -&gt; toolchain
+<p>The two <code>highWaterMark</code> properties have different symbols. An identity query
+cannot prove their structural correspondence. After obtaining the checked
+call and selected parameter, a target uses the public source boundary:</p>
+<pre><code class="language-ts">const semantics = source.semantics.forNode(callNode);
+const call = semantics.operations.call(callNode);
+const relation = semantics.types.structuralMembers(
+  call.sourceArguments[1].type,
+  call.sourceSelectedSignatureParameters[1].selectedType,
+);
 </code></pre>
-<p>Analysis may reach a target-specific fixed point, but planning consumes a
-sealed target program. The C# and Rust implementations share these boxes while
-using different target facts and algorithms inside them.</p>
-<h2 id="documents">Documents</h2>
-<ul>
-<li><a href="/docs/architecture/compilation-lifecycle/">Compilation lifecycle</a></li>
-<li><a href="/docs/architecture/target-pack-contract/">Target-pack contract</a></li>
-<li><a href="/docs/architecture/provider-and-runtime-ownership/">Provider and runtime ownership</a></li>
-<li><a href="/docs/architecture/memory-type-contracts/">Memory type contracts</a></li>
-<li><a href="/docs/architecture/workspace-agent-policy/">Workspace agent policy</a></li>
-</ul>
+<p>An available result records each destination property in destination order.
+Each row is either <code>present</code>, with both exact property symbols, root symbols,
+effective selected types, optional flags and read/accessor declarations; or
+<code>absent</code>, for an optional property not found on the source type. An optional
+source property is still <code>present</code>: its runtime presence must be handled by
+the target. This differs from an absent property and from a present property
+whose value is <code>undefined</code>. Extra source properties are not projected.</p>
+<p>The shared owner resolves the destination symbol’s compiler key through
+TSTS’s public property query and joins by the resulting source symbol, not by
+target-side string comparisons. Generic and mapped property types are the
+checker’s instantiated property types. Results are cached per source/destination
+type pair and immutable; compiler type, symbol and syntax handles retain their
+existing identity contracts.</p>
+<p>This is <strong>member correspondence, not an assignability test</strong>. The accepted
+call/assignment remains the source of assignment evidence. Index signatures,
+call signatures and construct signatures are returned separately for both
+types; a member map does not discharge those obligations or select a callable
+overload. Generic member types remain compiler types, not proof of native closure.
+Unions must be narrowed or selected first. Unresolved types, missing
+required properties, inconsistent member evidence and write-only source accessors
+return explicit <code>unavailable</code> reasons.</p>
+<p>No expression is evaluated by this query. Native snapshot construction, reading
+an accessor at the correct time, evaluating the source receiver once, preserving
+object identity and rejecting unsupported native conversions remain target work.
+There is no target-specific field matching or new checker state.</p>
 </div>
-
-
-    <div class="section-pages">
-
-        <a href="/docs/architecture/compilation-lifecycle/"><strong>Compilation Lifecycle</strong><span aria-hidden="true">→</span></a>
-
-        <a href="/docs/architecture/memory-type-contracts/"><strong>Memory Type Contracts</strong><span aria-hidden="true">→</span></a>
-
-        <a href="/docs/architecture/provider-and-runtime-ownership/"><strong>Provider And Runtime Ownership</strong><span aria-hidden="true">→</span></a>
-
-        <a href="/docs/architecture/structural-member-correspondence/"><strong>Structural Member Correspondence</strong><span aria-hidden="true">→</span></a>
-
-        <a href="/docs/architecture/target-pack-contract/"><strong>Target Pack Contract</strong><span aria-hidden="true">→</span></a>
-
-        <a href="/docs/architecture/workspace-agent-policy/"><strong>Workspace Agent Policy</strong><span aria-hidden="true">→</span></a>
-
-    </div>
-
 </article>
 </main>
       </div>

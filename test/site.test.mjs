@@ -81,6 +81,9 @@ test("the proof browser publishes source-backed projects for every target", () =
   for (const target of targets) {
     const published = catalog.targets.find((entry) => entry.id === target.id);
     for (const key of ["label", "outputLabel", "accent"]) assert.equal(published[key], target[key]);
+    for (const project of published.projects) {
+      assert.equal(project.provenance.repository, target.proofRepository);
+    }
   }
   assert.equal(catalog.targets[0].projects.length, 6);
   assert.equal(catalog.targets[1].projects.length, 7);
