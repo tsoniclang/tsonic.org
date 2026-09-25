@@ -868,8 +868,9 @@ installer includes npm.</p>
 <pre><code class="language-sh">node --version
 npm --version
 </code></pre>
-<p>For C#, install the <a href="https://dotnet.microsoft.com/en-us/download/dotnet/10.0">.NET 10 SDK</a>,
-not only the runtime.</p>
+<p>For C#, install a <a href="https://dotnet.microsoft.com/en-us/download/dotnet">.NET 10-or-later SDK</a>,
+not only the runtime. The starter targets <code>net10.0</code>; for another framework,
+set <code>target.options.targetFramework</code> in <code>tsonic.json</code> and install its runtime.</p>
 <pre><code class="language-sh">dotnet --version
 dotnet --list-sdks
 </code></pre>

@@ -863,6 +863,26 @@
     <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/reference/targets/rust/javascript-surface.md">Edit source</a>
   </div>
   <div class="prose"><h1 id="rust-javascript-surface">Rust JavaScript surface</h1>
+<h2 id="array-copies">Array copies</h2>
+<p><code>Array.from</code> materializes the destination slots directly, preserving source
+element identity. A dense copy has no hidden density prepass, temporary
+element vector or automatic optional-element widening.</p>
+<pre><code class="language-ts">import type { int32 } from "@tsonic/core/types.js";
+
+const values: int32[] = [1, 2];
+const copy = Array.from(values);
+</code></pre>
+<p>Ordinary arrays use dense native storage, including open array parameters.
+Length construction initializes native defaults rather than holes. Omitted
+literal elements and sparse mutations reject. Use explicit <code>(int32 | undefined)[]</code>
+elements when absence is part of the source contract.</p>
+<p>Shared mutable arrays must have the API’s native element type. For example,
+<code>SpawnSyncOptionsWithBufferEncoding.stdio</code> accepts an array whose elements include
+<code>null | undefined</code>. Declare that element domain when creating the array. Assigning
+a narrower present-only array is rejected, rather than copying it or silently
+widening every array’s storage. This preserves subsequent mutations through aliases.</p>
+<p>Ordinary strings use UTF-8 byte offsets. See <a href="/docs/reference/native-performance/">native performance</a>
+for string boundaries, array initialization, ownership and explicit compatibility.</p>
 <p>Select with <code>surfaces: ["js"]</code>. The target composes the shared JavaScript
 source profile and activates <code>@tsonic/rust-js</code> only when selected operations
 require it.</p>

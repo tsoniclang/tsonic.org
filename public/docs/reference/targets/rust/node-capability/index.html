@@ -882,6 +882,30 @@ import <code>node:path</code> without activating JavaScript globals. Unavailable
 operations reject at provider selection and are never forwarded to a Node
 process.</p>
 <p>See the detailed <a href="/docs/reference/targets/rust/support-inventory/">support inventory</a>.</p>
+<h2 id="engine-specific-controls">Engine-specific controls</h2>
+<p>The native program does not contain V8. The named
+<code>node:v8.setFlagsFromString(flags)</code> import is available so an optional engine
+control need not prevent compilation. Calling it always throws an explicit
+unsupported-operation error, including for an empty flag string. Importing it
+does not change process state. It does not adjust native thread stacks.</p>
+<pre><code class="language-ts">import { setFlagsFromString } from "node:v8";
+
+export function requestEngineFlags(flags: string): void {
+  setFlagsFromString(flags);
+}
+</code></pre>
+<p><code>getHeapStatistics()</code> also imports and type-checks, but always throws when
+called. Its <code>HeapInfo</code> result contract lets optional diagnostic code compile;
+the native runtime never returns invented V8 measurements.</p>
+<pre><code class="language-ts">import { getHeapStatistics } from "node:v8";
+
+export function reportHeapLimit(): number {
+  return getHeapStatistics().heap_size_limit;
+}
+</code></pre>
+<p>Importing this function is safe; calling it throws. A program that needs heap
+statistics on its normal execution path needs a native implementation of that
+requirement. This boundary does not provide one, or a general V8 implementation.</p>
 </div>
 </article>
 </main>

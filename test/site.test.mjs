@@ -38,6 +38,7 @@ test("the landing page states the current target contract directly", () => {
   assert.match(html, /<strong class="gradient-dotnet">\.NET\.<\/strong>/u);
   assert.match(html, /<strong class="gradient-rust">Rust\.<\/strong>/u);
   assert.match(html, /<strong class="gradient-mojo">Mojo\.<\/strong>/u);
+  assert.match(html, /<strong class="gradient-experimental">Experimental\.<\/strong>/u);
   assert.match(html, /Coming soon<\/span> Python and Triton/u);
   assert.match(html, /Tsonic checks TypeScript, writes native source projects/u);
   assert.match(html, /data-proof-browser/u);
@@ -126,6 +127,15 @@ test("every canonical Tsonic documentation page is published", () => {
     const outputPath = outputForMarkdown(sourcePath);
     assert.ok(existsSync(outputPath), `missing output for ${relative(canonicalDocsDir, sourcePath)}: ${outputPath}`);
   }
+  for (const currentChapter of [
+    "architecture/indexed-type-correspondence",
+    "architecture/proven-integer-operations",
+    "architecture/test-execution",
+    "reference/native-numerics",
+    "reference/native-performance",
+  ]) {
+    assert.ok(existsSync(join(publicDir, "docs", currentChapter, "index.html")), `missing current chapter ${currentChapter}`);
+  }
 });
 
 test("search contains canonical docs and no retired mounts", () => {
@@ -136,6 +146,9 @@ test("search contains canonical docs and no retired mounts", () => {
   assert.ok(search.some((item) => item.url === "/docs/reference/targets/csharp/provider-api/"));
   assert.ok(search.some((item) => item.url === "/docs/manual/targets/mojo/"));
   assert.ok(search.some((item) => item.url === "/docs/reference/targets/mojo/configuration/"));
+  assert.ok(search.some((item) => item.url === "/docs/reference/native-numerics/"));
+  assert.ok(search.some((item) => item.url === "/docs/reference/native-performance/"));
+  assert.ok(search.some((item) => item.url === "/docs/architecture/test-execution/"));
   assert.ok(search.every((item) => item.mount === "Home" || item.mount === "Docs"));
   assert.ok(search.every((item) => !item.url.startsWith("/tsbindgen/") && !item.url.startsWith("/express/")));
 });

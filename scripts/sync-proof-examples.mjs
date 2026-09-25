@@ -212,14 +212,25 @@ const assertSameSource = (repository, projectPath) => {
   }
 };
 
-const serializedFile = (base, path, language) => {
-  const content = readFileSync(path);
+const serializedFile = (base, path, language, content = readFileSync(path)) => {
   return {
     path: posixPath(relative(base, path)),
     language,
     sha256: hash(content),
     content: content.toString("utf8"),
   };
+};
+
+const containsLocalRepositoryPath = (content, repository) => {
+  const roots = new Set([
+    resolve(repository.sourceRoot),
+    resolve(repository.outputRoot),
+  ]);
+  return [...roots].some((root) => {
+    const posixRoot = posixPath(root);
+    const windowsRoot = root.split("/").join("\\");
+    return content.includes(posixRoot) || content.includes(windowsRoot);
+  });
 };
 
 const sourceFilesFor = (repository, projectPath) => {
@@ -243,8 +254,23 @@ const outputFilesFor = (target, repository, projectPath, selectedPath) => {
   if (paths.length === 0) {
     throw new Error(`No generated ${target} files found for ${projectPath}`);
   }
-  const files = paths.map((path) =>
-    serializedFile(outputRoot, path, target));
+  const omitted = [];
+  const files = paths.flatMap((path) => {
+    const content = readFileSync(path);
+    if (containsLocalRepositoryPath(content.toString("utf8"), repository)) {
+      omitted.push(posixPath(relative(outputRoot, path)));
+      return [];
+    }
+    return [serializedFile(outputRoot, path, target, content)];
+  });
+  if (omitted.length > 0) {
+    console.warn(
+      `Omitted host-bound generated files from ${repository.name}/${projectPath}: ${omitted.join(", ")}`,
+    );
+  }
+  if (files.length === 0) {
+    throw new Error(`No publishable generated ${target} files found for ${projectPath}`);
+  }
   if (selectedPath === undefined) return files;
   const selected = files.find((file) => file.path === selectedPath);
   if (selected === undefined) throw new Error(`Missing selected output ${projectPath}/${selectedPath}`);

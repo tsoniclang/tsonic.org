@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>Source Semantics | Tsonic</title>
+      <title>Indexed Type Correspondence | Tsonic</title>
 
     <meta name="description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Source Semantics" />
+    <meta property="og:title" content="Indexed Type Correspondence" />
     <meta property="og:description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/styles.css" />
@@ -132,7 +132,7 @@
               <li><a class=""  href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
 
 
-              <li><a class="active" aria-current="page" href="/docs/manual/source-semantics/">Source semantics</a></li>
+              <li><a class=""  href="/docs/manual/source-semantics/">Source semantics</a></li>
 
 
               <li><a class=""  href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
@@ -852,162 +852,92 @@
 
         <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
 
-        <a href="/docs/manual/">Manual</a><span aria-hidden="true">/</span>
+        <a href="/docs/architecture/">Architecture</a><span aria-hidden="true">/</span>
 
-      <span>Source Semantics</span>
+      <span>Indexed Type Correspondence</span>
     </nav>
-    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/manual/source-semantics.md">Edit source</a>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/indexed-type-correspondence.md">Edit source</a>
   </div>
-  <div class="prose"><h1 id="source-semantics">Source semantics</h1>
-<p>Ordinary TypeScript remains ordinary TypeScript:</p>
-<pre><code class="language-ts">export interface User {
-  readonly id: string;
-  name: string;
+  <div class="prose"><h1 id="indexed-type-correspondence">Indexed type correspondence</h1>
+<p>A resolved query has no member rows only when the checker selects <code>never</code> for
+an empty (<code>never</code>) key domain. This is distinct from a missing key, which is
+rejected, and a deferred generic selection, whose members are not yet known.</p>
+<p>An indexed TypeScript type can select different native value types:</p>
+<pre><code class="language-ts">function change&lt;Source, Key extends keyof Source&gt;(
+  source: Source,
+  key: Key,
+  copy: (value: Source[Key]) =&gt; Source[Key],
+): void {
+  source[key] = copy(source[key]);
 }
 
-export function rename(user: User, name: string): User {
-  return { ...user, name };
-}
+const item = { count: 3, label: "old" };
+change(item, "count", value =&gt; value + 1);
+change(item, "label", value =&gt; value + "!");
 </code></pre>
-<h2 id="inheritance-and-overrides">Inheritance and overrides</h2>
-<p>Write normal TypeScript inheritance:</p>
-<pre><code class="language-ts">class Message {
-  text = "base";
-
-  render(): string {
-    return this.text;
+<p>The first selected value type is <code>number</code>; the second is <code>string</code>. Both keys
+being strings does not make the two generic selections interchangeable.</p>
+<h2 id="shared-queries">Shared queries</h2>
+<p>Targets use the checked source program’s <code>SourceFinalTypeQueries</code>:</p>
+<ul>
+<li><code>indexedAccessComponents(type)</code> returns the exact object and index types of
+a deferred indexed type, such as <code>Source[Key]</code>. It returns <code>undefined</code> for a
+non-indexed type or a type from another checked program.</li>
+<li><code>selectIndexedAccess(objectType, indexType)</code> asks the owning checker for the
+indexed read and write types. A <code>deferred</code> result retains the relationship
+without inventing members. A <code>resolved</code> result includes each selected key’s
+property or index-signature evidence. Invalid or unavailable selections
+return <code>undefined</code>, never partial member lists.</li>
+</ul>
+<pre><code class="language-ts">const selected = semantics.types.selectIndexedAccess(objectType, keyType);
+if (selected?.kind === "resolved") {
+  for (const member of selected.members) {
+    if (member.kind === "property") {
+      const declarationOwners = member.property.rootSymbols;
+    }
   }
 }
-
-class EmphaticMessage extends Message {
-  text = "important";
-
-  render(): string {
-    return `${super.render()}!`;
-  }
-}
-
-export function show(message: Message): string {
-  return message.render();
-}
 </code></pre>
-<p>The checked source program records that the derived members override base
-members and that <code>message.render()</code> is virtual dispatch. C# emits the required
-<code>virtual</code> and <code>override</code> members. Rust emits its equivalent closed dispatch
-model. Source code does not add a C#- or Rust-specific override marker.</p>
-<p>Target-native inheritance is also evidence-driven. Extending a provider type
-is accepted only when that provider exposes an exact legal base contract.</p>
-<p>Tsonic source modules add types and operations only where JavaScript and
-TypeScript do not express a required native distinction.</p>
-<h2 id="type-transformations">Type transformations</h2>
-<p>Standard utility types are checked as TypeScript and then erase:</p>
-<pre><code class="language-ts">interface User {
-  id: string;
-  name: string;
-  active?: boolean;
-}
-
-type Patch = Partial&lt;User&gt;;
-type NameOnly = Pick&lt;User, "name"&gt;;
+<p><code>objectType</code> and <code>keyType</code> must belong to the same checker in this checked
+program. Use the exact types from one selected generic application, rather
+than combining opaque handles from independently checked files or programs.
+Cross-file declarations remain visible through that application’s types and
+selected root symbols.</p>
+<p>A deferred selection retains the exact object and index type handles. Its
+result need not be the same object as an alias-bearing type from authored
+syntax: the checker’s cache also distinguishes alias identity. Compare the
+selected relationship or use the checker’s type-identity query; do not discard
+alias evidence to force two handles to match.</p>
+<h2 id="alias-applications">Alias applications</h2>
+<pre><code class="language-ts">type Values&lt;T = string&gt; = T[];
+function first(values: Values): string | undefined { return values[0]; }
 </code></pre>
-<p>The target receives the resolved shape, not a request to implement a native
-type named <code>Partial</code> or <code>Pick</code>. The complete pinned inventory and the distinct
-<code>any</code> and <code>unknown</code> target contracts are in
-<a href="/docs/reference/typescript-types/">TypeScript types and utilities</a>.</p>
-<h2 id="exact-primitives">Exact primitives</h2>
-<pre><code class="language-ts">import type { int32, uint8, float64 } from "@tsonic/core/types.js";
-
-export function average(total: int32, count: uint8): float64 {
-  return total / count;
-}
-</code></pre>
-<p>These aliases may all erase to TypeScript <code>number</code> while checking, but TSTS
-retains their exact source-semantic identities for the target.</p>
-<h2 id="reference-arguments">Reference arguments</h2>
-<pre><code class="language-ts">import { readWriteRef, writeOnlyRef } from "@tsonic/core/lang.js";
-
-declare function divide(
-  numerator: number,
-  denominator: number,
-  quotient: number,
-  remainder: number,
-): void;
-
-let quotient = 0;
-let remainder = 0;
-divide(17, 5, writeOnlyRef(quotient), writeOnlyRef(remainder));
-</code></pre>
-<p>The selected provider signature determines whether a marker is legal. A marker
-does not turn an arbitrary value into a writable native location.</p>
-<h2 id="typed-locations">Typed locations</h2>
-<pre><code class="language-ts">import {
-  addressOf,
-  equalPointer,
-  loadPointer,
-  storePointer,
-} from "@tsonic/core/lang.js";
-import type { int32, Pointer } from "@tsonic/core/types.js";
-
-function increment(pointer: Pointer&lt;int32&gt;): void {
-  storePointer(pointer, loadPointer(pointer) + 1);
-}
-
-let value: int32 = 1;
-const pointer = addressOf(value);
-increment(pointer);
-const sameLocation = equalPointer(pointer, addressOf(value));
-</code></pre>
-<p><code>Pointer&lt;T&gt;</code> is a typed mutable storage location. It is not a raw address.
-C# lowers it to its closed <code>Location&lt;T&gt;</code> carrier; Rust lowers it to its own
-closed location representation. Identity follows storage, not wrapper-object
-identity.</p>
-<h2 id="native-pointers-and-safety">Native pointers and safety</h2>
-<p>Native pointer operations require exact target support and an explicit safety
-contract:</p>
-<pre><code class="language-ts">import {
-  loadNativePointer,
-  offsetNativePointer,
-  unsafeContext,
-} from "@tsonic/core/lang.js";
-import type {
-  NativePointer,
-  int32,
-  nativeInt,
-} from "@tsonic/core/types.js";
-
-export function read(
-  pointer: NativePointer&lt;int32&gt;,
-  offset: nativeInt,
-): int32 {
-  return unsafeContext(loadNativePointer(offsetNativePointer(pointer, offset)));
-}
-</code></pre>
-<p>The safety region and any declaration-level requires-unsafe contract are
-independent controls. Tsonic does not infer one from the other.</p>
-<h2 id="target-native-spelling">Target-native spelling</h2>
-<p>Target modules may provide native aliases. For example, C# offers <code>int</code>,
-<code>out</code>, and <code>ptr</code>; Rust offers explicit lifetime and reference types. Neutral
-library code should prefer <code>@tsonic/core</code> unless it intentionally exposes a
-target-native contract.</p>
-<p>The exhaustive catalog is in <a href="/docs/reference/source-core/">neutral types and markers</a>.</p>
-<h2 id="alias-evidence-for-target-authors">Alias evidence for target authors</h2>
-<p>An inferred type can retain an alias application even when there is no type
-argument written at the use site:</p>
-<pre><code class="language-ts">type Stored&lt;T&gt; = T extends { storage: infer Value } ? Value : T;
-function read&lt;T&gt;(value: { current: Stored&lt;T&gt; }): Stored&lt;T&gt; {
-  return value.current;
-}
-</code></pre>
-<p>The shared <code>source.semantics.forNode(node).types.aliasApplication(type)</code> query
-returns the checker’s retained alias declaration, parameter-to-argument bindings,
-result and conditional selections. Its immutable result uses the same contract
-as <code>types.instantiateAlias(declaration, arguments)</code>. Ordinary
-<code>types.typeArguments(type)</code> describes class/interface type references; it does
-not describe a conditional alias’s arguments.</p>
-<p>The query returns no application when the checker has erased that provenance.
-Targets must not infer an alias from a result’s name or shape. Types from a
-different checked program are not accepted. Each target still owns its native
-representation and its limits; this query adds no runtime object or marker.</p>
+<p><code>aliasApplication(type)</code> retains the selected <code>Values</code> declaration, its
+parameter-to-argument bindings and its result. Here the binding is <code>T</code> to
+<code>string</code>, even though the source supplies no type argument. <code>instantiateAlias</code>
+uses the checker’s declared defaults for omitted optional arguments, including
+defaults that depend on earlier arguments. Missing required arguments, excess
+arguments, failed constraints and foreign-program handles are rejected.</p>
+<p><code>typeArguments(type)</code> is the reference-type query. A conditional or other
+non-reference type returns an empty list; that is not evidence that it lacks
+alias bindings. Use <code>aliasApplication</code> for those bindings. If the checker has
+erased the alias provenance, the query returns no application rather than
+reconstructing one from a name or an equivalent type.</p>
+<h2 id="ownership-and-limits">Ownership and limits</h2>
+<p>Legacy owns TypeScript index selection. Shared Tsonic exposes it without
+changing its meaning. Targets own native representations, storage selection,
+generic closure and emission; planners consume finalized target facts only.
+Do not reproduce TypeScript property lookup in a target using property names.</p>
+<p>These are type-level queries, not substitutes for expression evidence. For
+an actual <code>object[key]</code>, the selected operation also carries flow narrowing,
+access mode and expression-position rules such as <code>noUncheckedIndexedAccess</code>.
+Read and write types remain separate. A union of keys may have a union read
+type and an intersection write type. Property <code>optional</code> and <code>readonly</code> flags
+remain independently available; the query does not add an operation to source
+code or authorize a rejected write.</p>
+<p>Results and member arrays are immutable; compiler type/symbol handles remain
+opaque identities. This contract supplies evidence. It does not by itself
+certify native support for every generic callback or indexed operation.</p>
 </div>
 </article>
 </main>

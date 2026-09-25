@@ -863,6 +863,27 @@
     <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/reference/targets/csharp/javascript-surface.md">Edit source</a>
   </div>
   <div class="prose"><h1 id="c-javascript-surface">C# JavaScript surface</h1>
+<h2 id="array-copies">Array copies</h2>
+<p><code>Array.from</code> copies a dense array directly into capacity-sized native
+storage. A mapped copy visits the live source length, including changes made by
+its callback. It does not run a hidden density scan or widen every element to an
+optional boxed value.</p>
+<pre><code class="language-ts">import type { int32 } from "@tsonic/core/types.js";
+
+const values: int32[] = [1, 2];
+const doubled = Array.from(values, value =&gt; value + value);
+</code></pre>
+<p>Ordinary arrays use dense native storage, including open array parameters.
+Length construction initializes native defaults rather than holes. Omitted
+literal elements and sparse mutations reject. Use explicit <code>(int32 | undefined)[]</code>
+elements when absence is part of the source contract.</p>
+<p>Shared mutable arrays must have the API’s native element type. For example,
+<code>SpawnSyncOptionsWithBufferEncoding.stdio</code> accepts an array whose elements include
+<code>null | undefined</code>. Declare that element domain when creating the array. Assigning
+a narrower present-only array is rejected, rather than copying it or silently
+widening every array’s storage. This preserves subsequent mutations through aliases.</p>
+<p>Ordinary strings use .NET UTF-16 units. See <a href="/docs/reference/native-performance/">native performance</a>
+for string boundaries, array initialization, ownership and explicit compatibility.</p>
 <p>Select with <code>surfaces: ["js"]</code>. The target composes the shared JavaScript source
 profile and references <code>@tsonic/csharp-js</code>.</p>
 <p>Implemented families include arrays, strings, maps, sets, dates, JSON with

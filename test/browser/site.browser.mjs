@@ -95,6 +95,16 @@ test("homepage loading, all target projects and formatted files", async () => {
   });
   try {
     await page.goto(origin, { waitUntil: "domcontentloaded" });
+    const heroTitle = page.locator("#hero-title");
+    const heroStatusStyle = await heroTitle.locator(".hero-status").evaluate((status) => ({
+      title: getComputedStyle(status.closest("h1")).fontSize,
+      status: getComputedStyle(status).fontSize,
+      statusBackground: getComputedStyle(status.querySelector("strong")).backgroundImage,
+      targetBackground: getComputedStyle(status.closest("h1").querySelector(".gradient-dotnet")).backgroundImage,
+    }));
+    assert.equal(heroStatusStyle.status, heroStatusStyle.title);
+    assert.notEqual(heroStatusStyle.statusBackground, heroStatusStyle.targetBackground);
+    assert.equal(await heroTitle.locator(".hero-status").textContent(), "Experimental.");
     assert.ok(await page.getByText("Loading examples", { exact: true }).isVisible());
     assert.match(await page.locator("[data-proof-progress]").textContent(), /^\d+%$/u);
     releaseCatalog();
@@ -144,6 +154,7 @@ test("mobile navigation and no-JavaScript target access", async () => {
     assert.equal(await page.locator("#menuToggle").getAttribute("aria-expanded"), "false");
     await page.goto(`${origin}/?target=mojo`);
     await page.getByRole("button", { name: "Mojo", exact: true }).waitFor();
+    assert.equal(await page.locator("#hero-title .hero-status").textContent(), "Experimental.");
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
     await page.screenshot({ path: resolve(screenshots, "home-mobile.png"), fullPage: true });
   } finally {

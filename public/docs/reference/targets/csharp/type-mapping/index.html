@@ -864,13 +864,16 @@
   </div>
   <div class="prose"><h1 id="c-type-mapping">C# type mapping</h1>
 <p>The target maps exact source evidence, not TypeScript display names.</p>
+<p>See <a href="/docs/reference/native-numerics/">native numbers</a> for exact integer ranges,
+numeric operations, literal handling and explicit truncation.</p>
 <table><thead><tr><th>Source contract</th><th>C# representation</th></tr></thead><tbody>
 <tr><td><code>boolean</code> / <code>bool</code></td><td><code>bool</code></td></tr>
 <tr><td><code>int8</code>…<code>uint64</code></td><td>matching fixed-width CLR integer</td></tr>
 <tr><td><code>int128</code>, <code>uint128</code></td><td><code>Int128</code>, <code>UInt128</code> when selected</td></tr>
+<tr><td>ordinary <code>bigint</code></td><td>arbitrary-precision <code>System.Numerics.BigInteger</code></td></tr>
 <tr><td><code>float32</code>, <code>float64</code>, <code>decimal</code></td><td><code>float</code>, <code>double</code>, <code>decimal</code></td></tr>
 <tr><td><code>string</code></td><td><code>string</code></td></tr>
-<tr><td>`T</td><td>undefined` / selected nullable</td></tr>
+<tr><td>`T</td><td>null<code>, </code>T</td></tr>
 <tr><td><code>T[]</code></td><td>selected C# array/runtime carrier</td></tr>
 <tr><td>tuple</td><td>C# tuple carrier</td></tr>
 <tr><td><code>Pointer&lt;T&gt;</code></td><td><code>Tsonic.CSharp.Runtime.Location&lt;T&gt;</code></td></tr>
@@ -884,19 +887,22 @@
 arguments, nullability, render shape, and assembly relation. A source type that
 cannot be reconciled with one exact target carrier is rejected before planning.</p>
 <h2 id="fixed-arrays">Fixed arrays</h2>
-<p>C# admits number-based fixed-array values with exact extents from <code>0</code> through
+<p>C# admits fixed-array values with exact extents from <code>0</code> through
 <code>2147483647</code>, retaining the ordinary array carrier, indexing, iteration and
 signed 32-bit <code>.Length</code>. This is a representation bound, not a guarantee that
-an allocation of that size succeeds. Larger numeric extents and every
-bigint-based value extent, including <code>0n</code> and <code>2n</code>, reject with
-<code>CSHARP_FIXED_ARRAY_REPRESENTATION_UNSUPPORTED</code>; bigint source <code>.length</code> must not
-silently become numeric <code>.Length</code>.</p>
+an allocation of that size succeeds. Numeric and bigint metadata literals select
+the same native array: <code>FixedArray&lt;T, 2&gt;</code> and <code>FixedArray&lt;T, 2n&gt;</code> both expose
+native signed 32-bit length results. Larger extents reject with
+<code>CSHARP_FIXED_ARRAY_REPRESENTATION_UNSUPPORTED</code>.</p>
 <p>The <a href="/docs/reference/source-core/#layout-and-raw-memory-source-contracts">shared layout contract</a>
 can describe exact array metadata, including huge zero-sized arrays, and
 resolve compile-time size/alignment/stride observations without constructing a
-C# array. Raw conversion or demanded physical backing for an inline array,
-directly or inside a record, rejects with an explicit unsupported inline-array
-reason. No native array codec or storage adapter is supplied by the descriptor.</p>
+C# array. Raw conversion and demanded physical backing support bounded fixed
+arrays whose elements have an exact native scalar or value-record layout,
+including nested arrays. The codec uses the declared element stride rather than
+the CLR array’s storage layout. Reads produce independent array snapshots;
+writes update the original raw region. Reference-valued elements and the extent
+restrictions above remain explicit rejections.</p>
 <h2 id="broad-values">Broad values</h2>
 <p><code>TsValue</code> is a finite runtime sum, not C# <code>dynamic</code> and not reflection over an
 arbitrary object:</p>
@@ -915,6 +921,17 @@ call, conversion, operator, or iteration has an implemented <code>TsValue</code>
 operation. It never authorizes a late-bound CLR call by name.</p>
 <p>See <a href="/docs/reference/typescript-types/">TypeScript types and utilities</a> for the pinned
 utility inventory and the target-neutral <code>any</code> and <code>unknown</code> rules.</p>
+<h2 id="absence">Absence</h2>
+<p><code>null</code> and <code>undefined</code> are the same native absence, including on the JavaScript
+and Node surfaces. A value that is absent compares equal to either spelling.
+Zero, <code>false</code> and an empty string remain present values. Optional chaining and
+<code>??</code> test absence without replacing these values.</p>
+<p>There is no separate undefined runtime object or tag. For closed dynamic values,
+string conversion renders absence as <code>"null"</code>, numeric conversion produces zero,
+and <code>typeof</code> reports <code>"object"</code>. JSON writes a present absent-valued member as
+<code>null</code>; it does not omit that member to imitate JavaScript undefined. A missing
+dictionary key remains different from a present key holding JSON null. Use a
+collection membership query when that distinction matters.</p>
 </div>
 </article>
 </main>

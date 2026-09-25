@@ -864,6 +864,10 @@ project from the public registry. The user needs Node.js, npm, and the native
 SDK for the selected target. The user does not need a Tsonic source checkout,
 a global Tsonic installation, workspace environment variables, or manual
 runtime-package wiring.</p>
+<p>npm is the sole distribution for Tsonic’s first-party compiler and runtime
+packages. C# and Rust runtime source is compiled by the application’s native
+toolchain. We do not publish separate runtime NuGet packages. C# projects still
+restore external NuGet dependencies through normal MSBuild/NuGet restore.</p>
 <h2 id="decide-whether-to-publish">Decide whether to publish</h2>
 <p>Run the read-only status command from the Tsonic repository:</p>
 <pre><code class="language-sh">./scripts/release-status.sh
@@ -871,9 +875,9 @@ runtime-package wiring.</p>
 <p>The command compares the one release wave with public npm and reports one of
 three actions:</p>
 <table><thead><tr><th>Status</th><th>Meaning</th><th>Next action</th></tr></thead><tbody>
-<tr><td><code>current</code></td><td>Every exact artifact exists and every <code>latest</code> tag selects it</td><td>Do not publish</td></tr>
+<tr><td><code>current</code></td><td>Every exact artifact exists, its certified source provenance matches, and every <code>latest</code> tag selects it</td><td>Do not publish</td></tr>
 <tr><td><code>publish</code></td><td>The local wave is newer, partially published, or not yet selected by <code>latest</code></td><td>Authenticate and run the publisher</td></tr>
-<tr><td><code>prepare-patch</code></td><td>npm is ahead, or package content changed after this version was recorded</td><td>Run the publisher to create one coordinated patch-release branch per repository</td></tr>
+<tr><td><code>prepare-patch</code></td><td>npm is ahead, source changed since publication, or published source provenance cannot be verified</td><td>Run the publisher to create one coordinated patch-release branch per repository</td></tr>
 </tbody></table>
 <p>Changes only to host documentation, host tests, or release tooling outside a
 published package do not by themselves require an npm package release. A
@@ -881,6 +885,22 @@ change to package source, generated distribution, manifest, dependency,
 published README, provider, or runtime does. First-party dependency versions
 are exact, so a required package release advances the complete wave in
 <code>scripts/release/npm-wave.json</code>; maintainers never publish a guessed subset.</p>
+<p>Each package declares <code>sourceInputs</code> in that wave. Nested host packages include
+their shared build configuration and build scripts; repository-root packages
+include their complete tracked tree. Changes within those inputs require a
+release, even if a stale <code>dist</code> directory still contains the previous build.</p>
+<p>The packer records a <code>tsonicRelease</code> field in the certified package manifest.
+It identifies the package, version, repository and package directory, and hashes
+the declared inputs together with their committed Git file identities and modes.
+The baseline is the source actually packed, not the earlier commit that changed
+the version. It works in a fresh clone without local release logs or historical
+commits. The same source tree has the same digest after a merge. Uncommitted
+selected inputs cannot be certified; missing or malformed published provenance
+requires a new version, never a guessed baseline.</p>
+<p>Provenance is inserted in an isolated staging directory before packed-install
+certification. Tracked manifests are not rewritten, and certified tarballs are
+not modified afterward. Source provenance does not replace artifact integrity:
+resuming a staged release still requires byte-identical tarballs.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>Use one coherent sibling workspace. The Tsonic host must be on clean <code>main</code>.
 Every package repository must be clean and identical to <code>origin/main</code>; an exact
@@ -898,11 +918,10 @@ user npm configuration:</p>
 set +a
 npm whoami --registry <a href="https://registry.npmjs.org/">https://registry.npmjs.org/</a>
 </code></pre>
-<p><code>npm whoami</code> proves identity, not write authorization. The first publication
-is the authoritative authorization check. A bypass-2FA token can publish but
-cannot perform package-governance operations such as changing distribution
-tags. An interrupted release that requires tag recovery therefore needs an
-interactive 2FA session.</p>
+<p><code>npm whoami</code> proves identity, not write authorization. Publishing and updating
+distribution tags each require the corresponding npm permissions and may
+require interactive 2FA. An authorization failure stops the release; it does
+not permit bypassing verification or publishing directly under <code>latest</code>.</p>
 <p>Do not publish packages by hand. Do not use local links, alternate registries,
 or global package installations as release evidence.</p>
 <h2 id="publish">Publish</h2>
@@ -910,9 +929,9 @@ or global package installations as release evidence.</p>
 <pre><code class="language-sh">./scripts/publish-npm.sh
 </code></pre>
 <p>All source and private-registry proofs pass before any public artifact is
-published. npm automatically creates <code>latest</code> for a package’s first published
-version even when another tag is requested, so a first release cannot use a
-distribution tag as a transaction boundary.</p>
+published. The publisher requires an existing <code>latest</code> baseline for every
+package. It updates existing packages; it does not bootstrap first-ever
+packages through an unverified promotion path. Run only one release at a time.</p>
 <p>The publisher performs these steps in order:</p>
 <ol>
 <li>verifies branch hygiene and exact <code>origin/main</code> identity;</li>
@@ -920,23 +939,46 @@ distribution tag as a transaction boundary.</p>
 <li>runs the complete source, target, provider, and runtime certification bank;</li>
 <li>packs the complete wave and runs C#, Rust, and Node-capability projects from
 a private tarball registry;</li>
-<li>publishes the already-certified tarballs directly under <code>latest</code>;</li>
+<li>checks local tarball hashes and existing <code>latest</code> baselines, then publishes
+the certified tarballs under <code>staged-&lt;version&gt;</code>, leaving <code>latest</code> unchanged;</li>
 <li>waits for registry metadata convergence and verifies every public artifact
 byte-for-byte against the certified tarball;</li>
-<li>verifies every final <code>latest</code> tag;</li>
-<li>creates fresh C# and Rust projects through <code>npm create tsonic@latest</code>,
-builds and runs both, installs the matching Node capability, and runs
-ordinary <code>node:*</code> source;</li>
-<li>prints the aggregate artifact hash.</li>
+<li>creates fresh C# and Rust projects using the exact staged version, installs
+matching exact Node capabilities, and verifies ordinary <code>node:*</code> execution;</li>
+<li>rechecks that no <code>latest</code> baseline changed, then promotes each verified
+package to <code>latest</code> in dependency order and verifies tag convergence;</li>
+<li>repeats the public proof through <code>npm create tsonic@latest</code> and matching
+latest Node capabilities, then prints the aggregate artifact hash.</li>
 </ol>
+<p>For example, staging <code>0.1.1</code> leaves ordinary users on <code>0.1.0</code>. The pre-promotion
+proof runs <code>npm create tsonic@0.1.1</code> and installs Node capabilities at <code>0.1.1</code>.
+If installation or execution fails, <code>latest</code> remains unchanged. Successful
+exact-version verification allows promotion; the final latest-based proof
+then verifies the commands ordinary users run.</p>
 <p>The public-install step uses an isolated npm cache and configuration. It strips
 workspace and source-root environment variables, rejects local dependency
 specifiers and linked first-party packages, checks the complete npm dependency
 tree, and runs only project-local tools. This is the proof that the commands in
 <a href="/docs/manual/get-started/">Get started</a> work without repository source.</p>
+<h3 id="verify-additional-c-frameworks">Verify additional C# frameworks</h3>
+<p>Set <code>TSONIC_CSHARP_FRAMEWORK_MATRIX</code> to an array of exact SDK/framework pairs
+before invoking the publisher. Both the private and public installation proofs
+use the same matrix. For the SDKs used in the source-distribution certification:</p>
+<pre><code class="language-sh">export TSONIC_CSHARP_FRAMEWORK_MATRIX='[
+  {"framework":"net10.0","sdk":"10.0.400"},
+  {"framework":"net11.0","sdk":"11.0.100-rc.1.26425.128"},
+  {"framework":"net10.0","sdk":"11.0.100-rc.1.26425.128"}
+]'
+./scripts/publish-npm.sh
+</code></pre>
+<p>Use versions actually installed on the release machine. Each selection builds
+and executes the native/JS/Node proof twice without reinstalling dependencies.
+It checks the runtime major, generated project framework and dependency paths.
+Omitting the matrix retains the ordinary starter and Node-capability proofs.</p>
 <h2 id="interrupted-releases">Interrupted releases</h2>
 <p>The release is resumable. Exact versions already present on npm are compared
-with the newly certified tarballs and are not published again. A successfully
+with the newly certified tarballs and are not published again. Public exact
+verification runs again before any remaining promotions. A successfully
 published package can take several minutes to become visible through all npm
 metadata endpoints; the publisher waits for that convergence rather than
 republishing the immutable version.</p>
@@ -946,6 +988,11 @@ versions and <code>latest</code> tags are already current.</p>
 <p>If an existing exact artifact differs from the certified tarball, stop. Never
 overwrite or reinterpret an immutable npm version. Prepare and merge a new
 patch wave, then rerun the publisher.</p>
+<p>An unexpected change to a package’s <code>latest</code> tag stops the release rather than
+overwriting another release. npm has no atomic multi-package tag promotion:
+an interruption during promotion can leave some verified packages promoted.
+Rerunning resumes the remaining promotions after checking the same artifacts
+and repeating the exact-version proof.</p>
 <p>If the publisher creates release branches, merge every printed PR, update the
 coherent release workspace to exact <code>origin/main</code>, and rerun the same command.</p>
 <h2 id="completion-record">Completion record</h2>
@@ -960,6 +1007,8 @@ package count;</li>
 total packed file count;</li>
 <li class="task-list-item"><input disabled="" type="checkbox"/>
 aggregate SHA-256;</li>
+<li class="task-list-item"><input disabled="" type="checkbox"/>
+exact staged public-install proof passed before any latest promotion;</li>
 <li class="task-list-item"><input disabled="" type="checkbox"/>
 exact public C# starter result;</li>
 <li class="task-list-item"><input disabled="" type="checkbox"/>

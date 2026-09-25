@@ -394,10 +394,18 @@ kbd {
   background-image: linear-gradient(90deg, #ffcc8a, #ff819d 55%, #ee6acd);
 }
 
+.gradient-experimental {
+  background-image: linear-gradient(90deg, #64e9ff, #74f0b1 52%, #d8f06a);
+}
+
 .hero h1 .hero-targets {
   display: flex;
   flex-wrap: wrap;
   gap: 0 0.3em;
+}
+
+.hero h1 .hero-status {
+  margin-top: 0.08em;
 }
 
 .hero-summary {

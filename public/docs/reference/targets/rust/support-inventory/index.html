@@ -871,10 +871,10 @@ provider declarations.</p>
 <li><strong>Array:</strong> literals, indexed access, <code>at</code>, length, push/pop, shift/unshift,
 splice, slice, concat, join, includes, index searches, reverse, default sort,
 fill, copyWithin, iteration, and callback forms of forEach, map, filter,
-reduce, some, every, find, and their index/last variants. Dense and sparse
-identity use the selected array carrier.</li>
+reduce, some, every, find, and their index/last variants. Dense native storage
+preserves identity; omitted elements and sparse mutations reject.</li>
 <li><strong>String:</strong> length, case conversion, search predicates, index searches,
-slice/substring/substr/at, UTF-16 character/code-point operations, repeat,
+slice/substring/substr/at, native UTF-8 character operations, repeat,
 padding, trimming, normalization, concat, split, replace, replaceAll,
 search, match, matchAll, well-formedness, and static code-unit/code-point
 construction. Unrepresentable native-string results reject; explicit
@@ -889,7 +889,8 @@ rounding, bit conversion, powers, random, and variadic min/max/hypot.</li>
 lookup, size, iteration, callbacks, insertion order, SameValueZero, and Set
 algebra.</li>
 <li><strong>Date:</strong> constructors, now/parse/UTC, identity, ISO/UTC/JSON output, UTC
-getters, and UTC setters with JavaScript overflow and TimeClip rules.</li>
+getters, local getters and timezone offsets, and UTC setters with JavaScript
+overflow and TimeClip rules. Local getters use the native timezone source.</li>
 <li><strong>Object and JSON:</strong> closed structural keys/values/entries, own-property
 tests, selected spread/assignment shapes, JSON parse/stringify over finite
 broad-value graphs, replacer callbacks, and selected <code>toJSON</code> methods.</li>
@@ -936,7 +937,7 @@ operation families rather than copying the evolving Rust API catalog.</p>
 <h2 id="rust-target-limits">Rust target limits</h2>
 <ul>
 <li>locale-sensitive string behavior requires one explicit ICU/data contract;</li>
-<li>local-time Date behavior requires one explicit timezone/data contract;</li>
+<li>local Date setters and locale string formatting remain unsupported;</li>
 <li>open Node event schedulers such as unrestricted streams and <code>fs.watch</code>
 cannot be approximated without exact cancellation, ordering, backpressure,
 and resource-lifetime contracts;</li>

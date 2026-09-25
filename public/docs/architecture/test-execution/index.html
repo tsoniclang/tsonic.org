@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>Source Semantics | Tsonic</title>
+      <title>Test Execution | Tsonic</title>
 
     <meta name="description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Source Semantics" />
+    <meta property="og:title" content="Test Execution" />
     <meta property="og:description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/styles.css" />
@@ -132,7 +132,7 @@
               <li><a class=""  href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
 
 
-              <li><a class="active" aria-current="page" href="/docs/manual/source-semantics/">Source semantics</a></li>
+              <li><a class=""  href="/docs/manual/source-semantics/">Source semantics</a></li>
 
 
               <li><a class=""  href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
@@ -852,162 +852,67 @@
 
         <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
 
-        <a href="/docs/manual/">Manual</a><span aria-hidden="true">/</span>
+        <a href="/docs/architecture/">Architecture</a><span aria-hidden="true">/</span>
 
-      <span>Source Semantics</span>
+      <span>Test Execution</span>
     </nav>
-    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/manual/source-semantics.md">Edit source</a>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/test-execution.md">Edit source</a>
   </div>
-  <div class="prose"><h1 id="source-semantics">Source semantics</h1>
-<p>Ordinary TypeScript remains ordinary TypeScript:</p>
-<pre><code class="language-ts">export interface User {
-  readonly id: string;
-  name: string;
-}
-
-export function rename(user: User, name: string): User {
-  return { ...user, name };
-}
+  <div class="prose"><h1 id="test-execution">Test execution</h1>
+<p>Run the complete host/C# bank from the host repository:</p>
+<pre><code class="language-sh">bash test/scripts/run-all.sh
 </code></pre>
-<h2 id="inheritance-and-overrides">Inheritance and overrides</h2>
-<p>Write normal TypeScript inheritance:</p>
-<pre><code class="language-ts">class Message {
-  text = "base";
-
-  render(): string {
-    return this.text;
-  }
-}
-
-class EmphaticMessage extends Message {
-  text = "important";
-
-  render(): string {
-    return `${super.render()}!`;
-  }
-}
-
-export function show(message: Message): string {
-  return message.render();
-}
+<p>Run the complete Rust target bank from <code>tsonic-rust</code>:</p>
+<pre><code class="language-sh">npm test
 </code></pre>
-<p>The checked source program records that the derived members override base
-members and that <code>message.render()</code> is virtual dispatch. C# emits the required
-<code>virtual</code> and <code>override</code> members. Rust emits its equivalent closed dispatch
-model. Source code does not add a C#- or Rust-specific override marker.</p>
-<p>Target-native inheritance is also evidence-driven. Extending a provider type
-is accepted only when that provider exposes an exact legal base contract.</p>
-<p>Tsonic source modules add types and operations only where JavaScript and
-TypeScript do not express a required native distinction.</p>
-<h2 id="type-transformations">Type transformations</h2>
-<p>Standard utility types are checked as TypeScript and then erase:</p>
-<pre><code class="language-ts">interface User {
-  id: string;
-  name: string;
-  active?: boolean;
-}
-
-type Patch = Partial&lt;User&gt;;
-type NameOnly = Pick&lt;User, "name"&gt;;
+<p>Both use the host’s shared resource-budget and bounded-process runner. CPU
+affinity, CPU quotas and available memory determine the worker count. The budget
+leaves room for the desktop and coordinator, bounds native child builds, disables
+swap for the test scope, and retains complete logs under the running repository’s
+<code>.temp/test-runs/</code>. A worker count is not a limit on all native threads.</p>
+<h2 id="configuration">Configuration</h2>
+<table><thead><tr><th>Variable</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>TSONIC_TEST_CPUS</code></td><td>Effective CPU budget; default 85% of available CPUs, at least one</td></tr>
+<tr><td><code>TSONIC_TEST_MEMORY_MIB</code></td><td>Total test memory ceiling in MiB</td></tr>
+<tr><td><code>TSONIC_TEST_WORKERS</code></td><td>Concurrent test files/tasks; must fit CPU and memory budgets</td></tr>
+<tr><td><code>TSONIC_TEST_WORKER_MEMORY_MIB</code></td><td>Memory reservation per worker</td></tr>
+<tr><td><code>TSONIC_TEST_CHILD_JOBS</code></td><td>Cargo jobs and .NET processor budget per native child</td></tr>
+<tr><td><code>TSONIC_TEST_HEAP_MIB</code></td><td>Node heap limit per worker, below its memory reservation</td></tr>
+<tr><td><code>TSONIC_TEST_TIMEOUT_SECONDS</code></td><td>Complete-run deadline; default 7,200 seconds</td></tr>
+<tr><td><code>TSONIC_TEST_HEARTBEAT_SECONDS</code></td><td>Progress interval; default 60 seconds</td></tr>
+<tr><td><code>TSONIC_TEST_TASKS_MAX</code></td><td>Scope process/thread ceiling; default 2,048</td></tr>
+<tr><td><code>TSONIC_TEST_LOG_SIZE_MAX_BYTES</code></td><td>Complete-log ceiling; default 64 MiB</td></tr>
+</tbody></table>
+<p>For example, use twelve host workers within a 32 GiB ceiling:</p>
+<pre><code class="language-sh">TSONIC_TEST_CPUS=16 TSONIC_TEST_MEMORY_MIB=32768 TSONIC_TEST_WORKERS=12 \
+  bash test/scripts/run-all.sh
 </code></pre>
-<p>The target receives the resolved shape, not a request to implement a native
-type named <code>Partial</code> or <code>Pick</code>. The complete pinned inventory and the distinct
-<code>any</code> and <code>unknown</code> target contracts are in
-<a href="/docs/reference/typescript-types/">TypeScript types and utilities</a>.</p>
-<h2 id="exact-primitives">Exact primitives</h2>
-<pre><code class="language-ts">import type { int32, uint8, float64 } from "@tsonic/core/types.js";
-
-export function average(total: int32, count: uint8): float64 {
-  return total / count;
-}
+<p>Native integrations need more resources than lightweight policy tests. Rust’s
+default reservation is 4 GiB per worker with two Cargo jobs; the host default is
+2 GiB with one native child job. Increase reservations when observed peaks
+require them. Invalid or unbudgetable selections fail before tests begin.</p>
+<p>The host schedules independent groups together, but retains explicit exclusive
+tasks and per-group limits. Package unit modules run separately; discovery and
+reporting must account for each authored test file exactly once. A full suite
+collects all failures. Do not start a subsequent suite while known failures
+remain; an aborted or filtered run is never full certification.</p>
+<h2 id="short-utilization-calibration">Short utilization calibration</h2>
+<p>Calibration is an explicitly partial run, not a way to certify a subset:</p>
+<pre><code class="language-sh">TSONIC_TEST_CALIBRATION_SECONDS=120 \
+TSONIC_TEST_CALIBRATION_WARMUP_SECONDS=60 \
+TSONIC_TEST_MIN_CPU_PERCENT=60 \
+  bash test/scripts/run-all.sh
 </code></pre>
-<p>These aliases may all erase to TypeScript <code>number</code> while checking, but TSTS
-retains their exact source-semantic identities for the target.</p>
-<h2 id="reference-arguments">Reference arguments</h2>
-<pre><code class="language-ts">import { readWriteRef, writeOnlyRef } from "@tsonic/core/lang.js";
-
-declare function divide(
-  numerator: number,
-  denominator: number,
-  quotient: number,
-  remainder: number,
-): void;
-
-let quotient = 0;
-let remainder = 0;
-divide(17, 5, writeOnlyRef(quotient), writeOnlyRef(remainder));
-</code></pre>
-<p>The selected provider signature determines whether a marker is legal. A marker
-does not turn an arbitrary value into a writable native location.</p>
-<h2 id="typed-locations">Typed locations</h2>
-<pre><code class="language-ts">import {
-  addressOf,
-  equalPointer,
-  loadPointer,
-  storePointer,
-} from "@tsonic/core/lang.js";
-import type { int32, Pointer } from "@tsonic/core/types.js";
-
-function increment(pointer: Pointer&lt;int32&gt;): void {
-  storePointer(pointer, loadPointer(pointer) + 1);
-}
-
-let value: int32 = 1;
-const pointer = addressOf(value);
-increment(pointer);
-const sameLocation = equalPointer(pointer, addressOf(value));
-</code></pre>
-<p><code>Pointer&lt;T&gt;</code> is a typed mutable storage location. It is not a raw address.
-C# lowers it to its closed <code>Location&lt;T&gt;</code> carrier; Rust lowers it to its own
-closed location representation. Identity follows storage, not wrapper-object
-identity.</p>
-<h2 id="native-pointers-and-safety">Native pointers and safety</h2>
-<p>Native pointer operations require exact target support and an explicit safety
-contract:</p>
-<pre><code class="language-ts">import {
-  loadNativePointer,
-  offsetNativePointer,
-  unsafeContext,
-} from "@tsonic/core/lang.js";
-import type {
-  NativePointer,
-  int32,
-  nativeInt,
-} from "@tsonic/core/types.js";
-
-export function read(
-  pointer: NativePointer&lt;int32&gt;,
-  offset: nativeInt,
-): int32 {
-  return unsafeContext(loadNativePointer(offsetNativePointer(pointer, offset)));
-}
-</code></pre>
-<p>The safety region and any declaration-level requires-unsafe contract are
-independent controls. Tsonic does not infer one from the other.</p>
-<h2 id="target-native-spelling">Target-native spelling</h2>
-<p>Target modules may provide native aliases. For example, C# offers <code>int</code>,
-<code>out</code>, and <code>ptr</code>; Rust offers explicit lifetime and reference types. Neutral
-library code should prefer <code>@tsonic/core</code> unless it intentionally exposes a
-target-native contract.</p>
-<p>The exhaustive catalog is in <a href="/docs/reference/source-core/">neutral types and markers</a>.</p>
-<h2 id="alias-evidence-for-target-authors">Alias evidence for target authors</h2>
-<p>An inferred type can retain an alias application even when there is no type
-argument written at the use site:</p>
-<pre><code class="language-ts">type Stored&lt;T&gt; = T extends { storage: infer Value } ? Value : T;
-function read&lt;T&gt;(value: { current: Stored&lt;T&gt; }): Stored&lt;T&gt; {
-  return value.current;
-}
-</code></pre>
-<p>The shared <code>source.semantics.forNode(node).types.aliasApplication(type)</code> query
-returns the checker’s retained alias declaration, parameter-to-argument bindings,
-result and conditional selections. Its immutable result uses the same contract
-as <code>types.instantiateAlias(declaration, arguments)</code>. Ordinary
-<code>types.typeArguments(type)</code> describes class/interface type references; it does
-not describe a conditional alias’s arguments.</p>
-<p>The query returns no application when the checker has erased that provenance.
-Targets must not infer an alias from a result’s name or shape. Types from a
-different checked program are not accepted. Each target still owns its native
-representation and its limits; this query adds no runtime object or marker.</p>
+<p>After warmup, the runner measures the entire test cgroup’s CPU consumption over
+the selected window, writes a <code>.calibration.json</code> report, and stops the scope.
+The percentage is relative to the assigned CPU budget: 60% of twenty CPUs means
+twelve CPU-seconds per wall-clock second. Exit 125 means a completed calibration
+or an insufficient window; inspect the report to distinguish them. Exit 126 means
+the utilization target was missed. Neither is a certification pass. Test failures
+observed during calibration still need investigation.</p>
+<p>Use the same variables with Rust’s <code>npm test</code>. Remove calibration variables for
+the full run. Keep network, shared-state and performance-sensitive test isolation;
+do not weaken assertions or remove checks to raise CPU utilization.</p>
 </div>
 </article>
 </main>

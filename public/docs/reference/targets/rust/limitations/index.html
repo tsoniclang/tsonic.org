@@ -920,8 +920,9 @@ subfields work. An owned-root receiver location remains unsupported.</p>
 <p><code>hashPointer</code> uses canonical location identity. <code>bindPointer</code> retains a closed
 reference owner, not just its identity token. <code>projectPointer</code> preserves
 identity, applies the selected conversions, and preserves optionality.
-Bindings and projections require infallible native callbacks with closed
-capture lifetimes; their stored callbacks must satisfy <code>'static</code>.</p>
+Bindings and projections retain their callbacks’ exact error contract. Throwing
+callbacks use native <code>Result</code> propagation rather than panic transport. Capture
+lifetimes must be closed; stored callbacks must satisfy <code>'static</code>.</p>
 <p>Raw identity, checked byte offsets, and exact 32/64-bit address integers are
 supported using a closed raw carrier. They require the <code>alloc</code> foundation;
 the selected address width must match the executing process. An address integer
@@ -979,8 +980,12 @@ observe the difference.</p>
 optional accessor shapes reject when no exact storage representation exists.
 Static fields require explicit initializers, and static access must retain the
 exact class identity; constructor aliases and static <code>this</code> are not guessed.</p>
-<p><code>delete</code> is supported for selected JavaScript-array hole semantics. It cannot
-remove a field from a static Rust record. <code>for...in</code> and <code>switch</code> similarly
+<p>Deleting an existing array element rejects because ordinary arrays have dense
+storage; use <code>splice</code> to remove an element. Gap writes, length growth without
+initialized values, and deletion of existing elements trigger native Rust panic
+guards. TypeScript <code>try</code>/<code>catch</code> handles source errors, not native panics.
+<code>delete</code> also cannot remove a field
+from a static Rust record. <code>for...in</code> and <code>switch</code> similarly
 require an exact own-key or equality policy for the selected carrier.</p>
 <h2 id="native-traits-threads-and-object-graphs">Native traits, threads, and object graphs</h2>
 <p>Project inheritance and interface dispatch are supported. A project-authored
@@ -995,6 +1000,21 @@ class Label implements Display {
 <code>Drop</code>, <code>Send</code>, <code>Sync</code>, or a provider trait. External inheritance is limited to
 the explicitly supported direct JavaScript <code>Error</code> model; transitive external
 heritage is not general Rust inheritance.</p>
+<p>Builtin errors can be narrowed after <code>catch</code> without creating another Error:</p>
+<pre><code class="language-ts">function sameError(): boolean {
+  const original = new Error("failed");
+  try { throw original; }
+  catch (failure) {
+    if (failure instanceof Error) return failure === original;
+  }
+  return false;
+}
+</code></pre>
+<p>The native transport retains identity and an explicitly captured stack. Ordinary
+thrown project objects do not become builtin errors. A closed error domain that
+contains a project subclass with mutable inherited Error fields still rejects
+this builtin projection: those fields do not yet share the native Error object.
+The target does not reconstruct one from its current name and message.</p>
 <p>Ordinary project objects and closures use single-threaded ownership. Tsonic
 does not silently replace them with <code>Arc</code>, a lock, or a sendable closure to
 satisfy a threaded API. Node workers use their separate structured-clone
@@ -1041,10 +1061,11 @@ project must provide executable startup, panic behavior, an allocator when
 required, linker policy, and the target specification. Tsonic will not infer
 those platform contracts from source code.</p>
 <h2 id="javascript-and-node-boundaries">JavaScript and Node boundaries</h2>
-<p>Locale- or timezone-dependent operations require an explicit deterministic
-data contract; host-default locale/timezone behavior is not compiler
-semantics. Open object inspection, dynamic field addition that changes a
-closed Rust layout, arbitrary cyclic graph projection, and Node stream/event
+<p>Local Date getters and <code>getTimezoneOffset</code> use the native timezone source,
+including an explicit <code>TZ</code> selection. An unavailable selected timezone produces
+an error rather than silently substituting UTC. Local setters and locale string
+formatting remain unsupported. Open object inspection, dynamic field addition
+that changes a closed Rust layout, arbitrary cyclic graph projection, and Node stream/event
 schedulers outside the capability’s closed contracts remain rejected.</p>
 <p>The JavaScript surface does not currently expose <code>String.raw</code>, wrapper-object
 construction, or the general object prototype/descriptor/extensibility

@@ -904,6 +904,29 @@ run();
 TypeScript exports. Synchronous top-level initialization uses a CLR module
 initializer. A library with top-level <code>await</code> is rejected because CLR module
 initializers are synchronous.</p>
+<h2 id="runtime-source-and-framework-selection">Runtime source and framework selection</h2>
+<p>The npm packages <code>@tsonic/csharp-runtime</code>, <code>@tsonic/csharp-js</code>, and
+<code>@tsonic/csharp-nodejs</code> contain native source projects. Tsonic creates small,
+framework-specific import projects in its cache and references the ones the
+program needs. MSBuild builds their source for the same
+framework as the application and restores their NuGet dependencies. There is
+no separate runtime build command and no precompiled runtime DLL to replace.</p>
+<p>The default framework is <code>net10.0</code>. Choose another in the C# target entry:</p>
+<pre><code class="language-json">{
+  "id": "csharp",
+  "options": {
+    "targetFramework": "net11.0",
+    "outputType": "Exe"
+  }
+}
+</code></pre>
+<p>Select an SDK that supports that framework using the normal .NET <code>global.json</code>
+mechanism. Run <code>dotnet --list-sdks</code> and <code>dotnet --list-runtimes</code> to check the
+installation. Tsonic reports an unavailable framework instead of substituting
+another. The C# language dialect remains separately configured.</p>
+<p>Build outputs are stored under <code>.tsonic/cache/csharp/runtime</code>, outside installed
+packages. MSBuild owns incremental rebuilds. Source delivery adds a cold native
+runtime build; it does not add runtime interpretation to the application.</p>
 <h2 id="references">References</h2>
 <p>Generated projects can declare project, NuGet package, framework, and assembly
 references:</p>
@@ -951,12 +974,37 @@ generated files.</p>
   &lt;/PropertyGroup&gt;
   &lt;ItemGroup&gt;
     &lt;Compile Include="../out/csharp/**/*.cs" LinkBase="Generated" /&gt;
+    &lt;ProjectReference Include="runtime/Tsonic.CSharp.Runtime.csproj" /&gt;
   &lt;/ItemGroup&gt;
 &lt;/Project&gt;
 </code></pre>
 <p>Adjust the relative path to match the project layout. Use a user-owned project
 for a different SDK, such as <code>Microsoft.NET.Sdk.Web</code>, a test SDK, desktop UI,
 MAUI, or a custom build pipeline.</p>
+<p>Keep its framework consistent with <code>targetFramework</code> in <code>tsonic.json</code>. The
+referenced <code>native/runtime/Tsonic.CSharp.Runtime.csproj</code> imports the installed
+source project:</p>
+<pre><code class="language-xml">&lt;Project&gt;
+  &lt;PropertyGroup&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;DirectoryBuildPropsPath&gt;$(MSBuildThisFileDirectory)../../node_modules/@tsonic/csharp-runtime/Directory.Build.props&lt;/DirectoryBuildPropsPath&gt;
+    &lt;TsonicRuntimeArtifactsPath&gt;$(MSBuildThisFileDirectory)../../.tsonic/cache/csharp/runtime/&lt;/TsonicRuntimeArtifactsPath&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;Import Project="../../node_modules/@tsonic/csharp-runtime/src/Tsonic.CSharp.Runtime/Tsonic.CSharp.Runtime.csproj" /&gt;
+&lt;/Project&gt;
+</code></pre>
+<p>For JS or Node, add equivalent import projects for their <code>runtime.csproj</code> and
+<code>runtime.props</code> package exports. Before the import, set
+<code>TsonicCsharpRuntimeProject</code> to the core import project; Node also needs
+<code>TsonicCsharpJsProject</code> pointing to the JS import project. Use absolute paths or
+paths based on <code>$(MSBuildThisFileDirectory)</code>. Keep one core project in that graph.
+Native source stays in npm packages, while build products stay in your cache.</p>
+<p>These examples use npm’s default hoisted layout. For a nested installation,
+resolve the package exports with Node’s <code>import.meta.resolve</code> and use those exact
+paths. Generated-project mode does this automatically. Do not carry framework
+or output selection through <code>ProjectReference.AdditionalProperties</code>: NuGet’s
+restore walk does not preserve that metadata. Each import project must declare
+the same configuration for restore and build.</p>
 <h2 id="what-each-setting-controls">What each setting controls</h2>
 <table><thead><tr><th>Need</th><th>Put it here</th></tr></thead><tbody>
 <tr><td>C# output kind, namespace, nullable mode, language rules</td><td>dedicated C# target option</td></tr>

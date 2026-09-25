@@ -882,6 +882,10 @@ rmSync(root, { recursive: true, force: true });
 <li>maps declarations through provider/module/export/member/signature identity;</li>
 <li>rejects unavailable Node behavior without source-name fallback.</li>
 </ul>
+<p>Type imports also retain the capability’s native project reference. A type such
+as <code>MakeDirectoryOptions</code> can become a native parameter, local or return value
+even when TypeScript imports it with <code>import type</code>. This does not execute a
+type-only imported source module or emit an unused type alias.</p>
 <p>The capability families include the supported portions of <code>node:fs</code>,
 <code>node:fs/promises</code>, <code>node:path</code>, <code>node:process</code>, <code>node:os</code>, <code>node:url</code>, Buffer,
 HTTP, crypto, zlib, streams, timers, assertions, and utilities. Exact per-target
