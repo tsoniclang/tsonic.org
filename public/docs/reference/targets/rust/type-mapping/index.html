@@ -865,13 +865,16 @@
   <div class="prose"><h1 id="rust-type-mapping">Rust type mapping</h1>
 <p>The target maps exact source evidence and sealed ownership facts, not
 TypeScript display names.</p>
+<p>See <a href="/docs/reference/native-numerics/">native numbers</a> for exact integer ranges,
+numeric operations, literal handling and explicit truncation.</p>
 <table><thead><tr><th>Source contract</th><th>Rust representation</th></tr></thead><tbody>
 <tr><td><code>boolean</code> / <code>bool</code></td><td><code>bool</code></td></tr>
 <tr><td><code>int8</code>…<code>uint128</code></td><td>matching Rust fixed-width integer</td></tr>
 <tr><td><code>nativeInt</code>, <code>nativeUint</code></td><td><code>isize</code>, <code>usize</code></td></tr>
+<tr><td>ordinary <code>bigint</code></td><td>arbitrary-precision runtime <code>BigInt</code></td></tr>
 <tr><td><code>float32</code>, <code>float64</code></td><td><code>f32</code>, <code>f64</code></td></tr>
 <tr><td><code>string</code></td><td><code>String</code> or <code>&amp;str</code> only when complete use analysis proves the ABI</td></tr>
-<tr><td>`T</td><td>undefined` / selected nullable</td></tr>
+<tr><td>`T</td><td>null<code>, </code>T</td></tr>
 <tr><td>mutable dense <code>T[]</code></td><td><code>Vec&lt;T&gt;</code> or selected JS array carrier</td></tr>
 <tr><td>readonly array parameter</td><td>borrowed slice when the closed ABI proves it</td></tr>
 <tr><td>homogeneous fixed tuple / <code>FixedArray&lt;T, N&gt;</code></td><td><code>[T; N]</code> when exact length and element carrier are proven</td></tr>
@@ -891,22 +894,21 @@ compile.</p>
 <code>[T; N]</code>, including bigint source extents, without converting it through a
 JavaScript number. Native <code>usize</code> representability and allocation limits remain
 native constraints; exact emitted constants do not certify those constraints.</p>
-<p>Source <code>.length</code> is a separate operation. Number-based extents through
-<code>2147483647</code> use the existing checked <code>int32</code> result. Larger numeric <code>.length</code>
-reads reject with <code>RUST_FIXED_ARRAY_LENGTH_RANGE_UNSUPPORTED</code>; bigint-based
-reads, even for <code>2n</code>, reject with
-<code>RUST_FIXED_ARRAY_LENGTH_RUNTIME_BASE_UNSUPPORTED</code>. A bigint metadata count
-does not authorize a numeric source result. Literal index/cardinality checks
-and rest bounds use exact counts; dynamic indexing retains its checked <code>int32</code>
-index, and iteration retains native bounds. This is not blanket support for
-every fixed-array operation.</p>
+<p>Source <code>.length</code> uses the native array’s <code>usize</code> result, including arrays with
+bigint source extents. It is not narrowed to <code>int32</code> or converted through a
+floating-point value. An explicit <code>as int32</code> conversion checks the native range;
+a declaration annotation does not silently narrow a native-word length.
+Literal index/cardinality checks and rest bounds use exact counts, and iteration
+retains native bounds. A representable extent alone does not guarantee that
+an array can be allocated or that every fixed-array operation is supported.</p>
 <p>The <a href="/docs/reference/source-core/#layout-and-raw-memory-source-contracts">shared layout contract</a>
 supports array metadata observations without materializing <code>[T; N]</code>, including
-huge zero-sized arrays. A native array carrier does not supply a physical
-layout codec: raw conversion or demanded backing requiring an inline array,
-directly or through record children, rejects with an explicit unsupported-array
-reason. Existing scalar/record codecs and ordinary dynamic-array element
-backing do not constitute such an adapter.</p>
+huge zero-sized arrays. Raw conversion and demanded backing support fixed arrays
+of native <code>Copy</code> scalars and value records, including nested arrays, using the
+declared element layout and stride. Reads produce independent <code>[T; N]</code> values;
+writes preserve aliases to the raw region. Zero-sized elements require no
+per-element memory operation, even for large exact extents. Reference-valued
+elements and counts outside the selected address width remain rejections.</p>
 <h2 id="broad-values">Broad values</h2>
 <p>An <code>any</code> or <code>unknown</code> annotation does not select a general Rust carrier:</p>
 <pre><code class="language-ts">export function keep(value: unknown): unknown {
@@ -926,6 +928,17 @@ operation may consume that value. This is exact producer evidence, not a
 spelling-based conversion from arbitrary <code>any</code>.</p>
 <p>See <a href="/docs/reference/typescript-types/">TypeScript types and utilities</a> for the pinned
 utility inventory and the target-neutral <code>any</code> and <code>unknown</code> rules.</p>
+<h2 id="absence">Absence</h2>
+<p><code>null</code> and <code>undefined</code> are the same native absence, including on the JavaScript
+and Node surfaces. A value that is absent compares equal to either spelling.
+Zero, <code>false</code> and an empty string remain present values. Optional chaining and
+<code>??</code> test absence without replacing these values.</p>
+<p>There is no separate undefined runtime object or tag. For closed dynamic values,
+string conversion renders absence as <code>"null"</code>, numeric conversion produces zero,
+and <code>typeof</code> reports <code>"object"</code>. JSON writes a present absent-valued member as
+<code>null</code>; it does not omit that member to imitate JavaScript undefined. A missing
+dictionary key remains different from a present key holding JSON null. Use a
+collection membership query when that distinction matters.</p>
 </div>
 </article>
 </main>

@@ -938,6 +938,13 @@ writes anything into the requested destination.</p>
 or crate names for a target. Starter creation does not run target analysis and
 does not create a second compilation path.</p>
 <h2 id="planning-boundary">Planning boundary</h2>
+<p>The host passes two distinct inputs to compilation. <code>runtimeReferences</code> contains
+native dependencies needed by all selected capabilities, including imported
+native types. <code>runtimeActivatedCapabilityIds</code> contains the immutable dependency
+closure selected by value imports and re-exports. Linking a type-only dependency
+does not authorize its initialization or binary hooks. Targets use the latter
+set for capability-owned executable hooks; surface-owned behavior remains
+controlled by surface selection.</p>
 <p>Planning may query:</p>
 <ul>
 <li>immutable source syntax and source navigation;</li>

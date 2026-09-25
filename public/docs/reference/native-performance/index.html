@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>Source Semantics | Tsonic</title>
+      <title>Native Performance | Tsonic</title>
 
     <meta name="description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Source Semantics" />
+    <meta property="og:title" content="Native Performance" />
     <meta property="og:description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/styles.css" />
@@ -132,7 +132,7 @@
               <li><a class=""  href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
 
 
-              <li><a class="active" aria-current="page" href="/docs/manual/source-semantics/">Source semantics</a></li>
+              <li><a class=""  href="/docs/manual/source-semantics/">Source semantics</a></li>
 
 
               <li><a class=""  href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
@@ -852,162 +852,104 @@
 
         <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
 
-        <a href="/docs/manual/">Manual</a><span aria-hidden="true">/</span>
+        <a href="/docs/reference/">Reference</a><span aria-hidden="true">/</span>
 
-      <span>Source Semantics</span>
+      <span>Native Performance</span>
     </nav>
-    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/manual/source-semantics.md">Edit source</a>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/reference/native-performance.md">Edit source</a>
   </div>
-  <div class="prose"><h1 id="source-semantics">Source semantics</h1>
-<p>Ordinary TypeScript remains ordinary TypeScript:</p>
-<pre><code class="language-ts">export interface User {
-  readonly id: string;
-  name: string;
-}
-
-export function rename(user: User, name: string): User {
-  return { ...user, name };
-}
+  <div class="prose"><h1 id="native-performance">Native performance</h1>
+<p>C# and Rust use native storage and operations. Selecting the JavaScript or Node
+APIs does not select a JavaScript engine or exact JavaScript behavior at any cost.
+Where the native contract differs, the difference is explicit below. Neither
+target reads uninitialized memory or discards aliasing guarantees to save work.</p>
+<h2 id="strings">Strings</h2>
+<p>Ordinary C# strings use .NET UTF-16. Ordinary Rust strings use UTF-8. Rust lengths,
+search results, regular-expression indices and slice positions are byte offsets.
+Slices must start and end on character boundaries.</p>
+<pre><code class="language-ts">const text = "é😀";
+const length = text.length;
+const position = text.indexOf("😀");
+const face = text.slice(position);
 </code></pre>
-<h2 id="inheritance-and-overrides">Inheritance and overrides</h2>
-<p>Write normal TypeScript inheritance:</p>
-<pre><code class="language-ts">class Message {
-  text = "base";
+<p>In C#, <code>length</code> is 3 and <code>position</code> is 1. In Rust, they are 6 and 2. <code>face</code> is the
+same text in both. Rust rejects a slice that splits a UTF-8 character; it does not
+silently convert the entire string to UTF-16 to make the slice possible. JSON and
+Node APIs retain native strings too.</p>
+<p>Rust <code>String.fromCharCode</code> and <code>String.fromCodePoint</code> construct Unicode scalar
+values from finite integer arguments. Fractional values, surrogate code points
+and values beyond <code>0x10FFFF</code> reject instead of applying UTF-16 wrapping.</p>
+<p>Use an explicit value when UTF-16 code-unit behavior is required:</p>
+<pre><code class="language-ts">import { jsstr } from "@tsonic/js/lang.js";
 
-  render(): string {
-    return this.text;
-  }
-}
-
-class EmphaticMessage extends Message {
-  text = "important";
-
-  render(): string {
-    return `${super.render()}!`;
-  }
-}
-
-export function show(message: Message): string {
-  return message.render();
-}
+const text = jsstr("é😀");
+const length = text.length;
 </code></pre>
-<p>The checked source program records that the derived members override base
-members and that <code>message.render()</code> is virtual dispatch. C# emits the required
-<code>virtual</code> and <code>override</code> members. Rust emits its equivalent closed dispatch
-model. Source code does not add a C#- or Rust-specific override marker.</p>
-<p>Target-native inheritance is also evidence-driven. Extending a provider type
-is accepted only when that provider exposes an exact legal base contract.</p>
-<p>Tsonic source modules add types and operations only where JavaScript and
-TypeScript do not express a required native distinction.</p>
-<h2 id="type-transformations">Type transformations</h2>
-<p>Standard utility types are checked as TypeScript and then erase:</p>
-<pre><code class="language-ts">interface User {
-  id: string;
-  name: string;
-  active?: boolean;
-}
-
-type Patch = Partial&lt;User&gt;;
-type NameOnly = Pick&lt;User, "name"&gt;;
+<p><code>length</code> is 3 on both targets. The conversion and the exact UTF-16 operations
+belong to this value, not every string in the program. A native Rust string cannot
+contain lone surrogates. Parsing JSON containing one rejects; an explicit
+<code>JsString</code> can retain it and JSON serialization escapes it.</p>
+<h2 id="arrays">Arrays</h2>
+<p>Ordinary arrays have contiguous initialized elements. They do not store a
+presence flag beside every element.</p>
+<pre><code class="language-ts">const values = new Array&lt;number&gt;(3);
+values[1] = 7;
+values.push(9);
+const copy = Array.from(values);
 </code></pre>
-<p>The target receives the resolved shape, not a request to implement a native
-type named <code>Partial</code> or <code>Pick</code>. The complete pinned inventory and the distinct
-<code>any</code> and <code>unknown</code> target contracts are in
-<a href="/docs/reference/typescript-types/">TypeScript types and utilities</a>.</p>
-<h2 id="exact-primitives">Exact primitives</h2>
-<pre><code class="language-ts">import type { int32, uint8, float64 } from "@tsonic/core/types.js";
-
-export function average(total: int32, count: uint8): float64 {
-  return total / count;
-}
+<p>The result is <code>[0, 7, 0, 9]</code>, not an array containing holes. <code>Array.from</code> creates
+independent storage and preserves the identity of reference-valued elements.
+This also works when the source is a parameter; the native carrier itself is
+dense. Reserving capacity in a native collection leaves its length zero and is
+different from constructing an initialized length.</p>
+<p>Omitted literal elements, deleting an existing array element, increasing
+<code>.length</code>, and assignments that jump beyond the next element are unsupported.
+Use <code>push</code>, <code>splice</code>, initialized length construction or a native indexed map.
+There is no automatic switch to sparse storage. Native initialization must be
+available for the selected element type; no arbitrary reference is fabricated.</p>
+<p>Absence is an explicit element type when needed:</p>
+<pre><code class="language-ts">const values: (number | undefined)[] = [1, undefined, 3];
 </code></pre>
-<p>These aliases may all erase to TypeScript <code>number</code> while checking, but TSTS
-retains their exact source-semantic identities for the target.</p>
-<h2 id="reference-arguments">Reference arguments</h2>
-<pre><code class="language-ts">import { readWriteRef, writeOnlyRef } from "@tsonic/core/lang.js";
-
-declare function divide(
-  numerator: number,
-  denominator: number,
-  quotient: number,
-  remainder: number,
-): void;
-
-let quotient = 0;
-let remainder = 0;
-divide(17, 5, writeOnlyRef(quotient), writeOnlyRef(remainder));
-</code></pre>
-<p>The selected provider signature determines whether a marker is legal. A marker
-does not turn an arbitrary value into a writable native location.</p>
-<h2 id="typed-locations">Typed locations</h2>
-<pre><code class="language-ts">import {
-  addressOf,
-  equalPointer,
-  loadPointer,
-  storePointer,
-} from "@tsonic/core/lang.js";
-import type { int32, Pointer } from "@tsonic/core/types.js";
-
-function increment(pointer: Pointer&lt;int32&gt;): void {
-  storePointer(pointer, loadPointer(pointer) + 1);
-}
-
-let value: int32 = 1;
-const pointer = addressOf(value);
-increment(pointer);
-const sameLocation = equalPointer(pointer, addressOf(value));
-</code></pre>
-<p><code>Pointer&lt;T&gt;</code> is a typed mutable storage location. It is not a raw address.
-C# lowers it to its closed <code>Location&lt;T&gt;</code> carrier; Rust lowers it to its own
-closed location representation. Identity follows storage, not wrapper-object
-identity.</p>
-<h2 id="native-pointers-and-safety">Native pointers and safety</h2>
-<p>Native pointer operations require exact target support and an explicit safety
-contract:</p>
-<pre><code class="language-ts">import {
-  loadNativePointer,
-  offsetNativePointer,
-  unsafeContext,
-} from "@tsonic/core/lang.js";
-import type {
-  NativePointer,
-  int32,
-  nativeInt,
-} from "@tsonic/core/types.js";
-
-export function read(
-  pointer: NativePointer&lt;int32&gt;,
-  offset: nativeInt,
-): int32 {
-  return unsafeContext(loadNativePointer(offsetNativePointer(pointer, offset)));
-}
-</code></pre>
-<p>The safety region and any declaration-level requires-unsafe contract are
-independent controls. Tsonic does not infer one from the other.</p>
-<h2 id="target-native-spelling">Target-native spelling</h2>
-<p>Target modules may provide native aliases. For example, C# offers <code>int</code>,
-<code>out</code>, and <code>ptr</code>; Rust offers explicit lifetime and reference types. Neutral
-library code should prefer <code>@tsonic/core</code> unless it intentionally exposes a
-target-native contract.</p>
-<p>The exhaustive catalog is in <a href="/docs/reference/source-core/">neutral types and markers</a>.</p>
-<h2 id="alias-evidence-for-target-authors">Alias evidence for target authors</h2>
-<p>An inferred type can retain an alias application even when there is no type
-argument written at the use site:</p>
-<pre><code class="language-ts">type Stored&lt;T&gt; = T extends { storage: infer Value } ? Value : T;
-function read&lt;T&gt;(value: { current: Stored&lt;T&gt; }): Stored&lt;T&gt; {
-  return value.current;
-}
-</code></pre>
-<p>The shared <code>source.semantics.forNode(node).types.aliasApplication(type)</code> query
-returns the checker’s retained alias declaration, parameter-to-argument bindings,
-result and conditional selections. Its immutable result uses the same contract
-as <code>types.instantiateAlias(declaration, arguments)</code>. Ordinary
-<code>types.typeArguments(type)</code> describes class/interface type references; it does
-not describe a conditional alias’s arguments.</p>
-<p>The query returns no application when the checker has erased that provenance.
-Targets must not infer an alias from a result’s name or shape. Types from a
-different checked program are not accepted. Each target still owns its native
-representation and its limits; this query adds no runtime object or marker.</p>
+<p>All three indices exist. Unmatched regular-expression captures likewise use
+optional values, not holes in the array representation.</p>
+<p>Rust values that leave mutable shared storage still need a safe ownership
+transfer. For example, retaining an array’s string while a callback can replace
+that element requires an owned string. Tsonic does not hold a borrow across an
+arbitrary callback or silently change value semantics to avoid that copy.</p>
+<h2 id="fixed-size-storage">Fixed-size storage</h2>
+<p><code>FixedArray&lt;T, N&gt;</code> preserves an exact extent. It is not a universal promise of
+stack allocation. C# currently uses a managed <code>T[]</code>; Rust uses native fixed-array
+storage through its selected carrier. Changing C# to an inline value struct would
+change assignment and alias behavior and needs a separate storage contract.
+Use the target’s native storage APIs for allocation and lifetime controls that
+are not expressed by ordinary arrays.</p>
+<h2 id="requested-results-only">Requested results only</h2>
+<ul>
+<li>Hash updates retain incremental hash state, not the complete message history.</li>
+<li>Buffer views share a backing range; explicit copies allocate independent bytes.</li>
+<li>Boolean regular-expression tests on proven native expressions do not build
+discarded public match arrays. Unknown C# receivers retain virtual <code>exec</code>
+dispatch so an override’s observable behavior is not erased.</li>
+<li>Number formatting writes text directly; <code>formatToParts</code> creates parts when asked.</li>
+<li>File statistics retain a numeric snapshot; Date objects are created on access.</li>
+<li>Errors capture no stack until <code>Error.captureStackTrace</code> is called.</li>
+<li>Rust async filesystem operations complete on a bounded worker pool. Ready
+network and worker events wake the event loop rather than waiting for a fixed
+polling interval.</li>
+<li>C# HTTP clients expose headers before reading the whole body. Streaming has
+bounded in-flight chunks; <code>readAll</code> and <code>readAllBuffer</code> explicitly request the
+complete body.</li>
+</ul>
+<h2 id="costs-that-remain-necessary">Costs that remain necessary</h2>
+<p>First-class callbacks retain captured state and identity. Shared mutable values
+retain shared ownership. Awaiting one shared promise more than once must preserve
+its result for each consumer; a uniquely owned result can move. These are source
+requirements, not optional emulation. Native direct functions, value types and
+explicit borrow APIs remain available where their contracts fit.</p>
+<p>Closed C# unions use typed value storage, avoiding allocation and boxing of a
+primitive payload. A wide union occupies the combined inline field space, so
+passing a large union by value still has a native copy cost. This is not a claim
+that every union is free or that every program improves by the same amount.</p>
 </div>
 </article>
 </main>

@@ -880,6 +880,69 @@ C# profile may import <code>node:path</code> while using <code>System.Console</c
 <p>Unavailable APIs reject at provider selection. They are not forwarded to an
 embedded Node process.</p>
 <p>See the detailed <a href="/docs/reference/targets/csharp/support-inventory/">support inventory</a>.</p>
+<h2 id="synchronous-child-processes">Synchronous child processes</h2>
+<p><code>spawnSync</code> uses .NET’s <code>System.Diagnostics.Process</code>, not Node or libuv.
+It supports argument arrays, a working directory, an independent child
+environment, binary input, and piped or inherited standard streams.</p>
+<pre><code class="language-ts">import { spawnSync } from "node:child_process";
+import { Buffer } from "node:buffer";
+
+const result = spawnSync("cat", [], {
+  input: Buffer.from("hello"),
+  maxBuffer: 4096,
+});
+const output = result.stdout;
+if (result.status === 0 &amp;&amp; output !== null) {
+  const text = output.toString("utf8");
+}
+</code></pre>
+<p>The JS profile also accepts <code>Uint8Array</code> input, including subarray views.
+Input is read when the call starts; assigning an options field does not copy
+the bytes or the <code>stdio</code> array. An omitted environment inherits the parent;
+an explicit environment record supplies the child’s complete environment.
+Creating or changing that record does not change <code>process.env</code>.</p>
+<p>Uncaptured output is <code>null</code>. A launch failure has no <code>pid</code> or <code>status</code>, leaves
+both output fields <code>null</code>, and reports <code>error.code</code> and <code>error.message</code>.
+An ordinary nonzero exit is not a launch error.</p>
+<p>Public .NET process APIs cannot express every Node launch contract:</p>
+<ul>
+<li>Numeric <code>uid</code>/<code>gid</code>, remapped or extra descriptors, and <code>"ignore"</code> streams
+are rejected before launch. <code>"pipe"</code>, <code>"inherit"</code>, and matching inherited
+descriptors 0, 1 and 2 are supported.</li>
+<li>Nonzero <code>timeout</code> and explicit <code>killSignal</code> are rejected before launch.
+The runtime does not substitute forceful termination for <code>SIGTERM</code>.</li>
+<li>If captured output exceeds <code>maxBuffer</code>, the runtime stops the child and
+throws an unsupported-operation error. It does not fabricate Node’s signal
+result. Memory remains bounded; overflow is not silently ignored.</li>
+<li>On Unix, .NET cannot distinguish certain exit codes from signal termination.
+Exit results of 128 or greater therefore throw rather than inventing
+<code>status</code> or <code>signal</code>. Ordinary exits below 128 retain their exact status.</li>
+</ul>
+<p>These are C# platform limitations, not restrictions on Rust’s native launcher.</p>
+<h2 id="engine-specific-controls">Engine-specific controls</h2>
+<p>The native program does not contain V8. The named
+<code>node:v8.setFlagsFromString(flags)</code> import is available so an optional engine
+control need not prevent compilation. Calling it always throws an explicit
+unsupported-operation error, including for an empty flag string. Importing it
+does not change process state. It does not adjust native thread stacks.</p>
+<pre><code class="language-ts">import { setFlagsFromString } from "node:v8";
+
+export function requestEngineFlags(flags: string): void {
+  setFlagsFromString(flags);
+}
+</code></pre>
+<p><code>getHeapStatistics()</code> also imports and type-checks, but always throws when
+called. Its <code>HeapInfo</code> result contract lets optional diagnostic code compile;
+the native runtime never returns invented V8 measurements.</p>
+<pre><code class="language-ts">import { getHeapStatistics } from "node:v8";
+
+export function reportHeapLimit(): number {
+  return getHeapStatistics().heap_size_limit;
+}
+</code></pre>
+<p>Importing this function is safe; calling it throws. A program that needs heap
+statistics on its normal execution path needs a native implementation of that
+requirement. This boundary does not provide one, or a general V8 implementation.</p>
 </div>
 </article>
 </main>

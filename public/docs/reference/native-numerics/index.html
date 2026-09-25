@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>Source Semantics | Tsonic</title>
+      <title>Native Numerics | Tsonic</title>
 
     <meta name="description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Source Semantics" />
+    <meta property="og:title" content="Native Numerics" />
     <meta property="og:description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/styles.css" />
@@ -132,7 +132,7 @@
               <li><a class=""  href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
 
 
-              <li><a class="active" aria-current="page" href="/docs/manual/source-semantics/">Source semantics</a></li>
+              <li><a class=""  href="/docs/manual/source-semantics/">Source semantics</a></li>
 
 
               <li><a class=""  href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
@@ -852,162 +852,136 @@
 
         <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
 
-        <a href="/docs/manual/">Manual</a><span aria-hidden="true">/</span>
+        <a href="/docs/reference/">Reference</a><span aria-hidden="true">/</span>
 
-      <span>Source Semantics</span>
+      <span>Native Numerics</span>
     </nav>
-    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/manual/source-semantics.md">Edit source</a>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/reference/native-numerics.md">Edit source</a>
   </div>
-  <div class="prose"><h1 id="source-semantics">Source semantics</h1>
-<p>Ordinary TypeScript remains ordinary TypeScript:</p>
-<pre><code class="language-ts">export interface User {
-  readonly id: string;
-  name: string;
-}
+  <div class="prose"><h1 id="native-numbers">Native numbers</h1>
+<p>TypeScript supplies checked source types, not a JavaScript virtual machine.
+C# and Rust retain their native numeric representations on every source surface.</p>
+<table><thead><tr><th>TypeScript type</th><th>C#</th><th>Rust</th></tr></thead><tbody>
+<tr><td><code>number</code>, <code>float64</code></td><td><code>double</code></td><td><code>f64</code></td></tr>
+<tr><td><code>float32</code></td><td><code>float</code></td><td><code>f32</code></td></tr>
+<tr><td><code>int8</code> through <code>int64</code></td><td><code>sbyte</code> through <code>long</code></td><td><code>i8</code> through <code>i64</code></td></tr>
+<tr><td><code>uint8</code> through <code>uint64</code></td><td><code>byte</code> through <code>ulong</code></td><td><code>u8</code> through <code>u64</code></td></tr>
+<tr><td><code>int128</code>, <code>uint128</code></td><td><code>Int128</code>, <code>UInt128</code></td><td><code>i128</code>, <code>u128</code></td></tr>
+<tr><td><code>nativeInt</code>, <code>nativeUint</code></td><td><code>nint</code>, <code>nuint</code></td><td><code>isize</code>, <code>usize</code></td></tr>
+<tr><td>unannotated <code>bigint</code></td><td><code>BigInteger</code></td><td>runtime <code>BigInt</code></td></tr>
+</tbody></table>
+<h2 id="exact-integers">Exact integers</h2>
+<pre><code class="language-ts">import type { int64, uint64 } from "@tsonic/core/types.js";
 
-export function rename(user: User, name: string): User {
-  return { ...user, name };
-}
-</code></pre>
-<h2 id="inheritance-and-overrides">Inheritance and overrides</h2>
-<p>Write normal TypeScript inheritance:</p>
-<pre><code class="language-ts">class Message {
-  text = "base";
+const count: int64 = 9007199254740993n;
+const maximum: uint64 = 18446744073709551615n;
 
-  render(): string {
-    return this.text;
-  }
-}
-
-class EmphaticMessage extends Message {
-  text = "important";
-
-  render(): string {
-    return `${super.render()}!`;
-  }
-}
-
-export function show(message: Message): string {
-  return message.render();
+export function retain(value: int64): int64 {
+  return value;
 }
 </code></pre>
-<p>The checked source program records that the derived members override base
-members and that <code>message.render()</code> is virtual dispatch. C# emits the required
-<code>virtual</code> and <code>override</code> members. Rust emits its equivalent closed dispatch
-model. Source code does not add a C#- or Rust-specific override marker.</p>
-<p>Target-native inheritance is also evidence-driven. Extending a provider type
-is accepted only when that provider exposes an exact legal base contract.</p>
-<p>Tsonic source modules add types and operations only where JavaScript and
-TypeScript do not express a required native distinction.</p>
-<h2 id="type-transformations">Type transformations</h2>
-<p>Standard utility types are checked as TypeScript and then erase:</p>
-<pre><code class="language-ts">interface User {
-  id: string;
-  name: string;
-  active?: boolean;
-}
+<p>These values stay exact. They do not pass through floating point or an
+arbitrary-precision temporary. The selected native width, signedness and
+overflow rules still apply. A literal outside its selected integer range
+is rejected.</p>
+<p>Selected native integer literals use the checked AST’s exact authored token,
+not a potentially rounded checker display string. Rust checks platform-sized
+literals through its native compiler. C# retains a checked native-integer
+conversion. Neither target assumes the compiler host’s pointer width.</p>
+<p><code>number</code> remains floating point. An explicit conversion to <code>number</code> can lose
+precision. <code>Number.MAX_SAFE_INTEGER</code> describes binary64 precision; it does
+not limit native integer storage, arithmetic, API arguments or results.</p>
+<h2 id="native-operations-and-js-apis">Native operations and JS APIs</h2>
+<p>Without a JS surface, use the selected target’s APIs and semantics. Selecting
+a JS or Node surface makes supported library operations available; it does
+not replace native carriers, string encoding, ownership or allocation policy.</p>
+<p>An explicitly selected JS API still means that operation, not whichever native
+library operation happens to have the same name:</p>
+<table><thead><tr><th>Source operation</th><th>Supported behavior</th></tr></thead><tbody>
+<tr><td><code>Math.min(NaN, 1)</code></td><td>NaN, even where a native minimum function ignores NaN</td></tr>
+<tr><td><code>Math.round(-1.5)</code></td><td>-1, with JS rounding and signed-zero rules</td></tr>
+<tr><td><code>Math.imul(a, b)</code></td><td>Wrapping 32-bit product; floating inputs convert to low 32-bit words</td></tr>
+<tr><td><code>Math.clz32(a)</code></td><td>Leading-zero count of the selected 32-bit word</td></tr>
+<tr><td><code>parseInt("123tail", 10)</code></td><td>123</td></tr>
+<tr><td><code>parseFloat("1.5tail")</code></td><td>1.5</td></tr>
+<tr><td><code>Number("")</code></td><td>0</td></tr>
+<tr><td><code>Number("123tail")</code></td><td>NaN: this conversion requires a complete numeric string</td></tr>
+<tr><td><code>BigInt("0xff")</code></td><td>Exact arbitrary-precision 255</td></tr>
+<tr><td><code>new Uint8Array([-1, 256])</code></td><td>Elements 255 and 0</td></tr>
+<tr><td><code>new Uint8ClampedArray([-1, 256])</code></td><td>Elements 0 and 255</td></tr>
+<tr><td><code>Date.UTC(99, 0, 1)</code></td><td>Year 1999</td></tr>
+</tbody></table>
+<p>For different native behavior, call the native API explicitly. Ordinary native
+integer arithmetic does not acquire JS coercion. Floating-point operands to
+integer bitwise operations are not silently converted to 32-bit integers.</p>
+<pre><code class="language-ts">import type { int32, int64 } from "@tsonic/core/types.js";
 
-type Patch = Partial&lt;User&gt;;
-type NameOnly = Pick&lt;User, "name"&gt;;
-</code></pre>
-<p>The target receives the resolved shape, not a request to implement a native
-type named <code>Partial</code> or <code>Pick</code>. The complete pinned inventory and the distinct
-<code>any</code> and <code>unknown</code> target contracts are in
-<a href="/docs/reference/typescript-types/">TypeScript types and utilities</a>.</p>
-<h2 id="exact-primitives">Exact primitives</h2>
-<pre><code class="language-ts">import type { int32, uint8, float64 } from "@tsonic/core/types.js";
-
-export function average(total: int32, count: uint8): float64 {
-  return total / count;
-}
-</code></pre>
-<p>These aliases may all erase to TypeScript <code>number</code> while checking, but TSTS
-retains their exact source-semantic identities for the target.</p>
-<h2 id="reference-arguments">Reference arguments</h2>
-<pre><code class="language-ts">import { readWriteRef, writeOnlyRef } from "@tsonic/core/lang.js";
-
-declare function divide(
-  numerator: number,
-  denominator: number,
-  quotient: number,
-  remainder: number,
-): void;
-
-let quotient = 0;
-let remainder = 0;
-divide(17, 5, writeOnlyRef(quotient), writeOnlyRef(remainder));
-</code></pre>
-<p>The selected provider signature determines whether a marker is legal. A marker
-does not turn an arbitrary value into a writable native location.</p>
-<h2 id="typed-locations">Typed locations</h2>
-<pre><code class="language-ts">import {
-  addressOf,
-  equalPointer,
-  loadPointer,
-  storePointer,
-} from "@tsonic/core/lang.js";
-import type { int32, Pointer } from "@tsonic/core/types.js";
-
-function increment(pointer: Pointer&lt;int32&gt;): void {
-  storePointer(pointer, loadPointer(pointer) + 1);
-}
-
-let value: int32 = 1;
-const pointer = addressOf(value);
-increment(pointer);
-const sameLocation = equalPointer(pointer, addressOf(value));
-</code></pre>
-<p><code>Pointer&lt;T&gt;</code> is a typed mutable storage location. It is not a raw address.
-C# lowers it to its closed <code>Location&lt;T&gt;</code> carrier; Rust lowers it to its own
-closed location representation. Identity follows storage, not wrapper-object
-identity.</p>
-<h2 id="native-pointers-and-safety">Native pointers and safety</h2>
-<p>Native pointer operations require exact target support and an explicit safety
-contract:</p>
-<pre><code class="language-ts">import {
-  loadNativePointer,
-  offsetNativePointer,
-  unsafeContext,
-} from "@tsonic/core/lang.js";
-import type {
-  NativePointer,
-  int32,
-  nativeInt,
-} from "@tsonic/core/types.js";
-
-export function read(
-  pointer: NativePointer&lt;int32&gt;,
-  offset: nativeInt,
-): int32 {
-  return unsafeContext(loadNativePointer(offsetNativePointer(pointer, offset)));
+export function shift(value: int64, count: int32): int64 {
+  return value &lt;&lt; count;
 }
 </code></pre>
-<p>The safety region and any declaration-level requires-unsafe contract are
-independent controls. Tsonic does not infer one from the other.</p>
-<h2 id="target-native-spelling">Target-native spelling</h2>
-<p>Target modules may provide native aliases. For example, C# offers <code>int</code>,
-<code>out</code>, and <code>ptr</code>; Rust offers explicit lifetime and reference types. Neutral
-library code should prefer <code>@tsonic/core</code> unless it intentionally exposes a
-target-native contract.</p>
-<p>The exhaustive catalog is in <a href="/docs/reference/source-core/">neutral types and markers</a>.</p>
-<h2 id="alias-evidence-for-target-authors">Alias evidence for target authors</h2>
-<p>An inferred type can retain an alias application even when there is no type
-argument written at the use site:</p>
-<pre><code class="language-ts">type Stored&lt;T&gt; = T extends { storage: infer Value } ? Value : T;
-function read&lt;T&gt;(value: { current: Stored&lt;T&gt; }): Stored&lt;T&gt; {
-  return value.current;
+<p>Native shifts retain native overflow/masking behavior. The explicit <code>Math.imul</code>
+and <code>Math.clz32</code> helpers do not redefine those operators. Their integer inputs
+are not converted through floating point.</p>
+<p>Small integer operations follow the target as well. Rust keeps the operand’s
+width for complement and shifts; C# promotes small integers to <code>int</code>. To
+complement a byte at 32 bits on both targets, write <code>~(value as int32)</code>.</p>
+<h2 id="numeric-text">Numeric text</h2>
+<p>On the JS surface, <code>toString()</code> retains integer receivers and their exact digits.
+<code>toFixed</code>, <code>toExponential</code> and <code>toPrecision</code> provide the supported JS notation
+and rounding rules. For example, <code>(12.5).toExponential(1)</code> produces
+<code>"1.3e+1"</code>. Precision argument ranges belong to these APIs: fraction digits
+range from 0 through 100; significant digits range from 1 through 100.</p>
+<p>A native <code>int64</code> receiver containing <code>9007199254740993</code> prints
+<code>"9007199254740993"</code>, not a rounded <code>double</code>. Integer radix formatting uses
+native integers. Floating-point radix formatting outside the supported
+decimal operation is rejected rather than approximated.</p>
+<p>Parsing returns its declared result: <code>parseInt</code> produces a floating-point
+<code>number</code>, not an exact native integer. Use <code>BigInt</code> or the target’s native
+integer parser when the result must retain every integer bit. Supported
+whitespace, prefixes and invalid-input handling belong to the explicit API.</p>
+<h2 id="explicit-bit-truncation">Explicit bit truncation</h2>
+<pre><code class="language-ts">import type { int64 } from "@tsonic/core/types.js";
+
+export function lowWord(value: bigint): int64 {
+  return BigInt.asIntN(64, value);
 }
 </code></pre>
-<p>The shared <code>source.semantics.forNode(node).types.aliasApplication(type)</code> query
-returns the checker’s retained alias declaration, parameter-to-argument bindings,
-result and conditional selections. Its immutable result uses the same contract
-as <code>types.instantiateAlias(declaration, arguments)</code>. Ordinary
-<code>types.typeArguments(type)</code> describes class/interface type references; it does
-not describe a conditional alias’s arguments.</p>
-<p>The query returns no application when the checker has erased that provenance.
-Targets must not infer an alias from a result’s name or shape. Types from a
-different checked program are not accepted. Each target still owns its native
-representation and its limits; this query adds no runtime object or marker.</p>
+<p>The selected operation and constant width prove the result fits <code>int64</code>.
+The target reads those low bits directly into a native integer without an
+intermediate truncated BigInt. An unannotated <code>bigint</code> result remains arbitrary
+precision.</p>
+<p>A dynamic or out-of-range width cannot prove an implicit native result
+conversion. The public BigInt operation normalizes its width argument and
+checks native capacity; the proven native-result helper validates its exact
+compile-time width. No width is capped at 53 bits merely for JS compatibility.</p>
+<h2 id="queries-collections-and-storage">Queries, collections and storage</h2>
+<p><code>Number.isInteger</code> tests the selected native value’s integrality.
+<code>Number.isSafeInteger</code> explicitly queries the JS Number precision domain.
+It can return false for an exact <code>int64</code> without restricting that integer in
+any way. Native integer arguments never round through floating point for
+this query.</p>
+<p>Native typed-array copies retain exact element carriers. Same-type copies use
+native bulk copying. Different integer types convert directly; floating inputs
+use the selected typed-array API’s conversion. Overlapping views preserve the
+source values required by the operation.</p>
+<p>JS array <code>indexOf</code> does not match NaN; <code>includes</code>, Map and Set do. Ordinary
+typed keys/searches avoid boxing. Explicit closed-value operations preserve
+exact native integers rather than converting all values to double.</p>
+<p>Array construction requires a non-negative integral length. Buffer and
+typed-array APIs normalize their numeric length arguments, then validate the
+native storage bounds. Allocation failure is not an artificial JS integer
+limit. Split limits and formatting precision are API-specific arguments, not
+a storage-carrier policy.</p>
+<p>Date stores floating-point epoch milliseconds within its native signed
+64-bit decomposition domain, rather than imposing the JS timestamp ceiling.
+Native local-time libraries can support a narrower calendar range than UTC.</p>
+<p>Node file reads and writes accept exact <code>int64</code> positions as well as ordinary
+numeric positions. The <code>int64</code> path never rounds through <code>number</code>. Native OS
+and filesystem limits still apply.</p>
+<p>Compatibility is best effort within these representations. Unsupported
+operations must reject precisely, not silently return a different result or
+introduce a slow general fallback.</p>
 </div>
 </article>
 </main>

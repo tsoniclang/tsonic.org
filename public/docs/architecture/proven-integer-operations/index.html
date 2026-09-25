@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>Source Semantics | Tsonic</title>
+      <title>Proven Integer Operations | Tsonic</title>
 
     <meta name="description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <meta name="theme-color" content="#0b0912" />
     <meta property="og:site_name" content="Tsonic" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Source Semantics" />
+    <meta property="og:title" content="Proven Integer Operations" />
     <meta property="og:description" content="Compile TypeScript into native C#, Rust and Mojo source projects." />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/styles.css" />
@@ -132,7 +132,7 @@
               <li><a class=""  href="/docs/manual/build-test-deploy/">Build, test, and deploy</a></li>
 
 
-              <li><a class="active" aria-current="page" href="/docs/manual/source-semantics/">Source semantics</a></li>
+              <li><a class=""  href="/docs/manual/source-semantics/">Source semantics</a></li>
 
 
               <li><a class=""  href="/docs/manual/surfaces-and-capabilities/">Surfaces and capabilities</a></li>
@@ -852,162 +852,51 @@
 
         <a href="/docs/">Docs</a><span aria-hidden="true">/</span>
 
-        <a href="/docs/manual/">Manual</a><span aria-hidden="true">/</span>
+        <a href="/docs/architecture/">Architecture</a><span aria-hidden="true">/</span>
 
-      <span>Source Semantics</span>
+      <span>Proven Integer Operations</span>
     </nav>
-    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/manual/source-semantics.md">Edit source</a>
+    <a class="edit-link" href="https://github.com/tsoniclang/tsonic/blob/main/docs/architecture/proven-integer-operations.md">Edit source</a>
   </div>
-  <div class="prose"><h1 id="source-semantics">Source semantics</h1>
-<p>Ordinary TypeScript remains ordinary TypeScript:</p>
-<pre><code class="language-ts">export interface User {
-  readonly id: string;
-  name: string;
-}
-
-export function rename(user: User, name: string): User {
-  return { ...user, name };
-}
-</code></pre>
-<h2 id="inheritance-and-overrides">Inheritance and overrides</h2>
-<p>Write normal TypeScript inheritance:</p>
-<pre><code class="language-ts">class Message {
-  text = "base";
-
-  render(): string {
-    return this.text;
-  }
-}
-
-class EmphaticMessage extends Message {
-  text = "important";
-
-  render(): string {
-    return `${super.render()}!`;
-  }
-}
-
-export function show(message: Message): string {
-  return message.render();
+  <div class="prose"><h1 id="proven-integer-operations">Proven integer operations</h1>
+<p>Ordinary TypeScript <code>number</code> remains a floating-point source contract. An
+optimization must not change its public type, native overload selection or
+observable arithmetic behavior.</p>
+<p>The shared source analysis in <code>@tsonic/target-api/source</code> exports
+<code>analyzeSourceIntegerRanges</code>. It uses exact declaration identities and checked
+numeric carriers supplied by target analysis. It retains immutable per-occurrence
+ranges; it does not rewrite the source or create integer marker annotations.</p>
+<p>Both C# and Rust consume this evidence during analysis, before sealing their
+target program. Planning only consumes the sealed selection and constructs
+target AST. There is no checker query or source-text matching in the printer.</p>
+<h2 id="remainder">Remainder</h2>
+<pre><code class="language-ts">function residues(): number {
+  let total = 0;
+  for (let value = 0; value &lt; 100; value++) total += value % 7;
+  return total;
 }
 </code></pre>
-<p>The checked source program records that the derived members override base
-members and that <code>message.render()</code> is virtual dispatch. C# emits the required
-<code>virtual</code> and <code>override</code> members. Rust emits its equivalent closed dispatch
-model. Source code does not add a C#- or Rust-specific override marker.</p>
-<p>Target-native inheritance is also evidence-driven. Extending a provider type
-is accepted only when that provider exposes an exact legal base contract.</p>
-<p>Tsonic source modules add types and operations only where JavaScript and
-TypeScript do not express a required native distinction.</p>
-<h2 id="type-transformations">Type transformations</h2>
-<p>Standard utility types are checked as TypeScript and then erase:</p>
-<pre><code class="language-ts">interface User {
-  id: string;
-  name: string;
-  active?: boolean;
-}
-
-type Patch = Partial&lt;User&gt;;
-type NameOnly = Pick&lt;User, "name"&gt;;
-</code></pre>
-<p>The target receives the resolved shape, not a request to implement a native
-type named <code>Partial</code> or <code>Pick</code>. The complete pinned inventory and the distinct
-<code>any</code> and <code>unknown</code> target contracts are in
-<a href="/docs/reference/typescript-types/">TypeScript types and utilities</a>.</p>
-<h2 id="exact-primitives">Exact primitives</h2>
-<pre><code class="language-ts">import type { int32, uint8, float64 } from "@tsonic/core/types.js";
-
-export function average(total: int32, count: uint8): float64 {
-  return total / count;
-}
-</code></pre>
-<p>These aliases may all erase to TypeScript <code>number</code> while checking, but TSTS
-retains their exact source-semantic identities for the target.</p>
-<h2 id="reference-arguments">Reference arguments</h2>
-<pre><code class="language-ts">import { readWriteRef, writeOnlyRef } from "@tsonic/core/lang.js";
-
-declare function divide(
-  numerator: number,
-  denominator: number,
-  quotient: number,
-  remainder: number,
-): void;
-
-let quotient = 0;
-let remainder = 0;
-divide(17, 5, writeOnlyRef(quotient), writeOnlyRef(remainder));
-</code></pre>
-<p>The selected provider signature determines whether a marker is legal. A marker
-does not turn an arbitrary value into a writable native location.</p>
-<h2 id="typed-locations">Typed locations</h2>
-<pre><code class="language-ts">import {
-  addressOf,
-  equalPointer,
-  loadPointer,
-  storePointer,
-} from "@tsonic/core/lang.js";
-import type { int32, Pointer } from "@tsonic/core/types.js";
-
-function increment(pointer: Pointer&lt;int32&gt;): void {
-  storePointer(pointer, loadPointer(pointer) + 1);
-}
-
-let value: int32 = 1;
-const pointer = addressOf(value);
-increment(pointer);
-const sameLocation = equalPointer(pointer, addressOf(value));
-</code></pre>
-<p><code>Pointer&lt;T&gt;</code> is a typed mutable storage location. It is not a raw address.
-C# lowers it to its closed <code>Location&lt;T&gt;</code> carrier; Rust lowers it to its own
-closed location representation. Identity follows storage, not wrapper-object
-identity.</p>
-<h2 id="native-pointers-and-safety">Native pointers and safety</h2>
-<p>Native pointer operations require exact target support and an explicit safety
-contract:</p>
-<pre><code class="language-ts">import {
-  loadNativePointer,
-  offsetNativePointer,
-  unsafeContext,
-} from "@tsonic/core/lang.js";
-import type {
-  NativePointer,
-  int32,
-  nativeInt,
-} from "@tsonic/core/types.js";
-
-export function read(
-  pointer: NativePointer&lt;int32&gt;,
-  offset: nativeInt,
-): int32 {
-  return unsafeContext(loadNativePointer(offsetNativePointer(pointer, offset)));
-}
-</code></pre>
-<p>The safety region and any declaration-level requires-unsafe contract are
-independent controls. Tsonic does not infer one from the other.</p>
-<h2 id="target-native-spelling">Target-native spelling</h2>
-<p>Target modules may provide native aliases. For example, C# offers <code>int</code>,
-<code>out</code>, and <code>ptr</code>; Rust offers explicit lifetime and reference types. Neutral
-library code should prefer <code>@tsonic/core</code> unless it intentionally exposes a
-target-native contract.</p>
-<p>The exhaustive catalog is in <a href="/docs/reference/source-core/">neutral types and markers</a>.</p>
-<h2 id="alias-evidence-for-target-authors">Alias evidence for target authors</h2>
-<p>An inferred type can retain an alias application even when there is no type
-argument written at the use site:</p>
-<pre><code class="language-ts">type Stored&lt;T&gt; = T extends { storage: infer Value } ? Value : T;
-function read&lt;T&gt;(value: { current: Stored&lt;T&gt; }): Stored&lt;T&gt; {
-  return value.current;
-}
-</code></pre>
-<p>The shared <code>source.semantics.forNode(node).types.aliasApplication(type)</code> query
-returns the checker’s retained alias declaration, parameter-to-argument bindings,
-result and conditional selections. Its immutable result uses the same contract
-as <code>types.instantiateAlias(declaration, arguments)</code>. Ordinary
-<code>types.typeArguments(type)</code> describes class/interface type references; it does
-not describe a conditional alias’s arguments.</p>
-<p>The query returns no application when the checker has erased that provenance.
-Targets must not infer an alias from a result’s name or shape. Types from a
-different checked program are not accepted. Each target still owns its native
-representation and its limits; this query adds no runtime object or marker.</p>
+<p>Within this loop, <code>value</code> is a non-negative integer below 100. The divisor is the
+positive integer 7. The remainder can use native signed-32-bit arithmetic and
+convert the exact result back to <code>number</code>. The surrounding declarations retain
+their existing contracts. There is no speculative branch or runtime guard.</p>
+<p>Selection requires both operands to be finite, non-negative integers fitting a
+signed 32-bit carrier, with a strictly positive divisor. Only the already-selected
+primitive floating remainder is replaced. Existing integer/BigInt/native provider
+operations are not reclassified.</p>
+<p>The analysis admits stable lexical local values, exact bounded arithmetic, branch joins,
+ascending bounded loops and non-negative square-bounded nested loops. Captured or
+address-exposed bindings and merged <code>var</code> declarations are not admitted. Loop-carried
+writes invalidate prior ranges, including values assigned by a one-time loop
+initializer. Unmodelled binding patterns and control flow do not manufacture evidence. The per-callable
+node/depth budgets discard that callable’s entire proof if exhausted.</p>
+<p>Negative operands, possible negative zero, NaN, infinities, fractions, zero
+divisors, uncertain mutation and unproven bounds keep the original arithmetic.
+Cross-function/object-field range propagation is not inferred from a caller’s
+validation. The absence of proof never makes otherwise-supported source invalid.</p>
+<p>This optimization does not replace cheap floating additions with extra casts or
+promise every numeric local becomes an integer. Native-oriented source can use
+explicit <code>int32</code> annotations when its own contract establishes the bounds.</p>
 </div>
 </article>
 </main>

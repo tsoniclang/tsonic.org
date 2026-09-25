@@ -867,7 +867,7 @@
 represented faithfully by the approved static Rust architecture.</p>
 <table><thead><tr><th>Area</th><th>Supported contracts</th></tr></thead><tbody>
 <tr><td>Modules</td><td>ESM imports/exports, side-effect imports, source packages, source-ordered module initialization, default exports</td></tr>
-<tr><td>Declarations</td><td>Functions, classes, interfaces, enums, aliases, generics, overload implementations, inheritance, constructors, statics, static blocks</td></tr>
+<tr><td>Declarations</td><td>Functions, classes, abstract declarations, readonly fields, interfaces, enums, aliases, generics, overload implementations, inheritance, constructors, statics, static blocks</td></tr>
 <tr><td>Values</td><td>Primitives, arrays, fixed arrays, tuples, structural records, string-literal enums, discriminated unions, nullable values, and producer-owned finite broad values</td></tr>
 <tr><td>Calls</td><td>Source/provider overloads, generics, optional/rest parameters, callbacks, constructors, parameter modes, conversions</td></tr>
 <tr><td>Expressions</td><td>Arithmetic, comparisons, boolean logic, optional chains, nullish coalescing, properties, elements, assignments, spreads, assertions</td></tr>
@@ -886,6 +886,31 @@ represented faithfully by the approved static Rust architecture.</p>
 target must prove source evaluation order, carrier identity, ownership,
 borrows, cleanup, errors, module initialization, and native API identity before
 planning.</p>
+<h2 id="structural-views">Structural views</h2>
+<p>A class instance can satisfy a checked structural contract without copying its
+fields into a new object:</p>
+<pre><code class="language-ts">class Counter { count: number = 0; }
+function view(value: Counter): { count: number } { return value; }
+
+const counter = new Counter();
+view(counter).count = 2;
+</code></pre>
+<p>Both references observe the same storage. The same rule covers parameters,
+returns, inherited members, accessors, and closed generic contracts. A readonly
+view does not freeze the original object or make a writable alias readonly.</p>
+<h2 id="callable-and-constructor-values">Callable and constructor values</h2>
+<p>Generic function values retain their type parameters and captured environment.
+Calls through a compatible union retain each selected method’s defaults, rest
+arguments, result, and error contract. An incompatible union is still rejected
+by source checking.</p>
+<p>Local classes and class expressions can capture values and return constructors.
+Each evaluation retains its own static state and observable constructor
+identity. This produces statically known native types and environments, not
+runtime-generated Rust types or reflection.</p>
+<p>Async arrows and generator expressions use the same suspension and cleanup
+contracts as declared functions. An escaping suspended call retains its
+receiver; a locally awaited call does not require an extra shared owner merely
+because it is async. Authored borrows still have to satisfy their lifetimes.</p>
 </div>
 </article>
 </main>

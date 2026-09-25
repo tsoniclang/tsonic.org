@@ -862,10 +862,12 @@
 <p>Select the JavaScript source profile with <code>surfaces: ["js"]</code> on a C# or Rust
 target. The profile supplies JavaScript globals and built-ins; the target
 supplies their carriers and runtime implementation.</p>
+<p>These are native operations, not a JavaScript runtime. See
+<a href="/docs/reference/native-numerics/">native numbers</a> for integer widths, bitwise operations,
+numeric predicates and allocation limits.</p>
 <h2 id="covered-source-families">Covered source families</h2>
 <ul>
-<li><code>Array</code>, readonly arrays, sparse arrays where the target provides an exact
-identity-preserving carrier;</li>
+<li><code>Array</code> and readonly arrays with native dense storage;</li>
 <li><code>String</code>, <code>Boolean</code>, <code>Number</code>, and <code>Math</code>;</li>
 <li><code>Map</code>, <code>Set</code>, and their iterators;</li>
 <li><code>Date</code>;</li>
@@ -875,8 +877,9 @@ identity-preserving carrier;</li>
 <li><code>console</code>;</li>
 <li>typed arrays and other declarations provided by the active profile.</li>
 </ul>
-<p>Support for a declaration is not permission to approximate it. Each target’s
-support matrix records implemented operations and precise target limits.</p>
+<p>Each target’s support matrix records implemented operations and precise target
+limits. See <a href="/docs/reference/native-performance/">native performance</a> for the native string
+units, dense-array contract, explicit UTF-16 values and retained ownership costs.</p>
 <h2 id="native-strings-and-jsstring">Native strings and <code>JsString</code></h2>
 <p><code>string</code> remains the default source string:</p>
 <pre><code class="language-ts">const path: string = "content/index.md";
@@ -890,6 +893,25 @@ const value: JsString = jsstr("😀");
 <p>Targets must not infer <code>JsString</code> from literals, selected surface, member
 spelling, or API use. Native APIs such as file-system paths continue to accept
 ordinary <code>string</code> unless their declared contract says otherwise.</p>
+<h2 id="error-stacks">Error stacks</h2>
+<pre><code class="language-ts">const error = new Error("Cannot load the file");
+Error.captureStackTrace(error);
+const stack = error.stack;
+if (stack !== undefined) console.log(stack);
+</code></pre>
+<p>C# and Rust do not capture stacks during Error construction or when <code>stack</code> is
+read. Call <code>Error.captureStackTrace(error)</code> explicitly to capture and format the
+native stack at that call. Aliases and rethrows retain the resulting string;
+calling it again replaces the previous snapshot. Without capture or an explicit
+stack assignment, <code>stack</code> is undefined, including for runtime-created errors.</p>
+<p>Frame names, filenames, and available debug information belong to the native
+toolchain. The text is not a V8 stack or a promised mapping to the authored
+TypeScript. Do not parse it as a portable source-location protocol. Only the
+explicit call pays capture and formatting costs. Rust requires its <code>std</code>
+foundation for capture; <code>alloc</code>-only errors still work without stacks. C# retains
+the CLR’s normal throw-time exception behavior independently of this source
+stack property. Rust currently supports explicit capture and stack reads, not
+arbitrary stack-property assignment.</p>
 <h2 id="target-references">Target references</h2>
 <ul>
 <li><a href="/docs/reference/targets/csharp/javascript-surface/">C# JavaScript surface</a></li>

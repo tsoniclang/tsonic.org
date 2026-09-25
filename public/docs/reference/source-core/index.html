@@ -894,8 +894,10 @@ safe closed location abstraction. The second requests the target’s native
 pointer representation and safety rules.</p>
 <p><code>FixedArray&lt;T, 2&gt;</code> has a number-based readonly <code>.length</code> of type <code>2</code>;
 <code>FixedArray&lt;T, 2n&gt;</code> has a bigint-based readonly <code>.length</code> of type <code>2n</code>. Shared
-metadata stores both counts exactly as bigint, without changing that source
-meaning. Wider <code>number</code>/<code>bigint</code> types, unions, negative or fractional extents,
+metadata stores both counts exactly as bigint. The native target retains its
+array length carrier independently of the metadata literal’s spelling; the
+source type does not require a bigint allocation or a floating conversion.
+Wider <code>number</code>/<code>bigint</code> types, unions, negative or fractional extents,
 and unsafe numeric literals are rejected. Use an exact bigint literal such as
 <code>9007199254740993n</code> beyond the safe-number range. Exact source evidence does not
 guarantee a native value representation or an implemented <code>.length</code> operation;
