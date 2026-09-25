@@ -59,6 +59,13 @@ test("the landing page states the current target contract directly", () => {
   assert.doesNotMatch(html, /tsbindgen|@tsonic\/express|strict, deterministic subset/u);
 });
 
+test("global GitHub links open the canonical Tsonic repository", () => {
+  const html = readFileSync(join(publicDir, "index.html"), "utf8");
+  const canonicalHref = 'href="https://github.com/tsoniclang/tsonic"';
+  assert.equal(html.split(canonicalHref).length - 1, 2);
+  assert.doesNotMatch(html, /href="https:\/\/github\.com\/tsoniclang"/u);
+});
+
 test("the proof browser formats code and reports loading progress", () => {
   const browserScript = readFileSync(join(publicDir, "assets/examples.js"), "utf8");
   const stylesheet = readFileSync(join(publicDir, "assets/styles.css"), "utf8");
