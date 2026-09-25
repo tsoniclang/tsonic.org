@@ -75,7 +75,7 @@ const projects = [
     id: "parallel-workers",
     title: "Parallel workers",
     summary: "Three CPU-bound workers run through the .NET parallel task API.",
-    path: "bcl/packages/multithreading",
+    path: "native/packages/multithreading",
   },
   {
     target: "csharp",
@@ -89,21 +89,21 @@ const projects = [
     id: "spans-and-memory",
     title: "Spans and memory",
     summary: "Allocation-conscious code using native span and memory types.",
-    path: "bcl/packages/high-performance",
+    path: "native/packages/high-performance",
   },
   {
     target: "csharp",
     id: "generators-and-cleanup",
     title: "Generators and cleanup",
     summary: "Generators, values sent into an iterator, and deterministic disposal.",
-    path: "bcl/packages/generators-resources",
+    path: "native/packages/generators-resources",
   },
   {
     target: "csharp",
     id: "native-pointers",
     title: "Native pointers",
     summary: "Explicit unsafe access, pointer loads, stores, and offsets.",
-    path: "bcl/packages/native-pointers",
+    path: "native/packages/native-pointers",
   },
   {
     target: "rust",
