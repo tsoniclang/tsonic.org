@@ -895,6 +895,37 @@ before planning.</p>
 operation consistency. <code>rustc</code> remains the final authority for Rust borrow
 validity. Tsonic does not weaken an authored lifetime or extend a borrow to
 make native compilation succeed.</p>
+<h2 id="captures-and-final-uses">Captures and final uses</h2>
+<p>For a mutable binding used only by one synchronous closure, Tsonic stores the
+binding in that closure’s environment. A native <code>FnMut</code> or <code>FnOnce</code> parameter
+uses an ordinary mutable captured value. The cloneable source-callable <code>Fn</code>
+contract instead needs <code>Cell&lt;T&gt;</code> for a Copy value or <code>RefCell&lt;T&gt;</code> for a Clone
+value that is not Copy. Neither needs a separate shared location allocation.
+Reads release their borrow before later source effects.</p>
+<p>Independent closures that update the same binding still share it. Taking its
+address, creating owners repeatedly, or retaining it across suspension can
+require shared storage. An imported native owner is not itself a reason to add
+another owner; binding mutation and payload ownership are separate questions.</p>
+<p>Final-use moves use the closed source-use graph. A last stored field of a
+local, unaliased generated value can move without cloning. Borrowed receivers,
+later uses, cleanup and overlapping argument borrows retain their required
+storage. Imported destructors are not inferred from a type name.</p>
+<p>Native imported carriers remain native through aliases, generic calls, fields,
+optional values and captures. Explicit <code>move</code> remains available when a native
+ownership transfer should be stated in the source. It does not bypass Rust’s
+borrow checker or manufacture a longer lifetime.</p>
+<h2 id="evidence-required-for-ownership-changes">Evidence required for ownership changes</h2>
+<p>Use checked source uses and Rust’s compiler-understood type, trait and lifetime
+guarantees. Names such as <code>Rc</code> and <code>Arc</code> are not a wrapper-detection mechanism;
+a third-party native type receives the same treatment. A <code>Clone</code> implementation
+does not prove that cloning is cheap or preserves shared identity.</p>
+<p>Providers may transport compiler facts, not invent those guarantees. Missing
+evidence prevents an optimization; it does not justify a hidden wrapper, unsafe
+conversion or weakened aliasing rule. This requirement is not a claim that every
+existing ownership path has already been proved optimal.</p>
+<ul>
+<li><a href="/docs/architecture/workspace-agent-policy/#compiler-understood-ownership">Compiler-understood ownership</a></li>
+</ul>
 </div>
 </article>
 </main>

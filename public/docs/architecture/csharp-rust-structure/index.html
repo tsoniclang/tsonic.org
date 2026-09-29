@@ -914,6 +914,7 @@ native symbols or require forwarding files at old paths.</p>
 <tr><td>Class declarations</td><td><code>backend/planner/declarations/classes/</code></td><td>CLR class members or Rust struct/impl members</td></tr>
 <tr><td>Interfaces and enums</td><td><code>backend/planner/declarations/interfaces/</code>, <code>enums/</code></td><td>Native declaration forms are not interchangeable</td></tr>
 <tr><td>Binding patterns</td><td><code>backend/planner/bindings/</code></td><td>Locals and destructuring, not callable signature policy</td></tr>
+<tr><td>Generic naming contexts</td><td><code>backend/planner/names/type-parameters.ts</code></td><td>Exact binder identities select generated names; type syntax stays under <code>types/</code></td></tr>
 </tbody></table>
 <p>Analysis may need different algorithms. C# selects members and expected types;
 Rust also proves ownership, fallibility, lifetimes and layout. Both must seal

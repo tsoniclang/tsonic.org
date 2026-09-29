@@ -868,17 +868,17 @@ codec implementation.</p>
 <p><code>layout.ts</code>:</p>
 <pre><code class="language-ts">import { abi } from "example:abi";
 import type { Pointer, uint32 } from "@tsonic/core/types.js";
-import { memoryLayout } from "@tsonic/core/lang.js";
+import { memorylayout } from "@tsonic/core/lang.js";
 
-export const layout = memoryLayout&lt;Pointer&lt;uint32&gt; | undefined&gt;(abi, 8, 8, 8);
+export const layout = memorylayout&lt;Pointer&lt;uint32&gt; | undefined&gt;({ datalayout: abi, bytesize: 8, bytealignment: 8, stride: 8, fields: [] });
 </code></pre>
 <p><code>index.ts</code>:</p>
 <pre><code class="language-ts">import { layout } from "./layout.js";
 import type { Pointer, uint32 } from "@tsonic/core/types.js";
-import { allocatePointer, reinterpretRawPointer, toRawPointer } from "@tsonic/core/lang.js";
+import { allocateptr, reinterpretrawptr, torawptr } from "@tsonic/core/lang.js";
 
-const slot = allocatePointer&lt;Pointer&lt;uint32&gt; | undefined&gt;(allocatePointer&lt;uint32&gt;(3));
-export const view = reinterpretRawPointer(toRawPointer(slot, layout), layout);
+const slot = allocateptr&lt;Pointer&lt;uint32&gt; | undefined&gt;(allocateptr&lt;uint32&gt;(3));
+export const view = reinterpretrawptr(torawptr(slot, layout), layout);
 </code></pre>
 <p>The layout describes a nullable pointer word in the provider’s explicit
 64-bit ABI. It does not mean that every target can represent this layout;
@@ -965,7 +965,7 @@ fingerprint, byte order, address width, size, alignment, stride, and exact
 child layouts. The target owns static codec placement, imports, initialization
 ordering, runtime alias preservation, and any target-specific rejection.</p>
 <p>Shared backing-demand reconciliation follows the same rule. For example,
-<code>toRawPointer(pointer, localLayout)</code> and <code>toRawPointer(pointer, importedLayout)</code>
+<code>torawptr(pointer, localLayout)</code> and <code>torawptr(pointer, importedLayout)</code>
 may demand the same storage even when the layouts were authored in different
 files. Their authenticated memory domains and complete physical layouts must
 agree, including every nested field’s exact corresponding member and placement.

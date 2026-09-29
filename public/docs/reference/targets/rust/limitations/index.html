@@ -917,8 +917,8 @@ commands, and <code>yield*</code> are supported when their selected protocol is 
 <h2 id="places-conversions-and-callable-values">Places, conversions, and callable values</h2>
 <p>Locations over locals, parameters, fields, array elements, and proven disjoint
 subfields work. An owned-root receiver location remains unsupported.</p>
-<p><code>hashPointer</code> uses canonical location identity. <code>bindPointer</code> retains a closed
-reference owner, not just its identity token. <code>projectPointer</code> preserves
+<p><code>hashptr</code> uses canonical location identity. <code>bindptr</code> retains a closed
+reference owner, not just its identity token. <code>projectptr</code> preserves
 identity, applies the selected conversions, and preserves optionality.
 Bindings and projections retain their callbacks’ exact error contract. Throwing
 callbacks use native <code>Result</code> propagation rather than panic transport. Capture

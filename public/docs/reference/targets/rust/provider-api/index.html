@@ -894,6 +894,13 @@ Cargo contribution
 <p>Concrete API names exist only in provider data. Generic selection compares
 exact identities and requirements; it does not branch on <code>HashMap</code>, <code>readFile</code>,
 or a package spelling.</p>
+<p>Ownership optimization has a stricter evidence boundary: provider data may
+carry exact native types, signatures, lifetimes and trait facts, but cannot
+invent an “already shared” or “cheap clone” classification. Standard and
+third-party types use the same compiler-understood rules.</p>
+<ul>
+<li><a href="/docs/architecture/workspace-agent-policy/#compiler-understood-ownership">Compiler-understood ownership</a></li>
+</ul>
 <h2 id="package-shape">Package shape</h2>
 <p>A provider package normally contains:</p>
 <pre><code class="language-text">package/
@@ -938,6 +945,19 @@ opts into a closed construction policy and every authored field resolves to
 exact readable/writable native member rows. Default completion is legal only
 when the provider explicitly supplies that construction contract.</p>
 <h2 id="generic-parameter-boundaries">Generic parameter boundaries</h2>
+<p>Integer const arguments retain their exact values, including values larger than
+a JavaScript number can represent. Use bigint literal syntax for those values:</p>
+<pre><code class="language-ts">import { Token, makeToken } from "@tsonic/rust/crates/example/index.js";
+
+const token: Token&lt;9007199254740993n&gt; = makeToken&lt;9007199254740993n&gt;();
+</code></pre>
+<p>The Rust const parameter still determines the permitted native type and range.
+The bigint suffix is source syntax; it does not allocate a runtime bigint.
+Provider declaration models represent an exact bigint literal as
+<code>{ kind: "bigint-literal", value: "9007199254740993" }</code>.
+The value is canonical signed decimal text without a suffix, leading zeros or
+positive sign. Validation rejects malformed text before declaration rendering.
+Ordinary numeric literals and bigint literals remain distinct checker types.</p>
 <p>Provider operation rows preserve whether a Rust type parameter accepts
 unsized arguments:</p>
 <pre><code class="language-ts">genericParameters: [

@@ -879,32 +879,32 @@ from the method name.</p>
 <p>Use the neutral attribute builder with provider-backed attribute types:</p>
 <pre><code class="language-ts">attribute&lt;Controller&gt;()
   .method((controller) =&gt; controller.handle)
-  .add(AuthorizeAttribute);
+  .add(() =&gt; new AuthorizeAttribute());
 </code></pre>
 <p>Selectors identify exact source declarations. The .NET provider resolves the
 attribute constructor and legal argument values; the C# planner emits Roslyn
 attribute nodes. Marker calls erase from runtime code.</p>
 <h2 id="safe-typed-locations">Safe typed locations</h2>
 <pre><code class="language-ts">let value: int32 = 1;
-const location = addressOf(value);
-storePointer(location, loadPointer(location) + 1);
+const location = addressof(value);
+storeptr(location, loadptr(location) + 1);
 </code></pre>
 <p>The C# target lowers this to the closed
 <code>Tsonic.CSharp.Runtime.Location&lt;int&gt;</code> carrier. It preserves local, parameter,
 field, property, array-element, and projected value-type storage identity when
 the exact location can be proven.</p>
 <h2 id="native-c-pointers">Native C# pointers</h2>
-<pre><code class="language-ts">import { loadNativePointer, unsafeContext } from "@tsonic/core/lang.js";
+<pre><code class="language-ts">import { loadnativeptr, unsafecontext } from "@tsonic/core/lang.js";
 import type { NativePointer, int32 } from "@tsonic/core/types.js";
 
 export function read(pointer: NativePointer&lt;int32&gt;): int32 {
-  return unsafeContext(loadNativePointer(pointer));
+  return unsafecontext(loadnativeptr(pointer));
 }
 </code></pre>
 <p>Native pointer representation, unsafe lexical context, declaration-level
-requires-unsafe, and project permission are separate controls. The target emits
-<code>AllowUnsafeBlocks</code> only when the sealed target program contains an authorized
-unsafe requirement. Other marker use does not imply unsafe output.</p>
+<code>safety&lt;T&gt;().requiresunsafe()</code>, and project permission are separate controls.
+The target emits <code>AllowUnsafeBlocks</code> only when the sealed target program contains
+an authorized unsafe requirement. Other marker use does not imply unsafe output.</p>
 <p><code>languageDialect</code> and <code>memorySafetyRules</code> independently select the C# language
 and memory-safety specifications. Preview memory-safety rules require the C# 15
 preview dialect.</p>

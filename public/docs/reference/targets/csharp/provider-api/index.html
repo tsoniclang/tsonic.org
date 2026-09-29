@@ -905,6 +905,13 @@ floating input type, integral result, and by-value parameter relation.</p>
 <p>Providers must not attach target-specific fields to closed TSTS values. They
 publish only through the C# target’s public relation, type, policy, and runtime
 contribution contracts.</p>
+<p>Ownership optimization has the same evidence boundary as every other target:
+use checked source uses and native compiler-understood types, signatures and
+qualifiers. An exact provider mapping does not authorize an invented wrapper
+or cheap-copy exemption. C# uses its native guarantees, not Rust-specific rules.</p>
+<ul>
+<li><a href="/docs/architecture/workspace-agent-policy/#compiler-understood-ownership">Compiler-understood ownership</a></li>
+</ul>
 <h2 id="package-shape">Package shape</h2>
 <p>A provider package normally contains:</p>
 <pre><code class="language-text">package/

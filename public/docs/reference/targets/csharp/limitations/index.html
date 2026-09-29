@@ -897,16 +897,16 @@ ref-return locations can be represented. A <code>for</code> initializer binding 
 escapes its loop, a destructured iteration binding, or an indexer without one
 exact storage identity cannot:</p>
 <pre><code class="language-ts">for (let index = 0; index &lt; values.length; index++) {
-  consume(addressOf(index)); // target diagnostic
+  consume(addressof(index)); // target diagnostic
 }
 
 for (const [key, value] of entries) {
-  consume(addressOf(value)); // target diagnostic
+  consume(addressof(value)); // target diagnostic
 }
 </code></pre>
-<p><code>hashPointer</code> hashes canonical location identity, including <code>undefined</code>.
-<code>bindPointer</code> requires a closed reference identity and exact read/write
-callbacks. <code>projectPointer</code> preserves that identity and applies the selected
+<p><code>hashptr</code> hashes canonical location identity, including <code>undefined</code>.
+<code>bindptr</code> requires a closed reference identity and exact read/write
+callbacks. <code>projectptr</code> preserves that identity and applies the selected
 conversions on reads and writes. Optional projections remain optional, and
 constructing a projection does not execute its callbacks.</p>
 <p>These accessor locations do not automatically have native addresses. A

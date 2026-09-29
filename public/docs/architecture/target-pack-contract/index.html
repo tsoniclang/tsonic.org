@@ -884,6 +884,13 @@ generic requirements, provider operations, and Cargo requirements.</li>
 </ul>
 <p>Those are different facts inside the same architectural phase, not different
 architectures.</p>
+<p>Ownership and representation optimizations must be justified by checked source
+uses and native compiler-understood guarantees, not library wrapper recognition.
+This is a design requirement, not a claim that every existing representation
+has already been certified minimal.</p>
+<ul>
+<li><a href="/docs/architecture/workspace-agent-policy/#compiler-understood-ownership">Compiler-understood ownership</a></li>
+</ul>
 <p>Targets obtain TypeScript structural member correspondence through the public
 <a href="/docs/architecture/structural-member-correspondence/">source member query</a>. Native option
 construction and ownership remain target decisions; targets do not match source
