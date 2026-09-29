@@ -874,6 +874,23 @@ hand-written standard-library surface.</p>
 <p>For example:</p>
 <pre><code class="language-ts">import { HashMap } from "@tsonic/rust/std/collections.js";
 </code></pre>
+<p>Primitive operations use their compiler-provided value imports. Keep their
+type annotations in <code>types.js</code>:</p>
+<pre><code class="language-ts">import type { uint32, float32 } from "@tsonic/core/types.js";
+import { u32, f32 } from "@tsonic/rust/core/index.js";
+
+export function blocks(count: uint32, size: uint32): uint32 {
+  return u32.div_ceil(count, size);
+}
+
+export function magnitude(value: float32): float32 {
+  return f32.abs(value);
+}
+</code></pre>
+<p>These calls emit <code>core::primitive::u32::div_ceil(count, size)</code> and
+<code>core::primitive::f32::abs(value)</code>. The receiver is the first source argument.
+No numeric wrapper or JavaScript number conversion is introduced. Available
+methods and constants come from the selected native toolchain.</p>
 <h2 id="cargo-dependencies">Cargo dependencies</h2>
 <p><code>@tsonic/rust/crates/&lt;alias&gt;/&lt;module&gt;.js</code> addresses a direct dependency alias
 from the user-owned Cargo graph:</p>

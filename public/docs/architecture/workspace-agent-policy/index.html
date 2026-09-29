@@ -889,6 +889,22 @@ not just the latest failing line. Correct the earliest layer that actually
 owns the decision, update its consumers, and remove superseded logic in the
 same change. A previous fix or passing checkpoint does not justify keeping
 redundant branches, adapters, conversions or competing decisions.</li>
+<li>Treat surprising user-facing constraints, limitations and required annotations
+as potential architectural defects before proposing a narrower capability.
+Trace the dependency through its real owners. Split or redesign modules,
+semantic layers, phase boundaries and data structures when needed; existing
+coupling is not a reason to make users repair our implementation’s ordering.
+Apply the same airplane-grade correctness, safety, performance and verification
+requirements to the complete replacement, not just the local symptom.
+A claimed unavoidable limitation needs concrete native-language or semantic
+evidence; a missing API in our current abstraction is not that evidence.</li>
+<li>For example, if native macro expansion supplies a type needed by source
+checking, but native construction assumes source checking is already complete,
+reassess the construction/checking boundary. Do not impose a source annotation,
+add a second lowering path, or accept erroneous native type results merely to
+break that implementation cycle. Preserve inferred behavior through the owning
+semantic phases and prove the actual source-to-native path. An independently
+ambiguous native program remains distinct from our phase-ordering defect.</li>
 <li>Prefer the smallest clean, complete canonical mechanism. Reuse genuine common
 requirements; do not hide repeated corrections behind a generic wrapper or
 invent a framework to preserve an accidental design. Independently necessary
@@ -948,6 +964,10 @@ delete another directory, unless the maintainer explicitly requests that
 exact cleanup.</li>
 <li>Keep ignored analysis, logs, generated output, build products, and local test
 state untracked.</li>
+<li>Never commit or push <code>.analysis</code> contents. Ignore rules do not untrack files
+already in Git: remove such entries from the index while preserving the local
+notes, and verify that no <code>.analysis</code> paths remain tracked. Do not rewrite
+published history as part of this cleanup.</li>
 </ul>
 <h2 id="agent-delegation">Agent Delegation</h2>
 <ul>
@@ -972,8 +992,9 @@ Downstream projects can reveal defects but cannot redefine the contract.</li>
 approval. Fix invalid downstream assumptions downstream instead of weakening
 the compiler.</li>
 <li>Use focused tests while iterating. Before merge or publication, run the
-repository’s documented complete gate unless the exact exception below
-applies.</li>
+repository’s documented applicable gates, reusing current verified coverage
+under the input-scoped rule below. The expectation-only exception also applies
+under its exact stated conditions.</li>
 <li>Never change product code, fixtures, tests, or expected output merely to make
 a test pass. Determine and fix the owning root cause.</li>
 <li>Temporary instrumentation belongs under <code>.temp/</code>, never in a final product
@@ -981,6 +1002,15 @@ path.</li>
 <li>Do not run a complete suite repeatedly after each small implementation. Batch
 coherent edits, collect all diagnostics from a run, fix the complete class,
 then rerun at the appropriate scope.</li>
+<li>Test execution is expensive. All publishing entrypoints must automatically
+reuse valid existing verification and run only checks invalidated by actual
+input changes. Documentation-only edits require their owning documentation
+checks, not another compiler/runtime run. Isolated release-tooling changes
+require their owning verification checks. Declare and verify those input
+boundaries; do not infer them from a commit message or a broad extension
+filter. Retain original evidence and record any required focused checks
+separately. Never rewrite a certificate or omit a necessary artifact/public
+installation proof merely to avoid execution.</li>
 <li>Finish an already-started certification suite and collect its failures, but
 do not start another suite while known failures remain. Do not reinterpret a
 multi-suite certification queue as one suite. An explicit maintainer request
@@ -1038,6 +1068,92 @@ old-or-new schema handling, compatibility aliases, legacy fallback, or
 “clean it later” code.</li>
 <li>When a canonical shape changes, break stale assumptions and repair every
 first-party producer and consumer against the final shape.</li>
+<li>An API replacement is one complete migration, not an additional supported
+form. Remove superseded signatures, handlers and adapters; update all owned
+callers, declarations, facts, documentation, fixtures and tests together.
+Prove that the removed form is rejected. Temporary compatibility overloads
+and staged old/new acceptance are prohibited.</li>
+<li>For example, replacing <code>add(AttributeType, ...args)</code> with an inline lambda
+containing a checked attribute invocation means deleting the flat form, not
+accepting both. Preserve independent placement selectors and native attribute
+restrictions; the new argument syntax does not justify losing capabilities
+or weakening validation.</li>
+</ul>
+<h3 id="evaluation-selection-and-declaration-inputs">Evaluation, Selection, and Declaration Inputs</h3>
+<ul>
+<li>Choose syntax by the input’s meaning, not a blanket rule that all compiler
+inputs are lambdas. Do not wrap existing direct value, storage, ownership,
+compile-time, safety or layout inputs merely for uniformity. Remove
+unnecessary quotation layers; retain one canonical API per input category,
+not direct/quoted compatibility alternatives.</li>
+<li>Attribute construction stays quoted: for example,
+<code>attribute&lt;User&gt;().add(() =&gt; new ObsoleteAttribute("reason"))</code>.
+Retain exact checked calls, constructors, overloads and native restrictions.
+Do not restore the superseded flat attribute-type/arguments API.</li>
+<li>Typed member selectors must remain lambdas: <code>.method(user =&gt; user.save)</code>,
+<code>.property(user =&gt; user.name)</code> and layout field selectors select exact checked
+declarations. Do not replace them with property-name strings or execute
+getters/methods to find the selected member. This differs from <code>ref(user.name)</code>,
+which selects an existing runtime storage expression and stays direct.</li>
+<li>Keep lambdas for conditional/deferred behavior such as match guards, match
+bodies and let-else failure blocks, and for necessary declaration scopes
+containing type/const/function declarations or generic binders. Do not add
+an outer lambda to an already scoped input, a match scrutinee/arm collection
+or a plain descriptor.</li>
+<li>Genuine runtime callbacks, closures and function types are not compiler
+quotation. Preserve their execution, capture, ownership and lifetime rules;
+pointer accessors and ordinary map/event/task callbacks remain callbacks.</li>
+<li>Inspect the exact source AST and checked identities; never execute user
+JavaScript to obtain compiler input. Retained quotation and erased metadata
+add no native closure, allocation, copying, boxing or runtime registration.</li>
+<li>State Node behavior honestly. A no-op facade does not suppress evaluation of
+direct arguments or template substitutions. A retained quoted attribute/body
+is not invoked by its compiler-only facade. Neither rule fabricates native
+results, generated APIs or loadable imports. Native-only code is not made
+Node-portable merely by recognizing its syntax.</li>
+</ul>
+<h3 id="authored-identifier-preservation">Authored Identifier Preservation</h3>
+<ul>
+<li>Preserve authored identifier spelling and case across targets. Do not convert
+<code>makeValue</code> into <code>make_value</code>, PascalCase or SCREAMING_SNAKE_CASE, or rename
+authored bindings merely to suppress a native naming/unused warning.</li>
+<li>Target keyword escaping may change source spelling while preserving the
+identifier’s semantic name, such as Rust <code>r#type</code> or C# <code>@event</code>. Exact imported
+native names remain provider-owned. Compiler-generated helpers require their
+own collision-safe names; they do not authorize renaming authored APIs.</li>
+<li>Audit declaration, member, reference, import/export and module/file pathways
+together. An actual target naming or collision constraint needs an explicit
+supported policy or a precise diagnostic, not an unannounced casing rewrite.
+Do not invent a name-override feature merely to preserve old transformations.</li>
+</ul>
+<h3 id="public-marker-naming">Public Marker Naming</h3>
+<ul>
+<li>Our public compiler operations, markers, builder methods and authored
+descriptor keys use lowercase without underscores across shared, C# and Rust
+APIs. Prefer one clear word; join necessary compound words without separators.
+Do not introduce camelCase or snake_case variants. Preserve independently
+controllable semantics rather than collapsing operations merely to shorten them.</li>
+<li>In operation names, shorten pointer to ptr: <code>loadPointer</code> becomes <code>loadptr</code>,
+<code>loadNativePointer</code> becomes <code>loadnativeptr</code>, and <code>offsetRawPointer</code> becomes
+<code>offsetrawptr</code>. Apply the same rule to all corresponding operations, not a
+special alias for one load operation.</li>
+<li>Types are excluded from this operation-naming migration. <code>Pointer</code>,
+<code>RawPointer</code>, <code>NativePointer</code>, <code>FunctionPointer</code>, <code>MemoryFieldLayout</code> and
+primitive type aliases keep their type spellings. Do not lowercase named
+types or abbreviate Pointer within type names under this rule.</li>
+<li>This is deliberate naming of our compiler API, never automatic recasing of
+user-authored declarations. Native imports retain their exact exported names,
+including native underscores. Internal implementation names, protocol fields
+and generated identity brands are not a blanket renaming target.</li>
+<li>Distinguish existing exports, proposed exports, generated declaration helpers
+and imported native symbols. A proposal is not a released capability. A
+replacement must be valid source syntax; for example, the TypeScript keyword
+<code>typeof</code> cannot serve as a bare callable replacement for a proposed <code>typeOf</code>.
+Remove a redundant helper rather than inventing another spelling for it.</li>
+<li>Migrate the one canonical declaration/identity owner and all affected owned
+consumers, artifacts, documentation and tests together. Remove superseded
+exports, signatures and handlers; prove the old form is rejected. Never retain
+compatibility aliases or add duplicate target-specific spellings of shared APIs.</li>
 </ul>
 <h3 id="truth-over-heuristics">Truth Over Heuristics</h3>
 <ul>
@@ -1059,7 +1175,8 @@ are declarative data, not branches in generic resolution algorithms.</li>
 the case as policy data.</li>
 <li>A hardcoded exception requires explicit source and target identity, rationale,
 required evidence, diagnostic behavior, positive and negative tests, and
-ledger evidence.</li>
+ledger evidence. A ledger entry does not authorize an exception to the
+compiler-understood ownership requirement below.</li>
 </ul>
 <h3 id="explicit-target-semantics">Explicit Target Semantics</h3>
 <ul>
@@ -1071,6 +1188,45 @@ acceptance is not specification evidence.</li>
 <li>Absence means the behavior was not selected. Emit exactly the target
 language’s documented coupling for the selected version, or reject an
 unrepresentable combination precisely.</li>
+</ul>
+<h3 id="compiler-understood-ownership">Compiler-Understood Ownership</h3>
+<ul>
+<li>Hard requirement: ownership, borrowing, moves, copies, storage and wrapper
+elimination must use checked source-use evidence and guarantees understood
+by the selected native compiler. Every semantic premise must trace to an
+exact compiler fact or the target language’s specified rule for the selected
+type, trait, signature, qualifier or lifetime. Do not invent library-specific
+optimization knowledge beyond what that compiler knows.</li>
+<li>Providers may transport those exact native facts; they may not manufacture
+ownership authority with custom “already shared”, “interior mutable”,
+“nonretaining” or “cheap clone” assertions. Moving a hardcoded assumption
+from compiler code into provider data does not satisfy this rule. Ordinary
+native API identity and invocation mapping remain provider responsibilities;
+they are not evidence for an additional ownership optimization.</li>
+<li>Standard-library and third-party types follow the same rules. Do not use
+wrapper-name lists, package names, private-field scans or arbitrary marker
+traits to infer ownership behavior. Preserve an imported native carrier
+without requiring it to be recognized as a particular smart pointer.</li>
+<li>Use each trait only for its compiler-understood guarantees. For example,
+Rust <code>Clone</code> establishes a cloning operation, not cheap copying or shared
+identity; <code>Copy</code> does not establish that copying a large value is cheap.
+<code>Deref</code> does not establish reference counting. Benchmark observations cannot
+manufacture missing semantic guarantees either.</li>
+<li>Genuine native compiler special cases are permitted only for the exact rule
+and declaration identity that the compiler recognizes. For example, Rust’s
+special <code>Rc&lt;Self&gt;</code> method-receiver support is not authority to infer payload
+sharing or eliminate a captured-binding cell. <code>UnsafeCell</code> does not waive
+exclusive-borrow uniqueness or thread-safety requirements. Delegate native
+checking to the native compiler rather than extending its rules ourselves.</li>
+<li>If compiler-understood evidence is missing, identify the precise missing
+guarantee and do not perform that optimization. Never fill the gap with a
+name heuristic, bespoke provider promise, unsafe cast or hidden runtime
+fallback. Preserve safety and existing required behavior; report an unresolved
+correctness/performance conflict rather than claiming completion or silently
+rejecting previously supported code.</li>
+<li>Native execution and cost proofs remain mandatory. Compiler acceptance alone
+proves neither preservation of source observations nor minimal runtime cost.
+Apply this rule symmetrically using each target’s own native semantics.</li>
 </ul>
 <h3 id="native-semantics-and-best-effort-js-surfaces">Native Semantics and Best-Effort JS Surfaces</h3>
 <ul>

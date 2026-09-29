@@ -882,6 +882,7 @@
 <tr><td><code>Placeholder</code></td><td>Rust <code>'_</code> placeholder lifetime</td></tr>
 <tr><td><code>Ref&lt;T, L&gt;</code></td><td>Shared native reference <code>&amp;'l T</code></td></tr>
 <tr><td><code>Mut&lt;T, L&gt;</code></td><td>Mutable native reference <code>&amp;'l mut T</code></td></tr>
+<tr><td><code>Slice&lt;T&gt;</code></td><td>Unsized native slice <code>[T]</code>; pass it through <code>Ref</code> or <code>Mut</code></td></tr>
 <tr><td><code>Outlives&lt;L&gt;</code></td><td>Lifetime outlives bound</td></tr>
 <tr><td><code>ValidFor&lt;L&gt;</code></td><td>Type outlives bound <code>T: 'l</code></td></tr>
 <tr><td><code>Dyn&lt;T, L&gt;</code></td><td>Native trait object with an optional authored lifetime</td></tr>
@@ -898,9 +899,11 @@
 <tr><td><code>mut&lt;T, L&gt;(value)</code></td><td>Form one exact mutable native reference</td></tr>
 <tr><td><code>load(reference)</code></td><td>Read through an exact native reference</td></tr>
 <tr><td><code>store(reference, value)</code></td><td>Write through an exact mutable native reference</td></tr>
+<tr><td><code>range&lt;T&gt;(start, end)</code></td><td>Exclusive native range <code>start..end</code></td></tr>
+<tr><td><code>propagate(result)</code></td><td>Native <code>?</code> inside a <code>Result</code>-returning function</td></tr>
 </tbody></table>
-<p>Portable ownership markers such as <code>sharedBorrow</code>, <code>mutableBorrow</code>, and
-<code>move</code>, safe typed locations, native-pointer operations, <code>unsafeContext</code>, and
+<p>Portable ownership markers such as <code>sharedborrow</code>, <code>mutableborrow</code>, and
+<code>move</code>, safe typed locations, native-pointer operations, <code>unsafecontext</code>, and
 the safety builder remain owned by <code>@tsonic/core/*</code>. The Rust modules above
 exist only for semantic controls that are intrinsically Rust-specific.</p>
 <p>All listed modules are compiler-owned virtual declarations, not npm packages.</p>

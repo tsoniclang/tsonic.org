@@ -885,6 +885,13 @@ opaque semantic identifiers. Physical generated filenames, import aliases,
 source spelling, overload-group names, and target text are not identity.</p>
 <p>Provider declarations are immutable snapshots. Recursive provider graphs may
 share canonical declarations, but contradictory declarations fail closed.</p>
+<p>For ownership optimization, provider facts must transport guarantees understood
+by the native compiler. An exact API mapping is not permission to attach an
+invented smart-pointer or cheap-copy promise. The mandatory rule is shared by
+all targets:</p>
+<ul>
+<li><a href="/docs/architecture/workspace-agent-policy/#compiler-understood-ownership">Compiler-understood ownership</a></li>
+</ul>
 <h2 id="packaged-providers">Packaged providers</h2>
 <p>Both targets expose a package-composition factory through their provider SDK:</p>
 <table><thead><tr><th>Target</th><th>Factory</th><th>Native relation data</th></tr></thead><tbody>
@@ -900,9 +907,11 @@ branches on Node module names.</p>
 The C# capability relates that result to its native <code>Stats</code> class; Rust relates
 it to its native carrier. The same ownership flow does not require identical
 native member schemas or identical runtime directory layouts.</p>
-<p>See the <a href="/docs/reference/targets/csharp/provider-api/">C# provider API</a> and
-<a href="/docs/reference/targets/rust/provider-api/">Rust provider API</a> for each factory’s
-native contract.</p>
+<p>Each factory’s native contract is documented separately:</p>
+<ul>
+<li><a href="/docs/reference/targets/csharp/provider-api/">C# provider API</a></li>
+<li><a href="/docs/reference/targets/rust/provider-api/">Rust provider API</a></li>
+</ul>
 <h2 id="runtime-ownership">Runtime ownership</h2>
 <p>Runtimes implement operations already selected by target analysis:</p>
 <ul>

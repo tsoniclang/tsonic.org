@@ -869,7 +869,7 @@ the documentation does not mean identical capabilities or release status.</p>
 <tr><td>Public installation</td><td>The target is not published on npm; use the source workspace. The public project creator currently covers C# and Rust.</td></tr>
 <tr><td>Toolchain/platform</td><td>The target pins Mojo <code>1.1.0.dev2026083005</code> and Linux x86-64. Other versions/platforms are not implied to work.</td></tr>
 <tr><td>Generators and native async iteration</td><td>Not a complete supported lowering.</td></tr>
-<tr><td>Layout-backed raw memory</td><td><code>toRawPointer</code> and <code>reinterpretRawPointer</code> are not implemented by this target. Shared layout facts alone do not prove storage or lifetime.</td></tr>
+<tr><td>Layout-backed raw memory</td><td><code>torawptr</code> and <code>reinterpretrawptr</code> are not implemented by this target. Shared layout facts alone do not prove storage or lifetime.</td></tr>
 <tr><td>Imported native variadic APIs</td><td>A reproduced native Mojo String-forwarding defect remains an upstream compiler issue.</td></tr>
 <tr><td>Native provider metadata</td><td>Missing ownership, origin or ABI evidence causes rejection rather than a guessed call.</td></tr>
 </tbody></table>

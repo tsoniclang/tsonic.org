@@ -936,8 +936,9 @@ packages through an unverified promotion path. Run only one release at a time.</
 <ol>
 <li>verifies branch hygiene and exact <code>origin/main</code> identity;</li>
 <li>inspects exact public artifacts and <code>latest</code> tags;</li>
-<li>runs the complete source, target, provider, and runtime certification bank;</li>
-<li>packs the complete wave and runs C#, Rust, and Node-capability projects from
+<li>validates existing source, target, provider, and runtime certification and
+runs only missing or invalidated checks;</li>
+<li>rebuilds and packs the complete wave and runs C#, Rust, and Node-capability projects from
 a private tarball registry;</li>
 <li>checks local tarball hashes and existing <code>latest</code> baselines, then publishes
 the certified tarballs under <code>staged-&lt;version&gt;</code>, leaving <code>latest</code> unchanged;</li>
@@ -955,6 +956,72 @@ proof runs <code>npm create tsonic@0.1.1</code> and installs Node capabilities a
 If installation or execution fails, <code>latest</code> remains unchanged. Successful
 exact-version verification allows promotion; the final latest-based proof
 then verifies the commands ordinary users run.</p>
+<h3 id="reuse-completed-verification">Reuse completed verification</h3>
+<p>Complete <code>npm test</code> runs in the Rust target and Rust runtimes, and the host’s
+complete <code>./test/scripts/run-all.sh</code>, write a common certification record. You
+can also bring all five release banks up to date, or select one:</p>
+<pre><code class="language-sh">node scripts/release/certify.mjs
+node scripts/release/certify.mjs --suite tsonic-rust
+</code></pre>
+<p>Commit the tested sources first. A run on a dirty worktree still reports its
+test result, but cannot authorize release reuse. The recorder captures the
+declared repository closure before and after execution, including exact Git
+trees, installed dependency-lock identity, native toolchains and relevant
+environment fingerprints. It retains complete test counts and hashes the
+underlying reports and bounded process log. Environment values are hashed, not
+copied into certification records.</p>
+<p>The publisher reuses valid results automatically. After merging, use:</p>
+<pre><code class="language-sh">./scripts/publish-npm.sh
+</code></pre>
+<p>The publisher accepts only complete, successful and current evidence from clean
+inputs. A merge commit with the same tree is fine. Changed product source,
+build configuration, dependencies, execution guards or toolchains invalidate
+their affected banks. Filtered runs, calibration runs, missing counts,
+changed evidence, resource failures and unfinished newer runs cannot stand in
+for complete certification. Rust JS’s one existing ignored vendored doctest is
+explicitly counted in the release manifest; additional skips are rejected.</p>
+<p>Documentation and release-control edits do not require another compiler/runtime
+run. The release manifest assigns their exact paths to focused checks. Those
+checks use the same bounded runner and immutable record format as source banks.
+Only current passing checks can cover those differences in an earlier source
+record. Other changed files still require their affected full bank. There is no
+blanket Markdown exemption, manually edited certificate or historical-log import.</p>
+<p>Original records remain unchanged: release acceptance combines the existing
+source results with the necessary focused results. Changes during any recorded
+run are rejected, including changes inside a focused scope. Repeated publication
+attempts reuse current focused evidence too.</p>
+<p>Missing or stale evidence runs only the affected checks. A failed check stops
+the sequence before another bank starts. To inspect evidence without running
+tests or publishing, use:</p>
+<pre><code class="language-sh">node scripts/release/certify.mjs --check
+</code></pre>
+<p>The read-only check reports missing or invalidated evidence as an error. There
+is no skip-tests or force-to-publish option. Direct complete test entrypoints
+still run their requested banks; publishing does not repeat them unnecessarily.</p>
+<p>Records live in <code>.temp/certification/&lt;repository&gt;/</code>. Keep that directory and
+its referenced logs if you want reuse; scratch cleanup can remove them. Old
+human-readable logs are not imported as certificates. These are local trusted
+runner records with corruption checks, not signed remote attestations: do not
+accept records supplied by an untrusted party.</p>
+<p>Reuse never skips rebuilding, packing, the private tarball installations, the
+configured framework matrix, the exact public installations or fresh <code>latest</code>
+installations. These prove the selected artifacts and registry state, not just
+unchanged compiler behavior.
+Publication still requires every release repository on clean, exact main.
+<code>./scripts/publish-npm.sh --validate</code> only validates manifests; it does not test
+or publish anything.</p>
+<h3 id="parallelism-and-resource-bounds">Parallelism and resource bounds</h3>
+<p>The publisher uses the same CPU/memory policy and no-swap process-group guards
+as ordinary certification. <code>TSONIC_TEST_CPUS</code> and <code>TSONIC_TEST_MEMORY_MIB</code> select
+finite limits; <code>TSONIC_TEST_WORKERS</code>, <code>TSONIC_TEST_CHILD_JOBS</code> and
+<code>TSONIC_TEST_HEAP_MIB</code> can further constrain test workers. Defaults use effective
+CPUs and available memory while keeping a system reserve.</p>
+<p>Independent C# and Rust installation projects run concurrently, dividing the
+total CPU and memory budget between them. Each project’s cold/warm and framework
+checks stay ordered because they intentionally modify the same project. Single
+Cargo test phases use the available native CPU budget. Complete source banks
+run in order because they share builds; their internal test workers remain
+parallel. Time, task, output-size and OOM guards still apply.</p>
 <p>The public-install step uses an isolated npm cache and configuration. It strips
 workspace and source-root environment variables, rejects local dependency
 specifiers and linked first-party packages, checks the complete npm dependency

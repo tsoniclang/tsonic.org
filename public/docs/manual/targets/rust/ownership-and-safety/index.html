@@ -873,6 +873,11 @@
 <p>The closed source use graph determines whether Rust can borrow, move, copy, or
 must own a value. The result is stored in the sealed Rust target program before
 planning. The planner does not re-infer ownership from emitted syntax.</p>
+<p>Ownership changes must follow compiler-understood native guarantees, not a list
+of recognized library wrappers. The reference explains the evidence boundary:</p>
+<ul>
+<li><a href="/docs/reference/targets/rust/ownership-and-lifetimes/#evidence-required-for-ownership-changes">Ownership evidence</a></li>
+</ul>
 <h2 id="explicit-native-references">Explicit native references</h2>
 <p>Use Rust source types only when an API contract itself distinguishes a borrow:</p>
 <pre><code class="language-ts">import type { int32 } from "@tsonic/core/types.js";
@@ -910,25 +915,25 @@ arguments use Rust’s legal call-scoped elision. Tsonic never inserts authored
 lifetime types into ordinary TypeScript.</p>
 <h2 id="safe-typed-locations">Safe typed locations</h2>
 <pre><code class="language-ts">let value: int32 = 1;
-const location = addressOf(value);
-storePointer(location, loadPointer(location) + 1);
+const location = addressof(value);
+storeptr(location, loadptr(location) + 1);
 </code></pre>
 <p><code>Pointer&lt;T&gt;</code> is a safe, identity-preserving location contract. Rust lowers it
 to the closed <code>Location&lt;T&gt;</code> runtime carrier, not to <code>*const T</code> or <code>*mut T</code>.
 Local, parameter, field, and index projections are accepted only when their
 storage and alias identity are exact.</p>
 <h2 id="native-pointers-and-explicit-safety">Native pointers and explicit safety</h2>
-<pre><code class="language-ts">import { loadNativePointer, unsafeContext } from "@tsonic/core/lang.js";
+<pre><code class="language-ts">import { loadnativeptr, unsafecontext } from "@tsonic/core/lang.js";
 import type { NativePointer, int32 } from "@tsonic/core/types.js";
 
 export function read(pointer: NativePointer&lt;int32&gt;): int32 {
-  return unsafeContext(loadNativePointer(pointer));
+  return unsafecontext(loadnativeptr(pointer));
 }
 </code></pre>
 <p>The operation lowers to native pointer dereference inside an explicit Rust
-<code>unsafe</code> expression or block. A native-pointer carrier, a requires-unsafe API
-contract, and an unsafe use site are independent facts. None is inferred from
-another.</p>
+<code>unsafe</code> expression or block. A native-pointer carrier, a declaration-level
+<code>safety&lt;T&gt;().requiresunsafe()</code> API contract, and an unsafe use site are
+independent facts. None is inferred from another.</p>
 </div>
 </article>
 </main>

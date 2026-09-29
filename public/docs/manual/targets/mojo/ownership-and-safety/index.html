@@ -875,14 +875,14 @@ export function duplicate(value: string): string {
 <p>The current proof emits <code>return value.copy()</code> in Mojo. Whether copying a larger
 value is cheap depends on that value’s native implementation.</p>
 <p>Compile-time values are distinct from runtime locals:</p>
-<pre><code class="language-ts">import { comptime, comptimeIf, unroll } from "@tsonic/core/lang.js";
+<pre><code class="language-ts">import { comptime, comptimeif, unroll } from "@tsonic/core/lang.js";
 import { materialize } from "@tsonic/mojo/lang.js";
 
 export function sum(): number {
   const enabled = comptime(true);
   const seed = comptime(0);
   let total = materialize(seed);
-  if (comptimeIf(enabled)) {
+  if (comptimeif(enabled)) {
     for (const value of unroll([1, 2, 3])) total += value;
   }
   return total;
@@ -896,7 +896,7 @@ An available type declaration is not proof that every native API using that
 type is supported. Provider calls must retain the selected argument convention,
 origin and result relationship. Missing evidence is rejected.</p>
 <p>Native pointer loads, stores and element offsets require the explicit shared
-<code>unsafeContext</code> marker. Do not infer that layout-backed raw memory is supported
+<code>unsafecontext</code> marker. Do not infer that layout-backed raw memory is supported
 from the presence of a pointer type; see the <a href="/docs/reference/targets/mojo/limitations/">current limitations</a>.</p>
 </div>
 </article>
